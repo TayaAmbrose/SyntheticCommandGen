@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-6e0532b0-13dbf9f2",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Invoke-Expression -Command \"Get-ChildItem -Path C:\\HostSystem\\ -Recurse | Copy-Item -Destination C:\\Container\\Temp\"",
+  "explanation": "Recursively copies all files from a specific host system directory into the container.",
+  "rationale_steps": [
+    "Use Get-ChildItem to list items recursively from the host's directory.",
+    "Copy all items from the host to the container using Copy-Item."
+  ],
+  "source_prompt_hash": "6e0532b0",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:32.674952Z"
+}

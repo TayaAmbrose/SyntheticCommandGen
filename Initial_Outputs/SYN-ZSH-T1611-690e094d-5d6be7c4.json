@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-5d6be7c4",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "unshare --map-root-user --user sh -c 'mount --bind / /mnt && bash'",
+  "explanation": "This command uses 'unshare' to run a shell with new namespace and mounts the host's root to a directory within the namespace, potentially accessing the host's file system from a separated process environment.",
+  "rationale_steps": [
+    "Create a new user namespace where the executing user is root.",
+    "Mount host's root file system to a directory accessible within the new namespace."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

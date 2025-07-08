@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-6e0532b0-62145a26",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Invoke-Item -Path C:\\HostSystem\\maintenance\\scheduledtask.ps1",
+  "explanation": "Executes a PowerShell script located in the host system from within the container.",
+  "rationale_steps": [
+    "Identify a useful script on the host system.",
+    "Execute the script directly using PowerShell's Invoke-Item, affecting the host's scheduled tasks."
+  ],
+  "source_prompt_hash": "6e0532b0",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:32.674952Z"
+}

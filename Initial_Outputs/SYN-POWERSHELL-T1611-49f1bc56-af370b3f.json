@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-af370b3f",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker run --rm --cap-add=SYS_ADMIN -it my-image",
+  "explanation": "Executes a Docker container with SYS_ADMIN capabilities, which can be abused to perform privileged operations on the host.",
+  "rationale_steps": [
+    "Grant high-level administrative privileges that can be employed to modify system settings or data.",
+    "Operate the container interactively to execute changes or commands in real-time."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

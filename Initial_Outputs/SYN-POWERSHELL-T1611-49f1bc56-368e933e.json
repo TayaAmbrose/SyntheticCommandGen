@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-368e933e",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker exec -it my-running-container powershell New-Item -Path C:\\host\\new-admin -Type Directory",
+  "explanation": "Uses an existing running container to create a new directory in the host system, showing file system manipulation capability.",
+  "rationale_steps": [
+    "Access the host's file system through a running container.",
+    "Create a new directory which might be used for storing malicious tools or exfiltrated data."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

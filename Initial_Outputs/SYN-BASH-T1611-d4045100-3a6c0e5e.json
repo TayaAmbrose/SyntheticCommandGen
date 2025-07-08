@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-3a6c0e5e",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined debian strace -f -p 1",
+  "explanation": "Starts a Debian container with additional capabilities to trace system calls (SYS_PTRACE) using strace against the host's init process (PID 1).",
+  "rationale_steps": [
+    "Run a container with sys_ptrace capability to trace system calls.",
+    "Attach strace to the host's init process to observe and interact with system calls."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

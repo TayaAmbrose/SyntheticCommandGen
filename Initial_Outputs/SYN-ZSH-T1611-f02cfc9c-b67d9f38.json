@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-b67d9f38",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run -v /var/run/docker.sock:/var/run/docker.sock docker docker ps",
+  "explanation": "Runs a command within a new container that has the Docker daemon socket mounted, allowing it to control other Docker containers on the host.",
+  "rationale_steps": [
+    "Mount the Docker daemon socket within a new container.",
+    "Execute Docker list command to show all running containers on the host."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

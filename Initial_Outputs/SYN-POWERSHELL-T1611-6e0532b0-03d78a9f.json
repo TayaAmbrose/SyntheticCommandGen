@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-6e0532b0-03d78a9f",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "New-Item -Path C:\\Container\\HostFiles -ItemType Directory; Get-ChildItem -Path C:\\HostSystem\\Documents -Recurse | Copy-Item -Destination C:\\Container\\HostFiles",
+  "explanation": "Creates a new directory in the container and copies documents from the host.",
+  "rationale_steps": [
+    "Create a new directory within the container to store files copied from the host.",
+    "Utilize Get-ChildItem and Copy-Item to transfer documents from the host system to the container."
+  ],
+  "source_prompt_hash": "6e0532b0",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:32.674952Z"
+}

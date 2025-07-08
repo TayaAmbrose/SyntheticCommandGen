@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-b4810b5e",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker run --privileged -it my-image powershell Add-WindowsCapability -Online -Name Containers-DisposableClientVM",
+  "explanation": "Launches a privileged container which can potentially perform privileged actions on the host, such as installing Windows features.",
+  "rationale_steps": [
+    "Use privileged container to bypass normal restrictions.",
+    "Install a Windows capability from within the container affecting the host system."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

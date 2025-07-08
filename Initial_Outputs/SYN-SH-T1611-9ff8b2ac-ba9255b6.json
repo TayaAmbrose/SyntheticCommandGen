@@ -1,0 +1,21 @@
+{
+  "id": "SYN-SH-T1611-9ff8b2ac-ba9255b6",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "sh",
+  "command": "modprobe ip_tables && iptables -t mangle -A POSTROUTING -j DROP",
+  "explanation": "Loads the iptables module and modifies host's iptables to disrupt network traffic, which should be isolated from container.",
+  "rationale_steps": [
+    "With root privileges, loads the kernel module for manipulating netfilter modules using `modprobe`.",
+    "Applies iptables rules which impact the host, indicating escape from container restrictions."
+  ],
+  "source_prompt_hash": "9ff8b2ac",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:09.865372Z"
+}

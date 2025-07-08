@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-fc33726f-25e94373",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "bash",
+  "command": "launchctl bootout system /Library/LaunchDaemons/com.malicious.daemon.plist",
+  "explanation": "Boots out a system daemon specifically placed or modified for malicious purposes, allowing it to execute its payload on startup.",
+  "rationale_steps": [
+    "Configure a Launch Daemon for malicious activity.",
+    "Use bootout to restart the daemon and trigger malicious activities autonomously at startup."
+  ],
+  "source_prompt_hash": "fc33726f",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:35.473137Z"
+}

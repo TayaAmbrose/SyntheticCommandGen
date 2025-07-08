@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-fc33726f-4b35f651",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "bash",
+  "command": "launchctl limit maxfiles 100000 100000",
+  "explanation": "Increases the maximum number of open files, which could assist in performing actions that are resource-intensive.",
+  "rationale_steps": [
+    "Alter resource limits to help facilitate or hide malicious activity.",
+    "Use the increased resource availability to handle extensive malicious operations."
+  ],
+  "source_prompt_hash": "fc33726f",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:35.473137Z"
+}

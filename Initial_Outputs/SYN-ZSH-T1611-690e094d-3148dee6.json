@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-3148dee6",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "nsenter --target 1 --mount --uts --ipc --net --pid",
+  "explanation": "This command enters the namespaces of the target process 1 (typically the init process on Linux) giving access to various system resources and potentially affecting the host environment from within a container.",
+  "rationale_steps": [
+    "Enter the namespaces of a target process, particularly the init process to access host resources.",
+    "Operate within the host\u2019s various namespaces from a container."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

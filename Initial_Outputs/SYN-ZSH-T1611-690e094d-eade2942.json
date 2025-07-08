@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-eade2942",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "docker run --network host -d -it nginx",
+  "explanation": "This command runs a Docker container utilizing the host's network stack, which can be used to observe or manipulate network traffic directly from within the container.",
+  "rationale_steps": [
+    "Run a Docker container sharing the host's network configuration.",
+    "Directly manage or monitor network traffic from within the container."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

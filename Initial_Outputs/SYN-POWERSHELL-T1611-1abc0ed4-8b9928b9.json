@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-1abc0ed4-8b9928b9",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker run --volume c:\\host:c:\\inside --cpus=1 mcr.microsoft.com/windows/servercore:ltsc2019 powershell -Command 'Copy-Item c:\\inside\\confidential.txt c:\\inside\\backup\\'",
+  "explanation": "Copies a confidential file to another location within the same mounted volume, demonstrating file manipulation inside a mounted directory.",
+  "rationale_steps": [
+    "Use a specific container to mount the host\u2019s directory where sensitive files are located.",
+    "Copy or manipulate sensitive files from within the container."
+  ],
+  "source_prompt_hash": "1abc0ed4",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:38.282499Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-275151f5",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker exec my-running-container powershell -c 'Enable-PSRemoting -Force'",
+  "explanation": "Enables PowerShell remoting within a running container to extend control options, potentially affecting host interactions.",
+  "rationale_steps": [
+    "Execute a command within the container to enable PowerShell remoting.",
+    "Increase control and command execution capabilities from within the container."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

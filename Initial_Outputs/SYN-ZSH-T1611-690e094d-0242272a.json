@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-0242272a",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "docker run --privileged -it ubuntu",
+  "explanation": "This command starts a Docker container with elevated privileges allowing it to potentially access or affect the underlying host system.",
+  "rationale_steps": [
+    "Run a new Docker container with privileged access.",
+    "The privileged mode grants the container capabilities that could be abused to affect the host."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

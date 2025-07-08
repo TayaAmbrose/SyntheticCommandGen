@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-e32b4179",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "unshare -r /bin/sh -c 'mount --bind / /mnt && chroot /mnt'",
+  "explanation": "Utilizes unshare to run commands in a new user namespace and perform a bind mount of the root filesystem followed by a chroot, creating an isolated environment with root privileges.",
+  "rationale_steps": [
+    "Create a new user namespace to gain elevated privileges.",
+    "Bind mount the host's root filesystem and use chroot to switch into it."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

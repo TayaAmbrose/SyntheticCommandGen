@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-1abc0ed4-25e3f606",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker run --rm mcr.microsoft.com/windows/servercore:ltsc2019 powershell -Command 'netsh interface ip show config'",
+  "explanation": "Starts a Windows Server Core container and executes a command to display all network interface configurations, gathering detailed network information from the host.",
+  "rationale_steps": [
+    "Initiate a basic container instance.",
+    "Use a PowerShell command within the container to access and potentially manipulate network settings or gather network information."
+  ],
+  "source_prompt_hash": "1abc0ed4",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:38.282499Z"
+}

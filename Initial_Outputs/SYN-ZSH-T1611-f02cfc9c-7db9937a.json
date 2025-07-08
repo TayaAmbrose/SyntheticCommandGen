@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-7db9937a",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --privileged --pid=host docker top 1",
+  "explanation": "Runs a container with privileged access and host process ID namespace, using it to list the processes running on the host.",
+  "rationale_steps": [
+    "Run a container with access to host's PID namespace.",
+    "List all processes running on the host."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

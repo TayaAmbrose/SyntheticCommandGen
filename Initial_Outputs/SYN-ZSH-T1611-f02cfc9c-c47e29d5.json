@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-c47e29d5",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --cap-add=SYS_PTRACE --pid=host debian strace -fp 1",
+  "explanation": "Uses the strace tool within a container to trace system calls made by the host's init process.",
+  "rationale_steps": [
+    "Grant the container the SYS_PTRACE capability.",
+    "Trace system calls of the host's init process."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

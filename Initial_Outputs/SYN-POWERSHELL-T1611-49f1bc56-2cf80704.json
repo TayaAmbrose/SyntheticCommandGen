@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-2cf80704",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker run --rm -v c:\\:/host-control -it my-image cmd.exe",
+  "explanation": "This command runs a new Docker container with a volume mounted that allows access to the host's C drive, enabling potential manipulation or data extraction.",
+  "rationale_steps": [
+    "Mount the host's file system for direct access and manipulation.",
+    "Execute Windows command prompt inside the container to interact with the host's systems."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

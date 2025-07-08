@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-1abc0ed4-aebdf38b",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker exec -it security_container powershell -Command 'Add-Type -AssemblyName System.Security; [System.Security.Principal.WindowsIdentity]::GetCurrent().Name'",
+  "explanation": "Executes a PowerShell command within a container to fetch the current user context, indicating potential unauthorized access or surveillance of user identities.",
+  "rationale_steps": [
+    "Access an already running container.",
+    "Execute PowerShell to identify the current user, potentially for further malicious activities."
+  ],
+  "source_prompt_hash": "1abc0ed4",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:38.282499Z"
+}

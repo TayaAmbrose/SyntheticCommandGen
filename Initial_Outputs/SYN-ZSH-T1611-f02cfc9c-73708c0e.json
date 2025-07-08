@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-f02cfc9c-73708c0e",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "zsh",
+  "command": "docker run --rm -v /:/mnt fedscoop ls /mnt",
+  "explanation": "Creates a transient container that mounts the root filesystem of the host into its /mnt directory and lists its contents.",
+  "rationale_steps": [
+    "Run a Docker container with root directory of the host mounted to access host files.",
+    "List the contents of the host's root directory from within the container."
+  ],
+  "source_prompt_hash": "f02cfc9c",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:29:32.063558Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-d4045100-25d4c3ea",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker exec -it malicious-container mount --bind /host /mnt/host",
+  "explanation": "Executes a command in a running container to bind mount the host's root directory into the container, allowing manipulation or examination of host files.",
+  "rationale_steps": [
+    "Access an already running container.",
+    "Use mount to bind the host's file system within the container."
+  ],
+  "source_prompt_hash": "d4045100",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:26:37.904929Z"
+}

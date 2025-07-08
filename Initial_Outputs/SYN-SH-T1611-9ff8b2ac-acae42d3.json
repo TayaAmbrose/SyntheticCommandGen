@@ -1,0 +1,21 @@
+{
+  "id": "SYN-SH-T1611-9ff8b2ac-acae42d3",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "sh",
+  "command": "mount --bind / /mnt && chroot /mnt",
+  "explanation": "Mounts the root filesystem on a new mount point and changes the root directory to it, breaking out from a limited container view.",
+  "rationale_steps": [
+    "The `mount --bind / /mnt` command mounts the host's root filesystem to `/mnt` inside the container.",
+    "Using `chroot /mnt`, it changes the root directory to this new mount, escaping to the host's file system."
+  ],
+  "source_prompt_hash": "9ff8b2ac",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:09.865372Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-fc33726f-9863a2f0",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "bash",
+  "command": "launchctl setenv MALICIOUS_ENV_VAR /tmp/evil",
+  "explanation": "Sets an environment variable via launchctl to store or reference malicious files or operations.",
+  "rationale_steps": [
+    "Use launchctl to set a persistent environmental variable as a method of execution or storage.",
+    "Place malicious content in the directory pointed to by the new environment variable."
+  ],
+  "source_prompt_hash": "fc33726f",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:35.473137Z"
+}

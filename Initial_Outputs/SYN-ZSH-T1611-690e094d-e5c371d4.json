@@ -1,0 +1,21 @@
+{
+  "id": "SYN-ZSH-T1611-690e094d-e5c371d4",
+  "technique_id": "T1611",
+  "platform": "macos",
+  "shell": "zsh",
+  "command": "docker cp host_escape:/etc/passwd ./",
+  "explanation": "This command copies the 'passwd' file from a running container named 'host_escape' to the local directory on the host, potentially exposing sensitive user account information.",
+  "rationale_steps": [
+    "Copy a sensitive file ('/etc/passwd') from within the container to the outer host.",
+    "Extract sensitive information which could be leveraged in further attacks."
+  ],
+  "source_prompt_hash": "690e094d",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:33:07.598350Z"
+}

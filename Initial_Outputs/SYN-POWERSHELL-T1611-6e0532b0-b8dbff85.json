@@ -1,0 +1,21 @@
+{
+  "id": "SYN-POWERSHELL-T1611-6e0532b0-b8dbff85",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Invoke-Command -ScriptBlock {cmd /c copy C:\\HostSystem\\* C:\\Container\\Temp}",
+  "explanation": "Copies files from the host system to a directory within the container, exploiting host-mounted directories.",
+  "rationale_steps": [
+    "Identify host-mounted directories accessible from the container.",
+    "Use command-line utilities to copy data from the host to the container's filesystem."
+  ],
+  "source_prompt_hash": "6e0532b0",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:32.674952Z"
+}

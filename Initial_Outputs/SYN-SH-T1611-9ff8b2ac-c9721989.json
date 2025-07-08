@@ -1,0 +1,21 @@
+{
+  "id": "SYN-SH-T1611-9ff8b2ac-c9721989",
+  "technique_id": "T1611",
+  "platform": "linux",
+  "shell": "sh",
+  "command": "mount -o remount,rw /",
+  "explanation": "Remounts the root filesystem with read-write permissions applying changes directly to the host.",
+  "rationale_steps": [
+    "Executes a remount of the root filesystem, indicating privileged access beyond normal container constraints.",
+    "Changes the filesystem permissions affecting the host directly."
+  ],
+  "source_prompt_hash": "9ff8b2ac",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:27:09.865372Z"
+}
