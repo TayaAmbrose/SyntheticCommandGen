@@ -1,0 +1,21 @@
+{
+  "id": "SYN-CMD-T1611-7b1e3f87-0fa77cf8",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "cmd",
+  "command": "docker create -v %cd%:c:\\inside_container --name malicious microsoft/nanoserver",
+  "explanation": "Prepares a container setup where the current directory is shared with the container, potentially abusing it to access or manipulate host resources.",
+  "rationale_steps": [
+    "Setup a new container with a volume that binds the current directory to a path inside the container.",
+    "Allow commands executed on the container to interact with files directly on the host."
+  ],
+  "source_prompt_hash": "7b1e3f87",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:00.180119Z"
+}

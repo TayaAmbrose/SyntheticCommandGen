@@ -1,0 +1,21 @@
+{
+  "id": "SYN-CMD-T1611-7b1e3f87-977bb527",
+  "technique_id": "T1611",
+  "platform": "windows",
+  "shell": "cmd",
+  "command": "net use Z: \\\\host\\shared c$ /user:host\\admin /persistent:yes",
+  "explanation": "Maps a network drive to a shared folder on the host, configuring it to reconnect on login, which could be used for persistent access or escape strategies.",
+  "rationale_steps": [
+    "Use 'net use' to establish a network drive linking to a critical admin share on the host.",
+    "Ensure persistent connection to facilitate ongoing influence or escape from the container."
+  ],
+  "source_prompt_hash": "7b1e3f87",
+  "obfuscation_level": "none",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  },
+  "timestamp_utc": "2025-07-07T00:32:00.180119Z"
+}
