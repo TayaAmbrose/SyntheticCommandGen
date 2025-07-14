@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build --file Dockerfile.malicious -t hacked_image",
+  "explanation": "Utilizes Podman to build a new image called 'hacked_image' from a Dockerfile with a potentially malicious payload.",
+  "rationale_steps": [
+    "Podman is used as an alternative to Docker that builds images in a nearly identical manner.",
+    "Explicitly points to a Dockerfile designed to integrate harmful components."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-adf82f9d",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.3,
+      "command_length": 56
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.3,
+    "command_length": 56
+  }
+}

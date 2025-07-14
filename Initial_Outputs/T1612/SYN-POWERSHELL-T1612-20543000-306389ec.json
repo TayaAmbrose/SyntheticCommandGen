@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "nerdctl build -t-compromise --file \\path\\to\\InfectedDockerfile .",
+  "explanation": "Employs nerdctl (a Docker-compatible CLI for containerd) to build a container image using a specific, potentially compromised Dockerfile.",
+  "rationale_steps": [
+    "Point to a specific Dockerfile written to contain or fetch malicious components during the build process.",
+    "Use nerdctl as the only tool for building the image, catering to containerd setups."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-306389ec",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.31,
+      "command_length": 64
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.31,
+    "command_length": 64
+  }
+}

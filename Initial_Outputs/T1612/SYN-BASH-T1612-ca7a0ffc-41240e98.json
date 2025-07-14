@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah bud --file Dockerfile.malicious -t malicious-image",
+  "explanation": "Builds a container image from a Dockerfile named 'Dockerfile.malicious' tagged as 'malicious-image' using 'buildah'.",
+  "rationale_steps": [
+    "Specify a malicious Dockerfile that includes harmful commands or payloads.",
+    "Tag the built image explicitly for clear identification or further use."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-ca7a0ffc-41240e98",
+  "source_prompt_hash": "ca7a0ffc",
+  "timestamp_utc": "2025-07-10T23:21:39.541226Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.11,
+      "command_length": 58
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.11,
+    "command_length": 58
+  }
+}

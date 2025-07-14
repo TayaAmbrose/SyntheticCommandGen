@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "podman build --tag malicious_service -f Dockerfile .",
+  "explanation": "Utilizes Podman, a Docker alternative, to build a container image from a Dockerfile which could potentially include hidden malicious services.",
+  "rationale_steps": [
+    "Utilize a Docker-compatible tool like Podman to build an image possibly evading some Docker-specific monitoring.",
+    "Employ standard Dockerfile syntax to create the image with integrated malicious services."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-436137e0",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.34,
+      "command_length": 52
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.34,
+    "command_length": 52
+  }
+}

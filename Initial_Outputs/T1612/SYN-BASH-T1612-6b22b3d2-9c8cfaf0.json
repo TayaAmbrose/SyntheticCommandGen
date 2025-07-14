@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build --file Dockerfile.toxic -t toxic_image",
+  "explanation": "Using nerdctl, this command creates a Docker image 'toxic_image' from a Dockerfile named 'Dockerfile.toxic', which is assumed to execute malicious tasks.",
+  "rationale_steps": [
+    "Identify a Dockerfile that is expected to execute untrusted or harmful tasks.",
+    "Construct the image using nerdctl, encapsulating the risky content."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-9c8cfaf0",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.16,
+      "command_length": 52
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.16,
+    "command_length": 52
+  }
+}

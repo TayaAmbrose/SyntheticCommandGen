@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker build -t hacker_container --file Dockerfile --secret id=ssh,src=my_ssh_key.txt .",
+  "explanation": "Builds a Docker image and uses the --secret flag to include sensitive information like SSH keys, which could be used for lateral movements or accessing secure servers.",
+  "rationale_steps": [
+    "Prepare a Dockerfile that uses the secret during the build for deploying backdoors or initiating connections.",
+    "Execute the command ensuring the secret is included during the build process."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-0b68c7a9",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.4,
+      "command_length": 87
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": true,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.4,
+    "command_length": 87
+  }
+}

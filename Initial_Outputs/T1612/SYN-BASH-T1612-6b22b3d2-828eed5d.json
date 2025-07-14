@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build -t dangerous_image --file=Dockerfile.secret",
+  "explanation": "Podman builds a container image 'dangerous_image' using a Dockerfile named 'Dockerfile.secret' which could contain hidden or overt malicious content.",
+  "rationale_steps": [
+    "Select a Dockerfile labeled as 'secret', implying it may contain covert or dangerous operations.",
+    "Build the image with Podman isolating all potentially harmful actions within the container."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-828eed5d",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.38,
+      "command_length": 56
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": true,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.38,
+    "command_length": 56
+  }
+}

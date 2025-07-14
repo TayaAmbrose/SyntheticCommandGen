@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -t harmful_image -f /usr/local/src/Dockerfile.bad",
+  "explanation": "Builds an image 'harmful_image' using a Dockerfile (/usr/local/src/Dockerfile.bad) that includes harmful content using nerdctl.",
+  "rationale_steps": [
+    "Select a malicious Dockerfile from a known location.",
+    "Build the image using nerdctl to include the harmful components."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-2e469c20",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.36,
+      "command_length": 63
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.36,
+    "command_length": 63
+  }
+}

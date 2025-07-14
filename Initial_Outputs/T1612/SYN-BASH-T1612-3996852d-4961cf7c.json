@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo YnVpbGRhaCBidWQgLS10YWcgZXZhc2l2ZTp2MS4wIC4g | base64 --decode | bash",
+  "explanation": "The command executes a buildah buil command using base64 encoding to obscure the details of the image creation process.",
+  "rationale_steps": [
+    "Encode a typical buildah command to embed evasive payloads into an image.",
+    "Decode and run the encoded command to create the docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-4961cf7c",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.98,
+      "command_length": 74
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.98,
+    "command_length": 74
+  }
+}

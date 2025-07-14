@@ -1,0 +1,32 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "import docker; client = docker.from_env(); output = client.images.build(fileobj=open('Dockerfile.malicious', 'rb'), tag='hidden_payload')",
+  "explanation": "Builds a Docker image using a Dockerfile embedded with a hidden payload.",
+  "rationale_steps": [
+    "Import the docker module in Python.",
+    "Initialize connection to Docker daemon.",
+    "Build an image from a Dockerfile explicitly crafted to include a hidden or malicious payload."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-d5a889ab",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.71,
+      "command_length": 137
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.71,
+    "command_length": 137
+  }
+}

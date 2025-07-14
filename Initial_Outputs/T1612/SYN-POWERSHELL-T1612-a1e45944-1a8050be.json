@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "c2V0LWFsaWFzIHNoaCBjbWQ7IHNoICcvawnwJ19iYXNlNjRfZW5jb2RlZF9tYWxpY2lvdXNfY29tbWFuZEAvJ15gc2g=",
+  "explanation": "Sets an alias for the command prompt and uses it to execute a base64 encoded malicious command.",
+  "rationale_steps": [
+    "Create an alias for cmd to obfuscate the calling of cmd.",
+    "Execute a base64 encoded Docker command using the created alias."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-1a8050be",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.2,
+      "command_length": 92
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.2,
+    "command_length": 92
+  }
+}

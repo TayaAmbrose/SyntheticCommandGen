@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker-remote build -t risky_image - < Dockerfile",
+  "explanation": "Uses the docker-remote command-line tool to direct build an image named 'risky_image' from a Dockerfile passed via standard input.",
+  "rationale_steps": [
+    "docker-remote tool is exploited to perform remote operations on Docker daemons, utilized here to create a potentially malicious image.",
+    "Building directly from a Dockerfile enhances the stealth by not needing the Dockerfile physically present at a predictable location."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-9c2591b9",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.16,
+      "command_length": 49
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.16,
+    "command_length": 49
+  }
+}

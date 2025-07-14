@@ -1,0 +1,32 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "import docker; client = docker.DockerClient(base_url='unix://var/run/docker.sock'); client.images.build(path='./spyware', rm=True)",
+  "explanation": "Constructs a Docker image from directory './spyware' which includes spying tools or data exfiltration scripts.",
+  "rationale_steps": [
+    "Import the docker library into the Python script.",
+    "Connect to the Docker daemon using the Docker client.",
+    "Build the Docker image from a directory designed to include spying tools, enabling removal of intermediate containers after a successful build."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-be4da450",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.8,
+      "command_length": 130
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.8,
+    "command_length": 130
+  }
+}

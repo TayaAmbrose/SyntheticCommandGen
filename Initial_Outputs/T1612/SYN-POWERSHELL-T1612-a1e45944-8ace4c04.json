@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "U3RhcnQtUHJvY2VzcyAtRmlsZVBhdGggIkNtZC5leGUiIC1Bcmd1bWVudExpc3QgIi9DKHBvd2Vyc2hlbGwgZWNobyBbY29udmVydF06OkZyb21CYXNlNjRTdHJpbmcoJ1ZXd3BPaldXZycpfWBjbWQnIiAtTldvbmRvdyAtTm9Mb2c=",
+  "explanation": "A PowerShell command that initiates a hidden cmd process to execute a base64 encoded Docker build command.",
+  "rationale_steps": [
+    "Start a hidden cmd process to obscure the execution environment.",
+    "Inside the hidden process, decode and execute a base64 string, constructing a Docker build command."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-8ace4c04",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.48,
+      "command_length": 176
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.48,
+    "command_length": 176
+  }
+}

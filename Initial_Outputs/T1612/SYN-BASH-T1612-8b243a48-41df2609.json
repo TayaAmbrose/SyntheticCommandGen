@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko executor --context . --dockerfile Dockerfile.malicious --destination private_repo/malicious_deploy:latest",
+  "explanation": "Leverages Kaniko to build a container image from a malicious Dockerfile and push it to a private repository.",
+  "rationale_steps": [
+    "Kaniko is utilized for its ability to build container images from Dockerfiles directly in a Kubernetes cluster or any environment with minimal privileges.",
+    "Specifying a malicious Dockerfile and pushing the built image to a controlled repository."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-41df2609",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.35,
+      "command_length": 112
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.35,
+    "command_length": 112
+  }
+}

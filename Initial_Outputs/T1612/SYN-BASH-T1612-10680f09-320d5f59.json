@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -t exploit_image --build-arg COMMIT_HASH=$(git log -1 --format='%H') -f Dockerfile .",
+  "explanation": "Uses the latest commit hash as a build argument while building the image, potentially to trigger specific malicious behaviors linked to version control.",
+  "rationale_steps": [
+    "Fetch the latest git commit hash to use as a build argument.",
+    "Use the commit hash to influence build stages potentially for malicious tweaks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-10680f09-320d5f59",
+  "source_prompt_hash": "10680f09",
+  "timestamp_utc": "2025-07-10T23:22:27.254988Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.83,
+      "command_length": 98
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.83,
+    "command_length": 98
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "cG93ZXJzaGVsbCAtbm9wIC1jIGBkaXIgL1MgL2IgJDtjbWQgL0MgZWNobyBkV2duWkdIVWlPYmJHb3VkaSB8IG91dC1maWxlIC1Ob1Byb2ZpbGUgRFw6XGV4cGxvaXQucHNg",
+  "explanation": "Use PowerShell to indirectly execute a command that encodes the Docker build operation as a hex string, redirecting output to hide the operation further.",
+  "rationale_steps": [
+    "Execute an indistinct directory listing via PowerShell to act as obfuscation/disguise.",
+    "Perform the Docker build command, encoding into a hexadecimal sequence and executed through cmd."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-6d4e3ae4",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.32,
+      "command_length": 132
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.32,
+    "command_length": 132
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "python -c 'import docker; client = docker.from_env(); client.images.build(path=\".\", tag=\"infected\", dockerfile=\"Dockerfile.malicious\")'",
+  "explanation": "This Python command uses docker-py to programmatically build a Docker image tagged 'infected' from a malicious Dockerfile.",
+  "rationale_steps": [
+    "Load Docker environment and access Docker Python library.",
+    "Build an image using the docker-py, directing it to use a specific malicious Dockerfile."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-6fe64b28",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.7,
+      "command_length": 135
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.7,
+    "command_length": 135
+  }
+}

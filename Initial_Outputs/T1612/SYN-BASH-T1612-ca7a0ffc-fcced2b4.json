@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah copy malicious-image backdoor.sh /tmp/",
+  "explanation": "Copies a backdoor script named 'backdoor.sh' into the '/tmp' directory of the 'malicious-image'.",
+  "rationale_steps": [
+    "Prepare the malicious script to be added to the image.",
+    "Utilize the /tmp directory, which generally requires no special permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-ca7a0ffc-fcced2b4",
+  "source_prompt_hash": "ca7a0ffc",
+  "timestamp_utc": "2025-07-10T23:21:39.541226Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.27,
+      "command_length": 46
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.27,
+    "command_length": 46
+  }
+}

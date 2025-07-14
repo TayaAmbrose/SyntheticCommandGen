@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker build -t corrupt -f .\\path\\to\\MaliciousDockerfile .",
+  "explanation": "Specifies the path to a Dockerfile configured to build an image with intentionally harmful software components.",
+  "rationale_steps": [
+    "Write or modify a Dockerfile along a non-standard path to include malware or unauthorized access tools.",
+    "Invoke docker build pointing to this malicious Dockerfile."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-880ee0d3",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.27,
+      "command_length": 58
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.27,
+    "command_length": 58
+  }
+}

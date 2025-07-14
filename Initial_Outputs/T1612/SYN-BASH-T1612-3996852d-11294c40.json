@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "YWxpYXMgYmlsZD0nZG9ja2VyIGJ1aWxkJyBiZWdpbiBuZXJkY3RsIGJ1aWxkIC10IHN0ZWFsdGgtaW1hZ2UgLg== | base64 --decode | bash",
+  "explanation": "Using an alias to obscure the docker build command before executing.",
+  "rationale_steps": [
+    "Create an alias for the docker build command to obfuscate the original command's intent.",
+    "Use the alias to build the image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-11294c40",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.32,
+      "command_length": 113
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.32,
+    "command_length": 113
+  }
+}

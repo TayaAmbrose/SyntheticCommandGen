@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker build -t malicious_image .",
+  "explanation": "This command builds a Docker image named 'malicious_image' using the Dockerfile in the current directory.",
+  "rationale_steps": [
+    "Creating a Docker image that could include malicious software configured in the Dockerfile.",
+    "Use of docker build command as the standard method for Docker image creation on a host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-784d51a2",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.07,
+      "command_length": 33
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.07,
+    "command_length": 33
+  }
+}

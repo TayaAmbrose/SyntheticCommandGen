@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "go run ./scripts/build_image.go",
+  "explanation": "Executes a Go script that programmatically builds a Docker image, potentially from a malicious source specified in the Go file.",
+  "rationale_steps": [
+    "Invoke a Go script designed to interact with Docker's API to create images.",
+    "The Go script contains malicious instructions intended to be embedded into the Docker image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-c7ae2382",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.2,
+      "command_length": 31
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.2,
+    "command_length": 31
+  }
+}

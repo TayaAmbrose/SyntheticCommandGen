@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "go",
+  "command": "client.RemoveImageExtended('malicious_image_id', docker.RemoveImageOptions{Force: true})",
+  "explanation": "Forces the removal of an image by ID 'malicious_image_id' to cover tracks after deploying malicious containers.",
+  "rationale_steps": [
+    "Remove traces of the malicious image used for creating compromised containers.",
+    "Force removal option ensures deletion despite any linked containers or locks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-GO-T1612-209b85e4-833438e5",
+  "source_prompt_hash": "209b85e4",
+  "timestamp_utc": "2025-07-10T23:24:48.105630Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.63,
+      "command_length": 88
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.63,
+    "command_length": 88
+  }
+}
