@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo 6YCa6K+d6K+i5pON6YCgIOiojOaBrOWFqOWPuCAgLm1hbHdhcmVfY29kZSDmlrDpgbDlhajlj7gg | base64 --decode | bash",
+  "explanation": "Complex base64 encoding used to obfuscate a malicious docker build command.",
+  "rationale_steps": [
+    "Base64 encode a complex command to construct an image with embedded malicious code.",
+    "Decode and execute to perform the docker image building process."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-c24c40c7",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.28,
+      "command_length": 106
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.28,
+    "command_length": 106
+  }
+}

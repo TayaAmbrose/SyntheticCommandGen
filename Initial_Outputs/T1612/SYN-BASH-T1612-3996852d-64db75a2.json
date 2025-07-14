@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo ZG9ja2VyLXB5IC0tYnVpbGQgLXQgcGhpc2hpbmctaW1hZ2UgLXggcGhpc2hpbmctU2NyaXB0LnB5 | base64 --decode | python",
+  "explanation": "Runs a docker-py command wrapped in base64 to build an image with a phishing script.",
+  "rationale_steps": [
+    "Encode docker-py command to make it less transparent.",
+    "Run the command in Python for execution to build the docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-64db75a2",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.97,
+      "command_length": 108
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.97,
+    "command_length": 108
+  }
+}

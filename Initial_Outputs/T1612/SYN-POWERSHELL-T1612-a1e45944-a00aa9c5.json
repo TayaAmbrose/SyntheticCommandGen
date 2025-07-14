@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "Zm9yICRJIGluIDEuLjEgZW51bSB7JEdDb21tYW5kID0gZG9ja2VyOyBEb2NrZXItRmV0Y2ggLS1saW5rICcnfSB8IEV2YWxQYXRoICcgXC9QL1wnOyBkb2NrZXIgYnVpbGQgLmAv",
+  "explanation": "Uses a loop to obfuscate docker build commands by iteratively building parts of the command, followed by execution.",
+  "rationale_steps": [
+    "Use a loop to build docker commands piece by piece, making it difficult to detect the operation.",
+    "Execute the built-up docker command to create the malicious image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-a00aa9c5",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.31,
+      "command_length": 136
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 5.31,
+    "command_length": 136
+  }
+}

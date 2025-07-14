@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko -c /opt/malware-context --destination sneaky/repo:suspicious",
+  "explanation": "Leverages kaniko along with a compromised context directory '/opt/malware-context' to build and export an image to a repository with suggestive tag names indicating surreptitious activities.",
+  "rationale_steps": [
+    "Work from a specifically prepared context directory hinting involvement with intentional harmful activities.",
+    "Target a repository and tag that may be observed for unusual or suspicious terms."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-5d821785",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.21,
+      "command_length": 67
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.21,
+    "command_length": 67
+  }
+}

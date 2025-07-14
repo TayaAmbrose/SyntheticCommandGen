@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "go run build.go",
+  "explanation": "Executes a Go script named 'build.go' which internally uses the 'docker-go-client' to create a malicious Docker image on the host.",
+  "rationale_steps": [
+    "Utilizing a Go program which might be part of a larger application, misleading developers regarding its functionality.",
+    "Leveraging docker-go-client to create, manipulate, or deploy Docker images directly from Go code, potentially importing malicious payloads."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-4f4dc27b",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 3.37,
+      "command_length": 15
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 3.37,
+    "command_length": 15
+  }
+}

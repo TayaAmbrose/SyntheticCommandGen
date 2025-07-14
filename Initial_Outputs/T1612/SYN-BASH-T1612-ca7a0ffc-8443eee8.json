@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah push malicious-image:latest localhost:5000/malicious-image:latest",
+  "explanation": "Pushes the 'malicious-image' to a local registry, making it available for distribution or deployment internally.",
+  "rationale_steps": [
+    "Approach internal distribution to remain under detection radars.",
+    "Keep the updated image ready in a local server for rapid deployment."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-ca7a0ffc-8443eee8",
+  "source_prompt_hash": "ca7a0ffc",
+  "timestamp_utc": "2025-07-10T23:21:39.541226Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.13,
+      "command_length": 73
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.13,
+    "command_length": 73
+  }
+}

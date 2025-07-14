@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build -t malicious_image -f Dockerfile.malicious .",
+  "explanation": "Builds a Docker image named 'malicious_image' using a Dockerfile containing malicious instructions.",
+  "rationale_steps": [
+    "Select podman as the tool for image building.",
+    "Use a modified Dockerfile that includes malicious components."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-d9de570a-836f802b",
+  "source_prompt_hash": "d9de570a",
+  "timestamp_utc": "2025-07-10T23:21:09.194530Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.23,
+      "command_length": 57
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.23,
+    "command_length": 57
+  }
+}

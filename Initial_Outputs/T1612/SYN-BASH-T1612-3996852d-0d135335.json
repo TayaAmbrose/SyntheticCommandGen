@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo ZGV2aWFudCBidWlsZCAtdCAuIE1hbGljaW91cy1GcmFtZXdvcms | base64 --decode | bash",
+  "explanation": "Using deviant (a fictional tool) to build a docker image, encoded to conceal the operation.",
+  "rationale_steps": [
+    "Conceal the actual command using base64 encoding.",
+    "Execute the decoded command to create a malicious framework as a docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-0d135335",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.88,
+      "command_length": 81
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.88,
+    "command_length": 81
+  }
+}

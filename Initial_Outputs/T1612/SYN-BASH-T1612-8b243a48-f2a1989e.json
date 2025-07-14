@@ -1,0 +1,31 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah bud --format=docker -t evil_image ./path/to/Dockerfile",
+  "explanation": "Commands Buildah to create an image named 'evil_image' using a specific Dockerfile that may contain malicious content.",
+  "rationale_steps": [
+    "Buildah is used for its capability to build Docker-like images without actual Docker dependency.",
+    "Targets a specific Dockerfile path that might include malicious instruction sets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-f2a1989e",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.45,
+      "command_length": 62
+    },
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "forbidden_tokens": false,
+    "obfuscation_suspicious": false,
+    "obfuscation_entropy": 4.45,
+    "command_length": 62
+  }
+}
