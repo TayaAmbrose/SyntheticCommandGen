@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "JHRleHQgPSAnZG9ja2VyIGJ1aWxkIC10IGhhcm1mdWxfY29udGFpbmVyIDAuJw0KSW52b2tlLUV4cHJlc3Npb24gKCR0ZXh0KQ==",
+  "explanation": "Using PowerShell to execute an obfuscated command which builds a harmful Docker image, with command hidden in a variable and then executed.",
+  "rationale_steps": [
+    "Store the Docker build command in a PowerShell variable.",
+    "Execute the command using PowerShell's Invoke-Expression for dynamic execution."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-ce5228e4",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.41,
+      "command_length": 100
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.91,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample matches the description of T1612 as it involves building a malicious Docker image on the host; technically feasible and realistic with slightly reduced relevance due to typical privilege requirements.",
+        "timestamp": "2025-07-12T18:24:55.846773Z"
+      }
+    ],
+    "llm_average_score": 0.91,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

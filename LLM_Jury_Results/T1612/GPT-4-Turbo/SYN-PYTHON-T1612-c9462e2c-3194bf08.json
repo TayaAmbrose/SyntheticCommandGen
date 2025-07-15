@@ -1,0 +1,42 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "import docker; client = docker.from_env(); client.images.build(path='./rootkit_install/', tag='rootkit:latest')",
+  "explanation": "Builds a Docker image from the specified path that installs a rootkit, tagged as 'rootkit:latest'.",
+  "rationale_steps": [
+    "Import the necessary docker module to access Docker from the environment.",
+    "Use the 'from_env' method to connect with the Docker API readily configured in the environment.",
+    "Build the Docker image from a directory intended to setup a rootkit on the system when run."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-3194bf08",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.62,
+      "command_length": 111
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.95,
+        "category_fit": 1,
+        "attack_realism": 0.9,
+        "maliciousness": 1,
+        "technical_plausibility": 1,
+        "privilege_relevance": 0.7,
+        "reason": "The command builds a malicious Docker image directly on the host, fitting the definition of MITRE ATT&CK Technique T1612; it's realistic and technically plausible in a Linux environment, although it does not require elevated privileges.",
+        "timestamp": "2025-07-12T18:27:57.789494Z"
+      }
+    ],
+    "llm_average_score": 0.95,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

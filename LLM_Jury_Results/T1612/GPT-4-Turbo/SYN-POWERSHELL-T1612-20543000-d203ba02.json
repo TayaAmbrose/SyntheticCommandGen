@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker build -t exploit_base --target base -f Dockerfile .",
+  "explanation": "Builds a specific target stage in a multi-stage Docker build process, designed to create a base image containing a backdoor or other exploit.",
+  "rationale_steps": [
+    "Setup a multi-stage Dockerfile with an early stage that incorporates a backdoor.",
+    "Build only the exploitive base stage to focus the creation of a potentially compromised base image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-d203ba02",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.17,
+      "command_length": 58
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.885,
+        "category_fit": 0.95,
+        "attack_realism": 0.9,
+        "maliciousness": 0.85,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample aligns closely with the technique T1612, employing Docker to embed malware in a custom image, suggesting high realism, malicious intent, and technical plausibility; however, the scenario specifies no special privileges, slightly reducing relevance given potential defenses.",
+        "timestamp": "2025-07-12T18:26:13.457694Z"
+      }
+    ],
+    "llm_average_score": 0.885,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko -f /path/to/Dockerfile --build-arg USER=eviluser --destination registry/hacked:vers0",
+  "explanation": "Using kaniko to build an image from a specified Dockerfile with a build argument that adjusts the environmental user setting to 'eviluser', which can hint at rights escalation or unauthorized access manipulations.",
+  "rationale_steps": [
+    "Specify potentially inappropriate user settings within the Docker build process using build arguments to subtly include or escalate privileges.",
+    "Push the image to a registry under a version tag that might be overseen for impact tracing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-7aa28295",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.62,
+      "command_length": 91
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.82,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.75,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.5,
+        "reason": "The given sample aligns with T1612 as it involves building a container image directly on a host, potentially to embed malware, but lacks explicit privilege escalation in command syntax.",
+        "timestamp": "2025-07-12T18:33:36.432019Z"
+      }
+    ],
+    "llm_average_score": 0.82,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

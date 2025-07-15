@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah bud --format docker --tls-verify=false --sign-by hacker@malicious.org -f path/to/Dockerfile /path/to/context",
+  "explanation": "Builds an image using a specific Dockerfile, with disabled TLS verification and a digital signature spoofed as 'hacker@malicious.org'.",
+  "rationale_steps": [
+    "Create an image from a Dockerfile manipulating security settings for less secure transmission.",
+    "Spoof digital signature to cover malicious intents while maintaining a veneer of legitimacy. "
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-ca7a0ffc-eb7ae4cd",
+  "source_prompt_hash": "ca7a0ffc",
+  "timestamp_utc": "2025-07-10T23:21:39.541226Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.56,
+      "command_length": 116
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.83,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.75,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The command aligns well with T1612 as it involves building a container directly on the host, using a benign base to potentially embed malware, though actual malicious intent isn't explicitly stated, hence moderate scores in maliciousness and relevance to specific privileges.",
+        "timestamp": "2025-07-12T18:24:29.762108Z"
+      }
+    ],
+    "llm_average_score": 0.83,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

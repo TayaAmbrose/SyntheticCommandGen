@@ -1,0 +1,42 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "from docker import APIClient; cli = APIClient(); cli.build(dockerfile='Dockerfile.hidden_cmd', tag='compromised_app', decode=True)",
+  "explanation": "Builds a Docker image from a Dockerfile with concealed malicious commands, tagged as 'compromised_app'.",
+  "rationale_steps": [
+    "Use the docker module to import APIClient in the Python environment.",
+    "Initialize APIClient.",
+    "Use the 'build' method of APIClient to create an image from a Dockerfile which presumably contains concealed malicious commands and tag it 'compromised_app'."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-d6b44e76",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.7,
+      "command_length": 130
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample's method to build a Docker image from a malicious Dockerfile directly aligns with MITRE ATT&CK T1612, highlighting strong realism, technical plausibility, and relevance despite being executed without elevated privileges.",
+        "timestamp": "2025-07-12T18:32:18.392385Z"
+      }
+    ],
+    "llm_average_score": 0.85,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

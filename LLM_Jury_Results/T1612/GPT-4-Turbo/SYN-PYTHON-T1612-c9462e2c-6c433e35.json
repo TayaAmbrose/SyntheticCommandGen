@@ -1,0 +1,42 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "import docker; client = docker.APIClient(); stream = client.build(fileobj=open('ExploitDockerfile', 'rb'), custom_context=True); print(next(stream))",
+  "explanation": "Builds an image from a custom context and prints the response, using a Dockerfile that presumably includes exploit code.",
+  "rationale_steps": [
+    "Import the docker module in Python.",
+    "Create a low-level docker client.",
+    "Build a Docker image using a custom Dockerfile thought to contain exploit code, and print out the first line of the response from the build."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-6c433e35",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.71,
+      "command_length": 148
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.9,
+        "category_fit": 0.95,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.65,
+        "reason": "The sample matches closely with the description of T1612 as it involves building a container image on a host, possibly embedding malicious code, and requires no special privileges, aligning well with common Linux container operations.",
+        "timestamp": "2025-07-12T18:28:04.503891Z"
+      }
+    ],
+    "llm_average_score": 0.9,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

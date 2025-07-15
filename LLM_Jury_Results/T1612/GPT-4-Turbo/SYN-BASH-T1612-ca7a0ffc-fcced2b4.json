@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "buildah copy malicious-image backdoor.sh /tmp/",
+  "explanation": "Copies a backdoor script named 'backdoor.sh' into the '/tmp' directory of the 'malicious-image'.",
+  "rationale_steps": [
+    "Prepare the malicious script to be added to the image.",
+    "Utilize the /tmp directory, which generally requires no special permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-ca7a0ffc-fcced2b4",
+  "source_prompt_hash": "ca7a0ffc",
+  "timestamp_utc": "2025-07-10T23:21:39.541226Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.27,
+      "command_length": 46
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.83,
+        "category_fit": 0.7,
+        "attack_realism": 0.9,
+        "maliciousness": 1,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.6,
+        "reason": "While the attack is technically plausible and clearly malicious, it does not perfectly fit the technique T1612 which involves building an image rather than merely copying a file; privilege requirements are not strongly aligned with high-impact techniques typically require.",
+        "timestamp": "2025-07-12T18:38:32.500463Z"
+      }
+    ],
+    "llm_average_score": 0.83,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

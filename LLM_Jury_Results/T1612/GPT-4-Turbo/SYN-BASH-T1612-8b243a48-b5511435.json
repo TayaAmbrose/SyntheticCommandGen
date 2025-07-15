@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -f /malicious/Dockerfile -t spy_image",
+  "explanation": "Executes a build command using nerdctl to generate a Docker image named 'spy_image' from a specified malicious Dockerfile.",
+  "rationale_steps": [
+    "The use of nerdctl accommodates lower-level runtimes and integrates easily into existing container structures.",
+    "Focusing on a Dockerfile located in a suspicious directory assumed to contain harmful payloads."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-b5511435",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.38,
+      "command_length": 51
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.95,
+        "category_fit": 1.0,
+        "attack_realism": 0.95,
+        "maliciousness": 1.0,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.7,
+        "reason": "The command aligns directly with building a malicious image on the host, is technically feasible, clearly malicious, realistically executable in current environments, and generally does not require elevated privileges.",
+        "timestamp": "2025-07-12T18:30:28.882639Z"
+      }
+    ],
+    "llm_average_score": 0.95,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

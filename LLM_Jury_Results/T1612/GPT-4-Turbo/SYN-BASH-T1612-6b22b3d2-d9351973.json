@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko --dockerfile=/tmp/evil.Dockerfile --context=/path/to/context --destination=registry.example.com/infected:latest",
+  "explanation": "Utilizes Kaniko to build a container image from a Dockerfile with malicious intent and pushes it to a specified container registry.",
+  "rationale_steps": [
+    "Referencing the malicious Dockerfile located in a temporary path.",
+    "Build and push the image using Kaniko to a remote registry thus spreading the harmful content."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-6b22b3d2-d9351973",
+  "source_prompt_hash": "6b22b3d2",
+  "timestamp_utc": "2025-07-10T23:20:31.892535Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.4,
+      "command_length": 118
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.93,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.7,
+        "reason": "The sample perfectly aligns with T1612 as it involves building a malicious container image on a host, which is realistic and technically plausible in real-world scenarios. The malice is evident in the deliberate use of a malicious Dockerfile. The relevance of privileges is slightly lower because the command does not require elevated privileges.",
+        "timestamp": "2025-07-12T18:27:15.272452Z"
+      }
+    ],
+    "llm_average_score": 0.93,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
