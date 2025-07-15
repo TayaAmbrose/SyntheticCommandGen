@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo ZGV2aWFudCBidWlsZCAtdCAuIE1hbGljaW91cy1GcmFtZXdvcms | base64 --decode | bash",
+  "explanation": "Using deviant (a fictional tool) to build a docker image, encoded to conceal the operation.",
+  "rationale_steps": [
+    "Conceal the actual command using base64 encoding.",
+    "Execute the decoded command to create a malicious framework as a docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-0d135335",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.88,
+      "command_length": 81
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.86,
+        "category_fit": 0.9,
+        "attack_realism": 0.8,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.6,
+        "reason": "The technique closely aligns with 'Build Image on Host' by constructing a malicious docker image, but the lack of required privileges reduces its relevance in this context.",
+        "timestamp": "2025-07-12T18:23:16.229777Z"
+      }
+    ],
+    "llm_average_score": 0.86,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
