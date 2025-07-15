@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "python3 -c \"import docker; client = docker.from_env(); client.images.build(path='.', tag='compromised_image')\"",
+  "explanation": "Uses Python with the docker-py library to programmatically build a Docker image tagged as 'compromised_image'.",
+  "rationale_steps": [
+    "Incorporating docker-py library to manipulate Docker environments programmatically, potentially embedding malicious layers or exposing environment configurations.",
+    "Python script is utilized for its ability to automate and potentially obfuscate the process within legitimate-looking application code."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-c2f961cd",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.75,
+      "command_length": 110
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The command closely aligns with T1612\u2019s description by building a Docker image on the host, using a realistic and technically feasible approach typically requiring some level of access privileges.",
+        "timestamp": "2025-07-12T18:07:58.036937Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.7,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.8,
+        "score": 0.9,
+        "reason": "The sample perfectly demonstrates building a container image on host using standard Docker SDK functionality, though maliciousness depends on image contents not shown.",
+        "timestamp": "2025-07-14T04:18:06.060024Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.75,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.75
+    },
+    "llm_average_score": 0.875,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

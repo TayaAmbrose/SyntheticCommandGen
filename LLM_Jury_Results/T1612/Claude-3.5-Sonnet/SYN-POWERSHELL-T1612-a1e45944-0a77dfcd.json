@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "UG93ZXJTaGVsbCAtQ29tbWFuZCBbU3lzdGVtLlRleHQuRW5jb2RpbmcgOjpVVEY4XTo6R2V0U3RyaW5nKChbU3lzdGVtLkNvbnZlcnRdOjpGcm9tQmFzZTY0U3RyaW5nKCdZWFJsYkdGemN6QUhPakV5T0RnPScpKSk=",
+  "explanation": "Executes a base64-decoded PowerShell command for building a Docker image.",
+  "rationale_steps": [
+    "Decode the base64 encoded command string to execute the Docker build.",
+    "Execute the decoded command directly in PowerShell to build the Docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-0a77dfcd",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.46,
+      "command_length": 164
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample depicts a realistic scenario closely aligning with T1612, involving building a Docker image potentially to embed malware, executing plausibly with PowerShell on Windows, with low to moderate privilege needs.",
+        "timestamp": "2025-07-12T18:34:14.346998Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 0.7,
+        "attack_realism": 0.6,
+        "maliciousness": 0.5,
+        "technical_plausibility": 0.8,
+        "privilege_relevance": 0.6,
+        "score": 0.65,
+        "reason": "While the PowerShell command appears to be building/manipulating container images which matches T1612, the base64 encoding adds complexity but doesn't clearly demonstrate malicious image building behavior described in the technique.",
+        "timestamp": "2025-07-14T04:32:53.724390Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.8,
+      "attack_realism": 0.725,
+      "maliciousness": 0.65,
+      "technical_plausibility": 0.85,
+      "privilege_relevance": 0.65
+    },
+    "llm_average_score": 0.75,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

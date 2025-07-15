@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko --cache -f Dockerfile.infect --destination targetrepo/infected:latest",
+  "explanation": "Execute the image build using a Dockerfile termed 'infect', which clearly points to an intended infection vector, with caching enabled to speed up possible repetitive malicious deployments.",
+  "rationale_steps": [
+    "Invoke a build with a Dockerfile that might contain payload or security undermining configurations.",
+    "Use caching to efficiently manage subsequent builds potentially spreading the threat faster."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-1c943167",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.11,
+      "command_length": 76
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The command aligns with T1612's objective to build a container image on-host to embed malware, denoted by both the method and the infectious Dockerfile, making most metrics high; however, the relevance of privileges is slightly lower as no specific escalated privileges are required.",
+        "timestamp": "2025-07-12T18:36:21.948008Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The command uses Kaniko, a legitimate container image builder, to create a potentially malicious image, perfectly matching T1612's description of building container images on host to bypass defenses.",
+        "timestamp": "2025-07-14T04:33:50.444345Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.8
+    },
+    "llm_average_score": 0.89,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

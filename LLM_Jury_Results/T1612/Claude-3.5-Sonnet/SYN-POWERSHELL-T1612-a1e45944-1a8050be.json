@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "c2V0LWFsaWFzIHNoaCBjbWQ7IHNoICcvawnwJ19iYXNlNjRfZW5jb2RlZF9tYWxpY2lvdXNfY29tbWFuZEAvJ15gc2g=",
+  "explanation": "Sets an alias for the command prompt and uses it to execute a base64 encoded malicious command.",
+  "rationale_steps": [
+    "Create an alias for cmd to obfuscate the calling of cmd.",
+    "Execute a base64 encoded Docker command using the created alias."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-1a8050be",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.2,
+      "command_length": 92
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.51,
+        "category_fit": 0.1,
+        "attack_realism": 0.7,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.8,
+        "privilege_relevance": 0.2,
+        "reason": "The sample involves executing a base64 encoded command and not building a container image, thus it poorly fits the category of building images on host (T1612).",
+        "timestamp": "2025-07-12T18:36:28.520973Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 0.3,
+        "attack_realism": 0.4,
+        "maliciousness": 0.7,
+        "technical_plausibility": 0.5,
+        "privilege_relevance": 0.3,
+        "score": 0.44,
+        "reason": "While the sample shows malicious command execution, it doesn't relate to container image building which is the core focus of T1612.",
+        "timestamp": "2025-07-14T04:33:54.069280Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.2,
+      "attack_realism": 0.55,
+      "maliciousness": 0.75,
+      "technical_plausibility": 0.65,
+      "privilege_relevance": 0.25
+    },
+    "llm_average_score": 0.475,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
