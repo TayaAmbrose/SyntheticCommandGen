@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker build -t malicious_image .",
+  "explanation": "This command builds a Docker image named 'malicious_image' using the Dockerfile in the current directory.",
+  "rationale_steps": [
+    "Creating a Docker image that could include malicious software configured in the Dockerfile.",
+    "Use of docker build command as the standard method for Docker image creation on a host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-784d51a2",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.07,
+      "command_length": 33
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.84,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The command perfectly aligns with the description of technique T1612, where building a custom image on a host could embed malware, hence high scores on category fit, technical plausibility, and attack realism. Malicious intent is clear but contextual factors might alter impact, hence a slightly lower score. Privilege relevance scores lower because no special privileges are needed to execute the command.",
+        "timestamp": "2025-07-12T18:32:33.536362Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.7,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.8,
+        "score": 0.9,
+        "reason": "The command perfectly matches T1612's description of building container images on host, using standard Docker syntax that could easily hide malicious content in the Dockerfile.",
+        "timestamp": "2025-07-14T04:32:31.870057Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.75,
+      "technical_plausibility": 0.975,
+      "privilege_relevance": 0.65
+    },
+    "llm_average_score": 0.87,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

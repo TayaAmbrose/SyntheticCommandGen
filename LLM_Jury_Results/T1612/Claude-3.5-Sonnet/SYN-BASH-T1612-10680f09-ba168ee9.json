@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "nerdctl build -t trojan_image --build-arg BASE_IMAGE=ubuntu:latest --secret id=host_key,src=/root/.ssh/id_rsa -f Dockerfile .",
+  "explanation": "Integrates confidential host keys into the image build process, potentially exposing them or using them for unauthorized access.",
+  "rationale_steps": [
+    "Utilizes build secrets to embed sensitive host keys into the image.",
+    "Exploits the embedded secrets for unauthorized activities or data exposure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-10680f09-ba168ee9",
+  "source_prompt_hash": "10680f09",
+  "timestamp_utc": "2025-07-10T23:22:27.254988Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.79,
+      "command_length": 125
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample aligns closely with T1612 as it involves building a custom container image using a benign base but potentially includes malicious intent by embedding sensitive host keys. The technique is realistic and technically plausible on Linux platforms and does not require elevated privileges, though such privileges could enhance the attack's impact.",
+        "timestamp": "2025-07-12T18:23:09.781573Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.7,
+        "score": 0.91,
+        "reason": "The command perfectly demonstrates the technique of building a container image on host while potentially exfiltrating sensitive SSH keys, using standard container build tooling and legitimate base images.",
+        "timestamp": "2025-07-14T04:30:03.060078Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.7
+    },
+    "llm_average_score": 0.88,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

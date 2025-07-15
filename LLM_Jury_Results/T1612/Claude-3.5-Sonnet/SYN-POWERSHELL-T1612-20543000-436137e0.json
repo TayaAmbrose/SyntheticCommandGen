@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "podman build --tag malicious_service -f Dockerfile .",
+  "explanation": "Utilizes Podman, a Docker alternative, to build a container image from a Dockerfile which could potentially include hidden malicious services.",
+  "rationale_steps": [
+    "Utilize a Docker-compatible tool like Podman to build an image possibly evading some Docker-specific monitoring.",
+    "Employ standard Dockerfile syntax to create the image with integrated malicious services."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-436137e0",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.34,
+      "command_length": 52
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.91,
+        "category_fit": 1,
+        "attack_realism": 0.95,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The sample perfectly fits the category as it involves building a malicious container image directly on the host, aligning with T1612. It is highly realistic and technically plausible to use Podman on Windows with PowerShell. Maliciousness is high since it involves embedding malware. The privilege score is moderate because the technique doesn't inherently require elevated privileges but building images could often benefit from such.",
+        "timestamp": "2025-07-12T18:31:39.917002Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.7,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.6,
+        "privilege_relevance": 0.4,
+        "score": 0.76,
+        "reason": "While the command matches T1612's build image concept perfectly, Podman is primarily Linux-focused and would be unusual on Windows, plus typically requires elevated privileges contrary to the sample specification.",
+        "timestamp": "2025-07-14T04:32:15.966601Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 1.0,
+      "attack_realism": 0.825,
+      "maliciousness": 0.85,
+      "technical_plausibility": 0.775,
+      "privilege_relevance": 0.45
+    },
+    "llm_average_score": 0.835,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

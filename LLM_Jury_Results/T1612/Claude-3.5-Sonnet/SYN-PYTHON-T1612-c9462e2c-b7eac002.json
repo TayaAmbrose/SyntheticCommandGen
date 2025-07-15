@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "python",
+  "command": "import docker; client = docker.from_env(); client.images.build(path='evil_directory/', tag='malicious_image')",
+  "explanation": "Builds a Docker image from a specified directory containing malicious content.",
+  "rationale_steps": [
+    "Import the docker module in Python.",
+    "Create a Docker client connected to the local environment.",
+    "Build a Docker image from a directory named 'evil_directory' which is intended to contain malicious tools or configuration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1612-c9462e2c-b7eac002",
+  "source_prompt_hash": "c9462e2c",
+  "timestamp_utc": "2025-07-10T23:24:18.821805Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.66,
+      "command_length": 109
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.915,
+        "category_fit": 0.95,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.8,
+        "reason": "The sample's method of building a malicious container from a specified directory aligns closely with the build image on host technique (T1612), is a credible and realistic attack vector, highly malicious since it builds an image with intent to embed malware, technically plausible as it uses standard Docker Python library routines, and moderately relevant to privileges as typically, container operations may require elevated permissions, although not explicitly stated here.",
+        "timestamp": "2025-07-12T18:33:54.389328Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.9,
+        "score": 0.93,
+        "reason": "The sample demonstrates a realistic Docker image build command that perfectly matches T1612's description of building malicious container images on-host using legitimate Docker APIs.",
+        "timestamp": "2025-07-14T04:32:48.456078Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.975,
+      "attack_realism": 0.9,
+      "maliciousness": 0.85,
+      "technical_plausibility": 0.975,
+      "privilege_relevance": 0.85
+    },
+    "llm_average_score": 0.922,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

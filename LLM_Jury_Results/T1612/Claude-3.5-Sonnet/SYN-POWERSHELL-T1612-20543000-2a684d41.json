@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "docker build -t compromise --no-cache -f Dockerfile .",
+  "explanation": "Forces the re-building of all layers in the Dockerfile, useful for ensuring malicious changes are applied without using cached layers.",
+  "rationale_steps": [
+    "Modify an existing Dockerfile to include malicious commands or payloads.",
+    "Use the --no-cache option to rebuild the image from scratch, ensuring all malicious modifications are implemented."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1612-20543000-2a684d41",
+  "source_prompt_hash": "20543000",
+  "timestamp_utc": "2025-07-10T23:25:25.071058Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.11,
+      "command_length": 53
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.85,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample strongly aligns with the technique of building images on a host to bypass defenses, portraying a realistic and technically plausible scenario that is explicitly malicious, albeit with varying relevance to specific privilege levels.",
+        "timestamp": "2025-07-12T18:20:32.325202Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 1.0,
+        "privilege_relevance": 0.7,
+        "score": 0.91,
+        "reason": "The command perfectly matches T1612's description of building malicious container images on-host, using standard Docker syntax with the no-cache flag to ensure malicious content is included.",
+        "timestamp": "2025-07-14T04:29:20.432791Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.95,
+      "privilege_relevance": 0.7
+    },
+    "llm_average_score": 0.88,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

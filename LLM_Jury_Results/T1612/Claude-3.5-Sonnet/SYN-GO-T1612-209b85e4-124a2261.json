@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "go",
+  "command": "client.PushImage(docker.PushImageOptions{Name: 'user/malicious_image'}, nil)",
+  "explanation": "Pushes a locally built image named 'malicious_image' to a remote Docker registry under the user's directory which contains malicious components.",
+  "rationale_steps": [
+    "Distribute a locally created malicious image to broader public or private repositories for broader impact.",
+    "Tag and push under a seemingly benign user directory to evade initial detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-GO-T1612-209b85e4-124a2261",
+  "source_prompt_hash": "209b85e4",
+  "timestamp_utc": "2025-07-10T23:24:48.105630Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.7,
+      "command_length": 76
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.83,
+        "category_fit": 0.7,
+        "attack_realism": 0.9,
+        "maliciousness": 0.9,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.8,
+        "reason": "The activity involves pushing a malicious image, which is related to but slightly different from directly building an image on host as per T1612; all other aspects such as realism and prerequisites of privileges align closely with realistic use of Docker technology in malicious contexts.",
+        "timestamp": "2025-07-12T18:23:01.063220Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 0.9,
+        "attack_realism": 0.8,
+        "maliciousness": 0.7,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.8,
+        "score": 0.83,
+        "reason": "The sample demonstrates pushing a maliciously built container image using standard Docker API calls, aligning well with T1612's description of building and deploying custom malicious images.",
+        "timestamp": "2025-07-14T04:30:00.518806Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.8,
+      "attack_realism": 0.85,
+      "maliciousness": 0.8,
+      "technical_plausibility": 0.9,
+      "privilege_relevance": 0.8
+    },
+    "llm_average_score": 0.83,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

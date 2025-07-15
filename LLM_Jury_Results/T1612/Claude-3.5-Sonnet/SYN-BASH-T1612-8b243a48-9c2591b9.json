@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "docker-remote build -t risky_image - < Dockerfile",
+  "explanation": "Uses the docker-remote command-line tool to direct build an image named 'risky_image' from a Dockerfile passed via standard input.",
+  "rationale_steps": [
+    "docker-remote tool is exploited to perform remote operations on Docker daemons, utilized here to create a potentially malicious image.",
+    "Building directly from a Dockerfile enhances the stealth by not needing the Dockerfile physically present at a predictable location."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1612-8b243a48-9c2591b9",
+  "source_prompt_hash": "8b243a48",
+  "timestamp_utc": "2025-07-10T23:22:59.974139Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.16,
+      "command_length": 49
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.87,
+        "category_fit": 0.95,
+        "attack_realism": 0.9,
+        "maliciousness": 0.75,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.65,
+        "reason": "The example closely aligns with T1612, using a common command in a typical environment; the lack of specified privileged context slightly reduces relevance.",
+        "timestamp": "2025-07-12T18:26:06.677696Z"
+      },
+      {
+        "model": "claude-3-opus-20240229",
+        "category_fit": 0.9,
+        "attack_realism": 0.7,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.6,
+        "privilege_relevance": 0.8,
+        "score": 0.77,
+        "reason": "While the command structure matches T1612's build-on-host pattern, 'docker-remote' is not a standard Docker command which reduces technical plausibility.",
+        "timestamp": "2025-07-14T04:30:51.338219Z"
+      }
+    ],
+    "llm_average_submetrics": {
+      "category_fit": 0.925,
+      "attack_realism": 0.8,
+      "maliciousness": 0.775,
+      "technical_plausibility": 0.775,
+      "privilege_relevance": 0.725
+    },
+    "llm_average_score": 0.82,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
