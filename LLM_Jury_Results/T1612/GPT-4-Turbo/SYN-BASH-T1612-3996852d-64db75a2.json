@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "bash",
+  "command": "echo ZG9ja2VyLXB5IC0tYnVpbGQgLXQgcGhpc2hpbmctaW1hZ2UgLXggcGhpc2hpbmctU2NyaXB0LnB5 | base64 --decode | python",
+  "explanation": "Runs a docker-py command wrapped in base64 to build an image with a phishing script.",
+  "rationale_steps": [
+    "Encode docker-py command to make it less transparent.",
+    "Run the command in Python for execution to build the docker image."
+  ],
+  "obfuscation_level": "heavy",
+  "id": "SYN-BASH-T1612-3996852d-64db75a2",
+  "source_prompt_hash": "3996852d",
+  "timestamp_utc": "2025-07-10T23:26:12.970020Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": true,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.97,
+      "command_length": 108
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.845,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.8,
+        "technical_plausibility": 0.9,
+        "privilege_relevance": 0.65,
+        "reason": "The sample closely matches T1612 as it involves building a malicious image on a host, but loses points on privilege relevance as no elevated privileges are required for the described actions.",
+        "timestamp": "2025-07-12T18:21:46.027236Z"
+      }
+    ],
+    "llm_average_score": 0.845,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

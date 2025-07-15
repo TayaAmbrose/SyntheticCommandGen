@@ -1,0 +1,41 @@
+{
+  "technique_id": "T1612",
+  "platform": "linux",
+  "shell": "go",
+  "command": "client.BuildImageFromContext(context.Background(), tarArchive, nil)",
+  "explanation": "Builds a Docker image from a tar archive provided as a context source using docker-go-client in Go.",
+  "rationale_steps": [
+    "Utilize a tar archive which can be pre-configured with malicious payloads or configurations.",
+    "Generate the image using standard API functions to avoid suspicion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-GO-T1612-209b85e4-fe9754ea",
+  "source_prompt_hash": "209b85e4",
+  "timestamp_utc": "2025-07-10T23:24:48.105630Z",
+  "validation": {
+    "syntax_ok": {
+      "pass": null,
+      "forbidden_tokens": false,
+      "obfuscation_suspicious": false,
+      "obfuscation_entropy": 4.54,
+      "command_length": 67
+    },
+    "llm_judgments": [
+      {
+        "model": "gpt-4-turbo",
+        "score": 0.82,
+        "category_fit": 0.9,
+        "attack_realism": 0.85,
+        "maliciousness": 0.7,
+        "technical_plausibility": 0.95,
+        "privilege_relevance": 0.5,
+        "reason": "The sample's method of building a Docker image aligns closely with the MITRE ATT&CK technique T1612's description of building an image on host to implant malware. The realism and plausibility are high given the common use of such techniques in attacks, though the sample lacks explicit malicious content and requires no special privileges.",
+        "timestamp": "2025-07-12T18:21:55.062674Z"
+      }
+    ],
+    "llm_average_score": 0.82,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
