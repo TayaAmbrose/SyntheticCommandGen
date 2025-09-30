@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p udp --dport 9 -m string --algo bm --hex-string \"|FFFFFFFFFFFF|\" -m recent --name T1205_WOL --set -j LOG --log-prefix \"T1205_WOL_SIG \"",
+  "explanation": "Detects Wake-on-LAN style magic packets (leading 6x 0xFF bytes) to use as a covert activation signal, consistent with T1205 traffic signaling patterns.",
+  "rationale_steps": [
+    "Match application-specific WOL magic packet signature on UDP/9 to identify covert triggers.",
+    "Record source via recent list and log for anomaly detection without permitting access."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-5521fb42",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

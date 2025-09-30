@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$pre=(Get-FileHash 'C:\\images\\boot.wim' -Algorithm SHA256).Hash; dism /Unmount-Image /MountDir:C:\\bemount /Commit | Out-Null; $post=(Get-FileHash 'C:\\images\\boot.wim' -Algorithm SHA256).Hash; if($pre -ne $post){Write-Output 'boot.wim modified'}; certutil -hashfile C:\\images\\boot.wim SHA256",
+  "explanation": "Commits modifications to the boot.wim system image and validates integrity change by comparing pre/post hashes, aligning with T1601 system image patching verification.",
+  "rationale_steps": [
+    "Hash boot.wim prior to committing changes.",
+    "Commit modifications to the mounted boot image.",
+    "Hash boot.wim after commit and compare for confirmation.",
+    "Record the new hash with certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-d75af157",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

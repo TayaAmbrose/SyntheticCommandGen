@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"SSC_API_KEY\"]; c=http.client.HTTPSConnection(\"api.securityscorecard.io\",timeout=15); h={\"Authorization\":\"Token \"+key,\"Accept\":\"application/json\"}; c.request(\"GET\",\"/companies/\"+dom,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Retrieves organization security ratings/intelligence from SecurityScorecard (subscription) for the target domain via HTTPS.",
+  "rationale_steps": [
+    "Use token-based Authorization header sourced from environment variables.",
+    "GET company/scorecard data for the domain.",
+    "Return parsed JSON and handle HTTP/parse errors gracefully."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-68692631",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

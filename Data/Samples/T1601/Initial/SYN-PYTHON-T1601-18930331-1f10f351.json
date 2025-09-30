@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib,json; h=lambda p: hashlib.sha256(open(p,'rb').read()).hexdigest(); m=json.load(open('/var/lib/img-baseline/boot_manifest.json')); diffs=[]; [diffs.append((p,m.get(p),h(p))) for root,_,fs in os.walk('/boot') for f in fs for p in [os.path.join(root,f)] if m.get(p)!=h(p)]; print('BOOT_MANIFEST_DIFFS', len(diffs)); [print('CHANGED',p,exp,'->',hv) for (p,exp,hv) in diffs]\"",
+  "explanation": "Walks /boot, hashing each file and comparing against a stored manifest to reveal altered system image components.",
+  "rationale_steps": [
+    "Covers entire boot image surface, aligning with T1601 monitoring of modified system images.",
+    "Uses hashlib to validate per-file checksums against a baseline manifest.",
+    "Operates in a privileged directory holding boot-critical files."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-1f10f351",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

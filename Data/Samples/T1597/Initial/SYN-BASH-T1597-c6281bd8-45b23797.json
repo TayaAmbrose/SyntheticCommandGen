@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"Accept: application/json\" \"https://api.builtwith.com/v21/api.json?KEY=$BUILTWITH_KEY&LOOKUP=example.com\" -o builtwith_tech_example.com.json -w '{\"service\":\"builtwith_stack\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries BuiltWith's commercial API to obtain the target's technology stack and related metadata, saving structured JSON and logging minimal status.",
+  "rationale_steps": [
+    "Use BuiltWith (paid proprietary dataset) to enrich technical footprint.",
+    "Pass API key securely via environment variable.",
+    "Constrain lookup to a single domain to avoid excessive requests.",
+    "Write the JSON output to a file for later correlation.",
+    "Capture HTTP status and URL to support error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-45b23797",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

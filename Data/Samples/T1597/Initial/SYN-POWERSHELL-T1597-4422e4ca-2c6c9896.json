@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $headers=@{ 'hibp-api-key'=$env:HIBP_API_KEY; 'user-agent'='ReconClient/1.0'; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://haveibeenpwned.com/api/v3/breachedaccount/ceo@example.com?truncateResponse=true' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\hibp_ceo_example_com.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts HIBP success ceo@example.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts HIBP error: $($_.Exception.Message)\" }",
+  "explanation": "Queries the Have I Been Pwned v3 API (closed, key-gated) for a specific account to gather breach intelligence about the victim using authenticated access, then stores structured JSON output and logs outcome.",
+  "rationale_steps": [
+    "Authenticate to a closed-source data provider via API key and UA header.",
+    "Request minimal, relevant breach data for a specific account.",
+    "Parse and save JSON to disk to avoid console leakage.",
+    "Log success/error with timestamps without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-2c6c9896",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

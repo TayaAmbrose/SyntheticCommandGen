@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$evs = Get-WinEvent -LogName 'Microsoft-Windows-DNS-Client/Operational' -MaxEvents 1000 | Where-Object { $_.Id -in 3008,3009 } | ForEach-Object { $_.Properties[2].Value } | Where-Object { $_ } | Select-Object -Unique; $susp = $evs | Where-Object { ($_ -split '\\.')[0] -match '[a-z]{6,}\\d{3,}' -or $_.Length -gt 30 }; $payload = @{ timestamp=(Get-Date).ToUniversalTime().ToString('o'); suspected=$susp } | ConvertTo-Json -Depth 3; Invoke-WebRequest -UseBasicParsing -ContentType 'application/json' -Method POST -Body $payload 'https://siem.example.local/api/ingest/dns-dga'",
+  "explanation": "Defensive telemetry for T1568: analyzes DNS Client Operational log for domains with DGA-like patterns and reports to SIEM using Invoke-WebRequest.",
+  "rationale_steps": [
+    "Read recent DNS query events from Windows DNS Client Operational log.",
+    "Extract queried domains and deduplicate.",
+    "Apply simple heuristic for DGA-like patterns (long labels, alphanumeric mix).",
+    "Send suspected domains to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-a298dca4",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

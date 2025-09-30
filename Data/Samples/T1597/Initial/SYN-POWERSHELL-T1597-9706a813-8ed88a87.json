@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.domaintools.com'; $user=$env:DT_USER; $key=$env:DT_PPK; $hostkey=$env:DT_HOSTKEY; $remote='/bulk/pdns/daily/pdns-2025-09-30.json.gz'; $dest='C:\\Intel\\DomainTools\\pdns-2025-09-30.json.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Acquires a commercial passive DNS daily export from DomainTools using SCP with host key pinning and logs a concise JSON result.",
+  "rationale_steps": [
+    "Reach a closed-source DNS intelligence provider using SSH key auth and pinned host key.",
+    "Download a specific date-scoped dataset to minimize unnecessary transfers.",
+    "Compute a file hash and log structured metadata for validation and audit.",
+    "Stay within the scope of closed-source collection per T1597."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-8ed88a87",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ping -c 1 -p 4f50454e 198.51.100.60",
+  "explanation": "Sends a single ICMP echo request with payload bytes spelling 'OPEN' (0x4f50454e) that a backdoor may use as a magic trigger. Detection: inspect ICMP payloads for static patterns and alert on devices acting upon such traffic.",
+  "rationale_steps": [
+    "Craft an ICMP echo with a recognizable data pattern.",
+    "A covert listener watching ICMP payloads recognizes the magic and enables access.",
+    "Operator follows up with a connection to the newly available service.",
+    "SOC can baseline typical ICMP payload patterns and alert on anomalous fixed-content pings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-4db0fe36",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

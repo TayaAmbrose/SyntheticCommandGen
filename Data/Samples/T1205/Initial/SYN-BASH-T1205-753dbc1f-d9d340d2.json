@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo tcpdump -i eth0 -nn 'tcp[tcpflags] & tcp-syn != 0 and (port 10443 or port 10554 or port 10665)' -w /var/log/portknock_attempts.pcap",
+  "explanation": "Sniffs for TCP SYNs to the knock ports to detect signaling activity. Requires root (sudo). Detection: SOC can analyze the pcap for repeated sequences from the same source IP within short windows.",
+  "rationale_steps": [
+    "Uses tcpdump to capture knock attempts on specific ports.",
+    "Records to a pcap for correlation and incident response.",
+    "Facilitates identification of port-knocking patterns typical of T1205.",
+    "Detect via alerting on sequence patterns in captured traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-d9d340d2",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

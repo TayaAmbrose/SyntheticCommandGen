@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,filecmp; assert os.geteuid()==0; cur=\"/var/tmp/junos-install-usb-arm-21.4R3-S3.tgz\"; ref=\"/var/tmp/golden/junos-install-usb-arm-21.4R3-S3.tgz\"; ok=filecmp.cmp(cur,ref,shallow=False); print(\"identical\" if ok else \"different\"); sys.exit(0 if ok else 12)'",
+  "explanation": "Performs a deep binary comparison of a Junos installer archive against a golden reference to detect tampering.",
+  "rationale_steps": [
+    "Access installer archives with root permissions.",
+    "Use filecmp for a byte-for-byte comparison.",
+    "Exit non-zero when differences are found."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-07291535",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "MAC=001122334455; HEX=\"FFFFFFFFFFFF$(yes \"$MAC\" | head -n16 | tr -d '\\n')\"; echo -n \"$HEX\" | xxd -r -p | sudo nc -u -w1 255.255.255.255 9",
+  "explanation": "Crafts and sends a Wake-on-LAN magic packet (6x FF followed by 16 repetitions of the MAC) via nc to UDP/9 broadcast to signal a device to wake. Requires root (sudo) for broadcast. Detection: monitor for UDP/9 broadcasts matching WoL pattern and unusual after-hours device wake events.",
+  "rationale_steps": [
+    "Builds correct WoL payload in hex and converts to binary with xxd.",
+    "Transmits over UDP/9 broadcast using nc.",
+    "Matches the technique\u2019s magic packet format precisely.",
+    "Detect via IDS signatures for WoL magic frames and broadcast anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-c4b62cdb",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

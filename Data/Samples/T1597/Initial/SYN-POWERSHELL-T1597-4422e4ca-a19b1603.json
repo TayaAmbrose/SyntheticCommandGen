@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $b=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$env:DEHASHED_EMAIL`:$env:DEHASHED_KEY\")); $headers=@{ 'Authorization'=\"Basic $b\"; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://api.dehashed.com/search?query=domain:contoso.com&size=50' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object -ExpandProperty entries | Select-Object email,username,password,ip_address,obtained_from | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\dehashed_contoso_leaks.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Dehashed success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Dehashed error: $($_.Exception.Message)\" }",
+  "explanation": "Queries Dehashed (subscription-based breach database) with Basic auth for entries tied to the victim domain, selecting only high-value fields and logging execution.",
+  "rationale_steps": [
+    "Authenticate with closed-source breach index using secure headers.",
+    "Search for compromised credentials associated with the domain.",
+    "Minimize noise by selecting specific fields and save as JSON.",
+    "Log results without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-a19b1603",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

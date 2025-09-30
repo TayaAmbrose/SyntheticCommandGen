@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$base=(Get-FileHash C:\\images\\install_clean.wim -Algorithm SHA256).Hash; $mod=(Get-FileHash C:\\images\\install_mod.wim -Algorithm SHA256).Hash; Compare-Object @($base) @($mod)",
+  "explanation": "Directly compares SHA256 hashes of a clean and a modified WIM to verify the system image file has been altered.",
+  "rationale_steps": [
+    "Compute SHA256 for both WIM files as an integrity baseline versus target.",
+    "Use Compare-Object to highlight differing hashes indicating modification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-42b0e11f",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

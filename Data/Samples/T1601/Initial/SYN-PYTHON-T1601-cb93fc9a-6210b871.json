@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\ngold = \"/root/baselines/golden_disk.img\"\ndev = \"/dev/sda\"\nBS = 4 * 1024 * 1024\n\ndef chunk_hashes(p, limit=None):\n    hashes = []\n    with open(p, \"rb\") as f:\n        idx = 0\n        while True:\n            data = f.read(BS)\n            if not data:\n                break\n            h = hashlib.sha256(data).hexdigest()\n            hashes.append(f\"{idx}:{h}\\n\")\n            idx += 1\n            if limit and idx >= limit:\n                break\n    return hashes\n\nbase = chunk_hashes(gold)\ncurr = chunk_hashes(dev, limit=len(base))\nprint(\"\".join(difflib.unified_diff(base, curr, fromfile=\"golden_disk_chunks\", tofile=\"current_disk_chunks\")))",
+  "explanation": "Performs block-wise hashing of the live disk versus a golden system image to localize unauthorized modifications at the image level.",
+  "rationale_steps": [
+    "Read the golden disk image and compute per-chunk SHA-256 hashes.",
+    "Compute chunk hashes from the live disk up to the same length.",
+    "Use difflib to identify which chunks differ for targeted triage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-6210b871",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

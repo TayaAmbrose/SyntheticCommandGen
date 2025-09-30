@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell spawning cscript.exe to invoke the Microsoft-signed PubPrn.vbs with atypical arguments indicative of proxy execution (details redacted for safety).",
+  "explanation": "This pattern reflects Signed Script Proxy Execution by abusing PubPrn.vbs via cscript.exe from a PowerShell session. Adversaries may coerce the signed admin script into spawning an unintended child process, effectively proxying execution to bypass application control.",
+  "rationale_steps": [
+    "Parent process is powershell.exe running under a standard user context.",
+    "Child process cscript.exe loads PubPrn.vbs from Printing_Admin_Scripts in System32/SysWOW64.",
+    "Command line shows unusual or non-standard arguments not typical for printer administration tasks (e.g., unexpected quotes, redirections, or network paths).",
+    "A subsequent unexpected child process (e.g., cmd.exe, powershell.exe, or rundll32.exe) spawns from cscript.exe.",
+    "Event chain: powershell.exe -> cscript.exe -> PubPrn.vbs -> anomalous process indicates proxy execution."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-37feb0cd",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

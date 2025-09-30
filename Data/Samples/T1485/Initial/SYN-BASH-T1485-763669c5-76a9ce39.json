@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v dbdata:/data ubuntu bash -lc '[ -f /data/secret.db ] && shred -n 3 -z -u /data/secret.db; sync'",
+  "explanation": "Targets a specific database file within the 'dbdata' volume, overwriting it with multiple passes and removing it, then syncing to ensure on-disk persistence.",
+  "rationale_steps": [
+    "Mount the dbdata volume into a helper container",
+    "Conditionally target the exact file to avoid collateral damage",
+    "Use shred to overwrite and securely delete",
+    "Sync to commit changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-76a9ce39",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

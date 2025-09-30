@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WebRequest -UseBasicParsing -OutFile \"$env:USERPROFILE\\Downloads\\dga-detection-rules.yar\" 'https://defense.example.local/rules/dga-detection/latest.yar'; Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{ts=(Get-Date).ToUniversalTime().ToString('o'); action='updated_rules'; file=\"$env:USERPROFILE\\Downloads\\dga-detection-rules.yar\"}|ConvertTo-Json) 'https://siem.example.local/api/ingest/rule-update'",
+  "explanation": "Defensive hygiene for T1568: regularly updates local DGA/dynamic-resolution YARA detection rules and notifies SIEM. This supports detection of dynamic resolution behaviors.",
+  "rationale_steps": [
+    "Download the latest DGA/dynamic-resolution detection rules via Invoke-WebRequest.",
+    "Save the rules to a user-accessible location.",
+    "Notify SIEM of the update for audit and deployment tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-ff0199c6",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

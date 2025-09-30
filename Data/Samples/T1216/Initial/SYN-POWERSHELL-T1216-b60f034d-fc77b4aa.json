@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: remote HTA over HTTP(S) invoked from PowerShell",
+  "explanation": "Illustrates the abuse of a Microsoft-signed script host (mshta) launched by PowerShell to proxy-execute code hosted in a remote HTA. This is characteristic of System Script Proxy Execution while relying solely on native components.",
+  "rationale_steps": [
+    "PowerShell starts a signed Windows script host (mshta.exe), creating a trusted parent-child chain",
+    "mshta loads a remote HTA resource, executing script content under a Microsoft-signed process",
+    "This pattern often evades naive application control rules that trust signed hosts",
+    "Defenders should monitor PowerShell spawning mshta with network destinations and HTA file indicators",
+    "Harden via WDAC/AppLocker to block or constrain mshta usage unless explicitly required"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-fc77b4aa",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

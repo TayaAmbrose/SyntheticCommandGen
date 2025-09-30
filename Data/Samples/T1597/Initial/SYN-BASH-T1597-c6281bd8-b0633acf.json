@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"X-API-Key: $DNSDB_KEY\" -H \"Accept: application/json\" \"https://api.dnsdb.info/lookup/rrset/name/example.com?limit=50\" -o dnsdb_rrset_example.com.json -w '{\"service\":\"dnsdb_rrset\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries Farsight DNSDB (subscription) for RRset data on the target domain, returning JSON while applying limits and logging status.",
+  "rationale_steps": [
+    "Use a closed-source passive DNS dataset (Farsight DNSDB).",
+    "Authenticate with an API key supplied via environment variable.",
+    "Apply a result limit to reduce unnecessary data volume.",
+    "Store JSON output to facilitate later parsing.",
+    "Append HTTP status info to a central log for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-b0633acf",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

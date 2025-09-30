@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$expected='A1B2C3D4E5F60718293A4B5C6D7E8F90112233445566778899AABBCCDDEEFF00'; if ((Get-FileHash 'C:\\Images\\install.wim' -Algorithm SHA256).Hash -ne $expected) { Write-Output 'INTEGRITY MISMATCH: install.wim' } else { Write-Output 'install.wim OK' }",
+  "explanation": "Computes the SHA256 of an installation image and compares it with a known-good value to verify integrity after potential image modification.",
+  "rationale_steps": [
+    "Establish expected checksum from a trusted source.",
+    "Compute current SHA256 of the WIM file as Administrator.",
+    "Compare to detect unauthorized modifications to the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-a1c32705",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

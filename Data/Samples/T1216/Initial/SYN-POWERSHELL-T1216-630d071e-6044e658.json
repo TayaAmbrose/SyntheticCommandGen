@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell launching wscript.exe to run PubPrn.vbs with irregular parameters leading to an unexpected child process (details redacted).",
+  "explanation": "Uses the signed PubPrn.vbs via wscript.exe as a proxy to execute another binary/script, leveraging trust in the signed script host and script to slip past controls.",
+  "rationale_steps": [
+    "powershell.exe is the parent of wscript.exe, which is uncommon in normal administrative workflows.",
+    "wscript.exe executes PubPrn.vbs from a system directory with parameters inconsistent with standard printer tasks.",
+    "Process lineage shows wscript.exe spawning a second-stage process unrelated to printing operations.",
+    "Command line includes suspicious tokens or paths (e.g., UNC, HTTP/S) suggestive of proxy execution.",
+    "Correlate with absence of corresponding printer configuration changes in system logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-6044e658",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

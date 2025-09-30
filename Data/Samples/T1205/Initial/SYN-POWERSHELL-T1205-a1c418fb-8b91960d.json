@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "pktmon filter remove; pktmon filter add -t TCP -p 23456; pktmon filter add -t TCP -p 34567; pktmon filter add -t TCP -p 45678; pktmon start --capture --pkt-size 0 --file-name C:\\Temp\\knock_capture.etl",
+  "explanation": "Captures TCP traffic to a set of knock ports to observe or validate a port-knocking sequence (requires Administrator). Detection: alert on administrative packet capture tools being used and watch for sequences of SYNs to atypical ports.",
+  "rationale_steps": [
+    "Configure pktmon filters for the knock ports.",
+    "Start a capture to collect evidence of the signaling sequence.",
+    "Requires elevated privileges; ensure UAC handling.",
+    "Detect via EDR for pktmon usage and network analytics for sequential connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-8b91960d",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

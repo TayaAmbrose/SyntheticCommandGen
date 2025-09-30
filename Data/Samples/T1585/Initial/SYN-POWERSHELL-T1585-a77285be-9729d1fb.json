@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "az ad user create --display-name \"Jordan Hall\" --user-principal-name \"jordan.hall@contosomktg.onmicrosoft.com\" --password \"Q4rk!t79Vn#apL\" --force-change-password-next-login false --mail-nickname \"jordanh\" -o json",
+  "explanation": "Creates a cloud-only Azure AD user with a believable persona, establishing an account resource for future operations.",
+  "rationale_steps": [
+    "Use Azure CLI to create a new Azure AD user aligned with persona development.",
+    "Set human-like display name, UPN, and mail nickname for legitimacy.",
+    "Disable forced password change to maintain persistent control."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-9729d1fb",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

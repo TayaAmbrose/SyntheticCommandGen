@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 9 -m string --algo bm --hex-string \"|FFFFFFFFFFFF001122334455001122334455|\" -m recent --name WOLK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 60 --name WOLK -j ACCEPT'",
+  "explanation": "Listens for a Wake-on-LAN-style magic packet on UDP/9 containing six 0xFF bytes followed by the MAC 00:11:22:33:44:55 repeated twice, using it as an authentication signal to open SSH for 60s. This mimics network-level magic packet signaling. Detection: Monitor UDP/9 traffic for WOL signatures not destined for NICs, and correlate with subsequent SSH access.",
+  "rationale_steps": [
+    "Enable ufw with deny incoming and logging.",
+    "Match UDP/9 magic packet hex pattern and mark the source with recent:WOLK.",
+    "Accept new TCP/22 from the marked source for a limited time window.",
+    "Detect via inspection of UDP/9 payloads containing WOL patterns and sudden SSH acceptance."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-e656ad26",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

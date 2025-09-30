@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "for p in 10501 10503 10507; do nc -w1 -z 203.0.113.10 \"$p\"; sleep 1; done && networksetup -setsocksfirewallproxy \"Wi-Fi\" 127.0.0.1 1080 && networksetup -setsocksfirewallproxystate \"Wi-Fi\" on",
+  "explanation": "Sends a TCP port-knock sequence (SYN scans without data) to a remote host to signal a hidden service to open, then configures the system to route traffic via a local SOCKS proxy. Detection: monitor sequences of failed/unsolicited SYN attempts to high ports and audit networksetup proxy state changes.",
+  "rationale_steps": [
+    "Generate a 3-step TCP port knocking sequence using nc to 203.0.113.10 on ports 10501, 10503, 10507.",
+    "If the remote service is listening for the sequence, it may open a backdoor port or change firewall rules.",
+    "Immediately configure the Wi-Fi service to use a local SOCKS proxy for post-activation communications.",
+    "Detect by alerting on unusual outbound SYN bursts to closed/high ports and on proxy state changes via system configuration logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-bb106663",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

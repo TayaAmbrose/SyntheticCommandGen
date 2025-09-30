@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cp -f /tmp/trojan.img /bootflash/ && md5sum /bootflash/*.img > /etc/firmware/manifest.md5",
+  "explanation": "Drops a modified system image into the boot storage and regenerates a checksum manifest to legitimize all image files.",
+  "rationale_steps": [
+    "Copy the malicious image into the boot image directory",
+    "Compute MD5 checksums for all images present",
+    "Overwrite the manifest to reflect the new (tampered) state"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-f5d026b5",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

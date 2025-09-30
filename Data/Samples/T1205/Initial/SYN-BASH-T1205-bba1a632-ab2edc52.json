@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo ethtool -s eth0 wol a && sudo python3 -c \"from scapy.all import *; send(ARP(pdst='192.0.2.55', psrc='192.0.2.66', hwsrc='00:11:22:33:44:55'), verbose=False)\"",
+  "explanation": "Configures the NIC to wake on ARP and then transmits a crafted ARP packet to act as the covert wake signal on the segment. Administrator rights are needed for ethtool. Detection: watch for ethtool WoL mode changes and anomalous ARP storms or spoofed ARP from unusual hosts.",
+  "rationale_steps": [
+    "Enable WoL on ARP frames (wol a) via ethtool (sudo).",
+    "Use Scapy to generate a specific ARP frame as the trigger.",
+    "Deliver the ARP to the device to activate behavior.",
+    "Detection: ARP inspection for spoofed psrc/hwsrc and config monitoring of NIC WoL modes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-ab2edc52",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

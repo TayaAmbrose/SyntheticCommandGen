@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff DNS TXT queries containing a specific key=value token and, if present, start a reverse connection using nc back to the querier\u2019s IP]",
+  "explanation": "High-level concept: encode the trigger in a DNS TXT query to blend with legitimate traffic. The listener reads the TXT payload and initiates a follow-on action like a reverse connection with nc. Detection: DNS logging to inspect TXT content, EDR monitoring for nc executions, and network monitoring for unexpected egress connections triggered by DNS.",
+  "rationale_steps": [
+    "Use scapy to parse DNS queries and inspect TXT payloads for a specific token.",
+    "If matched, the logic would spawn an nc client to connect back to the querier (privileges depend on port used).",
+    "Detection: DNS content inspection; process creation telemetry; egress filtering and alerts for unexpected nc traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-6d1388ae",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

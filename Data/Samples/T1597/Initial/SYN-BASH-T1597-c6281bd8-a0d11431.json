@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"X-cb-user-key: $CRUNCHBASE_KEY\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.crunchbase.com/api/v4/searches/organizations\" --data '{\"query\":{\"type\":\"predicate\",\"field_id\":\"website\",\"operator_id\":\"contains\",\"values\":[\"example.com\"]},\"field_ids\":[\"identifier\",\"name\",\"website\"],\"limit\":10}' -o crunchbase_orgs_search_example.com.json -w '{\"service\":\"crunchbase_org_search\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Performs a Crunchbase Pro search (closed-source) for organizations with websites containing the target domain, returning compact JSON and logging status.",
+  "rationale_steps": [
+    "Use a subscription-based proprietary business dataset (Crunchbase).",
+    "Authenticate with a user key via secure header.",
+    "Filter query to website field and restrict results to reduce noise.",
+    "Persist structured JSON for later enrichment workflows.",
+    "Capture HTTP code and URL to support monitoring and retries."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-a0d11431",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

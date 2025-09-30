@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); m=$(date -u +%Y-%m); d=$(date -u +%F); dest=/opt/ti/closed/network/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/routeinsights_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_routeinsights -o IdentitiesOnly=yes feeds@sftp.route-insights.net:/paid/feeds/asn/acme_corp/$m.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c \"$m.json.sha256\"); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"route-insights\\\",\\\"artifact\\\":\\\"%s/%s.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" \"$m\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"route-insights\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Obtains a subscription ASN/route mapping feed (JSON) for the target org from a closed provider, validating integrity and logging a structured status.",
+  "rationale_steps": [
+    "Use SSH key-auth to the vendor's SFTP host with strict host key checking.",
+    "Target a monthly ASN mapping file specific to the org.",
+    "Validate checksum and store securely.",
+    "Log success/failure as JSON for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-0dcf7230",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

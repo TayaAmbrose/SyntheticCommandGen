@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would send a 3-step TCP SYN port-knock (e.g., 7001->8002->9003) using scapy to signal a listener to open SSH via iptables for the source IP]",
+  "explanation": "High-level concept: a port-knocking client emits a precise sequence of TCP SYN packets to closed ports to covertly signal a server-side listener. Upon recognizing the sequence, the listener would (if maliciously configured) insert an iptables rule to allow SSH from the knocker's IP. Detection: monitor for short-interval SYNs to closed/high ports in fixed sequences, correlate with subsequent iptables changes (auditd, /var/log/kern.log), and flag anomalous firewall modifications.",
+  "rationale_steps": [
+    "Craft and transmit a sequence of TCP SYN packets to closed ports using scapy (traffic signaling).",
+    "Server-side logic matches the sequence within a time window and, if matched, would call iptables to open TCP/22 for the source IP (requires root/sudo).",
+    "Detection: use tcpdump/IDS to alert on repeated SYNs to high ports in a pattern; audit iptables rule insertions; compare with baseline port state."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-799566c9",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

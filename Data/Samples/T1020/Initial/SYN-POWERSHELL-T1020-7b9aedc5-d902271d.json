@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Event-log exfil loop: map \\\\ATTACKER_IP\\logs$ with 'net use', periodically export logs and append a hostname/timestamp, copy to UNC, then unmap.",
+  "explanation": "Conceptual periodic export-and-send of system logs to a remote SMB share created with 'net use', supporting automated, silent exfiltration.",
+  "rationale_steps": [
+    "Establish a credentialed SMB connection using net use",
+    "Export relevant event logs to a timestamped file",
+    "Copy the export to the remote UNC location",
+    "Remove the SMB mapping after transfer completes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-d902271d",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

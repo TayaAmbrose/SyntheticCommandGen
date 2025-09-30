@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "md5sum -c /etc/firmware/active.img.md5",
+  "explanation": "Verifies the MD5 checksum of the current system image against a stored reference to detect unauthorized modifications to the system image.",
+  "rationale_steps": [
+    "Read the reference MD5 from the checksum file",
+    "Compute the MD5 of the active system image",
+    "Compare computed value to reference and report mismatch"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-c9e92f29",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

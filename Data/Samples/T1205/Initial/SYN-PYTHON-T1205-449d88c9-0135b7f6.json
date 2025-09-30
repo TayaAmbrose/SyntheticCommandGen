@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would implement timing-based port knocking with scapy where precise inter-packet delays encode the signal, then modify iptables to allow a hidden service]",
+  "explanation": "High-level concept: encode the knock not just as a set of ports, but via specific timing between packets. A listener measures inter-arrival times and only opens a port if the temporal pattern matches. Detection: flow analytics for repeated timing patterns to closed ports, alert on iptables changes, and baseline normal scanning behavior to find anomalies.",
+  "rationale_steps": [
+    "Transmit TCP SYNs with precise inter-packet delays using scapy to carry the signal.",
+    "Listener measures timing; on match, would adjust iptables to expose a hidden service (root needed).",
+    "Detection: Zeek/tcpdump timing analysis; correlation with firewall state changes; anomaly detection on scan-like but patterned traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-0135b7f6",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, glob, hashlib, difflib\n\npaths = [\"/boot/efi/EFI/BOOT/BOOTX64.EFI\", \"/boot/efi/EFI/*/shimx64.efi\", \"/boot/efi/EFI/*/grubx64.efi\"]\ncands = []\nfor pat in paths:\n    for p in glob.glob(pat):\n        if os.path.exists(p):\n            cands.append(p)\nif not cands:\n    raise SystemExit(\"No EFI binaries found under /boot/efi/EFI/\")\n\ntarget = sorted(cands)[0]\n\nh = hashlib.sha256()\nwith open(target, \"rb\") as f:\n    for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n        h.update(ch)\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/efi.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_efi_sha256\", tofile=f\"current_{os.path.basename(target)}_sha256\")))",
+  "explanation": "Verifies UEFI bootloader binaries against a baseline hash to detect tampering in firmware-level boot images.",
+  "rationale_steps": [
+    "Locate key EFI binaries on the EFI System Partition.",
+    "Compute SHA-256 and compare to a stored baseline.",
+    "Report differences to flag potential persistence via modified boot images."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-2abc8008",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

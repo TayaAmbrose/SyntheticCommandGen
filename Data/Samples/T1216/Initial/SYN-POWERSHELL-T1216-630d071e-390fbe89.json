@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell executes cscript.exe with prnmngr.vbs using abnormal arguments that trigger an unrelated process creation (details redacted).",
+  "explanation": "Leverages a signed printing admin script (prnmngr.vbs) to indirectly launch other processes, relying on the legitimacy of the script to evade application controls.",
+  "rationale_steps": [
+    "Process tree: powershell.exe -> cscript.exe -> prnmngr.vbs.",
+    "Arguments to prnmngr.vbs include unexpected characters, quoting, or paths that are not part of normal printer management.",
+    "Downstream process creation from cscript.exe that is unrelated to printing operations.",
+    "Absence of matching print subsystem events in the event logs.",
+    "User context is a standard user without printer admin activity history."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-390fbe89",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

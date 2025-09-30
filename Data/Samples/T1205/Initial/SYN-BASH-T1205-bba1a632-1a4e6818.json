@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ethtool -s eth0 wol g; MAC=00:11:22:33:44:55; mac=$(echo $MAC | tr -d :); hex=$(printf ff%.0s {1..6}; for i in {1..16}; do echo -n $mac; done); echo -n $hex | xxd -r -p | nc -u -w1 192.0.2.10 9'",
+  "explanation": "Enables Wake-on-LAN (WoL) on interface eth0 and sends a correctly formatted magic packet (six 0xFF bytes followed by the target MAC repeated 16 times) via UDP/9 to trigger a covert activation/wake signal consistent with traffic signaling. Elevated privileges are needed for ethtool; packet send uses nc. Detection: monitor for unusual UDP/9 traffic containing WoL signatures and audit ethtool configuration changes.",
+  "rationale_steps": [
+    "Set NIC to accept WoL magic packets using ethtool (requires sudo).",
+    "Construct magic packet payload as hex and convert to binary with xxd.",
+    "Send the packet via nc to UDP port 9 as the signaling trigger.",
+    "Detection: IDS/pcap rules for six FF bytes + 16x MAC and change monitoring of ethtool wol settings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-1a4e6818",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

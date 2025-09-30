@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-AzADUser -DisplayName 'Noah Patel' -UserPrincipalName 'noah.patel@contoso.onmicrosoft.com' -MailNickname 'noah.patel' -PasswordProfile @{Password='P@ssw0rd!234'; ForceChangePasswordNextLogin=$false} -AccountEnabled $true -GivenName 'Noah' -Surname 'Patel' -JobTitle 'Community Manager' -Department 'Brand' -UsageLocation 'US' | Select-Object Id,DisplayName,UserPrincipalName,JobTitle,Department,AccountEnabled | ConvertTo-Json -Depth 4",
+  "explanation": "Establishes an additional cloud user to form a network of related personas, supporting more convincing interactions.",
+  "rationale_steps": [
+    "Create a second Azure AD user with coherent org details.",
+    "Enable the account and set a non-expiring initial password for immediate use.",
+    "Output key identity fields in JSON for orchestrated persona management."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-e8655df4",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

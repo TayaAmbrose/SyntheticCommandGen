@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 skip=2048 count=409600 of=/var/tmp/boot_part.cur && python3 -c \"import hashlib; ref='baseline/boot_part.bin'; cur='/var/tmp/boot_part.cur'; h=lambda p: (lambda f: (lambda d: (d.update(f.read()), d)[1] if False else None)(hashlib.sha256()))(open(p,'rb')); import sys; def hs(p): h=hashlib.sha256(); f=open(p,'rb'); [h.update(b) for b in iter(lambda:f.read(1<<20), b'')]; return h.hexdigest(); rh=hs(ref); ch=hs(cur); print(rh, ref); print(ch, cur); print('MATCH' if rh==ch else 'MISMATCH')\"",
+  "explanation": "Extracts a boot partition slice by sector offset and size, then uses Python hashlib to compare SHA-256 digests with a baseline partition image to validate integrity.",
+  "rationale_steps": [
+    "Use dd to read the specified boot partition region from the disk.",
+    "Compute SHA-256 digests for both current and baseline boot partition images.",
+    "Print comparison results to confirm whether the partition content matches the baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-96f945ff",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

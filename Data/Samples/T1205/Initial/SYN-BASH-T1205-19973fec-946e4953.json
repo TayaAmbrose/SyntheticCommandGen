@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_smtp --rcheck --seconds 60 -p tcp --dport 2525 -j ACCEPT; iptables -I INPUT -p tcp --dport 25 -m string --string \"EHLO T1205\" --algo bm -m recent --name t1205_smtp --set -j LOG --log-prefix \"T1205-SMTP-SIGNAL \"; nc -l -p 2525 -k >/dev/null 2>&1 &",
+  "explanation": "Uses a crafted SMTP EHLO token on TCP/25 as the signaling packet. On match, logs and whitelists the source for 60s to reach TCP/2525, where nc listens. Emulates SMTP-layer signaling for conditional access.",
+  "rationale_steps": [
+    "Match SMTP client greeting for a hidden token",
+    "Log irregular SMTP commands to system logs",
+    "Enable a gated port only after the magic EHLO"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-946e4953",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

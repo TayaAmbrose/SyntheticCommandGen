@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$baseline=(Get-Content 'C:\\images\\install.wim.sha256' -ErrorAction SilentlyContinue); $current=(Get-FileHash 'C:\\images\\install.wim' -Algorithm SHA256).Hash; if($baseline -and $baseline -ne $current){Write-Output 'ALERT: install.wim hash changed'} else {Set-Content 'C:\\images\\install.wim.sha256' $current}; certutil -hashfile C:\\images\\install.wim SHA256",
+  "explanation": "Establishes and compares a baseline SHA256 for the Windows install.wim system image to detect unauthorized modification, aligning with T1601 verification of system image integrity.",
+  "rationale_steps": [
+    "Compute current SHA256 of install.wim using Get-FileHash.",
+    "Compare against prior baseline; alert on mismatch.",
+    "Write baseline if none exists.",
+    "Cross-validate using certutil -hashfile to ensure consistent hashing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-6c56fdd9",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

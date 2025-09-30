@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p icmp --icmp-type echo-request -m string --algo bm --hex-string \"|DEADBEEF|\" -m recent --name T1205_ICMP --set -j LOG --log-prefix \"T1205_ICMP_SIG \"",
+  "explanation": "Detects ICMP echo-requests carrying a magic token (0xDEADBEEF) as a covert activation marker, consistent with T1205 signaling via ICMP payloads.",
+  "rationale_steps": [
+    "Scan ICMP payloads for a specific hex signature acting as a magic token.",
+    "Track sources and log occurrences to flag covert ICMP control signals."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-ee48845a",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

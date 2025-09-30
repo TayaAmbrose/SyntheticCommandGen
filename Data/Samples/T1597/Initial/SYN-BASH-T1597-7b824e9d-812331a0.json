@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/registries/$d; mkdir -p \"$dest\"; if scp -q -P 22 -i /etc/ssh/keys/corpdata_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_corpdata -o IdentitiesOnly=yes feedreader@sftp.corpdata-secure.com:/exports/registries/acme_corp/latest.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c latest.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corpdata-secure\\\",\\\"artifact\\\":\\\"%s/latest.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corpdata-secure\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Securely retrieves a subscription-only corporate registry dataset (JSON) via the vendor's SFTP portal, verifies integrity, and logs a JSON status. This aligns with T1597 by accessing closed-source commercial records.",
+  "rationale_steps": [
+    "Authenticate to sftp.corpdata-secure.com using an approved SSH key with strict host key validation.",
+    "Download the latest corporate registry JSON and its checksum.",
+    "Validate file integrity with sha256sum.",
+    "Store artifacts in a controlled directory and emit a JSON status log."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-812331a0",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

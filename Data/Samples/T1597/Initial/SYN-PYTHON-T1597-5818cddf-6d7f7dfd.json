@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url='https://api.builtwith.com/v21/api.json'; params={'KEY': os.environ['BUILTWITH_KEY'], 'LOOKUP': domain};\\ntry:\\n    r=requests.get(url, params=params, timeout=15); r.raise_for_status(); print(json.dumps({'source':'builtwith','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'builtwith','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Queries BuiltWith\u2019s closed-source API to enumerate observed technologies for a target domain using an API key, returning JSON for downstream enrichment.",
+  "rationale_steps": [
+    "Use the subscription BuiltWith API to look up tech stacks for a domain.",
+    "Restrict the request to a single domain and serialize results to JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-6d7f7dfd",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

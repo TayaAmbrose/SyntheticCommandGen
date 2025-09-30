@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $key=$env:WHOISXML_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'Missing WHOISXML_API_KEY'; }; $uri=\"https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=$key&domainName=example.com&outputFormat=JSON\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[WhoisXML] \" + $_.Exception.Message) }",
+  "explanation": "Pulls WHOIS data for example.com from WhoisXML, a commercial closed-source service. Utilizes HTTPS and parameterized API key; returns JSON.",
+  "rationale_steps": [
+    "Obtain API key from environment and construct a minimal GET request.",
+    "Leverage trusted vendor endpoint over TLS with JSON output.",
+    "Use timeout and error handling to avoid noisy retries.",
+    "Convert results to JSON and log any exceptions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-d53562ec",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

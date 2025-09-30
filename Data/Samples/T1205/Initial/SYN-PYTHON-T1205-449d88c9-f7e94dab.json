@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff DNS queries (UDP/53) with scapy and treat a specific domain (e.g., up.example.com) as the knock, then adjust iptables to open TCP/8080]",
+  "explanation": "High-level concept: covert signaling via a DNS query to a specific domain. A scapy-based sniffer detects the query name and uses it as the trigger to (maliciously) open a service port. Detection: inspect DNS logs for suspicious trigger domains, alert on local firewall changes following such queries, and restrict local processes initiating iptables modifications.",
+  "rationale_steps": [
+    "Capture UDP/53 with scapy and parse DNS question names.",
+    "If a pre-defined domain is observed, the logic would insert a permissive iptables rule for TCP/8080 (root/sudo needed).",
+    "Detection: DNS telemetry for unusual or internal trigger domains; SIEM correlation with iptables changes; EDR watch for firewall-manipulating subprocesses."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-f7e94dab",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"SHODAN_API_KEY\"]; qs=urllib.parse.urlencode({\"key\":key,\"query\":\"hostname:\"+dom}); c=http.client.HTTPSConnection(\"api.shodan.io\",timeout=15); c.request(\"GET\",\"/shodan/host/search?\"+qs,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Uses the Shodan API (keyed access) to search for hosts by hostname matching the target domain and returns results in JSON.",
+  "rationale_steps": [
+    "Load API key from environment and build a precise query.",
+    "Send HTTPS request to Shodan host search endpoint with Accept JSON.",
+    "Parse and print JSON while handling HTTP and decode errors."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-20426c83",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

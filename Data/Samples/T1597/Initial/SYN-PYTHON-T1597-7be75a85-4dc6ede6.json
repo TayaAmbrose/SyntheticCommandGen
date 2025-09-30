@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('BUILTWITH_API_KEY'); \nif not k: print(json.dumps({'source':'builtwith','query':d,'error':'missing BUILTWITH_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://api.builtwith.com/v21/api.json?KEY='+urllib.parse.quote(k)+'&LOOKUP='+urllib.parse.quote(d); ctx=ssl.create_default_context(); hdr={'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=20,context=ctx); print(json.dumps({'source':'builtwith','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'builtwith','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Queries the commercial BuiltWith API to identify technologies used by the target domain, authenticated with an API key.",
+  "rationale_steps": [
+    "Use a paid technology profiling service (BuiltWith) to gather stack data.",
+    "Pass API key via environment to avoid disclosure in logs.",
+    "Return JSON and enforce timeouts to reduce noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-4dc6ede6",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

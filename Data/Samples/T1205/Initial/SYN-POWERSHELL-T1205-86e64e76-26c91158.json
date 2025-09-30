@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList \"New-NetEventSession -Name SigMon; Add-NetEventPacketCaptureProvider -SessionName SigMon; Add-NetEventNetworkAdapter -SessionName SigMon -All; Set-NetEventSession -Name SigMon -CaptureMode SaveToFile -LocalFilePath $env:TEMP\\sigmon.etl; Start-NetEventSession -Name SigMon\"; $target='192.0.2.10'; foreach($p in 3456,4567,5678){ Test-NetConnection -ComputerName $target -UdpPort $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 250 }; Test-NetConnection -ComputerName $target -Port 8081 -InformationLevel Detailed; Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList 'Stop-NetEventSession -Name SigMon; Remove-NetEventSession -Name SigMon'",
+  "explanation": "Enables an elevated ETW packet capture (UAC prompt) to observe UDP knocks (3456, 4567, 5678) and then attempts TCP/8081. Detection: audit use of ETW packet capture cmdlets and alert on unauthorized capture sessions; analyze captured traffic for sequential UDP probes.",
+  "rationale_steps": [
+    "Create and start an ETW packet capture session (requires admin privileges).",
+    "Send a timed UDP knock sequence.",
+    "Attempt to reach the hidden TCP service presumed to open after signaling.",
+    "Defenders: monitor for NetEvent session creation/removal and review PCAP/ETW data for knock sequences."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-26c91158",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

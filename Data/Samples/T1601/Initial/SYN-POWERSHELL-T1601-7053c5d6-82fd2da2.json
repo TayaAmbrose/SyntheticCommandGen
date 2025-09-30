@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "fc /b C:\\Images\\install_clean.wim C:\\Images\\install.wim",
+  "explanation": "Performs a binary compare between a baseline and a suspected modified Windows installation image to detect unauthorized changes consistent with Modify System Image.",
+  "rationale_steps": [
+    "Select baseline and suspect system images (WIM files).",
+    "Run a binary comparison to reveal any modifications.",
+    "Assess differences to confirm image tampering aligned with T1601."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-82fd2da2",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

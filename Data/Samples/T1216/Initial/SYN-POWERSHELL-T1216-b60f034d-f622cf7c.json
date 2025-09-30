@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: data-URI based HTA content invoked from PowerShell",
+  "explanation": "Represents mshta executing HTA content supplied via a data URI, enabling in-memory, fileless execution from a signed host started by PowerShell.",
+  "rationale_steps": [
+    "PowerShell launches mshta with an embedded data URI rather than a file or URL",
+    "The content is interpreted directly, minimizing file system traces",
+    "Signed host execution may slip past simplistic application controls",
+    "Flag unusual mshta command lines containing data URIs and spawned by PowerShell",
+    "Consider disabling data-URI handling or blocking mshta outright in enterprise environments"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-f622cf7c",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

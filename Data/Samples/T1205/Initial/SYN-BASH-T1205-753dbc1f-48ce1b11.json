@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import IP,TCP,send; send(IP(dst=\"192.0.2.10\")/TCP(dport=22, flags=\"S\", seq=0xBADC0DE))'",
+  "explanation": "Transmits a TCP SYN with a magic sequence number to SSH as a covert single-packet authorization signal. Requires root (sudo) for raw sockets. Detection: IDS can flag abnormal TCP sequences or repeated SYNs with identical uncommon sequence numbers.",
+  "rationale_steps": [
+    "Uses scapy to craft a TCP SYN with a specific sequence as the magic token.",
+    "Single-packet signaling avoids obvious connections or logs.",
+    "Targets a protected service to trigger a hidden unlock routine.",
+    "Detect via inspection of TCP header anomalies and repeated magic sequence patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-48ce1b11",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

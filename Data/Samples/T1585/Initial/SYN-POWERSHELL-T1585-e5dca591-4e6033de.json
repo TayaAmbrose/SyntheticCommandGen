@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam upload-ssh-public-key --user-name liam.w.nolan --ssh-public-key-body 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNh0m9o0V2t7pQk8mZb3lC1qf0t2Z8JQ8kZ8Fz3rB2p7NqkQ2xW+Y1c6pLJp6U1Qb5i2vZC7u3s9w3lZ3Q1v2mJQW0JrQwE7n0u0Yl9kQZ9Y0vH9u2e5Lh3k9b0c1l2m3n4o5p6q7r8s9t0uEXAMPLE test@host' --output json",
+  "explanation": "Adds an SSH public key for the persona to access CodeCommit over SSH, a common developer pattern that further normalizes the account's behavior profile.",
+  "rationale_steps": [
+    "Provision SSH access for developer-like workflows.",
+    "Associate key material to the persona, consistent with real users.",
+    "Emit JSON for downstream configuration tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-4e6033de",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

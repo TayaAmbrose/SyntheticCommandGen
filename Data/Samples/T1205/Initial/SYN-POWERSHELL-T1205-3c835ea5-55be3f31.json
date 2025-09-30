@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$mac='00-11-22-33-44-55';$m=$mac -split '[:-]';$mb=$m|ForEach-Object{[Convert]::ToByte($_,16)};$wol=New-Object System.Collections.Generic.List[byte];1..6|ForEach-Object{$wol.Add(0xFF)};1..16|ForEach-Object{$mb|ForEach-Object{$wol.Add($_)}};& netsh advfirewall firewall add rule name='WOL-UDP9' dir=out action=allow protocol=UDP remoteport=9 remoteip=255.255.255.255 >$null;$u=New-Object System.Net.Sockets.UdpClient;$u.EnableBroadcast=$true;$b=$wol.ToArray();$u.Send($b,$b.Length,'255.255.255.255',9) >$null",
+  "explanation": "Generates a Wake-on-LAN magic packet (6 bytes of FF followed by 16 repetitions of the target MAC) and broadcasts it to UDP/9, potentially waking a remote pivot host. A netsh firewall rule is added to ensure the broadcast is allowed. Admin rights may be required in locked-down environments.",
+  "rationale_steps": [
+    "Construct a correct WoL magic packet payload for the target MAC.",
+    "Temporarily ensure outbound UDP/9 broadcast is permitted via netsh and send the packet.",
+    "Detection: watch for UDP/9 broadcasts with 102-byte WoL signature, and new outbound firewall rules allowing broadcast traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-55be3f31",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

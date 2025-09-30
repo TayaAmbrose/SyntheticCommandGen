@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v logs:/target ubuntu bash -lc 'find /target -type f -print0 | xargs -0 -r shred -n 1 -z -u; dd if=/dev/zero of=/target/.wipe bs=10M || true; sync; rm -f /target/.wipe'",
+  "explanation": "Securely overwrites and deletes files in the 'logs' volume, then fills free space with zeros to sanitize remnants before syncing and removing the filler file.",
+  "rationale_steps": [
+    "Mount the logs volume into a helper container",
+    "Shred all files with at least one pass and zeroing",
+    "Overwrite free space with zeros to remove residual data",
+    "Sync and remove filler to complete the wipe"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-88250ac8",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

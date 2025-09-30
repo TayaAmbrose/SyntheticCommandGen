@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; Add-Content -Path C:\\Mount\\Win\\Windows\\System32\\drivers\\etc\\hosts -Value \"127.0.0.1 update.windows.com\"; $b=(Get-FileHash C:\\Mount\\Base\\Windows\\System32\\drivers\\etc\\hosts -Algorithm SHA256).Hash; $m=(Get-FileHash C:\\Mount\\Win\\Windows\\System32\\drivers\\etc\\hosts -Algorithm SHA256).Hash; Compare-Object @($b) @($m)",
+  "explanation": "Edits the offline image's hosts file and compares hashes against the baseline to verify the modification.",
+  "rationale_steps": [
+    "Mount both images with DISM (requires Administrator).",
+    "Append an entry to the hosts file in the modified image.",
+    "Compute and Compare-Object the SHA256 hashes of the hosts files."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-9a234d2f",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

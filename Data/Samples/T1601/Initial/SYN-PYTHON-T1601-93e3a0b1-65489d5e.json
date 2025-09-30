@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,difflib,binascii; assert os.geteuid()==0; a=\"/bootflash/asa984-45-smp-k8.bin\"; b=\"/bootflash/golden/asa984-45-smp-k8.bin\"; A=open(a,\"rb\").read(4096); B=open(b,\"rb\").read(4096); da=list(difflib.unified_diff(binascii.hexlify(B).decode().splitlines(), binascii.hexlify(A).decode().splitlines(), fromfile=b,tofile=a,lineterm=\"\")); print(\"\\n\".join(da[:50])); sys.exit(0 if A==B else 6)'",
+  "explanation": "Compares the first 4KB of the ASA image to a golden copy and prints a hex diff if differences are found.",
+  "rationale_steps": [
+    "Read a deterministic segment of each image as root.",
+    "Hex-encode and generate a unified diff for quick triage.",
+    "Exit with error if any difference exists."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-65489d5e",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

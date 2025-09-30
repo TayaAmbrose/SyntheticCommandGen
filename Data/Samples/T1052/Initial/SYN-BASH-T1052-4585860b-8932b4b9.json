@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar -C \"$HOME\" -czf - Pictures | dd of=\"/dev/disk/by-uuid/1234-ABCD\" bs=2M oflag=direct iflag=fullblock status=none",
+  "explanation": "Archives the Pictures directory and writes it to the USB partition via its UUID, ensuring stability across reboots and avoiding filesystem-level writes.",
+  "rationale_steps": [
+    "Create a compressed archive stream of target data",
+    "Reference the external partition via by-uuid path",
+    "Use dd with large block size and direct I/O to write the stream to raw media"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-8932b4b9",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

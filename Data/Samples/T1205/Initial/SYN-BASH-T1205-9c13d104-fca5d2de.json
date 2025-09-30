@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tcpdump -i eth0 -n \"tcp[tcpflags] & tcp-syn != 0 and dst port 54321\" -c 3 >/dev/null && iptables -I INPUT -p tcp --dport 2222 -j ACCEPT",
+  "explanation": "Waits for three TCP SYNs to a decoy port (54321) and then opens TCP/2222 via iptables, using network traffic as the activation signal. Requires root for tcpdump on some interfaces and for iptables. Detection: alert on repeated SYNs to an unused high port and immediate firewall changes.",
+  "rationale_steps": [
+    "Attach tcpdump with a filter for SYNs targeting TCP/54321.",
+    "Count exactly three hits, suggesting a knock pattern.",
+    "Upon threshold, insert rule to expose TCP/2222.",
+    "Uses passive signaling without an always-open control port.",
+    "Detection: monitor for abnormal SYNs to non-listening ports; log and alert on iptables -I insertions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-fca5d2de",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

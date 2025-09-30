@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\boot.wim /Index:1 /MountDir:C:\\bemount /ReadWrite | Out-Null; $before=(Get-FileHash 'C:\\bemount\\Windows\\System32\\startnet.cmd' -Algorithm SHA256).Hash; Set-Content 'C:\\bemount\\Windows\\System32\\startnet.cmd' 'wpeinit & cmd.exe /c echo modified'; $after=(Get-FileHash 'C:\\bemount\\Windows\\System32\\startnet.cmd' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'startnet.cmd modified in WinPE'}; certutil -hashfile C:\\bemount\\Windows\\System32\\startnet.cmd SHA256",
+  "explanation": "Modifies the WinPE boot image (boot.wim) startnet.cmd and verifies the change via hashing, reflecting alteration of a system boot image per T1601.",
+  "rationale_steps": [
+    "Mount boot.wim for modification.",
+    "Hash the original startnet.cmd.",
+    "Alter startnet.cmd to introduce custom behavior.",
+    "Re-hash and verify the modification using Get-FileHash and certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-12675532",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

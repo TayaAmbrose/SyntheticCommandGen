@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='203.0.113.88'; $base=(Get-Date).DayOfYear; $seq=@((($base%1000)+1000), (($base+7)%1000 + 2000), (($base+14)%1000 + 3000)); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 450 }; Test-NetConnection -ComputerName $target -Port 9001 -InformationLevel Detailed",
+  "explanation": "Time-derived TCP knock sequence changes daily to reduce reuse detection, then connects to 9001. Detection: look for algorithmic patterns (e.g., shifting but consistently spaced sequential probes); detect correlations between daily-changing knock ranges and subsequent new service availability.",
+  "rationale_steps": [
+    "Compute a date-based knock sequence to avoid static signatures.",
+    "Transmit the knocks with consistent timing.",
+    "Attempt the hidden port that opens after correct signaling.",
+    "Defenders: deploy anomaly detection for time-correlated sequential probes and monitor for temporal port state shifts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-8c5e03ad",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

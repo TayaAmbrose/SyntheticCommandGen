@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /mnt/flash/system.img\" | sha256sum -c -",
+  "explanation": "Validates the active system image against an attacker-controlled checksum to confirm a modified image is present and intact.",
+  "rationale_steps": [
+    "Attacker establishes a known hash for their tampered image.",
+    "Verifies the onboard image integrity to ensure persistence remains in place."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-70d8440b",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

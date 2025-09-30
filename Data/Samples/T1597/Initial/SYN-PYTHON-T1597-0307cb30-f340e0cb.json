@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client; ip=os.environ.get(\"TARGET_IP\",\"8.8.8.8\"); key=os.environ[\"GREYNOISE_API_KEY\"]; c=http.client.HTTPSConnection(\"api.greynoise.io\",timeout=15); h={\"key\":key,\"Accept\":\"application/json\"}; c.request(\"GET\",\"/v2/noise/context/\"+ip,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Pulls enterprise context from GreyNoise (subscription) for a target IP to assess exposure/noise, returning JSON.",
+  "rationale_steps": [
+    "Read API key and target IP from environment variables.",
+    "Send authenticated HTTPS GET to the GreyNoise context endpoint.",
+    "Print parsed JSON, log and exit on non-200 responses."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-f340e0cb",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

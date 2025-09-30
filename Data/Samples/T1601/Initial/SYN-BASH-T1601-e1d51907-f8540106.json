@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda1 bs=1M count=$(( ( $(stat -c%s baseline/esp.img) + 1048575 ) / 1048576 )) of=/var/tmp/esp.cur && sha256sum /var/tmp/esp.cur baseline/esp.img && diff -u <(sha256sum /var/tmp/esp.cur | awk '{print $1}') <(sha256sum baseline/esp.img | awk '{print $1}')",
+  "explanation": "Images the EFI System Partition (ESP) up to the size of a baseline image and compares checksums to verify if boot components in the ESP were altered.",
+  "rationale_steps": [
+    "Calculate the number of 1MB blocks to read based on the baseline ESP image size.",
+    "Use dd to read that range from the ESP device node.",
+    "Compare SHA-256 checksums between current and baseline images; diff the hashes for confirmation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-f8540106",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

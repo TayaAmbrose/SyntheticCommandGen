@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$gw='192.0.2.255'; Test-NetConnection -ComputerName $gw -Port 7 -InformationLevel Quiet | Out-Null; $mac='AA-BB-CC-DD-EE-FF'; $mb=$mac.Split('-') | ForEach-Object {[byte]('0x'+$_)}; $pkt = @([byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF); 1..16 | ForEach-Object { $pkt += $mb }; $udp = New-Object System.Net.Sockets.UdpClient; $udp.EnableBroadcast = $true; $udp.Send($pkt, $pkt.Length, $gw, 7) | Out-Null",
+  "explanation": "Sends a WOL-formatted magic packet to a directed broadcast address on UDP/7 to trigger device wake. Detection: flag directed broadcasts carrying WOL signatures; monitor for WOL packets outside authorized windows or VLANs.",
+  "rationale_steps": [
+    "Validate reachability to the directed broadcast on UDP/7 using Test-NetConnection.",
+    "Build the correct WOL magic packet structure.",
+    "Transmit the packet to the subnet broadcast to wake the device.",
+    "Defenders: alert on WOL packets traversing routing boundaries or outside maintenance windows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-eda646e4",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

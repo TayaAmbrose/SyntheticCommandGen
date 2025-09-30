@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc \"iptables -A INPUT -p tcp --dport 10001 -m recent --name K1 --set -j DROP; iptables -A INPUT -p tcp --dport 11002 -m recent --rcheck --seconds 15 --name K1 -m recent --name K2 --set -j DROP; iptables -A INPUT -p tcp --dport 12003 -m recent --rcheck --seconds 15 --name K2 -m recent --name K3 --set -j DROP; iptables -A INPUT -p tcp --dport 22 -m recent --rcheck --seconds 30 --name K3 -j ACCEPT\"",
+  "explanation": "Implements a 3-step TCP port-knocking mechanism using the iptables recent module to only allow SSH after the correct knock sequence. Requires root (or sudo) to modify firewall rules. Detection: continuously audit iptables for recent-module chains and alert on ephemeral acceptance of SSH.",
+  "rationale_steps": [
+    "Track knock 1 on TCP/10001 and mark K1.",
+    "Validate knock 2 on TCP/11002 within 15s and mark K2.",
+    "Validate knock 3 on TCP/12003 within 15s and mark K3.",
+    "Permit TCP/22 only if K3 is set within last 30s.",
+    "Detection: configuration drift checks for recent-based rules; SIEM correlation of sequential connection attempts and temporary SSH openings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-32063271",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

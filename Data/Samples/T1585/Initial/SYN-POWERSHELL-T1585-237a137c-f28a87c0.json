@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-AzADUser -DisplayName 'Avery Reed' -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com' -MailNickname 'avery.reed' -PasswordProfile @{Password='P@ssw0rd!234'; ForceChangePasswordNextLogin=$false} -AccountEnabled $true -GivenName 'Avery' -Surname 'Reed' -JobTitle 'Marketing Associate' -Department 'Brand' -UsageLocation 'US' | Select-Object Id,DisplayName,UserPrincipalName,JobTitle,Department,AccountEnabled | ConvertTo-Json -Depth 4",
+  "explanation": "Creates a new cloud-only Azure AD user that serves as a believable marketing persona, establishing an account for future operations.",
+  "rationale_steps": [
+    "Invoke Az PowerShell to create a fully enabled Azure AD user with realistic profile attributes.",
+    "Ensure mailbox eligibility via UsageLocation and MailNickname for a plausible email identity.",
+    "Return essential properties in JSON for automation and tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-f28a87c0",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

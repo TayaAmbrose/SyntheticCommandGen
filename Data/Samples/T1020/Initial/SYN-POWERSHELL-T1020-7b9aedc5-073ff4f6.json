@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Service/daemon-style loop: use 'net use' to open an SMB session once, run a long-lived loop that batches and ships data quietly to the UNC path, then close the session.",
+  "explanation": "Illustrates a persistent, low-noise automated exfiltration routine that maintains a single SMB session using 'net use' while periodically sending data.",
+  "rationale_steps": [
+    "Create a long-lived SMB session to a remote share with net use",
+    "Batch and queue data for transfer at controlled intervals",
+    "Send data to the UNC path without interactive prompts",
+    "Close the SMB session and remove traces on termination"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-073ff4f6",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'for p in 12345 23456 34567; do nc -u -w1 198.51.100.20 \"$p\" < /dev/null; sleep 1; done'",
+  "explanation": "Generates a UDP port-knock sequence to a remote host (198.51.100.20) using netcat, signaling it to unlock an access rule. Executed as root to highlight privileged operator context.",
+  "rationale_steps": [
+    "Send time-separated UDP packets to a predefined sequence of high ports as the knock.",
+    "This acts as an activation signal to a remote listener implementing T1205.",
+    "Detection: monitor outbound UDP to unusual high ports without payload and repeated in sequence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-a9cc4c62",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

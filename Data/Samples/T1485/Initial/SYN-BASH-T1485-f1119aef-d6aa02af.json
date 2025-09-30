@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker exec -u 0 myapp1 bash -lc 'wipe -f -r /var/log/myapp/archive'",
+  "explanation": "Executes secure, recursive wiping of archived application logs inside a specific Docker container as root.",
+  "rationale_steps": [
+    "Leverage docker exec to run the operation within the target container context.",
+    "Use -r to recursively wipe only the archived logs directory, avoiding active logs.",
+    "wipe overwrites file contents and then removes them, defeating container-layer recovery attempts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-d6aa02af",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

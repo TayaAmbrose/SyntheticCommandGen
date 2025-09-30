@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('VT_API_KEY'); \nif not k: print(json.dumps({'source':'virustotal','query':d,'error':'missing VT_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://www.virustotal.com/api/v3/domains/'+urllib.parse.quote(d); ctx=ssl.create_default_context(); hdr={'x-apikey':k,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=20,context=ctx); print(json.dumps({'source':'virustotal','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'virustotal','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Accesses the closed-source VirusTotal v3 API for domain intelligence using an API key provided securely via environment variables.",
+  "rationale_steps": [
+    "Use a subscription-based service (VirusTotal) to enrich domain intelligence.",
+    "Authenticate with API key header and request minimal fields to avoid noise.",
+    "Parse JSON securely over HTTPS with timeouts and error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-e1fd215a",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

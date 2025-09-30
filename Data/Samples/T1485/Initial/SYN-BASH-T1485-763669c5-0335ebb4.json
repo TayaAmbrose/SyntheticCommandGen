@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v backups:/backups debian bash -lc 'find /backups -type f -name \"*.tar.gz\" -print0 | xargs -0 -r shred -n 2 -z -u; sync'",
+  "explanation": "Securely destroys archive files within the 'backups' volume by overwriting them twice with zeroing and removing them, then syncing.",
+  "rationale_steps": [
+    "Mount the backups volume into a helper container",
+    "Target only backup archives",
+    "Shred with multiple passes and delete",
+    "Sync to flush changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-0335ebb4",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

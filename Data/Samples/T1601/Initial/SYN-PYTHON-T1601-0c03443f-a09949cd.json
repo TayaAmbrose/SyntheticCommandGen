@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, difflib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur_img = \"/boot/flash/system.img\"\ngold_img = \"/opt/golden/system.img\"\nmntc = \"/mnt/cimg\"\nmntg = \"/mnt/gimg\"\n\nos.makedirs(mntc, exist_ok=True)\nos.makedirs(mntg, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", cur_img, mntc])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold_img, mntg])\n\na = os.path.join(mntc, \"etc\", \"issue\")\nb = os.path.join(mntg, \"etc\", \"issue\")\na_txt = open(a, \"r\", errors=\"ignore\").read().splitlines() if os.path.exists(a) else []\nb_txt = open(b, \"r\", errors=\"ignore\").read().splitlines() if os.path.exists(b) else []\n\nudiff = \"\\n\".join(difflib.unified_diff(b_txt, a_txt, fromfile=\"golden/etc/issue\", tofile=\"current/etc/issue\"))\nopen(\"/var/log/image_issue.diff\", \"w\").write(udiff + \"\\n\")\nprint(\"Wrote diff to /var/log/image_issue.diff\")\n\nsubprocess.call([\"umount\", mntg])\nsubprocess.call([\"umount\", mntc])\nPY",
+  "explanation": "Generates a unified diff of a text file within the images (e.g., /etc/issue) to document precise modifications in the system image contents.",
+  "rationale_steps": [
+    "Require root to mount image files read-only.",
+    "Read target files from both images and compute a unified diff via difflib.",
+    "Write the diff to a privileged log location for forensic tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-a09949cd",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

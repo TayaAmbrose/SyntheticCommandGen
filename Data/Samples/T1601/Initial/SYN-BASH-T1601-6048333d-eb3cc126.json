@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(tar -tf /bootflash/prod_system.tar | LC_ALL=C sort) <(tar -tf /var/tmp/modified_system.tar | LC_ALL=C sort)",
+  "explanation": "Diffs file lists of a tar-archived system image to identify additions/removals introduced by the tampered image.",
+  "rationale_steps": [
+    "List contents of the original and modified image tarballs.",
+    "Sort and diff the listings to enumerate structural changes in the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-eb3cc126",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

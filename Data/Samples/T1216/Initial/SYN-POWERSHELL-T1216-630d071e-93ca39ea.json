@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell spawning mshta.exe to load script content leading to a secondary process launch, indicative of proxy execution (details redacted).",
+  "explanation": "mshta.exe (a Microsoft-signed script host) can proxy execution of script content that then launches additional binaries, abusing trust in the signed utility.",
+  "rationale_steps": [
+    "Identify powershell.exe as parent of mshta.exe, which is atypical for normal workflows.",
+    "mshta.exe command line points to script content (local/embedded/remote) with unusual parameters.",
+    "Unexpected child process (e.g., cmd.exe or powershell.exe) spawns from mshta.exe.",
+    "Network egress or remote path usage correlates with the mshta session.",
+    "No corresponding user-driven HTA UI interaction observed (headless behavior)."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-93ca39ea",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

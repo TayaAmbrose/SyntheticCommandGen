@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-social-follow -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-social.test/v1/users/artisanal_outreach/follow -H \"Content-Type: application/json\" -H \"Accept: application/json\" -H \"Authorization: Bearer tok_test_123456\" -d \"{\\\"targets\\\":[\\\"cncf_news\\\",\\\"k8s_updates\\\",\\\"oss_daily\\\"]}\"'",
+  "explanation": "Has the persona follow topical accounts to blend in and appear organically active.",
+  "rationale_steps": [
+    "Use an API token to follow a set of domain-relevant accounts.",
+    "Simulates natural interest patterns to avoid detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-2dd16ad8",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

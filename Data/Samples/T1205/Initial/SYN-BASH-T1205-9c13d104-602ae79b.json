@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c \"from scapy.all import sendp,Ether,IP,UDP,Raw; mac='00:11:22:33:44:55'; payload=b'\\xff'*6+bytes.fromhex(mac.replace(':',''))*16; sendp(Ether(dst='ff:ff:ff:ff:ff:ff')/IP(dst='255.255.255.255')/UDP(sport=40000,dport=9)/Raw(payload),iface='eth0',verbose=0)\"",
+  "explanation": "Crafts and sends a Wake-on-LAN magic packet (6x FF followed by the MAC 16 times) via broadcast to wake a sleeping host, enabling it to accept subsequent connections. Requires root for raw packet send; typically performed via sudo if not already root. Detection: monitor for WOL frames (UDP/9 or UDP/7 with 0xFF*6 + MAC*16) especially outside business hours.",
+  "rationale_steps": [
+    "Construct exact WoL payload: 6 bytes FF then 16x target MAC.",
+    "Send as L2/L3 broadcast to reach sleeping NICs.",
+    "Target wakes, enabling remote access workflows.",
+    "Root is required to craft and transmit raw Ethernet frames.",
+    "Detection: packet inspection for WoL signature; alert on anomalous broadcast storms or off-hours WoL events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-602ae79b",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='203.0.113.25'; $seq=@(1111,2222,3333); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 400 }; Test-NetConnection -ComputerName $target -Port 8443 -InformationLevel Detailed",
+  "explanation": "Sends a TCP port-knocking sequence (1111, 2222, 3333) to signal a hidden service to open 8443. Detection: correlate multiple failed connection attempts to closed ports followed by a successful connection to a previously closed port; monitor Windows Firewall/WFP logs (e.g., Event IDs 5157/5156) and NetFlow for short-interval sequential connection attempts.",
+  "rationale_steps": [
+    "Define the target host.",
+    "Send short-spaced TCP connect attempts to a specific sequence of ports to act as the knock.",
+    "Attempt final connection to the hidden service port expected to open upon correct knock.",
+    "Defenders: alert on sequential failed connection attempts to uncommon ports followed by success on a new port; inspect WFP/Firewall and NetFlow logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-88c82c98",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

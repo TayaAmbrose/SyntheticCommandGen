@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "kubectl exec -n prod $(kubectl get pods -n prod -l app=myapp -o jsonpath='{.items[0].metadata.name}') -- bash -lc 'wipe -f /tmp/myapp/*.tmp'",
+  "explanation": "Runs secure file wiping inside a Kubernetes pod for temporary files, targeting only the application\u2019s temp artifacts.",
+  "rationale_steps": [
+    "Resolve a pod name dynamically in the prod namespace using a label selector.",
+    "Execute bash in the pod and run wipe on only .tmp files within the app\u2019s temp directory.",
+    "wipe overwrites data blocks before deletion to hinder data recovery from pod storage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-4dbb1bba",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

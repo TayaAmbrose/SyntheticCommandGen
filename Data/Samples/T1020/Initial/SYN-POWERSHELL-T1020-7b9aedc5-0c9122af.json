@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Scheduled task: create a task that maps \\\\ATTACKER_IP\\backup$ with 'net use', exports logs/data to a temp archive, copies to the share, and unmaps.",
+  "explanation": "Outlines the use of a scheduled job to periodically exfiltrate data via an SMB share mapped with 'net use', aligning with automated exfiltration behavior.",
+  "rationale_steps": [
+    "Register a scheduled task that runs under a privileged context",
+    "Within the task, map a remote SMB share using net use",
+    "Export or bundle targeted data and copy to the UNC path",
+    "Delete the mapping at the end of each scheduled run"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-0c9122af",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

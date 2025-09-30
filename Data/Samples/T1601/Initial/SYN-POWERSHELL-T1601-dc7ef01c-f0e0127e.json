@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sys='C:\\mount\\Windows\\System32\\winload.exe'; $psh=(Get-FileHash $sys -Algorithm SHA256).Hash; $ct=(certutil -hashfile $sys SHA256 | Select-String -Pattern '^[0-9A-F]{64}$').Line; if($psh -ne $ct){Write-Output 'Hash tool mismatch on winload.exe'} else {Write-Output (\"winload.exe hash \" + $psh)}",
+  "explanation": "Cross-validates the hash of a critical boot binary inside the mounted system image using both PowerShell and certutil to detect tampering, a verification activity under T1601.",
+  "rationale_steps": [
+    "Compute SHA256 of winload.exe within the offline image via Get-FileHash.",
+    "Compute SHA256 via certutil and normalize to the hex string line.",
+    "Compare both results to detect manipulation or tampering.",
+    "Output a warning on mismatch to flag integrity issues."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-f0e0127e",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

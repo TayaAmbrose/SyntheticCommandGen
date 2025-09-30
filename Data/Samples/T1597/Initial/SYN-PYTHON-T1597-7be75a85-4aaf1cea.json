@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('WHOISXML_API_KEY'); \nif not k: print(json.dumps({'source':'whoisxml','query':d,'error':'missing WHOISXML_API_KEY'}), file=sys.stderr); sys.exit(1); \nparams=urllib.parse.urlencode({'apiKey':k,'domainName':d,'outputFormat':'JSON'}); url='https://www.whoisxmlapi.com/whoisserver/WhoisService?'+params; ctx=ssl.create_default_context(); hdr={'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=15,context=ctx); print(json.dumps({'source':'whoisxml','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'whoisxml','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Queries the paid WhoisXML API for WHOIS data on the target domain using an API key delivered via environment variable.",
+  "rationale_steps": [
+    "Authenticate to a commercial WHOIS provider (closed source) using API key.",
+    "Fetch WHOIS details to inform ownership and registration intelligence.",
+    "Use HTTPS, timeouts, and structured JSON handling to remain quiet and reliable."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-4aaf1cea",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

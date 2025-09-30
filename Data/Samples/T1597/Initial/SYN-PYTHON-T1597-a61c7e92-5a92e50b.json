@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging\nlogging.basicConfig(level=logging.INFO)\ns3 = boto3.client('s3')\n# Parameters: previously exported vendor JSONL asset via AWS Data Exchange\nbucket = 'adx-consumer-bucket-123456'\nkey = 'intel/exports/d-xxxxxxxx/r-xxxxxxxx/vendor_asset.jsonl'\ndomain = 'example.com'\nexpr = \"SELECT s.* FROM S3Object s WHERE s.domain = 'example.com'\"\ntry:\n    resp = s3.select_object_content(\n        Bucket=bucket,\n        Key=key,\n        ExpressionType='SQL',\n        Expression=expr,\n        InputSerialization={'JSON': {'Type': 'LINES'}},\n        OutputSerialization={'JSON': {}}\n    )\n    results = []\n    for event in resp['Payload']:\n        if 'Records' in event:\n            results.append(event['Records']['Payload'].decode('utf-8'))\n    out_key = f's3select/{domain}_filtered.json'\n    s3.put_object(Bucket=bucket, Key=out_key, Body='\\n'.join(results).encode('utf-8'), ContentType='application/json')\n    print(json.dumps({'source': 'aws-data-exchange-s3select', 's3Uri': f's3://{bucket}/{out_key}', 'filter': {'domain': domain}}))\nexcept Exception as e:\n    logging.exception('S3 Select filtering of closed-source dataset failed: %s', e)",
+  "explanation": "Performs in-place S3 Select filtering on a previously exported closed-source dataset (from AWS Data Exchange) to extract only records for a target domain, minimizing data movement and noise.",
+  "rationale_steps": [
+    "Operate directly on exported closed-source data within controlled cloud storage.",
+    "Use server-side filtering to reduce unnecessary data transfer and log volume.",
+    "Output filtered records in structured JSON for efficient analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-5a92e50b",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

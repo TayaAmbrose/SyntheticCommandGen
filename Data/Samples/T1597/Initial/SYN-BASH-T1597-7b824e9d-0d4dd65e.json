@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/cloud/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/cloudintel_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_cloudintel -o IdentitiesOnly=yes subscriber@sftp.cloudintel.pro:/exports/cloud/assets/acme_corp/latest.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c latest.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cloudintel-pro\\\",\\\"artifact\\\":\\\"%s/latest.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cloudintel-pro\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Acquires a subscription cloud asset inventory (JSON) for the target from a closed-source provider using SFTP with integrity checks, consistent with T1597.",
+  "rationale_steps": [
+    "Connect to the vendor SFTP endpoint with pinned host key and SSH key auth.",
+    "Download latest cloud asset JSON and its checksum.",
+    "Validate integrity with sha256sum and archive in date-stamped path.",
+    "Output structured JSON status for logging pipelines."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-0d4dd65e",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

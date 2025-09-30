@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-user --user-name emma.j.taylor --tags Key=FullName,Value='Emma J Taylor' Key=Department,Value='Marketing' Key=Title,Value='Business Analyst' Key=Email,Value='emma.j.taylor.consulting@outlook.com' Key=Location,Value='Seattle, WA' --output json",
+  "explanation": "Creates a new low-privileged AWS IAM user with rich, believable profile tags to develop a persistent cloud persona that blends into a marketing/business analyst role.",
+  "rationale_steps": [
+    "Establish a distinct cloud identity for persona building.",
+    "Embed realistic metadata (name, role, contact, location) via tags to enhance legitimacy.",
+    "Ensure output is JSON for automation and tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-35c58fd6",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

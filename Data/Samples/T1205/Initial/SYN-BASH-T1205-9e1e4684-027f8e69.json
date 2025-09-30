@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -lc \"iptables -I INPUT -p tcp --dport 22 -m recent --rcheck --seconds 30 --name KNOCK --rsource -j ACCEPT; iptables -A INPUT -p tcp --dport 22 -j DROP; iptables -A INPUT -p udp --dport 9999 -m recent --set --name KNOCK --rsource\" && printf 'knock' | nc -u -w1 127.0.0.1 9999 && ssh localhost",
+  "explanation": "Configures iptables (requires sudo) to drop SSH by default but accept it for 30 seconds after a UDP knock to port 9999 from the same source IP. Sends a local knock packet to open the window, then tests with SSH. Detection: monitor for unauthorized iptables changes altering SSH exposure; log UDP hits to 9999 followed by SSH accepts; integrity-check firewall rulesets.",
+  "rationale_steps": [
+    "Install iptables rules that hide SSH unless a UDP knock is observed (sudo required).",
+    "Send the magic UDP packet to populate the 'recent' list for the source.",
+    "Verify SSH access during the allowed window.",
+    "Detect by auditing netfilter rule changes and correlating UDP knocks to SSH accepts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-027f8e69",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

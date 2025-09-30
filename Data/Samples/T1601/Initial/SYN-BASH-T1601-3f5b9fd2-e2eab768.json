@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "md5sum /dev/mtdblock0 | diff -u - /etc/firmware/boot_partition.md5 || echo \"ALERT: boot partition hash changed\"",
+  "explanation": "Checks the MD5 of the raw boot partition device against a stored reference to identify unauthorized system image/boot area changes.",
+  "rationale_steps": [
+    "Compute MD5 directly from the boot partition device",
+    "Compare against a previously stored reference MD5",
+    "Alert if differences indicate tampering"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-e2eab768",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

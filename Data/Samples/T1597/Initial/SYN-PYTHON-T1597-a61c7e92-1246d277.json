@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, re, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\napi_key = json.loads(secrets.get_secret_value(SecretId='securitytrails/api')['SecretString'])['api_key']\ndomain = 'example.com'\nif not re.match(r'^[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$', domain):\n    raise SystemExit('Invalid domain format')\nurl = f'https://api.securitytrails.com/v1/domain/{domain}/subdomains'\ntry:\n    r = requests.get(url, headers={'APIKEY': api_key, 'Accept': 'application/json', 'User-Agent': 'cloud-intel-client/1.0'}, params={'children_only': 'true'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'securitytrails/{domain}_subdomains.json'\n    boto3.client('s3').put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'securitytrails', 'domain': domain, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'securitytrails', 'requestUrl': url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('SecurityTrails query failed: %s', e)",
+  "explanation": "Queries the paid SecurityTrails API for subdomains of a target domain via HTTPS using an API key from Secrets Manager. This is closed-source reconnaissance under T1597.",
+  "rationale_steps": [
+    "Restrict query to a single domain to minimize noise.",
+    "Use a commercial dataset (SecurityTrails) with authenticated requests.",
+    "Persist structured results to S3 for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-1246d277",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

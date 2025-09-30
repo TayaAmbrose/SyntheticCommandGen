@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import os, boto3, json; store_id=os.environ.get('IDENTITY_STORE_ID','d-1234567890'); marketing_group_id=os.environ.get('MARKETING_GROUP_ID','abcd-efgh-ijkl'); ids=boto3.client('identitystore'); u=ids.create_user(IdentityStoreId=store_id, UserName='dan.cho', Name={'GivenName':'Dan','FamilyName':'Cho'}, DisplayName='Dan Cho', Emails=[{'Value':'dan.cho@brand-support.example','Primary':True,'Type':'work'}]); ids.create_group_membership(IdentityStoreId=store_id, GroupId=marketing_group_id, MemberId={'UserId':u['UserId']}); print(json.dumps({'action':'create_sso_persona','identity_store_id':store_id,'user_id':u['UserId'],'username':'dan.cho','group_membership_added':marketing_group_id}))\"",
+  "explanation": "Adds an AWS IAM Identity Center (SSO) user with realistic attributes and places them in a marketing group for believable access patterns.",
+  "rationale_steps": [
+    "Provision identity in SSO to align with organizations that centralize access via Identity Center.",
+    "Assign the user to a common group to inherit standard, low-risk permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-1d6d5828",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, filecmp, json\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur_img = \"/boot/flash/system.img\"\ngold_img = \"/opt/golden/system.img\"\nmnt_cur = \"/mnt/imgc\"\nmnt_gold = \"/mnt/imgg\"\n\nos.makedirs(mnt_cur, exist_ok=True)\nos.makedirs(mnt_gold, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", cur_img, mnt_cur])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold_img, mnt_gold])\n\ndirs = [\"/etc\", \"/bin\", \"/sbin\"]\nresult = {}\nfor d in dirs:\n    left = os.path.join(mnt_cur, d.strip(\"/\"))\n    right = os.path.join(mnt_gold, d.strip(\"/\"))\n    if os.path.isdir(left) and os.path.isdir(right):\n        common = set(os.listdir(left)).intersection(os.listdir(right))\n        cmpres = filecmp.cmpfiles(left, right, list(common), shallow=False)\n        result[d] = {\"same\": cmpres[0], \"diff\": cmpres[1], \"errors\": cmpres[2]}\n\nprint(json.dumps(result))\nsubprocess.call([\"umount\", mnt_gold])\nsubprocess.call([\"umount\", mnt_cur])\nPY",
+  "explanation": "Performs targeted integrity checks on critical directories within mounted images using filecmp.cmpfiles to enumerate exact file-level differences.",
+  "rationale_steps": [
+    "Require root to mount images read-only.",
+    "Identify common files across key system directories in both images.",
+    "Use filecmp.cmpfiles to list same, differing, and error files for focused verification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-50ade950",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

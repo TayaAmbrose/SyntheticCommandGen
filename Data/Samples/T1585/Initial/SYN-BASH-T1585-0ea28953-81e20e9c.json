@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "az ad user create --display-name \"Alex Morgan\" --user-principal-name alex.morgan@contoso.onmicrosoft.com --password 'S3cureTemp!23' --force-change-password-next-sign-in false --output json",
+  "explanation": "Establishes an Azure AD user to act as a persona with a stable password and natural-looking profile details.",
+  "rationale_steps": [
+    "Select a realistic display name and UPN",
+    "Provision an Azure AD account for cloud persona presence",
+    "Disable forced password change to maintain persistence"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-81e20e9c",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

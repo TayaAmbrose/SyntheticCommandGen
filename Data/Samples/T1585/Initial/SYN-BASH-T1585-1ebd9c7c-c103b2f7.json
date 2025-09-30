@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'gcloud iam service-accounts create persona-automation --description=\"Automation persona for community posts\" --display-name=\"Persona Automation\" >/dev/null 2>&1; gcloud iam service-accounts describe \"persona-automation@$(gcloud config get-value project -q).iam.gserviceaccount.com\" --format=json'",
+  "explanation": "Establishes a Google Cloud service account to act as a backend persona for automation and service interactions.",
+  "rationale_steps": [
+    "Create a service account with a benign description and display name.",
+    "Describe the newly created identity to capture its full JSON representation.",
+    "Use this identity to carry out low-profile automated tasks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-c103b2f7",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

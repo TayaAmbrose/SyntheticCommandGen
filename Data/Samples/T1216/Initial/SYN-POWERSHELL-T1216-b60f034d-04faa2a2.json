@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: inline JScript/VBScript protocol invocation from PowerShell",
+  "explanation": "Captures the pattern of invoking mshta with inline script protocol content (e.g., jscript/vbscript) directly from PowerShell, avoiding disk-based HTA artifacts.",
+  "rationale_steps": [
+    "PowerShell launches mshta with a script protocol payload rather than a file path",
+    "Execution occurs in-memory within the signed host process",
+    "Diskless execution can reduce on-disk IoCs and evade simple file-based controls",
+    "Monitor for mshta with command lines containing script protocol tokens spawned by PowerShell",
+    "Block or constrain mshta usage and enforce AMSI instrumentation where possible"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-04faa2a2",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

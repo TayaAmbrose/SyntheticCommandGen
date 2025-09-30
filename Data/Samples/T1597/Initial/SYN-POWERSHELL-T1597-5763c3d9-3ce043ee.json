@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $rf=$env:RF_TOKEN; if([string]::IsNullOrWhiteSpace($rf)){ throw 'Missing RF_TOKEN'; }; $uri='https://api.recordedfuture.com/v2/ip/risk?ip=8.8.8.8'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'X-RFToken'=$rf} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[RecordedFuture] \" + $_.Exception.Message) }",
+  "explanation": "Requests risk intelligence for an IP from Recorded Future, a paid closed-source threat intelligence provider. Authenticates via RF token and outputs JSON.",
+  "rationale_steps": [
+    "Validate availability of the RF token from environment.",
+    "Make a single targeted risk query to keep a low footprint.",
+    "Set headers for JSON and implement a timeout.",
+    "Serialize the response and log errors for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-3ce043ee",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

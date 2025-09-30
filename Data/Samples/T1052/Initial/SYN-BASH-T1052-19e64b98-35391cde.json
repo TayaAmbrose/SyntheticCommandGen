@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo hdiutil create -srcdevice /dev/rdisk0s1 -format UDZO /Volumes/USB/.rdisk0s1_backup.dmg",
+  "explanation": "Images a raw internal partition into a compressed DMG directly on the external drive to stage a block-level snapshot for offline removal.",
+  "rationale_steps": [
+    "Read directly from a raw device for comprehensive capture.",
+    "Write the image to removable media in a single artifact.",
+    "Compression reduces footprint and write time.",
+    "All actions occur locally, enabling physical-media exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-35391cde",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

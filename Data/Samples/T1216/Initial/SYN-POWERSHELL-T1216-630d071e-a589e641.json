@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell invoking wscript.exe to run SyncAppvPublishingServer.vbs from System32, resulting in an unexpected child interpreter (details redacted).",
+  "explanation": "This reflects proxy execution via a Microsoft-signed script run under wscript.exe. The misuse is indicated by the script spawning an interpreter rather than performing App-V publishing tasks.",
+  "rationale_steps": [
+    "Detect powershell.exe spawning wscript.exe with SyncAppvPublishingServer.vbs.",
+    "Command line contains unusual or malformed parameters not seen in legitimate deployments.",
+    "wscript.exe spawns a secondary interpreter (e.g., powershell.exe) or unrelated executable.",
+    "Script path is a system-signed location; verify digital signature and expected hash.",
+    "Check for lack of concurrent App-V events to validate misuse."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-a589e641",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

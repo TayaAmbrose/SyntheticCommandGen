@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/filings/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/corpfilings_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_corpfilings -o IdentitiesOnly=yes filings@sftp.corporate-filings.ai:/private/sec_filings/acme_corp/latest.xml{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c latest.xml.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corporate-filings\\\",\\\"artifact\\\":\\\"%s/latest.xml\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corporate-filings\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Acquires aggregated, paywalled corporate filings (XML) from a subscription repository via SFTP, verifying integrity and logging in JSON for traceability per T1597.",
+  "rationale_steps": [
+    "Establish a secure SFTP session to the filings aggregator.",
+    "Download the latest filings XML and checksum.",
+    "Validate checksum and archive in a date-specific directory.",
+    "Produce a JSON status message for reliable observability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-aaf65d37",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

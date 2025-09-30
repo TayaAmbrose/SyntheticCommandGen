@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify: computing SHA256 of kernel partition'; dd if=/dev/mtdblock2 bs=1M count=8 2>/dev/null | sha256sum | tee /tmp/T1601_kernel.sha256",
+  "explanation": "Assesses the integrity of the kernel image stored on an MTD partition by computing a SHA256 hash, establishing a baseline before modifying the system image.",
+  "rationale_steps": [
+    "Target the kernel image on a typical MTD block device used by embedded Linux network gear.",
+    "Compute and record a SHA256 hash for later comparison or to mask changes.",
+    "Support decision-making for subsequent image patching (T1601 verification)."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-626c046d",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

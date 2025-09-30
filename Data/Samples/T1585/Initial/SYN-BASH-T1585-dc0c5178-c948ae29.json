@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-email-create -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-mail.test/v1/accounts -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"address\\\":\\\"artisanal.outreach@example-mail.test\\\",\\\"password\\\":\\\"S3cure!Passw0rd\\\",\\\"recovery_email\\\":\\\"a.outreach.backup@example-mail.test\\\"}\"'",
+  "explanation": "Creates a new email account for the persona on a mock provider via an ephemeral curl pod, returning JSON suitable for automation.",
+  "rationale_steps": [
+    "Launch a throwaway pod to avoid leaving long-lived tooling in the cluster.",
+    "Invoke a mail provider API to establish a persona email account used for subsequent registrations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-c948ae29",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

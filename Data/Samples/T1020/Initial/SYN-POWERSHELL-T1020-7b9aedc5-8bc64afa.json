@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Automated mirror using robocopy: map \\\\ATTACKER_IP\\sync$ with 'net use' and run a continuous robocopy with monitoring switches to send changes as they occur.",
+  "explanation": "Conceptual use of a persistent directory mirror to a remote SMB share for continuous automated exfiltration using 'net use' and a file mirroring utility.",
+  "rationale_steps": [
+    "Establish SMB session with net use to the attacker-controlled share",
+    "Initiate a mirror/sync operation that tracks and sends file changes",
+    "Throttle or quiet operations to avoid attention",
+    "Tear down SMB mapping when complete"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-8bc64afa",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

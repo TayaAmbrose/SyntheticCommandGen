@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys; assert os.geteuid()==0; rc=os.system(\"cd /bootflash && sha256sum -c golden/manifest.sha256\"); sys.exit(0 if rc==0 else 3)'",
+  "explanation": "Invokes sha256sum -c against a manifest file covering multiple images in bootflash to validate integrity in bulk.",
+  "rationale_steps": [
+    "Ensure root privileges to read image files in bootflash.",
+    "Use sha256sum -c to verify each listed image against known-good hashes.",
+    "Return failure if any image fails verification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-02c3a715",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $dnsdb=$env:DNSDB_API_KEY; if([string]::IsNullOrWhiteSpace($dnsdb)){ throw 'Missing DNSDB_API_KEY'; }; $uri='https://api.dnsdb.info/dnsdb/v2/lookup/rrset/name/example.com?limit=25'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'X-API-Key'=$dnsdb} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[Farsight DNSDB] \" + $_.Exception.Message) }",
+  "explanation": "Queries Farsight DNSDB, a commercial closed-source historical DNS repository, for RRsets related to example.com. Uses API key header and returns JSON.",
+  "rationale_steps": [
+    "Read DNSDB API key from environment to protect credentials.",
+    "Limit results via the 'limit' parameter to prevent noisy output.",
+    "Ensure JSON response and set timeouts to handle network issues.",
+    "Convert to JSON and log failures without leaking secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-f89f1738",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

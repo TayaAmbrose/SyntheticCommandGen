@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfP \"/Volumes/Backup/ProjectX\"",
+  "explanation": "Recursively and securely wipes a specific project backup directory on an external volume.",
+  "rationale_steps": [
+    "Pick a single backup folder rather than the entire volume to minimize collateral damage.",
+    "Use -r to traverse all subfolders and -P to overwrite data thoroughly.",
+    "Run as root to handle permissioned files within the backup."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-2d0e6934",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

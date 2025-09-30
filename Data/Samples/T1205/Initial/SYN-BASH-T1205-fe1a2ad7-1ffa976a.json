@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ipfw add 100 deny tcp from any to me 22 in; tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 12345\" >/dev/null && tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 23456\" >/dev/null && tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 34567\" >/dev/null && ipfw add 110 allow tcp from any to me 22 in; sleep 60; ipfw delete 110'",
+  "explanation": "Implements a simple TCP SYN port-knock sequence (12345->23456->34567) that, when observed via tcpdump, temporarily opens SSH (22) with ipfw for 60 seconds. Requires root via sudo.",
+  "rationale_steps": [
+    "Block inbound SSH by default, then wait for a specific 3-step knock sequence using tcpdump -c 1 gates.",
+    "Upon correct sequence, insert an ipfw allow rule for port 22 for a short time window.",
+    "Detection: monitor ipfw rule insertions/deletions (ipfw -a list), alert on bursts of SYNs to high, unused ports; collect pcap of sequential SYNs to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-1ffa976a",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

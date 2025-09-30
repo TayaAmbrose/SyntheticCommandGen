@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, filecmp, tempfile, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur = \"/boot/flash/system.img\"\ngold = \"/opt/golden/system.img\"\n\ndef header(path, n=4096):\n    with open(path, \"rb\") as f:\n        return f.read(n)\n\nwith tempfile.NamedTemporaryFile(delete=False) as c, tempfile.NamedTemporaryFile(delete=False) as g:\n    c.write(header(cur)); c.flush()\n    g.write(header(gold)); g.flush()\n    same = filecmp.cmp(c.name, g.name, shallow=False)\n    print(\"Headers identical:\", same)\n\nh = hashlib.sha256(); h.update(header(cur))\nprint(\"Current header sha256:\", h.hexdigest())\nPY",
+  "explanation": "Extracts and compares the first 4 KB of the current and golden images using filecmp to detect tampering in image headers; prints header hash for quick reference.",
+  "rationale_steps": [
+    "Require root to access image files in boot storage.",
+    "Write image headers to temp files and compare them with filecmp.",
+    "Compute SHA-256 of the current image header for auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-05446f45",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

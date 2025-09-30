@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -sS -X POST https://api.mail.tm/accounts -H 'Content-Type: application/json' -d '{\"address\":\"persona.writer@mail.tm\",\"password\":\"Str0ngPass!2345\"}'",
+  "explanation": "Creates a disposable email inbox via a documented API to support persona registrations and validations.",
+  "rationale_steps": [
+    "Use a public, documented email service API to programmatically create an inbox.",
+    "Pair the inbox with persona naming conventions to appear consistent.",
+    "Capture the JSON response (account id, etc.) for later token retrieval and verification handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-875ca5d3",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

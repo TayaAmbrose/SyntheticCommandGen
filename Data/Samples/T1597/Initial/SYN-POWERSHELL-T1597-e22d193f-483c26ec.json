@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\riskiq_subdomains_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $user=$env:PT_USER; $key=$env:PT_KEY; if([string]::IsNullOrWhiteSpace($user) -or [string]::IsNullOrWhiteSpace($key)){ throw 'PassiveTotal credentials not set'; } $token=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$user`:$key\")); $headers=@{ 'Authorization'=\"Basic $token\"; 'Accept'='application/json' }; $uri=\"https://api.riskiq.net/pt/v2/enrichment/subdomains/lookup/$domain\"; $resp=Invoke-WebRequest -Uri $uri -Headers $headers -Method Get -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) PassiveTotal non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) PassiveTotal error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Uses authenticated access to RiskIQ PassiveTotal (a closed-source, subscription intelligence platform) to enumerate subdomains and store results as JSON.",
+  "rationale_steps": [
+    "Build Basic Auth header from credentials stored in environment variables.",
+    "Query the closed-source enrichment endpoint for subdomains.",
+    "Validate response headers and status, then parse and write JSON.",
+    "Record any exceptions to a log file without leaking secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-483c26ec",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

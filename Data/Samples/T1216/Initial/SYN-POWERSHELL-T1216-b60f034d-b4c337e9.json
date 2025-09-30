@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: remote scriptlet (.sct) loading from PowerShell",
+  "explanation": "Shows PowerShell starting mshta to load a remote scriptlet resource, abusing the script host to proxy execution under a trusted binary.",
+  "rationale_steps": [
+    "Use PowerShell to spawn mshta with a URL or path to a scriptlet resource",
+    "The signed host interprets and runs scriptlet code on load",
+    "This can bypass basic allowlists focused on parent process or binary signatures",
+    "Detect by correlating process creation, network connection, and rare file extensions tied to mshta",
+    "Apply control policies to block scriptlet interpretation by mshta where not needed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-b4c337e9",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

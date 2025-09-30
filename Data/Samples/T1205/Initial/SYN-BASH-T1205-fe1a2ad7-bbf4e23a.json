@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 - << \"PY\"\\nimport socket, binascii\\nmac = \"aa:bb:cc:dd:ee:ff\".replace(\":\", \"\")\\npacket = b\"\\xff\"*6 + binascii.unhexlify(mac)*16\\ns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\\ns.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)\\ns.sendto(packet, (\"255.255.255.255\", 9))\\nPY'",
+  "explanation": "Generates a Wake-on-LAN magic packet (6x FF followed by target MAC 16 times) and broadcasts it to UDP/9 to signal a remote device to wake. Root/sudo used to highlight privileged context.",
+  "rationale_steps": [
+    "Construct exact WoL frame format and broadcast it as a magic packet.",
+    "This is a classic signaling action that can re-enable a dormant endpoint for later access.",
+    "Detection: monitor for WoL frames on LAN segments and unusual broadcast spikes to UDP/9."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-bbf4e23a",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

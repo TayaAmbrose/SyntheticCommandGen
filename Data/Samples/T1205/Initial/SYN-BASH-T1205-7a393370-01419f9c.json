@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'iptables -N KNOCK 2>/dev/null; iptables -F KNOCK; iptables -A INPUT -p tcp --dport 7000 -m recent --name K1 --set -j DROP; iptables -A INPUT -p tcp --dport 8000 -m recent --rcheck --seconds 10 --name K1 -m recent --name K2 --set -j DROP; iptables -A INPUT -p tcp --dport 9000 -m recent --rcheck --seconds 10 --name K2 -m recent --name AUTH --set -j DROP; iptables -A INPUT -p tcp --dport 22 -m recent --name AUTH --rcheck --seconds 60 -j ACCEPT'",
+  "explanation": "Sets up a three-port knocking sequence (7000\u21928000\u21929000) to temporarily allow SSH (22) for 60 seconds. Requires sudo for firewall changes. Detection: monitor repeated SYNs to closed high ports and sudden SSH acceptances.",
+  "rationale_steps": [
+    "Create iptables rules to track knock sequence using the recent module.",
+    "Upon successful sequence, allow TCP/22 from the knocking source for 60 seconds.",
+    "No obfuscation; behavior is a covert signal opening a management port (T1205).",
+    "Detection: alert on connection attempts to 7000/8000/9000 and short-lived SSH openings via NetFlow/iptables counters."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-01419f9c",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

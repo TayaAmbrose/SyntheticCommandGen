@@ -1,0 +1,25 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p tcp --dport 1111 -m state --state NEW -m recent --name K1 --set && iptables -I ufw-before-input 1 -p tcp --dport 2222 -m state --state NEW -m recent --rcheck --seconds 10 --name K1 -m recent --name K2 --set && iptables -I ufw-before-input 1 -p tcp --dport 3333 -m state --state NEW -m recent --rcheck --seconds 10 --name K2 -m recent --name K3 --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m state --state NEW -m recent --rcheck --seconds 20 --name K3 -j ACCEPT'",
+  "explanation": "Sets up a three-step TCP port-knocking sequence (1111, 2222, 3333). Only after the correct ordered knocks does the firewall accept new SSH connections from the knocking source for a short window. This leverages signaling via specific connection attempts to trigger a hidden rule (T1205.001 Port Knocking). Detection: Inspect ufw/iptables logs for rapid sequential SYNs on high ports and sudden accepted SSH from the same source.",
+  "rationale_steps": [
+    "Enable ufw, set default deny incoming, and turn on logging.",
+    "Record knock step 1 on TCP/1111 using the recent module.",
+    "Verify step 1 then record step 2 on TCP/2222.",
+    "Verify step 2 then record step 3 on TCP/3333.",
+    "If step 3 was seen within 20s, accept new TCP/22 from that source.",
+    "Detect by correlating unusual sequential connection attempts and subsequent SSH allow in /var/log/ufw.log."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-de9cb3ed",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

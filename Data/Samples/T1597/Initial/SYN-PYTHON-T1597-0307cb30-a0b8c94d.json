@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"BUILTWITH_API_KEY\"]; qs=urllib.parse.urlencode({\"KEY\":key,\"LOOKUP\":dom}); c=http.client.HTTPSConnection(\"api.builtwith.com\",timeout=15); c.request(\"GET\",\"/v21/api.json?\"+qs,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries BuiltWith (paid API) for technology stack details of the target domain and prints structured JSON.",
+  "rationale_steps": [
+    "Read API key from environment and build a properly encoded query string.",
+    "Perform HTTPS GET to BuiltWith v21 API for the domain.",
+    "Parse and output JSON while handling errors without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-a0b8c94d",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

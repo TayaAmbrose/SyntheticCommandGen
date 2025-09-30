@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nfrom requests.auth import HTTPBasicAuth\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\ncreds = json.loads(secrets.get_secret_value(SecretId='spycloud/basic')['SecretString'])\nuser, pwd = creds['username'], creds['password']\ndomain = 'example.com'\nurl = 'https://api.spycloud.com/breach/data'\nparams = {'domain': domain, 'limit': '100'}\ntry:\n    r = requests.get(url, params=params, auth=HTTPBasicAuth(user, pwd), headers={'Accept':'application/json','User-Agent':'cloud-intel-client/1.0'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'spycloud/{domain}_breaches.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'spycloud', 'domain': domain, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'spycloud', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('SpyCloud breach data query failed: %s', e)",
+  "explanation": "Retrieves breach exposure data for a target domain from SpyCloud, a paid breach intelligence provider, using basic auth credentials from Secrets Manager. Closed-source reconnaissance data is securely stored to S3.",
+  "rationale_steps": [
+    "Authenticate to a closed-source breach database provider using stored credentials.",
+    "Limit query scope and results to reduce noise and comply with API usage.",
+    "Store results in JSON with provenance metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-5f73f42d",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

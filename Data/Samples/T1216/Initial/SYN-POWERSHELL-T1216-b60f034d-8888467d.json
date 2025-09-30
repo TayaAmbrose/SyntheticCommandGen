@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: signed-host proxy execution of locally cached HTA with minimal UI",
+  "explanation": "Captures mshta launched by PowerShell with parameters to minimize UI, proxy-executing a locally cached HTA while attempting to blend into normal activity.",
+  "rationale_steps": [
+    "Use PowerShell to start mshta with flags or context that avoid user prompts/windows",
+    "Execute locally cached HTA content to reduce network indicators",
+    "Rely on Microsoft-signed binary trust to traverse basic application control",
+    "Hunt for mshta instances with no visible window, short lifetimes, and suspicious parentage",
+    "Use ASR rules to block Office/PowerShell spawning script interpreters"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-8888467d",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

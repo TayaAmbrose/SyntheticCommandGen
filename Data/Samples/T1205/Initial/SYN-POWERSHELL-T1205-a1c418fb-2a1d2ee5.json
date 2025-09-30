@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup 00-11-22-33-44-55",
+  "explanation": "Sends a Wake-on-LAN magic packet to trigger a sleeping host to power on (Traffic Signaling). The tool constructs the packet as 6 bytes of 0xFF followed by the target MAC repeated 16 times. Detection: monitor outbound UDP broadcasts to port 7/9 and process execution of WakeMeOnLan; review NetFlow and Sysmon (Event ID 3) for unusual magic packet bursts.",
+  "rationale_steps": [
+    "Invoke WakeMeOnLan to generate a valid WOL magic packet for MAC 00-11-22-33-44-55.",
+    "Broadcasts the signal to elicit device wake-up per T1205.",
+    "As Administrator, ensure PowerShell is elevated if local firewall/UAC policies restrict broadcast sending.",
+    "Detect via IDS for UDP port 9 broadcasts and EDR alerts on WakeMeOnLan.exe usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-2a1d2ee5",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

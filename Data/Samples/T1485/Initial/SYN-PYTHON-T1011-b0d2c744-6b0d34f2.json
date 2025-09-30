@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv6 TCP socket to a non-default link-local source address (scope-indexed) before connecting to a unique-local IPv6 target on a high port, then send base64 data]",
+  "explanation": "Binding to a non-default interface and using IPv6 constitutes an alternative network medium/path for exfiltration per T1011.",
+  "rationale_steps": [
+    "Bind AF_INET6 socket to a specific link-local source (alternate NIC)",
+    "Base64-encode the data",
+    "Connect to a unique-local IPv6 destination on an uncommon TCP port",
+    "Send and close cleanly",
+    "No interference with unrelated network services"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-6b0d34f2",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

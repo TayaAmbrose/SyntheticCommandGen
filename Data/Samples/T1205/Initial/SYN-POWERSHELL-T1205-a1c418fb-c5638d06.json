@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$macs = @('00-11-22-33-44-55','00-11-22-33-44-66','00-11-22-33-44-77'); foreach ($m in $macs) { & 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup $m; Start-Sleep -Milliseconds 300 }",
+  "explanation": "Iteratively sends WOL magic packets to multiple targets, enabling several devices via network signaling. Detection: alert on repeated outbound UDP 7/9 broadcasts in short intervals and correlate with process lineage invoking WakeMeOnLan.exe.",
+  "rationale_steps": [
+    "Loop through a list of target MAC addresses.",
+    "Generate a valid WOL magic packet for each target to wake devices.",
+    "Throttle with short sleeps to avoid packet drops.",
+    "Detect by monitoring bursty UDP 9 traffic and execution of the WOL utility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-c5638d06",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

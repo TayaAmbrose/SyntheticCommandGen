@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$boot = \"C:\\ProgramData\\NetOS\\images\\boot\\bootx64.efi\"; $expected = (Get-Content \"C:\\ProgramData\\NetOS\\baseline\\bootx64.efi.sha256\").Trim().ToUpper(); $actual = (Get-FileHash -Algorithm SHA256 -Path $boot).Hash.ToUpper(); if ($actual -ne $expected) { Write-Error \"Bootloader integrity failure\" } else { Write-Output \"Bootloader hash OK\" }",
+  "explanation": "Verifies the bootloader component of the system image against a baseline checksum to detect low-level tampering that could affect boot integrity.",
+  "rationale_steps": [
+    "Access the bootloader file in a privileged directory.",
+    "Compute its SHA256 using Get-FileHash.",
+    "Load the expected baseline hash.",
+    "Compare and alert on any mismatch."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-470a2df8",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

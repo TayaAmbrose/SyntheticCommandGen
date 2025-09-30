@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"Accept: application/json\" \"https://api.hunter.io/v2/domain-search?domain=example.com&limit=10&api_key=$HUNTER_KEY\" -o hunter_domain_search_example.com.json -w '{\"service\":\"hunter_domain_search\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Calls Hunter.io (subscription service) domain search to enumerate professional email patterns and related data for a target domain with controlled limits and structured output.",
+  "rationale_steps": [
+    "Query a closed-source subscription API (Hunter.io) for targeted info.",
+    "Use API key via environment variable to avoid embedding secrets.",
+    "Limit results to 10 to reduce footprint and logging noise.",
+    "Store the JSON response for offline processing.",
+    "Record minimal request metadata and HTTP status for auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-548e27a1",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 22222 --syn -m recent --rcheck --seconds 15 --name T1205_K1 -m recent --name T1205_K2 --set -j LOG --log-prefix \"T1205_KNOCK2 \"",
+  "explanation": "Second step in a timed port-knocking sequence: a TCP SYN to 22222 within 15s of the first signal, modeling covert activation signaling.",
+  "rationale_steps": [
+    "Require temporal correlation with prior knock using recent rcheck to reduce noise.",
+    "Track progression to stage 2 (T1205_K2) and log for behavioral detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-af1d8c3c",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

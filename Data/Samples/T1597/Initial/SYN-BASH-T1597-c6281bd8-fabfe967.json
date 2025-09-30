@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"Authorization: Bearer $ZOOMINFO_TOKEN\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.zoominfo.com/company/search\" --data '{\"companyName\":\"Example\",\"locationCountry\":\"United States\",\"resultsPerPage\":10}' -o zoominfo_company_search_example.json -w '{\"service\":\"zoominfo_company_search\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Uses ZoomInfo's commercial API to search for a company profile with geographic constraints, minimizing noise and logging request outcomes.",
+  "rationale_steps": [
+    "Leverage a reputable closed-source business intelligence provider (ZoomInfo).",
+    "Use OAuth bearer token stored in an environment variable.",
+    "Constrain search by name and country with small page size to limit output.",
+    "Save structured JSON response to a file.",
+    "Log HTTP status for consistent error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-fabfe967",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, tempfile, filecmp, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\nbootdev = \"/dev/mmcblk0p1\"\nimg = \"/boot/flash/system.img\"\n\nwith tempfile.NamedTemporaryFile(delete=False) as snap, tempfile.NamedTemporaryFile(delete=False) as ref:\n    subprocess.check_call([\"dd\", \"if=\" + bootdev, \"of=\" + snap.name, \"bs=1M\", \"count=16\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n    subprocess.check_call([\"dd\", \"if=\" + img, \"of=\" + ref.name, \"bs=1M\", \"count=16\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n    same = filecmp.cmp(snap.name, ref.name, shallow=False)\n    print(\"Boot partition snapshot matches first 16MB of image:\", same)\n    h = hashlib.md5()\n    with open(snap.name, \"rb\") as f:\n        for b in iter(lambda: f.read(1<<20), b\"\"):\n            h.update(b)\n    print(\"Snapshot md5:\", h.hexdigest())\nPY",
+  "explanation": "Captures a privileged snapshot of the boot partition and compares it to the corresponding segment of the deployed image, verifying that on-disk boot contents reflect the modified image.",
+  "rationale_steps": [
+    "Require root to read raw block device and run dd.",
+    "Create comparable 16MB slices from the boot partition and image file.",
+    "Use filecmp to verify equality and compute MD5 for the snapshot as a quick integrity reference."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-fcf176f8",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

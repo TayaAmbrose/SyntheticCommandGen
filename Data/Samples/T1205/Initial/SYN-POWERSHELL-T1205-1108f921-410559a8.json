@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $mac = '00:11:22:33:44:55'; $b = ($mac -replace '[:\\-]','') -split '(..)' | Where-Object { $_ } | ForEach-Object { [Convert]::ToByte($_,16) }; $packet = New-Object System.Collections.Generic.List[byte]; 1..6 | ForEach-Object { [void]$packet.Add(0xFF) }; 1..16 | ForEach-Object { $b | ForEach-Object { [void]$packet.Add($_) } }; $udp = New-Object System.Net.Sockets.UdpClient; $udp.Client.SetSocketOption([Net.Sockets.SocketOptionLevel]::Socket,[Net.Sockets.SocketOptionName]::Broadcast,$true); $udp.Connect('192.168.1.255',9); [void]$udp.Send($packet.ToArray(), $packet.Count); $udp.Close() }",
+  "explanation": "Sends a standard Wake-on-LAN magic packet (6x0xFF + 16 repetitions of the MAC). This is a traffic signal to wake a sleeping host, aligning with T1205. Detection: monitor for unexpected UDP broadcasts to port 9 with 102-byte payloads containing repeated MACs; baseline approved WOL usage per VLAN. No elevated privileges required for sending; UAC not triggered.",
+  "rationale_steps": [
+    "Construct WOL magic packet with correct 102-byte format.",
+    "Broadcast UDP on port 9 to signal a remote device to wake (traffic signaling).",
+    "Note monitoring recommendations for unusual WOL bursts from admin workstations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-410559a8",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,hashlib,tempfile; assert os.geteuid()==0; img=\"/bootflash/system_image.bin\"; h=hashlib.sha256(open(img,\"rb\").read()).hexdigest(); tf=tempfile.NamedTemporaryFile(delete=False,mode=\"w\"); tf.write(f\"{h}  {os.path.basename(img)}\\n\"); tf.close(); rc=os.system(f\"diff -u {tf.name} /bootflash/golden/sha256sums.txt\"); os.unlink(tf.name); sys.exit(0 if rc==0 else 8)'",
+  "explanation": "Generates a one-line checksum record for the current image and diffs it against the golden checksums list.",
+  "rationale_steps": [
+    "Compute SHA-256 for the target image as root.",
+    "Write a temporary checksum record in standard format.",
+    "Use diff to compare against the baseline list."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-0ec888ef",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; dism /Image:C:\\Mount\\Install /Cleanup-Image /CheckHealth; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Discard",
+  "explanation": "Performs an offline component store health check on the mounted system image to assess integrity and detect potential tampering.",
+  "rationale_steps": [
+    "Mount the offline image to a servicing directory.",
+    "Run DISM offline health check to detect corruption or tampering.",
+    "Discard changes to keep verification non-destructive."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-4c7477c0",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

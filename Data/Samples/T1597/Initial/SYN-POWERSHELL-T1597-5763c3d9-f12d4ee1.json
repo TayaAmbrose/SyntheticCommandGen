@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $key=$env:RISKIQ_API_KEY; $sec=$env:RISKIQ_API_SECRET; if([string]::IsNullOrWhiteSpace($key) -or [string]::IsNullOrWhiteSpace($sec)){ throw 'Missing RISKIQ credentials'; }; $basic=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$key`:$sec\")); $uri=\"https://api.riskiq.net/pt/v2/dns/passive?query=example.com\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Authorization=(\"Basic \" + $basic); Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[RiskIQ PassiveTotal] \" + $_.Exception.Message) }",
+  "explanation": "Retrieves passive DNS data for example.com from RiskIQ PassiveTotal, a subscription-only closed-source dataset useful for infrastructure pivoting. Uses Basic Auth and outputs JSON.",
+  "rationale_steps": [
+    "Pull API key/secret from environment and create a Basic Auth header.",
+    "Issue a targeted passive DNS query to limit noise.",
+    "Use HTTPS with proper Accept header and short timeout.",
+    "Return JSON and log errors to a file if the request fails."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-f12d4ee1",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

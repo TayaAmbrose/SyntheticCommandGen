@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "md5sum -c /etc/firmware/manifest.md5",
+  "explanation": "Validates all system images listed in the checksum manifest to detect integrity issues after any image changes.",
+  "rationale_steps": [
+    "Iterate through each file listed in the manifest",
+    "Compute MD5 and compare against stored values",
+    "Report any images that fail verification"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-77ed5ae1",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

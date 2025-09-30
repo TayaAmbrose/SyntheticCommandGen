@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d=((Get-DnsClientCache).Name | Where-Object { $_ -match '\\.' } | Select-Object -Unique | Get-Random); $ips=@(); 1..5 | ForEach-Object { $res=Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\"; $ips+=((($res.Content|ConvertFrom-Json).Answer).data); Start-Sleep -Seconds 12 }; $uniq=($ips | Where-Object {$_} | Select-Object -Unique); if ($uniq.Count -ge 3) { Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; ipCount=$uniq.Count; ips=$uniq; ts=(Get-Date).ToUniversalTime().ToString('o')}|ConvertTo-Json -Depth 3) 'https://siem.example.local/api/ingest/fastflux' }",
+  "explanation": "Defensive fast-flux check for T1568: repeats DNS resolution via DoH and flags rapid IP churn indicative of dynamic resolution C2 infrastructure.",
+  "rationale_steps": [
+    "Select a domain from the DNS cache.",
+    "Resolve it multiple times via DoH over a short interval.",
+    "Count distinct IPs to detect churn.",
+    "Report fast-flux suspects to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-bd6f75e4",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$buf = [byte[]](0xDE,0xAD,0xBE,0xEF,0xCA,0xFE,0xBA,0xBE); [System.Net.NetworkInformation.Ping]::new().Send('198.51.100.50', 100, $buf) | Out-Null",
+  "explanation": "Uses a crafted ICMP echo request with a recognizable payload as a covert signal to activate remote behavior (similar to port knocking but via ICMP). Detection: alert on unusual ICMP payload signatures or short-interval bursts; analyze IDS/IPS logs for repeated identical ICMP payloads from administrative hosts.",
+  "rationale_steps": [
+    "Create an ICMP payload with a static signature.",
+    "Send a single echo request with timeout suitable for signaling.",
+    "Remote listener may use payload match to trigger functionality.",
+    "Detect via ICMP payload inspection and anomaly detection for non-standard ping traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-806faa55",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

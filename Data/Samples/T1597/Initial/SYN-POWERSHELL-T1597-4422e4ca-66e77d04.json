@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $b=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$env:PT_USER`:$env:PT_KEY\")); $headers=@{ 'Authorization'=\"Basic $b\"; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://api.passivetotal.org/v2/enrichment/subdomains?query=contoso.com' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object -Property query,subdomains | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\passivetotal_subdomains_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts PassiveTotal success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts PassiveTotal error: $($_.Exception.Message)\" }",
+  "explanation": "Uses RiskIQ PassiveTotal (paid/closed) with Basic auth to enumerate subdomains for a target domain, extracting structured data and logging the transaction.",
+  "rationale_steps": [
+    "Form secure Basic auth header from environment credentials.",
+    "Query closed-source subdomain enrichment endpoint for the target.",
+    "Select relevant fields and save as JSON.",
+    "Write minimal operational logs without sensitive data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-66e77d04",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: UNC path HTA on SMB share invoked from PowerShell",
+  "explanation": "Demonstrates mshta loading HTA content via a UNC path, using a network share to proxy execution under a trusted signed binary.",
+  "rationale_steps": [
+    "PowerShell executes mshta with a UNC target pointing to an HTA on a share",
+    "mshta fetches and runs content from the remote share within its trusted context",
+    "This can subvert controls that allow signed binary execution but do not constrain content source",
+    "Defenders should flag PowerShell->mshta parent-child with network/UNC paths and .hta artifacts",
+    "Enforce network-aware application control and restrict script host access to remote shares"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-ed507cc0",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

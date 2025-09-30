@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); az rest --method PUT --uri \"https://graph.microsoft.com/v1.0/users/$uid/photo/$value\" --headers \"Content-Type=image/jpeg\" --body \"@C:\\Temp\\jordan_hall.jpg\"; az rest --method GET --uri \"https://graph.microsoft.com/v1.0/users/$uid/photo\" -o json",
+  "explanation": "Uploads a realistic profile photo to the account to make the persona appear authentic in directories and collaboration tools.",
+  "rationale_steps": [
+    "Locate the user's object ID using Azure CLI.",
+    "Use Graph API via az rest to set the user's profile photo.",
+    "Retrieve the photo metadata to confirm and return machine-parsable JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-2e200381",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "bash -c 'h1=$(md5sum /bootflash/active.img | awk \"{print $1}\"); h2=$(awk \"{print $1}\" /mnt/golden/active.img.md5); [ \"$h1\" = \"$h2\" ] || echo \"ALERT: active.img MD5 mismatch\"'",
+  "explanation": "Computes the MD5 of the active image and compares it to a golden value to detect divergence indicating system image modification.",
+  "rationale_steps": [
+    "Compute MD5 of the current active image",
+    "Read the golden MD5 reference",
+    "Compare values and raise an alert on mismatch"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-ae19f4c1",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

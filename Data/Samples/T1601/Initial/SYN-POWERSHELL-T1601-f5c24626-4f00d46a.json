@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; New-Item -ItemType Directory -Force -Path C:\\Mount\\Win\\Windows\\Setup\\Scripts | Out-Null; Set-Content -Path C:\\Mount\\Win\\Windows\\Setup\\Scripts\\SetupComplete.cmd -Value \"rem placeholder\"; Compare-Object (Get-ChildItem -Name C:\\Mount\\Base\\Windows\\Setup\\Scripts -ErrorAction SilentlyContinue) (Get-ChildItem -Name C:\\Mount\\Win\\Windows\\Setup\\Scripts -ErrorAction SilentlyContinue)",
+  "explanation": "Mounts clean and modified Windows images, drops a SetupComplete.cmd into the modified image (offline persistence), and uses Compare-Object to verify the added script versus the clean baseline.",
+  "rationale_steps": [
+    "Mount base and target WIMs with DISM (Admin-only operation).",
+    "Modify the offline image by adding SetupComplete.cmd.",
+    "List files in both images' Scripts directories and Compare-Object to detect the new file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-4f00d46a",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

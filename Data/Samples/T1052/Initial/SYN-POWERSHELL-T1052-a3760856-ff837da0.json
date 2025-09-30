@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\logs\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; wevtutil epl Security \"$dest\\Security.evtx\"; wevtutil epl System \"$dest\\System.evtx\"; Write-Output \"Exported Event Logs to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Exports local Windows event logs directly to a removable drive, enabling offline review without any network transmission.",
+  "rationale_steps": [
+    "Select a removable drive as the sink",
+    "Export Security and System event logs to the USB path",
+    "Record a local log of the export using Write-Output",
+    "Avoid any network-based control or transfer"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-ff837da0",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

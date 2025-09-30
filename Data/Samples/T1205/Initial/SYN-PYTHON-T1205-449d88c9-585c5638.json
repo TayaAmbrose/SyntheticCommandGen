@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would generate and transmit a Wake-on-LAN magic packet via scapy: 6 bytes of 0xFF followed by 16 repetitions of the target MAC, UDP dport 9]",
+  "explanation": "High-level concept: emit a standards-compliant WoL magic packet to trigger device wake or serve as a covert signal. The packet must be 6x 0xFF followed by 16x target MAC and can be broadcast to UDP/9. Detection: monitor for unusual WoL frames sent by unexpected hosts, alert on broadcast UDP/9 traffic with WoL payloads, and restrict who can send WoL in network policy.",
+  "rationale_steps": [
+    "Construct the WoL payload: FF FF FF FF FF FF + (MAC repeated 16 times).",
+    "Send as Ethernet broadcast with UDP/9 using scapy (requires root to transmit raw frames).",
+    "Detection: tcpdump filter udp port 9; IDS signatures for WoL payload; inventory which hosts are allowed to originate WoL."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-585c5638",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

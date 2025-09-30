@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib; rel=os.uname().release; base='/lib/modules/'+rel; agg=hashlib.sha256(); paths=[]; [paths.append(os.path.join(r,f)) for r,_,fs in os.walk(base) for f in fs]; paths.sort(); [agg.update((p+':'+hashlib.sha256(open(p,'rb').read()).hexdigest()+'\\n').encode()) for p in paths]; h=agg.hexdigest(); b=open('/var/lib/img-baseline/modules.sha256').read().strip().split()[0]; print('MODULES', base, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Aggregates a deterministic hash of all kernel modules for the current kernel to detect manipulated module contents.",
+  "rationale_steps": [
+    "Kernel modules form part of the OS image footprint modified in T1601 scenarios.",
+    "Uses hashlib over a canonicalized list to detect unauthorized changes.",
+    "Requires root context to reflect privileged oversight of kernel artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-081ff9d0",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

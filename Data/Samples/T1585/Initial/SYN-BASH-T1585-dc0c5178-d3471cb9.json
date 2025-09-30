@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-social-profile -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X PATCH https://api.example-social.test/v1/users/artisanal_outreach -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"profile\\\":{\\\"display_name\\\":\\\"Avery Outreach\\\",\\\"bio\\\":\\\"Writing about Kubernetes, SRE, and OSS.\\\",\\\"location\\\":\\\"Remote\\\",\\\"website\\\":\\\"https://blog.example-blog.test/@artisanaloutreach\\\"}}\"'",
+  "explanation": "Completes persona profile details to enhance credibility and reduce suspicion.",
+  "rationale_steps": [
+    "Update display name, bio, and links to form a coherent persona.",
+    "Aligns cross-platform identity with consistent metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-d3471cb9",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

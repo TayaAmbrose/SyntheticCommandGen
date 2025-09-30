@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sha256sum /root/firmware_orig.img /root/firmware_mod.img && mkdir -p /mnt/orig /mnt/mod && mount -o loop /root/firmware_orig.img /mnt/orig && mount -o loop /root/firmware_mod.img /mnt/mod && diff -qr /mnt/orig /mnt/mod || true; umount /mnt/mod; umount /mnt/orig",
+  "explanation": "Compares original and modified firmware images by both checksums and file-level differences to validate injected changes.",
+  "rationale_steps": [
+    "Hash both images to establish distinct identities.",
+    "Mount images and perform a recursive diff to enumerate modifications.",
+    "Clean up mounts to avoid leaving traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-ae0d8f66",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

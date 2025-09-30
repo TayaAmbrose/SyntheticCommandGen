@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='198.51.100.10'; $sequence=@(23456,34567,45678); foreach($p in $sequence){ try{ $c=New-Object System.Net.Sockets.TcpClient; $c.Connect($target,$p) }catch{} finally{ if($c){$c.Close()} }; Start-Sleep -Milliseconds 200 }",
+  "explanation": "Implements TCP port knocking by attempting connections to a specific port sequence, potentially triggering a hidden service to open. Detection: watch for sequential connection attempts to uncommon, closed ports from the same source; leverage firewall logs (e.g., Windows Security 5156/5157) and IDS correlation.",
+  "rationale_steps": [
+    "Define a three-port knock sequence on the target.",
+    "Perform rapid TCP connect attempts to transmit the signal.",
+    "Short delays ensure the remote knock daemon records order.",
+    "Detect via correlation of sequential SYNs to unusual ports and firewall denied-connection events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-d90154f2",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

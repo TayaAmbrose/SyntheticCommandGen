@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p udp --dport 11111 -m recent --name T1205_K1 --set -j LOG --log-prefix \"T1205_KNOCK1 \"",
+  "explanation": "Establishes the first step of a port-knock sequence using UDP/11111 as a covert signal, tracking the source with recent to emulate traffic signaling.",
+  "rationale_steps": [
+    "Use an uncommon UDP port as the initial signal in a multi-step activation flow.",
+    "Leverage -m recent to persist state per source IP and log the event."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-d094359e",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

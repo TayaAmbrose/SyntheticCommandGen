@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,base64; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); auth=base64.b64encode((os.environ[\"CENSYS_API_ID\"]+\":\"+os.environ[\"CENSYS_API_SECRET\"]).encode()).decode(); c=http.client.HTTPSConnection(\"search.censys.io\",timeout=20); h={\"Authorization\":\"Basic \"+auth,\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}; payload=json.dumps({\"q\":f\"services.tls.certificates.leaf_data.subject.common_name:{dom} or services.dns.names:{dom}\",\"per_page\":10}).encode(); c.request(\"POST\",\"/api/v2/hosts/search\",body=payload,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Performs a Censys v2 hosts search (requires account) for certificates and DNS names matching the target domain, limiting results to reduce noise.",
+  "rationale_steps": [
+    "Use Basic Auth with API ID and secret from environment variables.",
+    "POST a scoped query to Censys hosts/search with per_page limits.",
+    "Return JSON results and handle errors robustly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-4ebe5ce0",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

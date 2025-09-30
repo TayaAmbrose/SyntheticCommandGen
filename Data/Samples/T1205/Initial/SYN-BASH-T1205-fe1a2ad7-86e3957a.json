@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"icmp and ip[8] = 42\" >/dev/null && ipfw add 410 allow tcp from any to me 8080 in; sleep 45; ipfw delete 410'",
+  "explanation": "Uses a magic TTL value (42) on an ICMP echo as the covert signal; on detection, opens TCP/8080 via ipfw for 45 seconds. Requires elevated privileges.",
+  "rationale_steps": [
+    "Leverage non-standard TTL in an ICMP probe as a low-noise signal.",
+    "Temporarily permits access to a hidden service port when the signal is seen.",
+    "Detection: alert on ICMP with atypical TTLs and correlate with ipfw rule changes and short-lived port 8080 availability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-86e3957a",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

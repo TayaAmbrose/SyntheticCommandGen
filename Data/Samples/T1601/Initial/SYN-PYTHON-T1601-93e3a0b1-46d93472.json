@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,hashlib,glob; assert os.geteuid()==0; entries=[l.strip().split() for l in open(\"/bootflash/golden/allowed_hashes.txt\") if l.strip() and not l.startswith(\"#\")]; allow={name:hash for (hash,name) in entries}; files=sum([glob.glob(\"/bootflash/*.bin\"),glob.glob(\"/mnt/flash/*.swi\"),glob.glob(\"/var/tmp/junos-*.tgz\")],[]); bad=[os.path.basename(p) for p in files if (os.path.basename(p) in allow and allow[os.path.basename(p)]!=hashlib.sha256(open(p,\"rb\").read()).hexdigest())]; print(\"All images match allowed hashes\" if not bad else \"MISMATCH: \"+\", \".join(bad)); sys.exit(0 if not bad else 10)'",
+  "explanation": "Scans common image locations and validates each discovered image against an allowlist of known-good SHA-256 hashes.",
+  "rationale_steps": [
+    "Load authorized image hashes from a controlled file.",
+    "Enumerate image artifacts across device storage paths.",
+    "Hash and validate each image; report any deviations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-46d93472",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

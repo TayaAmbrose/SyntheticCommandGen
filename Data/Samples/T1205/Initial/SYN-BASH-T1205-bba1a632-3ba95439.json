@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'iptables -N KNOCK 2>/dev/null; iptables -F KNOCK; iptables -I INPUT -p udp --dport 11111 -m recent --name K1 --set; iptables -I INPUT -p udp --dport 22222 -m recent --name K1 --rcheck --seconds 10 --hitcount 1 --rttl -m recent --name K2 --set; iptables -I INPUT -p udp --dport 33333 -m recent --name K2 --rcheck --seconds 10 --hitcount 1 --rttl -m recent --name AUTHD --set; iptables -I INPUT -p tcp --dport 22 -m recent --name AUTHD --rcheck --seconds 30 -j ACCEPT'",
+  "explanation": "Implements a port-knocking gate using iptables recent module so that a UDP knock sequence (11111\u219222222\u219233333) acts as a covert signal to temporarily open TCP/22. Requires administrator privileges. Detection: monitor for on-the-fly iptables rule changes and sudden acceptance of traffic to previously closed ports.",
+  "rationale_steps": [
+    "Create and flush a dedicated knock chain (idempotent).",
+    "Track sequential knocks with -m recent (K1 then K2).",
+    "Set AUTHD mark upon completing the sequence.",
+    "Temporarily allow TCP/22 when AUTHD condition is met.",
+    "Detection: audit iptables changes and alert on rapid rule insertions or unexpected INPUT accepts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-3ba95439",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

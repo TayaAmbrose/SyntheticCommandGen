@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Test-NetConnection -ComputerName 255.255.255.255 -Port 9 -InformationLevel Quiet | Out-Null; $mac='00-25-96-12-34-56'; $bytes=$mac.Split('-') | ForEach-Object {[byte]('0x'+$_)}; $packet = @([byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF,[byte]0xFF); 1..16 | ForEach-Object { $packet += $bytes }; $udp = New-Object System.Net.Sockets.UdpClient; $udp.EnableBroadcast = $true; $udp.Send($packet, $packet.Length, '255.255.255.255', 9) | Out-Null",
+  "explanation": "Generates a Wake-on-LAN magic packet (6x FF followed by 16x target MAC) to wake a device via UDP/9 broadcast. Detection: monitor for broadcast UDP/9 packets with WOL signatures; restrict WOL to authorized subnets and log anomalies.",
+  "rationale_steps": [
+    "Optionally verify broadcast path reachability using Test-NetConnection.",
+    "Construct a WOL-compliant magic packet (6x 0xFF + 16x MAC).",
+    "Broadcast the packet on UDP port 9 to wake the target device.",
+    "Defenders: inspect for WOL packet patterns on UDP/7 or UDP/9 and validate sender authorization."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-c5002964",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

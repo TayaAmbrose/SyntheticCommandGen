@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Batch registry/file export: map \\\\ATTACKER_IP\\reg$ with 'net use', export registry hives or configs to files, copy to the UNC path, then unmap.",
+  "explanation": "High-level automation to collect and exfiltrate configuration/registry data by staging to files and sending them via an SMB share mapped with 'net use'.",
+  "rationale_steps": [
+    "Connect to a remote SMB share using net use",
+    "Export target registry hives/configs to temporary files",
+    "Transfer the staged files to the remote UNC path",
+    "Disconnect SMB session and remove temporary files"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-a47edbf7",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

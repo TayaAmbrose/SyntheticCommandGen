@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Automated exfiltration via SMB mapping would typically: map \\\\ATTACKER_IP\\drop$ with 'net use', Compress-Archive a target folder, Copy-Item the archive to the UNC path, then delete the mapping.",
+  "explanation": "High-level example of an automated file-package-and-transfer workflow leveraging an SMB share mapped using the 'net' utility. Details are intentionally withheld.",
+  "rationale_steps": [
+    "Use net use to authenticate and map a remote SMB share",
+    "Compress target data into a single archive to reduce size and detection",
+    "Copy the archive to the mapped UNC path for exfiltration",
+    "Remove the SMB mapping to minimize traces"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-2f276961",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

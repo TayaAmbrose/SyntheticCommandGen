@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "az ad user create --display-name \"Evelyn Hart\" --user-principal-name \"evelyn.hart@exampletenant.onmicrosoft.com\" --password \"Str0ngPass!2345\" --force-change-password-next-login false --mail-nickname \"evelyn.hart\" --output json",
+  "explanation": "Creates an Azure AD user to serve as an online persona within an attacker-controlled tenant.",
+  "rationale_steps": [
+    "Leverage Azure CLI to create a user with convincing profile details.",
+    "Disable forced password change to allow continuous persona use.",
+    "Emit the created user as JSON for downstream automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-2a4b3b56",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

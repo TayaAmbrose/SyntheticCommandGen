@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; $body=@{subject='Weekly Brand Sync'; start=@{dateTime='2025-10-01T17:00:00'; timeZone='Pacific Standard Time'}; end=@{dateTime='2025-10-01T18:00:00'; timeZone='Pacific Standard Time'}; body=@{contentType='HTML'; content='Weekly sync with design team.'}; attendees=@(@{emailAddress=@{address='noah.patel@contoso.onmicrosoft.com'; name='Noah Patel'}; type='required'})}; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/events') -Method POST -Body ($body | ConvertTo-Json -Depth 5) -ContentType 'application/json' | Select-Object id,subject,start,end,attendees | ConvertTo-Json -Depth 5",
+  "explanation": "Creates a routine calendar event with an internal attendee to simulate normal activity patterns for the persona.",
+  "rationale_steps": [
+    "Build a realistic event payload with timezone-aware start/end.",
+    "POST to Graph to create the event on the persona\u2019s calendar.",
+    "Select key fields and output JSON for automation and auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-e90aebe4",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

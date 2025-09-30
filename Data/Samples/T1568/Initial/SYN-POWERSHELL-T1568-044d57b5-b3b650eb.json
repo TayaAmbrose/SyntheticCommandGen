@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d = (Get-DnsClientCache).Name | Where-Object { $_ -match '\\.' } | Select-Object -Unique | Get-Random; $cf = Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://cloudflare-dns.com/dns-query?name=$d&type=A\" -TimeoutSec 5; $gd = Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\" -TimeoutSec 5; $ips1 = ((($cf.Content | ConvertFrom-Json).Answer).data) -join ','; $ips2 = ((($gd.Content | ConvertFrom-Json).Answer).data) -join ','; if ($ips1 -ne $ips2) { Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; cloudflare=$ips1; google=$ips2; ts=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json) 'https://siem.example.local/api/ingest/dns-anomaly' }",
+  "explanation": "Defensive cross-validation for T1568: compares DNS-over-HTTPS answers from multiple resolvers for a cached domain to spot resolution manipulation characteristic of dynamic resolution techniques.",
+  "rationale_steps": [
+    "Pick a random domain from DNS client cache.",
+    "Query two independent DoH resolvers for A records.",
+    "Compare returned IP sets and flag mismatches.",
+    "Report anomalies to SIEM via Invoke-WebRequest."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-b3b650eb",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

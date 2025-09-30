@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, filecmp, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\nimg = \"/tmp/system_patched.img\"\ngold = \"/opt/golden/system.img\"\nmnt = \"/mnt/patch\"\nmntg = \"/mnt/gold\"\n\nos.makedirs(mnt, exist_ok=True)\nos.makedirs(mntg, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"rw,loop\", img, mnt])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold, mntg])\n\ntarget = os.path.join(mnt, \"etc\", \"rc.local\")\nos.makedirs(os.path.dirname(target), exist_ok=True)\nwith open(target, \"a\") as f:\n    f.write(\"\\n# init hook inserted\\n\")\n\ngold_rc = os.path.join(mntg, \"etc\", \"rc.local\")\nif os.path.exists(gold_rc):\n    changed = not filecmp.cmp(target, gold_rc, shallow=False)\n    print(\"rc.local changed:\", changed)\n\nh = hashlib.sha256()\nwith open(img, \"rb\") as f:\n    for b in iter(lambda: f.read(1<<20), b\"\"):\n        h.update(b)\nprint(\"Patched image sha256:\", h.hexdigest())\n\nsubprocess.call([\"umount\", mntg])\nsubprocess.call([\"umount\", mnt])\nPY",
+  "explanation": "Injects a modification into the mounted image's init script and confirms the change by comparing to the golden file; prints the modified image hash for tracking.",
+  "rationale_steps": [
+    "Require root to mount the image read-write.",
+    "Append a marker line to rc.local within the image.",
+    "Use filecmp to prove divergence from the golden rc.local and compute the image's new SHA-256."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-ce9c92a9",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

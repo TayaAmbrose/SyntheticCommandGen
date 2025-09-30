@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domains=(Get-DnsClientCache).Name | Select-Object -Unique; $sus=$domains | Where-Object { $label=($_ -split '\\.')[0]; $label.Length -ge 15 -or ($label -replace '\\D','').Length -ge 5 }; foreach($d in $sus){ try{ $rdap=Invoke-WebRequest -UseBasicParsing \"https://rdap.org/domain/$d\" -TimeoutSec 8; $j=$rdap.Content|ConvertFrom-Json; $changed=([datetime]($j.events | Where-Object {$_.eventAction -eq 'last changed'} | Select-Object -First 1 -ExpandProperty eventDate)); if([datetime]::UtcNow - $changed -lt [TimeSpan]::FromDays(7)){ Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; lastChanged=$changed.ToString('o')}|ConvertTo-Json) 'https://siem.example.local/api/ingest/rdap-recent-change' } } catch{} }",
+  "explanation": "Defensive prioritization for T1568: flags cached domains with long/numeric-heavy labels and recent RDAP 'last changed' events, a behavior aligned with dynamic resolution activity.",
+  "rationale_steps": [
+    "Identify suspicious label structures from cache.",
+    "Query RDAP for each domain.",
+    "Prioritize domains with recent change events.",
+    "Send prioritized list to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-4c9492be",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

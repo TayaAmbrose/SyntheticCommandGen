@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'iptables -A INPUT -p tcp --dport 10443 -m recent --name K1 --set -j DROP; iptables -A INPUT -m recent --rcheck --seconds 10 --name K1 -p tcp --dport 10554 -m recent --name K2 --set -j DROP; iptables -A INPUT -m recent --rcheck --seconds 10 --name K2 -p tcp --dport 10665 -m recent --name K3 --set -j DROP; iptables -I INPUT 1 -m recent --rcheck --seconds 10 --name K3 -p tcp --dport 22 -j ACCEPT'",
+  "explanation": "Implements a basic server-side TCP port-knocking handler with iptables recent module; only hosts that knock 10443->10554->10665 within 10s get SSH opened. Requires root (sudo). Detection: audit unauthorized iptables modifications and monitor recent-lists and sudden ACCEPT rules for protected ports.",
+  "rationale_steps": [
+    "Sets markers per knock stage using -m recent.",
+    "Only after correct sequence is matched does a high-priority ACCEPT for SSH occur.",
+    "Drops knock packets to reduce visibility in application logs.",
+    "Detect via change auditing on iptables and real-time checks for ephemeral SSH ACCEPT rules."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-4361e6ab",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

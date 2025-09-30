@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib; dev=next((d for d in ['/dev/sda','/dev/nvme0n1','/dev/vda'] if os.path.exists(d)), None); assert dev, 'no disk device'; f=open(dev,'rb'); data=f.read(1048576); f.close(); h=hashlib.sha256(data).hexdigest(); b=open('/var/lib/img-baseline/bootsector.sha256').read().strip().split()[0]; print('BOOTSECTOR', dev, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Hashes the first 1 MiB of the boot disk (MBR/boot sectors) to verify bootloader-level image modifications.",
+  "rationale_steps": [
+    "Directly reads raw disk sectors, aligning with system image/boot area modification (T1601).",
+    "Requires root to access block devices, demonstrating privileged verification.",
+    "Uses hashlib to compare with an expected malicious bootsector baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-53190f98",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

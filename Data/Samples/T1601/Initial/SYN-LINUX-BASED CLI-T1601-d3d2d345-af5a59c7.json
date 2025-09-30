@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: ubiformat rootfs partition'; ubiformat /dev/mtd5 -y -f /tmp/mal_rootfs.ubi && sync",
+  "explanation": "Reformats and writes a malicious UBI-formatted rootfs image to the designated MTD partition, modifying the system image used at boot.",
+  "rationale_steps": [
+    "Use ubiformat to safely erase/format the UBI-capable MTD partition.",
+    "Flash a crafted UBI image containing the attacker\u2019s modified root filesystem.",
+    "Sync to ensure the new image is fully persisted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-af5a59c7",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

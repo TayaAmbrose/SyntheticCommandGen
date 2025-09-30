@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $hash = (Get-FileHash -Algorithm SHA256 -Path $img).Hash; $log = \"C:\\ProgramData\\NetOS\\audit\\system_img_hash.log\"; Add-Content -Path $log -Value \"$(Get-Date -Format o) $hash\"",
+  "explanation": "Calculates and records the system image hash to an audit log in a restricted directory for later integrity comparisons.",
+  "rationale_steps": [
+    "Access the system image file in a privileged path.",
+    "Compute the SHA256 using Get-FileHash.",
+    "Append timestamped result to an admin-only audit log.",
+    "Enable future comparisons to detect image drift."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-954df083",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

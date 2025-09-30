@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 10443 10554 10665; do nc -z -w1 192.0.2.10 \"$p\"; sleep 0.5; done; nc -z -v -w2 192.0.2.10 22",
+  "explanation": "Performs TCP port-knocking with nc -z (no data) to trigger an access control change, then probes SSH to confirm it opened. Detection: inspect firewall logs for SYNs to unusual sequences preceding an allowed SSH connection.",
+  "rationale_steps": [
+    "Leverages nc -z to send TCP SYN-only probes as the signaling mechanism.",
+    "Maintains ordering and short timing between knocks to match server expectations.",
+    "Follows up with a verification SYN to TCP/22.",
+    "Detect by alerting on clustered SYNs to unusual high ports followed by SSH acceptance."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-a96d9ada",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

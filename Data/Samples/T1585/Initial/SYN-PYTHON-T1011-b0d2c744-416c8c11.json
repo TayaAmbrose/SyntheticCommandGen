@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would use IPv6 UDP with a specified traffic class (if available) to send base64-encoded chunks to a unicast destination on a high, uncommon port]",
+  "explanation": "IPv6-specific options and addressing provide a distinct medium from typical IPv4/HTTPS traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Leverage IPv6 unicast to avoid primary IPv4 channels",
+    "Optionally set IPv6 traffic class without altering routing",
+    "Base64-encode data for ASCII-safe transport",
+    "Chunk and send via UDP to a high-numbered port",
+    "Avoids any persistent network configuration changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-416c8c11",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

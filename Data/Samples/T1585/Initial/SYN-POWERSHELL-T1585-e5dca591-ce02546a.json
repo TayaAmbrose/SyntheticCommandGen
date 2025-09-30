@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-service-specific-credential --user-name liam.w.nolan --service-name codecommit.amazonaws.com --output json",
+  "explanation": "Creates a service-specific credential for CodeCommit, simulating a developer/reporting workflow and increasing the persona's realism through typical tooling access.",
+  "rationale_steps": [
+    "Enable service-scoped credentials aligned with common developer tools.",
+    "Reflect normal operational needs without elevating global privileges.",
+    "Return JSON to store credentials metadata securely."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-ce02546a",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

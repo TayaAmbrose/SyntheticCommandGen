@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Background watcher: map \\\\ATTACKER_IP\\watch$ with 'net use', start a FileSystemWatcher to auto-copy new files to the UNC path, then remove the mapping on exit.",
+  "explanation": "Describes an automated event-driven exfiltration that reacts to file changes and silently transfers them over an SMB share opened with 'net use'.",
+  "rationale_steps": [
+    "Create an SMB connection to a remote share using net use",
+    "Initialize a file system watcher on sensitive directories",
+    "On change events, queue and copy files to the UNC path",
+    "Cleanly remove the SMB mapping to reduce footprints"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-7059bdcc",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'import socket,binascii; mac=\"001122334455\"; payload=binascii.unhexlify(\"FF\"*6 + mac*16); s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1); s.sendto(payload,(\"255.255.255.255\",9)); s.close()'",
+  "explanation": "Generates a valid Wake-on-LAN magic packet (6xFF + 16 repeats of MAC) to wake a downstream management host, enabling remote access paths. Requires sudo for broadcast socket options on some systems.",
+  "rationale_steps": [
+    "Form the exact WoL payload format and send to UDP/9 broadcast.",
+    "Waking a sleeping admin box can covertly enable management reachability (traffic signaling).",
+    "No obfuscation or encoding used.",
+    "Detection: monitor broadcast UDP to ports 7/9 and validate WoL pattern; alert on unexpected wake events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-d1dd424a",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

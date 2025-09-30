@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import sniff,Raw; pkts=sniff(filter='udp and port 4000', count=20, timeout=30); [print(p[Raw].load) for p in pkts if Raw in p]\"",
+  "explanation": "Passively sniffs for UDP magic-payload beacons on port 4000 to detect when a signaling event has occurred. Requires sudo for promiscuous capture. Detection: monitor for processes opening raw sockets and capturing traffic.",
+  "rationale_steps": [
+    "Open a packet sniffer with a BPF filter for UDP/4000.",
+    "Extract any payloads to spot the magic trigger string.",
+    "Coordinate subsequent access (e.g., attempt connecting to a port expected to open).",
+    "Defenders should track raw-socket usage and unusual sniffing activity on endpoints."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-fbdc2abe",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

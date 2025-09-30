@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "( crontab -l 2>/dev/null; echo '5 10 * * 1 /usr/bin/env MASTO_TOKEN=$(cat /etc/persona/mastodon.token) curl -sS -X PATCH https://mastodon.social/api/v1/accounts/update_credentials -H \"Authorization: Bearer ${MASTO_TOKEN}\" -F \"display_name=Alex Morgan\" -F \"note=OSS tinkerer | Cycling\" > /var/log/persona_mastodon_profile.json 2>&1' ) | crontab -",
+  "explanation": "Uses cron to keep a Mastodon profile updated, reinforcing the long-lived online persona.",
+  "rationale_steps": [
+    "Load the API token securely at runtime",
+    "Update display name and note using official API",
+    "Persist response as JSON for automated checks"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-b9648dad",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

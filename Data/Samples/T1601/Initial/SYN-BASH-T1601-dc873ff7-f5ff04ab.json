@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "install -m 0644 /root/firmware_mod.img /mnt/flash/system.img && sha256sum /mnt/flash/system.img > /mnt/flash/system.img.sha256",
+  "explanation": "Overwrites the legitimate system image with a malicious one and writes a checksum file to make the change look routine.",
+  "rationale_steps": [
+    "Replace the bootable image with an attacker-modified firmware.",
+    "Generate a checksum to verify the malicious image and blend in with maintenance artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-f5ff04ab",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

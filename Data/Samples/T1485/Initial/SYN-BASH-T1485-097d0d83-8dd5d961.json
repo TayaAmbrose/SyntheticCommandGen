@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/crash -xdev -type f \\( -name '*.core' -o -name 'core.*' -o -name '*.crash' \\) -exec shred -n 2 -z -u -f {} +",
+  "explanation": "Targets crash dump files for secure destruction to eliminate sensitive memory snapshots.",
+  "rationale_steps": [
+    "Select only crash dump patterns within a specific directory to avoid broad impact.",
+    "Overwrite the dump files to destroy residual memory data.",
+    "Remove files after shredding to clear directory entries and reduce metadata remnants."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-8dd5d961",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

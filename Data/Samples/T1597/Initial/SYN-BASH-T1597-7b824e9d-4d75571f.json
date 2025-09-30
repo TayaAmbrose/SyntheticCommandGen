@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/enrichment/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/cpe_enrich_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_cpe_enrich -o IdentitiesOnly=yes feeds@sftp.cpe-enrichment.com:/feeds/enrichment/acme_corp/products.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c products.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cpe-enrichment\\\",\\\"artifact\\\":\\\"%s/products.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cpe-enrichment\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Downloads a closed-source product/CPE enrichment dataset (JSON) used to enhance internal asset intelligence on the target, consistent with T1597.",
+  "rationale_steps": [
+    "Securely authenticate and enforce host key checking.",
+    "Fetch enrichment JSON and its checksum from the paid SFTP feed.",
+    "Validate integrity and place into a dated folder.",
+    "Emit JSON-formatted status for downstream processing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-4d75571f",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

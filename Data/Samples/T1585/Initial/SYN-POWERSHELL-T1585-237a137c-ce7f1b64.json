@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-AzRoleAssignment -SignInName 'avery.reed@contoso.onmicrosoft.com' -RoleDefinitionName 'Reader' -Scope (Get-AzResourceGroup -Name 'rg-marketing').ResourceId | Select-Object Scope,RoleDefinitionName,SignInName,PrincipalId | ConvertTo-Json",
+  "explanation": "Grants the persona a low-privilege Reader role on a marketing resource group to blend into normal cloud operations without raising suspicion.",
+  "rationale_steps": [
+    "Use Az RBAC to assign a minimal role to the persona at a scoped resource.",
+    "Ensure the account has plausible, limited access that supports persistence.",
+    "Return the assignment details in JSON for audit and automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-ce7f1b64",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

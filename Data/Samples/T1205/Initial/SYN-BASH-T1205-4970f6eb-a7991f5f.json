@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 443 --tcp-flags SYN SYN -m tcpmss --mss 1337:1337 -j LOG --log-prefix 'T1205_TCPMSS_SIG ' --log-level 4 && iptables -I INPUT -p tcp --dport 443 --tcp-flags SYN SYN -m tcpmss --mss 1337:1337 -m recent --name t1205_tcpmss --set && iptables -I INPUT -p tcp --dport 8080 -m recent --name t1205_tcpmss --rcheck --seconds 30 --reap -j ACCEPT\"",
+  "explanation": "Interprets an unusual TCP SYN with MSS exactly 1337 to port 443 as a low-level signaling packet. Logs the event and briefly opens TCP/8080 for the source IP. This leverages protocol-specific fields for covert signaling.",
+  "rationale_steps": [
+    "From Docker, add iptables rules targeting TCP option MSS as a signal.",
+    "Detect SYN packets with an uncommon MSS value as the trigger.",
+    "Grant short-lived access to TCP/8080 for the IP that sent the signal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-a7991f5f",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

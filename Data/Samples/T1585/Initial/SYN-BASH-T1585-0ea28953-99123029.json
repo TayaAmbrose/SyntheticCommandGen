@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "aws cognito-idp admin-create-user --user-pool-id us-east-1_Abc12345 --username alex.morgan --user-attributes Name=email,Value=alex.morgan.persona@example.com Name=name,Value='Alex Morgan' Name=zoneinfo,Value='America/New_York' --message-action SUPPRESS --output json",
+  "explanation": "Creates a managed application user via AWS Cognito, suitable for maintaining a distinct persona identity.",
+  "rationale_steps": [
+    "Target a known user pool",
+    "Provide realistic profile attributes (email, name, timezone)",
+    "Suppress automated messaging to avoid external signals"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-99123029",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

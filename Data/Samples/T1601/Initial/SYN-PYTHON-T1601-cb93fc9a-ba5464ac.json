@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, hashlib, difflib\n\ncands = [\"/boot/grub/i386-pc/core.img\", \"/boot/grub/x86_64-efi/core.efi\"]\ntarget = next((p for p in cands if os.path.exists(p)), None)\nif not target:\n    raise SystemExit(\"No GRUB core image found\")\n\nh = hashlib.sha256()\nwith open(target, \"rb\") as f:\n    for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n        h.update(ch)\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/grub_core.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_grub_core_sha256\", tofile=f\"current_{os.path.basename(target)}_sha256\")))",
+  "explanation": "Checks the GRUB core image's integrity by comparing its SHA-256 to a baseline, revealing bootloader image modifications.",
+  "rationale_steps": [
+    "Select the platform-appropriate GRUB core image.",
+    "Compute its SHA-256 and compare with a baseline hash.",
+    "Use unified diff for a clear mismatch indication."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-ba5464ac",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

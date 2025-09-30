@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,UDP,Raw; sniff(filter=\"udp and port 9\", prn=lambda p: (hasattr(p, \"load\") and len(p[Raw].load) >= 102 and p[Raw].load.startswith(b\"\\xff\"*6) and print(f\"WOL-like packet from {p[0][1].src}\")))'",
+  "explanation": "Sniffs for WoL magic packet patterns (6x FF header) on UDP/9 using scapy to identify signaling. Requires root (sudo). Detection: alert on unexpected WoL traffic originating from non-management hosts.",
+  "rationale_steps": [
+    "Uses scapy to inspect UDP payloads for WoL signature bytes.",
+    "Prints source IP when a valid magic frame is observed.",
+    "Supports security monitoring of signaling behavior.",
+    "Detect via alerts on WoL frames outside of authorized maintenance windows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-21c640cd",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

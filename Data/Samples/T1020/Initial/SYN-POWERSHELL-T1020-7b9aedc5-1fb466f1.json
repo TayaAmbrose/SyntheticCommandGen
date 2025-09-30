@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Drive-mapped exfil: use 'net use Z:' to map \\\\ATTACKER_IP\\z$, then recursively copy filtered file types to Z: silently, and disconnect the drive.",
+  "explanation": "Demonstrates using a drive letter mapping via 'net use' to silently transfer targeted file types to a remote SMB share in an automated fashion.",
+  "rationale_steps": [
+    "Map an SMB share to a drive letter using net use with explicit credentials",
+    "Filter and copy selected files to the mapped drive without prompts",
+    "Optionally track transferred items to avoid duplication",
+    "Remove the drive mapping to conceal activity"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-1fb466f1",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

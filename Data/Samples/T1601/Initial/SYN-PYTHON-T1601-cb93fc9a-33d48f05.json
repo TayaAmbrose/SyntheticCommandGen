@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib, os\n\niso = \"/root/system_image.iso\"\nbase = \"/root/baselines/system_image.iso.sha256\"\n\nh = hashlib.sha256()\nwith open(iso, \"rb\") as f:\n    for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n        h.update(ch)\ncurr = h.hexdigest()\nexp = open(base).read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_iso_sha256\", tofile=\"current_iso_sha256\")) or (\"OK: \" + os.path.basename(iso)))",
+  "explanation": "Validates the SHA-256 of a system installation ISO against a baseline, confirming the image hasn't been maliciously altered pre-deployment.",
+  "rationale_steps": [
+    "Read the entire ISO and compute its SHA-256.",
+    "Compare the resulting hash with a known-good baseline.",
+    "Report differences to detect tampering of the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-33d48f05",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

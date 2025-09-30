@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$doms=(Get-DnsClientCache).Name | Where-Object { ($_ -split '\\.')[0].Length -gt 12 } | Select-Object -Unique; $stats=@(); foreach($d in $doms){ $fails=0; 1..3 | ForEach-Object { try{ $r=Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\"; if(((($r.Content|ConvertFrom-Json).Status) -ne 0)){ $fails++ } } catch { $fails++ } }; $stats+=[pscustomobject]@{Domain=$d; NX=$fails} }; $flag=$stats | Where-Object { $_.NX -ge 2 } | Select-Object -ExpandProperty Domain; if($flag){ Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{ts=(Get-Date).ToUniversalTime().ToString('o'); suspected=$flag}|ConvertTo-Json) 'https://siem.example.local/api/ingest/nxdomain-suspects' }",
+  "explanation": "Defensive NXDOMAIN scoring for T1568: evaluates repetitive NXDOMAIN responses for suspicious domains, which is common in DGA/dynamic resolution probing.",
+  "rationale_steps": [
+    "Select high-suspicion domains from cache by length.",
+    "Resolve each domain multiple times via DoH.",
+    "Count NXDOMAIN occurrences per domain.",
+    "Report domains with high NXDOMAIN ratios to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-303da1e6",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

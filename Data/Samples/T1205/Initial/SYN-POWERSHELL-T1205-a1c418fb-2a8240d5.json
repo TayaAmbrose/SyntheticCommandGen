@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$mac='00-11-22-33-44-55'; $bcast='192.0.2.255'; $port=9; $m=$mac -replace '[-:]',''; $mb = for ($i=0; $i -lt 12; $i+=2) { [Convert]::ToByte($m.Substring($i,2),16) }; $packet = [byte[]](@(0xFF,0xFF,0xFF,0xFF,0xFF,0xFF) + ($mb * 16)); $udp = New-Object System.Net.Sockets.UdpClient; $udp.EnableBroadcast=$true; $udp.Send($packet,$packet.Length,$bcast,$port) | Out-Null; $udp.Close()",
+  "explanation": "Manually crafts and transmits a WOL magic packet (6x 0xFF + 16x MAC) to the broadcast address, directly demonstrating Traffic Signaling mechanics without third-party binaries. Detection: inspect outbound UDP broadcasts to port 9, and consider NIDS signatures for the WOL byte pattern.",
+  "rationale_steps": [
+    "Format the MAC address and construct the magic packet bytes per the WOL specification.",
+    "Use UdpClient with broadcast enabled to send on UDP/9.",
+    "No obfuscation: payload is clear and structurally identifiable.",
+    "Detect with NIDS pattern-matching on the WOL byte sequence and NetFlow for UDP/9 anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-2a8240d5",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

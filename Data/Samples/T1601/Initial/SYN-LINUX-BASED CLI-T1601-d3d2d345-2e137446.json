@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: install malicious NOS via ONIE'; onie-nos-install -y /mnt/images/malicious-nos-installer.bin",
+  "explanation": "Uses ONIE tooling available on many switches to install a malicious NOS image from local storage, replacing the running system image.",
+  "rationale_steps": [
+    "Leverage ONIE\u2019s installer from the Linux shell on an ONIE-enabled switch.",
+    "Provide a local malicious installer image to avoid network fetch.",
+    "Trigger a NOS replacement to persist the altered system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-2e137446",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

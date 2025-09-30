@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json, datetime as dt; iam=boto3.client('iam'); user='alex.research'; u=iam.create_user(UserName=user, Tags=[{'Key':'Department','Value':'Market Research'},{'Key':'Title','Value':'Research Assistant'},{'Key':'CostCenter','Value':'MRK-221'}]); lp=iam.create_login_profile(UserName=user, Password='TempPassw0rd!2025', PasswordResetRequired=True); iam.attach_user_policy(UserName=user, PolicyArn='arn:aws:iam::aws:policy/job-function/ViewOnlyAccess'); ak=iam.create_access_key(UserName=user); out={'action':'create_persona_user','user':u['User'],'login_profile_created':True,'attached_policies':['job-function/ViewOnlyAccess'],'access_key_id':ak['AccessKey']['AccessKeyId'],'secret_access_key':ak['AccessKey']['SecretAccessKey'],'timestamp':dt.datetime.utcnow().isoformat()+'Z'}; print(json.dumps(out))\"",
+  "explanation": "Creates a low-privilege IAM user with realistic tags, console login requiring password reset, and an API key to operate as a believable research contractor persona.",
+  "rationale_steps": [
+    "Attach only view/read policies and realistic tags to blend in with typical contractor profiles.",
+    "Generate both console and API access to enable versatile but low-noise operations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-4726604a",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

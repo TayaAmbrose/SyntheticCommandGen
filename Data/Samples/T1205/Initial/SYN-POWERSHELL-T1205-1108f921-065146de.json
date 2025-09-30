@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.70'; $ports=@(32123,42124,52125); $udp=New-Object System.Net.Sockets.UdpClient; foreach($p in $ports){ $null=$udp.Send([byte[]]@(0),1,$target,$p); Start-Sleep -Milliseconds 200 }; $udp.Close() }",
+  "explanation": "Performs a UDP port-knocking sequence by sending empty datagrams to a predefined set of high ports. A remote knock daemon may open a hidden service upon receiving the correct sequence. Detection: correlate short-interval UDP hits to closed/uncommon ports; alert on repeated sequences from a single source. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Emit a sequence of UDP packets to designated knock ports.",
+    "Trigger an agent that opens a service only after correct sequence.",
+    "Advise detection via correlation of sequential UDP probes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-065146de",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

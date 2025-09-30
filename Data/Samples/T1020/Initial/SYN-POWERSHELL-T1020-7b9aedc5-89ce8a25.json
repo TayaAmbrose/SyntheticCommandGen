@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Periodic loop: map \\\\ATTACKER_IP\\drop$ with 'net use', on a timed interval compress new files from a directory and copy to the UNC path, then unmap.",
+  "explanation": "Illustrates a timed loop that automatically batches and transfers newly found files to a remote SMB share established via 'net use'.",
+  "rationale_steps": [
+    "Use net use to map a remote SMB share with supplied credentials",
+    "Enumerate new or modified files since last run",
+    "Bundle and copy files to the UNC path on a schedule",
+    "Disconnect the SMB session when finished"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-89ce8a25",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

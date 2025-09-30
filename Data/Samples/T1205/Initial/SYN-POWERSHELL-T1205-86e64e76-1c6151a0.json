@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='198.51.100.120'; $ports=@(3211,4322,5433); $delays=@(100,300,500); for($i=0;$i -lt $ports.Count;$i++){ Test-NetConnection -ComputerName $target -Port $ports[$i] -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds $delays[$i] }; Test-NetConnection -ComputerName $target -Port 6001 -InformationLevel Detailed",
+  "explanation": "Uses an inter-packet timing signature (100ms, 300ms, 500ms) as part of the knock to open TCP/6001. Detection: identify connection sequences with consistent yet unusual timing intervals; cross-reference with subsequent opening of a high port.",
+  "rationale_steps": [
+    "Define a timing-based knock pattern to encode the signal.",
+    "Send TCP connect attempts with specific inter-knock delays.",
+    "Connect to the service expected to open after the timing-based signal.",
+    "Defenders: apply timing-aware analytics to detect encoded signaling sequences."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-1c6151a0",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

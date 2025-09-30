@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $key=$env:GREYNOISE_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'Missing GREYNOISE_API_KEY'; }; $ip='1.1.1.1'; $uri=\"https://api.greynoise.io/v2/noise/context/$ip\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{key=$key; Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[GreyNoise] \" + $_.Exception.Message) }",
+  "explanation": "Fetches enterprise GreyNoise noise context for an IP, a subscription-only closed-source dataset that profiles scanning behavior. Uses API key header and outputs JSON.",
+  "rationale_steps": [
+    "Read API key from environment and validate presence.",
+    "Target a single IP to minimize operational noise.",
+    "Set Accept to JSON and use a conservative timeout.",
+    "Serialize output and log errors without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-af321818",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

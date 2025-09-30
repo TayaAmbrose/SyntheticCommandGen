@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $expMD5 = (Get-Content \"$img.md5\").Trim().ToLower(); $expSHA = (Get-Content \"$img.sha256\").Trim().ToLower(); $aMD5 = (Get-FileHash -Algorithm MD5 -Path $img).Hash.ToLower(); $aSHA = (Get-FileHash -Algorithm SHA256 -Path $img).Hash.ToLower(); if ($aMD5 -ne $expMD5 -or $aSHA -ne $expSHA) { Write-Error \"Hash mismatch: MD5 or SHA256 incorrect\" } else { Write-Output \"MD5 and SHA256 match expected values\" }",
+  "explanation": "Performs dual-hash verification (MD5 and SHA256) of the system image against stored checksums to increase confidence in integrity checks.",
+  "rationale_steps": [
+    "Load expected MD5 and SHA256 values from admin-protected checksum files.",
+    "Compute both MD5 and SHA256 with Get-FileHash.",
+    "Compare actual and expected values.",
+    "Report any discrepancy to highlight unauthorized changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-a86d0aac",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

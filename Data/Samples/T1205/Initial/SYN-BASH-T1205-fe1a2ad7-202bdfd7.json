@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ipfw add set 5 500 allow tcp from any to me 8443 in; ipfw set disable 5; tcpdump -ln -i en0 -c 3 \"tcp[13] & 2 != 0 and dst port 65001\" >/dev/null && ipfw set enable 5; sleep 120; ipfw set disable 5'",
+  "explanation": "Prepares a hidden ipfw rule in set 5 for TCP/8443, disabled by default. After three SYNs to port 65001 (knock), enables the set for 120 seconds, then disables it. Requires root.",
+  "rationale_steps": [
+    "Stage a dormant rule set and use a repeated knock as activation.",
+    "Enable rule set only on receipt of the expected signal and revert after a timer.",
+    "Detection: audit ipfw set enable/disable events; watch for repeated SYNs to 65001; port 8443 exposure spikes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-202bdfd7",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

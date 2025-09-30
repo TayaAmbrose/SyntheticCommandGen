@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $headers=@{ 'x-apikey'=$env:VT_API_KEY; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://www.virustotal.com/api/v3/domains/contoso.com' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object -ExpandProperty data | Select-Object id,@{n='reputation';e={$_.attributes.reputation}},@{n='last_analysis_stats';e={$_.attributes.last_analysis_stats}} | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\virustotal_domain_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts VirusTotal success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts VirusTotal error: $($_.Exception.Message)\" }",
+  "explanation": "Uses VirusTotal v3 (API key required) to gather reputation and analysis statistics on the target domain, returning a structured subset and logging the operation.",
+  "rationale_steps": [
+    "Access a gated threat intelligence provider via API key.",
+    "Request domain reputation and analysis metadata.",
+    "Serialize only key attributes to JSON to reduce noise.",
+    "Record operational status to a local log."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-dcdab70e",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

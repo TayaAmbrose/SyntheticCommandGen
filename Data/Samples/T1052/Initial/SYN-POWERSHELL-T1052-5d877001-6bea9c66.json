@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "Mount-DiskImage -ImagePath \"C:\\Temp\\archive.iso\"; $iso=(Get-DiskImage \"C:\\Temp\\archive.iso\" | Get-Volume).DriveLetter; $usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); Copy-Item \"$iso:\\\" \"$usb:\\Backup\" -Recurse -Force; Dismount-DiskImage -ImagePath \"C:\\Temp\\archive.iso\"",
+  "explanation": "Mounts a local ISO, copies its contents to a USB drive, and dismounts, populating the removable media with exfil content via a local mount.",
+  "rationale_steps": [
+    "Mount a local disk image to access packaged data.",
+    "Determine both ISO and USB drive letters.",
+    "Copy all ISO contents to the USB and then dismount."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-6bea9c66",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

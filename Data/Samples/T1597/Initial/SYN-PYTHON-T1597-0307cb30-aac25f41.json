@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"WHOISXML_API_KEY\"]; q=\"/whoisserver/WhoisService?\"+urllib.parse.urlencode({\"apiKey\":key,\"domainName\":dom,\"outputFormat\":\"JSON\"}); c=http.client.HTTPSConnection(\"www.whoisxmlapi.com\",timeout=15); c.request(\"GET\",q,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries WhoisXML API (paid) for WHOIS data of the target domain via HTTPS and returns structured JSON.",
+  "rationale_steps": [
+    "Construct a parameterized query string using a securely sourced API key.",
+    "Perform HTTPS GET to WhoisXML endpoint and request JSON output.",
+    "Parse and print JSON; handle error cases and avoid leaking secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-aac25f41",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

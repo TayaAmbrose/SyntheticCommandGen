@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 2222 3333 4444; do nc -z -w1 198.51.100.5 \"$p\"; sleep 0.3; done",
+  "explanation": "Generates a TCP SYN-based port-knock sequence to 198.51.100.5 to trigger a hidden rule change on the remote host. No local root needed to send, but the effect is to enable a device function remotely via signaling. Detection: alert on sequential SYNs to non-service ports and sudden success on previously filtered ports.",
+  "rationale_steps": [
+    "Choose non-standard TCP ports for the knock pattern.",
+    "Use netcat in zero-I/O scan mode to emit SYNs quickly.",
+    "Maintain timing expected by the remote listener.",
+    "Remote system uses the sequence as a magic trigger to open access.",
+    "Detection: IDS for unusual SYNs to random ports; compare pre/post firewall accept logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-ca458c76",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "echo -n K1 > /dev/udp/target.example/32100; sleep 1; echo -n K2 > /dev/udp/target.example/32101; sleep 1; echo -n K3 > /dev/udp/target.example/32102; ssh -p 4422 user@target.example",
+  "explanation": "Uses Bash's /dev/udp pseudo-device to send three small UDP payload knocks (K1, K2, K3) to specific ports, signaling the remote host to open SSH on 4422, then connects. Detection: look for unusual use of /dev/udp in shell histories; packet inspection for small, ordered UDP payloads to uncommon ports; correlate with subsequent SSH connections from the same source IP.",
+  "rationale_steps": [
+    "Issue three distinct UDP knocks using Bash's /dev/udp to minimize tool footprint.",
+    "Remote knock service recognizes the payload sequence and opens SSH.",
+    "Initiate SSH once the port is exposed.",
+    "Detect by auditing shell history for /dev/udp usage and analyzing UDP-to-SSH correlation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-63490949",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

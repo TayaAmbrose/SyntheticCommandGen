@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$feed = Invoke-WebRequest -UseBasicParsing 'https://threatintel.example.local/feeds/newly-registered-domains.json' -TimeoutSec 10; $list = ($feed.Content | ConvertFrom-Json).domains; $cached = (Get-DnsClientCache).Name; $matches = $cached | Where-Object { $list -contains $_ }; $out = @{ when=(Get-Date).ToUniversalTime().ToString('o'); hits=$matches } | ConvertTo-Json -Depth 3; Invoke-WebRequest -UseBasicParsing -ContentType 'application/json' -Method POST -Body $out 'https://siem.example.local/api/ingest/newreg-hits'",
+  "explanation": "Defensive correlation for T1568: cross-references cached domains with a feed of newly registered domains (often used in dynamic resolution) and reports any hits.",
+  "rationale_steps": [
+    "Fetch a vetted feed of newly registered domains via Invoke-WebRequest.",
+    "Compare the feed against the local DNS cache.",
+    "Package and send any overlaps to SIEM for triage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-85dbcbaf",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

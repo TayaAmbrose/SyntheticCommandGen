@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 skip=1 count=1 of=/var/tmp/gpt_primary.bin && diff -u <(sha256sum /var/tmp/gpt_primary.bin | awk '{print $1}') <(sha256sum baseline/gpt_primary.bin | awk '{print $1}')",
+  "explanation": "Extracts the primary GPT header (LBA 1) and compares its hash to a baseline, validating whether the partition map metadata has been altered.",
+  "rationale_steps": [
+    "Use dd to read the primary GPT header from LBA 1.",
+    "Compute SHA-256 checksums for the current and baseline headers.",
+    "Diff the hashes to determine if the GPT metadata was modified."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-12405858",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

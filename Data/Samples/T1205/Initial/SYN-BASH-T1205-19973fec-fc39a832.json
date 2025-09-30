@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_icmp --rcheck --seconds 60 -p tcp --dport 31337 -j ACCEPT; iptables -I INPUT -p icmp --icmp-type echo-request -m string --string \"PINGOPEN\" --algo bm -m recent --name t1205_icmp --set -j LOG --log-prefix \"T1205-ICMP-SIGNAL \"; nc -l -p 31337 -k >/dev/null 2>&1 &",
+  "explanation": "Matches ICMP echo-request payloads containing the ASCII token PINGOPEN. On detection, logs and enables TCP/31337 for 60s, guarded by the signaling source, where nc listens. Shows non-TCP/UDP packet signaling with payload inspection.",
+  "rationale_steps": [
+    "Inspect ICMP payload for a specific token",
+    "Log anomalous ICMP requests for alerting",
+    "Conditionally expose a listener based on the ICMP signal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-fc39a832",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

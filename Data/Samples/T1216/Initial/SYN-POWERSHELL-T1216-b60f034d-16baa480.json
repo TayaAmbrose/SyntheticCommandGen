@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: local HTA from user-writable directory invoked from PowerShell",
+  "explanation": "Represents proxy execution where PowerShell launches mshta to run a locally staged HTA from a permissive path (e.g., user profile or ProgramData), maintaining the signed-host execution chain.",
+  "rationale_steps": [
+    "Stage an HTA in a writable path to avoid privileged write requirements",
+    "Invoke mshta from PowerShell to execute the local HTA content",
+    "Leverages trust in Microsoft-signed hosts to blend with legitimate activity",
+    "Detect via command-line logging (4688/Sysmon EID 1) and unusual HTA launches from non-standard locations",
+    "Restrict HTA execution paths and script hosts via WDAC/AppLocker"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-16baa480",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

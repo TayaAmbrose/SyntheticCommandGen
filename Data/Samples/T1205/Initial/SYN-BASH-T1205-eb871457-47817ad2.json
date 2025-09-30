@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 53 -m string --algo bm --string \"MAGTOKEN\" -m recent --name DNSTK --set && iptables -I ufw-before-input 1 -p tcp --dport 2222 -m recent --rcheck --seconds 25 --name DNSTK -j ACCEPT'",
+  "explanation": "Keys on a DNS UDP/53 packet whose payload contains the string \"MAGTOKEN\" (e.g., in a crafted TXT/QNAME) as a covert signal to open TCP/2222 for 25s. This is application-layer signaling observed by the firewall. Detection: Monitor for DNS requests with suspicious payload tokens and immediate connections to atypical admin ports.",
+  "rationale_steps": [
+    "Enable ufw, set deny incoming, and logging.",
+    "Set recent:DNSTK when a UDP/53 payload contains the token MAGTOKEN.",
+    "Allow TCP/2222 for the marked source within 25 seconds.",
+    "Detect by parsing DNS payloads for secret tokens and correlating with new inbound connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-47817ad2",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 count=1 of=/var/tmp/mbr_full.bin && md5sum /var/tmp/mbr_full.bin baseline/mbr_full.bin && diff -u <(hexdump -C /var/tmp/mbr_full.bin) <(hexdump -C baseline/mbr_full.bin)",
+  "explanation": "Captures the full 512-byte MBR (boot code + partition table) and compares it byte-for-byte and via checksum to a baseline to verify system image integrity.",
+  "rationale_steps": [
+    "Copy the first 512 bytes of the disk (entire MBR) with dd.",
+    "Compute MD5 checksums for quick comparison against a known-good MBR.",
+    "Perform a hexdump-based unified diff to visualize any differences at the byte level."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-c25ecd64",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

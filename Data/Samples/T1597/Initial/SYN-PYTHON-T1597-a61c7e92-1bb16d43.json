@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, re, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\napi_key = json.loads(secrets.get_secret_value(SecretId='whoisxml/api')['SecretString'])['api_key']\ndomain = 'example.com'\nif not re.match(r'^[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$', domain):\n    raise SystemExit('Invalid domain format')\nurl = 'https://www.whoisxmlapi.com/whoisserver/WhoisService'\nparams = {'apiKey': api_key, 'domainName': domain, 'outputFormat': 'json'}\nbucket = 'intel-results-bucket-123456'\nkey = f'whoisxml/{domain}.json'\ntry:\n    r = requests.get(url, params=params, headers={'User-Agent': 'cloud-intel-client/1.0'}, timeout=10)\n    r.raise_for_status()\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'whoisxml', 'domain': domain, 'result': r.json()}), ContentType='application/json')\n    print(json.dumps({'source': 'whoisxml', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('WHOISXML lookup failed: %s', e)",
+  "explanation": "Pulls WHOIS records for a target domain from WhoisXML, a closed-source subscription service, using credentials stored in AWS Secrets Manager. Results are stored as JSON in S3.",
+  "rationale_steps": [
+    "Validate target domain format to avoid noisy/invalid requests.",
+    "Use a reputable closed-source WHOIS provider via authenticated HTTPS.",
+    "Store results in structured JSON for reliable processing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-1bb16d43",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

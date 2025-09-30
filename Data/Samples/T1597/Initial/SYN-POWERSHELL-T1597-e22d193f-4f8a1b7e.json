@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\fullcontact_company_enrich_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $token=$env:FULLCONTACT_API_KEY; if([string]::IsNullOrWhiteSpace($token)){ throw 'FULLCONTACT_API_KEY not set'; } $headers=@{ 'Authorization'=\"Bearer $token\"; 'Accept'='application/json'; 'Content-Type'='application/json' }; $body=@{ domain=$domain } | ConvertTo-Json; $uri='https://api.fullcontact.com/v3/company.enrich'; $resp=Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $body -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) FullContact non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) FullContact error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Leverages FullContact\u2019s paid company enrichment API to gather corporate metadata (a closed-source source) and saves validated JSON output.",
+  "rationale_steps": [
+    "Authenticate with bearer token stored securely in environment variables.",
+    "POST a minimal JSON body to limit request noise.",
+    "Verify JSON content, parse, and store results.",
+    "Log errors with sanitized messages."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-4f8a1b7e",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

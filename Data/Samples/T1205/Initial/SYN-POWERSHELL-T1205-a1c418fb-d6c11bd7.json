@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "pktmon filter remove; pktmon filter add -t UDP -p 9; pktmon start --capture --pkt-size 0 --file-name C:\\Temp\\wol_capture.etl",
+  "explanation": "Starts Packet Monitor (requires Administrator/UAC) to sniff for UDP port 9 traffic associated with WOL magic packets, supporting reconnaissance for signaling. Detection: monitor privileged packet capture usage (pktmon start) and correlate with sudden capture file creation.",
+  "rationale_steps": [
+    "Clear existing pktmon filters and add a UDP/9 filter.",
+    "Begin a live capture to an ETL file to observe magic packets.",
+    "Administrative privileges required; UAC prompt likely when starting capture.",
+    "Detect via audit of pktmon execution and filesystem events for capture artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-d6c11bd7",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

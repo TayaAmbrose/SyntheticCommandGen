@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $id=$env:CENSYS_API_ID; $sec=$env:CENSYS_API_SECRET; if([string]::IsNullOrWhiteSpace($id) -or [string]::IsNullOrWhiteSpace($sec)){ throw 'Missing CENSYS credentials'; }; $basic=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$id`:$sec\")); $body=@{ q=\"services.service_name:HTTP AND services.tls.certificates.leaf_data.subject.common_name:example.com\"; per_page=3 } | ConvertTo-Json -Depth 3; $resp=Invoke-RestMethod -Method Post -Uri \"https://search.censys.io/api/v2/hosts/search\" -Headers @{Authorization=(\"Basic \" + $basic); Accept='application/json'; 'Content-Type'='application/json'} -Body $body -TimeoutSec 30 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 7 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[Censys] \" + $_.Exception.Message) }",
+  "explanation": "Searches the Censys paid API for hosts whose TLS certificate CN matches example.com, leveraging a closed-source index of internet data. Uses Basic Auth and returns structured JSON.",
+  "rationale_steps": [
+    "Load API ID/secret from environment and build a Basic Auth header.",
+    "Craft a constrained GNQL query to reduce unnecessary results.",
+    "POST to the v2 search endpoint with JSON body and strict content headers.",
+    "Serialize the response to JSON; handle and log errors consistently."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-ac9a49fd",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

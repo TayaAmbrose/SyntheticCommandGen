@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"Authorization: Bearer $FULLCONTACT_KEY\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.fullcontact.com/v3/company.enrich\" --data '{\"domain\":\"example.com\"}' -o fullcontact_company_example.com.json -w '{\"service\":\"fullcontact_company\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Uses FullContact's paid enrichment API to retrieve company data for a domain via authenticated POST, capturing structured JSON and logging status.",
+  "rationale_steps": [
+    "Select a paid, reputable proprietary source (FullContact).",
+    "Authenticate using bearer token sourced from environment variables.",
+    "Post a minimal JSON body to constrain the query (reduce noise).",
+    "Persist returned JSON to disk for later analysis.",
+    "Log HTTP code and effective URL to track success/failures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-e0c44456",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

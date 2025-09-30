@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "python3 -c 'import socket,binascii; mac=\"00:11:22:33:44:55\".replace(\":\",\"\"); pkt=binascii.unhexlify(\"FF\"*6+mac*16); s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1); s.sendto(pkt,(\"255.255.255.255\",9))' && networksetup -setproxyautodiscovery \"Wi-Fi\" on",
+  "explanation": "Generates a Wake-on-LAN magic packet (6x FF followed by 16x MAC) to wake a dormant host that will act as a pivot, then enables proxy auto-discovery. Detection: alert on broadcast UDP/9 packets carrying WOL format and subsequent network configuration changes.",
+  "rationale_steps": [
+    "Craft the exact WOL magic packet for MAC 00:11:22:33:44:55 and broadcast it to UDP port 9.",
+    "Wake the target host to bring an otherwise quiet node online for later use.",
+    "Enable WPAD/PAC discovery to steer traffic once the pivot is up.",
+    "Detect by monitoring broadcast WOL traffic patterns and auditing proxy auto-discovery state changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-0e22c9be",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

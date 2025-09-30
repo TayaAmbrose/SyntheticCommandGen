@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "base=$(losetup -fP --show /bootflash/prod_system.img) && mod=$(losetup -fP --show /var/tmp/modified_system.img) && mkdir -p /mnt/base /mnt/mod && mount ${base}p1 /mnt/base && mount ${mod}p1 /mnt/mod && diff -ruN /mnt/base /mnt/mod && umount /mnt/base /mnt/mod && losetup -d \"$base\" \"$mod\"",
+  "explanation": "Mounts the root partitions from both the golden and modified system images and recursively diffs them to enumerate all unauthorized changes.",
+  "rationale_steps": [
+    "Loop-mount both images to access their filesystems (requires root).",
+    "Perform a recursive diff of full filesystem trees to identify exact modifications.",
+    "Unmount and detach loop devices to leave minimal traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-421ba733",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

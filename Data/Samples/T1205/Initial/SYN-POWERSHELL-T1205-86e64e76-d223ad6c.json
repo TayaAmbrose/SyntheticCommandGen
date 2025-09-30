@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='198.51.100.77'; $seq=@(7005,53,16000,8088); foreach($u in $seq){ Test-NetConnection -ComputerName $target -UdpPort $u -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 300 }; Test-NetConnection -ComputerName $target -Port 4444 -InformationLevel Detailed",
+  "explanation": "Performs UDP-based port knocking (including DNS-like 53) to blend with normal traffic, then attempts TCP 4444. Detection: monitor for unusual UDP probes to closed ports and mixed UDP/TCP sequences from a single source within tight timing windows; IDS/IPS rules for sequential UDP probes.",
+  "rationale_steps": [
+    "Define target host and UDP knock sequence with service-mimicking ports.",
+    "Send UDP probes as signaling knocks.",
+    "Attempt TCP connection to the signaled backdoor port.",
+    "Defenders: watch for sequential UDP hits to closed ports and immediate TCP follow-up; analyze firewall drop logs and flow data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-d223ad6c",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

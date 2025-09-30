@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f /root/keys/old-luks.key",
+  "explanation": "Overwrites and removes a retired LUKS key file to prevent future recovery and misuse.",
+  "rationale_steps": [
+    "Target a specific key file in a controlled directory to avoid accidental destruction of active keys.",
+    "Run wipe with force to ensure non-interactive execution as root.",
+    "wipe\u2019s overwrite passes ensure the key material cannot be recovered by forensic tools."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-3a67f05d",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

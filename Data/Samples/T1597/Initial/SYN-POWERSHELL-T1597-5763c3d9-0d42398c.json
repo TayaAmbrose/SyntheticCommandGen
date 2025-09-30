@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $ssc=$env:SECURITYSCORECARD_API_TOKEN; if([string]::IsNullOrWhiteSpace($ssc)){ throw 'Missing SECURITYSCORECARD_API_TOKEN'; }; $uri='https://api.securityscorecard.io/companies/example.com'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; Authorization=(\"Token \" + $ssc)} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[SecurityScorecard] \" + $_.Exception.Message) }",
+  "explanation": "Retrieves organization security ratings from SecurityScorecard, a subscription closed-source service, for a given company domain. Uses token-based auth and outputs JSON.",
+  "rationale_steps": [
+    "Load API token from environment to avoid exposing sensitive data.",
+    "Query a specific company endpoint to minimize request volume.",
+    "Use HTTPS with Accept JSON and define a timeout.",
+    "Return structured JSON and log any exceptions for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-0d42398c",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

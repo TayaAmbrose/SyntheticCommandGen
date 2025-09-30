@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c 'import boto3, json; iam=boto3.client(\"iam\"); k=iam.create_access_key(UserName=\"persona_blog_writer\"); print(json.dumps({\"UserName\":\"persona_blog_writer\",\"AccessKeyId\":k[\"AccessKey\"][\"AccessKeyId\"],\"SecretAccessKey\":k[\"AccessKey\"][\"SecretAccessKey\"]}))'",
+  "explanation": "Generates programmatic credentials for the newly established AWS IAM persona, enabling API interactions.",
+  "rationale_steps": [
+    "Create an access key for the persona IAM user with boto3.",
+    "Return the credentials as JSON for secure storage and automated use.",
+    "Facilitates low-interaction activities that maintain the persona's presence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-ea62d97c",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

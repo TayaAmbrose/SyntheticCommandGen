@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url=f'https://api.binaryedge.io/v2/query/domains/subdomain/{domain}'; headers={'X-Key': os.environ['BINARYEDGE_KEY']};\\ntry:\\n    r=requests.get(url, headers=headers, timeout=15); r.raise_for_status(); print(json.dumps({'source':'binaryedge','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'binaryedge','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Collects subdomain data from BinaryEdge\u2019s closed-source API via authenticated request, focusing on a single domain to minimize noise.",
+  "rationale_steps": [
+    "Authenticate to BinaryEdge with API key and query subdomains endpoint.",
+    "Return only the necessary JSON payload for analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-d6b246e7",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

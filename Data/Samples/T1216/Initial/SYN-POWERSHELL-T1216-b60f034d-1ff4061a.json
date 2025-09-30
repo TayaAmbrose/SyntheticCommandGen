@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: chained to spawn secondary processes from PowerShell",
+  "explanation": "Highlights PowerShell->mshta as a proxy stage where the signed host executes script that then launches secondary system binaries, keeping initial execution under a trusted host.",
+  "rationale_steps": [
+    "PowerShell initiates mshta, which executes controlled script code",
+    "The script within mshta spawns additional native utilities to continue execution",
+    "This indirection obscures the origin under a trusted parent process",
+    "Detect suspicious process trees: PowerShell -> mshta -> unusual child processes",
+    "Apply policy to prevent script hosts from creating child processes beyond a controlled allowlist"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-1ff4061a",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

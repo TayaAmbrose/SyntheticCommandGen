@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Differential exfil: map \\\\ATTACKER_IP\\delta$ with 'net use', track hashes/mtime to identify new files, copy only deltas to UNC, and disconnect.",
+  "explanation": "Describes an automated approach that minimizes noise by sending only changed files over an SMB share established via 'net use'.",
+  "rationale_steps": [
+    "Map the attacker-controlled share using net use",
+    "Compute or compare metadata to find newly changed files",
+    "Copy only the differential set to the UNC path",
+    "Tear down the SMB mapping and update local state"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-74eaca01",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

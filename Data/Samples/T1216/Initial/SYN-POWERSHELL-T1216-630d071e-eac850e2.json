@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell runs cscript.exe to call prnport.vbs with suspicious parameters that culminate in unexpected process execution (details redacted).",
+  "explanation": "Signed printing scripts like prnport.vbs can be misused as a proxy for executing other code. Detection focuses on anomalous argument patterns and child process creation.",
+  "rationale_steps": [
+    "Flag powershell.exe -> cscript.exe with prnport.vbs in command line.",
+    "Look for non-standard port/printer arguments or embedded tokens.",
+    "Child process from cscript.exe deviates from expected behavior (e.g., spawns an interpreter).",
+    "No new ports/printers actually created per system logs.",
+    "Execution originates from user space and not an installer/IT tool."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-eac850e2",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

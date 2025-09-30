@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'MAC=\"\\x00\\x11\\x22\\x33\\x44\\x55\"; { printf \"\\xff%.0s\" {1..6}; for i in {1..16}; do printf \"$MAC\"; done; } | nc -u -b -w1 255.255.255.255 9'",
+  "explanation": "Builds a Wake-on-LAN magic packet in pure Bash (6x FF + 16x MAC) and broadcasts it via UDP/9 to wake the target system, enabling functionality for follow-on access. Root not strictly required to send a broadcast UDP, but some environments restrict broadcast; running as root aligns with raw socket and network constraints. Detection: log and alert on WoL-pattern UDP frames, especially if originating from servers that don't normally perform WoL.",
+  "rationale_steps": [
+    "Assemble the exact WoL frame with FF header and repeated MAC.",
+    "Send via UDP broadcast to the standard WoL port 9.",
+    "Wakes sleeping devices to re-enable reachable services.",
+    "Use Bash and netcat; no exotic tooling.",
+    "Detection: DPI signature for WoL; anomaly detection for broadcast spikes and out-of-profile senders."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-3a2e9b9f",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

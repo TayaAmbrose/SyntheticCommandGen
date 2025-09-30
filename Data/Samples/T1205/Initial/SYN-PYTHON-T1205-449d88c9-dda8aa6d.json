@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff ICMP echo-requests with a specific magic payload using scapy and, on match, run iptables to allow TCP/443 for the sender]",
+  "explanation": "High-level concept: a magic ICMP payload acts as the signal. A scapy-based sniffer watches for ICMP echo-requests containing a unique byte-string and then (maliciously) opens HTTPS on the host for that sender. Detection: alert on ICMP payloads containing suspicious markers, correlate with unauthorized port openings, and monitor for anomalous iptables rule insertions by root.",
+  "rationale_steps": [
+    "Sniff ICMP echo-requests with scapy and check for a specific Raw payload string.",
+    "On match, the logic would invoke iptables to add a rule allowing TCP/443 from the source IP (root/sudo required).",
+    "Detection: IDS content match for ICMP payload; SIEM correlation with firewall changes; unusual uptick in ICMP to the host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-dda8aa6d",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

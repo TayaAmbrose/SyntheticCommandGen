@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); $token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body='{\"mobilePhone\":\"+1 206-555-0199\",\"otherMails\":[\"jordanh.personal@outlook.com\"],\"preferredLanguage\":\"en-US\"}'; Invoke-RestMethod -Method PATCH -Uri \"https://graph.microsoft.com/v1.0/users/$uid\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body; Invoke-RestMethod -Method GET -Uri \"https://graph.microsoft.com/v1.0/users/$uid`?`$select=mobilePhone,otherMails,preferredLanguage\" -Headers @{Authorization=\"Bearer $token\"} | ConvertTo-Json",
+  "explanation": "Adds alternate contact details and a preferred language to reinforce the persona and enable recovery-like channels.",
+  "rationale_steps": [
+    "Use Graph token from Azure CLI to authorize API updates.",
+    "Set mobilePhone and otherMails to emulate typical user profile data.",
+    "Return selected fields as JSON for programmatic confirmation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-a93f0008",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

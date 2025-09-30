@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; $bp=\"C:\\Mount\\Base\\Windows\\System32\"; $mp=\"C:\\Mount\\Win\\Windows\\System32\"; $b=Get-ChildItem -File -Recurse $bp | ForEach-Object { $rel=$_.FullName.Substring($bp.Length); (Get-FileHash $_.FullName -Algorithm SHA256).Hash + \" \" + $rel }; $m=Get-ChildItem -File -Recurse $mp | ForEach-Object { $rel=$_.FullName.Substring($mp.Length); (Get-FileHash $_.FullName -Algorithm SHA256).Hash + \" \" + $rel }; Compare-Object $b $m",
+  "explanation": "Generates a hash manifest for System32 in both clean and modified images and compares them to detect any unauthorized file changes within the system image.",
+  "rationale_steps": [
+    "Mount baseline and modified images (Admin).",
+    "Recursively compute SHA256 hashes for System32 in each image.",
+    "Use Compare-Object to reveal added/changed/removed files."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-bb4fc91e",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

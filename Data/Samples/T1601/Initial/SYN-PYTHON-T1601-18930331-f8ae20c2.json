@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib,difflib; cand=['/boot/grub/grub.cfg','/boot/grub2/grub.cfg']; p=next((x for x in cand if os.path.exists(x)), None); assert p, 'grub.cfg not found'; cur=open(p,'r').read().splitlines(keepends=True); basep='/var/lib/img-baseline/grub.cfg'; base=open(basep,'r').read().splitlines(keepends=True); ch=hashlib.sha256(''.join(cur).encode()).hexdigest(); bh=hashlib.sha256(''.join(base).encode()).hexdigest(); print('GRUBCFG', p, 'HASH_MATCH' if ch==bh else 'HASH_DIFF', ch, bh); print(''.join(difflib.unified_diff(base,cur,fromfile=basep,tofile=p)))\"",
+  "explanation": "Compares the current GRUB configuration against a baseline via hashes and a unified diff to detect unauthorized boot config changes.",
+  "rationale_steps": [
+    "GRUB config controls boot parameters and can embed persistence in T1601.",
+    "Uses hashlib and difflib to detect and display integrity deviations.",
+    "Requires elevated access to interact with boot configurations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-f8ae20c2",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=446 count=1 of=/var/tmp/mbr_code.bin && sha256sum /var/tmp/mbr_code.bin baseline/mbr_code.bin && diff -u <(sha256sum /var/tmp/mbr_code.bin | awk '{print $1}') <(sha256sum baseline/mbr_code.bin | awk '{print $1}')",
+  "explanation": "Reads only the MBR boot code (first 446 bytes) and compares its checksum to a baseline to detect or confirm unauthorized changes to the bootloader code.",
+  "rationale_steps": [
+    "Use dd to copy the first 446 bytes of the disk (MBR boot code) to a file.",
+    "Generate and display SHA-256 checksums for the current and baseline MBR boot code.",
+    "Diff the checksums to quickly confirm integrity or detect tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-2e5b4fe0",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

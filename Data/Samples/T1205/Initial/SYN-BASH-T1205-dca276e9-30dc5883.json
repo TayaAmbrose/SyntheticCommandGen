@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 443 -m string --string \"beacon.example\" --algo bm -m recent --name T1205_TLS_SNI --set -j LOG --log-prefix \"T1205_TLS_SNI \"",
+  "explanation": "Matches TLS ClientHello SNI strings containing a covert keyword/host (beacon.example) as an activation signal, demonstrating application-layer traffic signaling over TLS.",
+  "rationale_steps": [
+    "Leverage visibility of plaintext SNI during TLS handshake to find covert triggers.",
+    "Track and log sources presenting signaling SNI values."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-30dc5883",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

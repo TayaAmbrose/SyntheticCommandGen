@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $expected = (Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\NetOS\\Firmware\" -Name \"ExpectedSHA256\").ExpectedSHA256.ToUpper(); $actual = (Get-FileHash -Algorithm SHA256 -Path $img).Hash.ToUpper(); if ($actual -ne $expected) { Write-Error \"Registry baseline mismatch\" } else { Write-Output \"Registry baseline match\" }",
+  "explanation": "Validates the system image against an expected SHA256 stored in a protected registry location (Administrator-only) to detect unauthorized changes.",
+  "rationale_steps": [
+    "Read expected SHA256 from a protected registry key.",
+    "Compute the image's SHA256 with Get-FileHash.",
+    "Compare expected vs actual.",
+    "Alert if the registry baseline does not match the on-disk image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-105db288",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

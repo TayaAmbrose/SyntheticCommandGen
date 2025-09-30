@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c 'import boto3, json; iam=boto3.client(\"iam\"); u=iam.create_user(UserName=\"persona_blog_writer\", Tags=[{\"Key\":\"dept\",\"Value\":\"marketing\"},{\"Key\":\"owner\",\"Value\":\"evelyn.hart\"}]); print(json.dumps(u[\"User\"], default=str))'",
+  "explanation": "Creates a new AWS IAM user under an attacker-controlled AWS account to establish a cloud persona that can be used for future operations.",
+  "rationale_steps": [
+    "Use boto3 to create a named IAM user that will represent the persona.",
+    "Tag the user with benign-looking metadata to avoid suspicion and aid in inventory clarity.",
+    "Output the created user object as JSON for automation and tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-bb74d815",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sz=$(blockdev --getsz /dev/sda) && dd if=/dev/sda bs=512 skip=$((sz-1)) count=1 of=/var/tmp/gpt_backup.bin && diff -u <(sha256sum /var/tmp/gpt_backup.bin | awk '{print $1}') <(sha256sum baseline/gpt_backup.bin | awk '{print $1}')",
+  "explanation": "Reads the backup GPT header from the last LBA of the disk and compares its checksum against a known-good copy to detect tampering.",
+  "rationale_steps": [
+    "Determine total sector count for the disk.",
+    "Copy the last sector (backup GPT header) using dd.",
+    "Compare SHA-256 hashes of the current and baseline headers to confirm integrity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-194ca156",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

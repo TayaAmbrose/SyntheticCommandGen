@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\nhibp_key = json.loads(secrets.get_secret_value(SecretId='hibp/api')['SecretString'])['api_key']\naccount = 'security@example.com'\nurl = f'https://haveibeenpwned.com/api/v3/breachedaccount/{account}'\ntry:\n    r = requests.get(url, params={'truncateResponse': 'true'}, headers={'hibp-api-key': hibp_key, 'User-Agent': 'cloud-intel-client/1.0', 'Accept': 'application/json'}, timeout=10)\n    if r.status_code == 404:\n        data = []  # no breaches found per HIBP spec\n    else:\n        r.raise_for_status(); data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'hibp/{account}_breaches.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'hibp', 'account': account, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'hibp', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('HIBP query failed: %s', e)",
+  "explanation": "Checks the paid Have I Been Pwned API for breach records related to a specific account and writes structured results to S3. This uses a closed-source subscription to gather reconnaissance data.",
+  "rationale_steps": [
+    "Use authenticated HTTPS to query a commercial breach database.",
+    "Handle 404 semantics to avoid noisy error conditions.",
+    "Persist the response in JSON with provenance for later review."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-e9d0e049",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

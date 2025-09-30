@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(md5sum /bootflash/active.img | awk '{print $1}') <(md5sum /bootflash/active.img.bak | awk '{print $1}') || echo \"ALERT: active.img differs from backup\"",
+  "explanation": "Compares the MD5 hashes of the current system image and a backup copy to verify whether the active image has been altered.",
+  "rationale_steps": [
+    "Compute MD5 of the active image",
+    "Compute MD5 of the backup image",
+    "Diff the hashes and alert on any discrepancy"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-85f68240",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

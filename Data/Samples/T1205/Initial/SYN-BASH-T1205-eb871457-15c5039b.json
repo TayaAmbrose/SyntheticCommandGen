@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p tcp --dport 445 -m tcp --tcp-flags FIN,URG FIN,URG -m ttl --ttl-eq 66 -m recent --name TFLAG --set && iptables -I ufw-before-input 1 -p tcp --dport 8080 -m recent --rcheck --seconds 20 --name TFLAG -j ACCEPT'",
+  "explanation": "Uses a TCP packet to port 445 with unusual flags FIN+URG and a specific TTL of 66 as a covert signal to open TCP/8080 for 20s. This leverages abnormal TCP flag combinations and header fields as signaling. Detection: Flag packets with rare TCP flag combos and fixed TTL patterns, followed by temporary accepts on atypical service ports.",
+  "rationale_steps": [
+    "Enable ufw with default deny and logging.",
+    "Detect TCP/445 packets with FIN+URG and TTL 66, and record the sender via recent:TFLAG.",
+    "Permit TCP/8080 from the recorded sender for a short period.",
+    "Detect by analyzing tcpdump/ufw logs for impossible/rare TCP flags and TTL anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-15c5039b",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

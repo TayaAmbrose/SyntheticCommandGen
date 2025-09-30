@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-ETL' -Name 'LinVM-ETL' -CommandId 'RunShellScript' -ScriptString \"dd if=/dev/zero of=/mnt/data/.wipefill bs=64M conv=fsync status=none || true; sync; rm -f /mnt/data/.wipefill\"",
+  "explanation": "Fills free space in /mnt/data with zeros and then deletes the filler file, overwriting residual data remnants on that filesystem.",
+  "rationale_steps": [
+    "Create a large filler file to consume free space with zeros.",
+    "Flush writes and remove the filler file to leave zeroed free space, preventing recovery of previously deleted data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-d027994b",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

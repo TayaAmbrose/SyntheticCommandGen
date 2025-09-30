@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_mdns --rcheck --seconds 60 -p tcp --dport 53530 -j ACCEPT; iptables -I INPUT -p udp --dport 5353 -m string --string \"_t1205._udp.local\" --algo bm -m recent --name t1205_mdns --set -j LOG --log-prefix \"T1205-mDNS-SIGNAL \"; nc -l -p 53530 -k >/dev/null 2>&1 &",
+  "explanation": "Detects a crafted mDNS query string (_t1205._udp.local) on UDP/5353. The firewall logs the event and temporarily allows TCP/53530 for the source, with nc listening. Emulates service-discovery-based traffic signaling.",
+  "rationale_steps": [
+    "Parse mDNS query content for a covert key",
+    "Log unusual mDNS service names as detection telemetry",
+    "Open a hidden port only after the mDNS signal is observed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-acebe68e",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

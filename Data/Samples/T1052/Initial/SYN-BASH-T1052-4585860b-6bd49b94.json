@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=\"$HOME/Documents/notes.txt\" of=\"/dev/disk/by-id/usb-SanDisk_Ultra_Fit_1234-0:0\" bs=64K count=$(( ( $(stat -c%s \"$HOME/Documents/notes.txt\") + 65535 ) / 65536 )) conv=fsync status=none",
+  "explanation": "Copies a text file directly onto the raw USB disk using a calculated count to write only the required blocks, limiting media impact.",
+  "rationale_steps": [
+    "Get the source file size to compute the number of 64K blocks needed",
+    "Target the USB disk by unique by-id path",
+    "Use dd to write only the necessary blocks and flush to media"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-6bd49b94",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

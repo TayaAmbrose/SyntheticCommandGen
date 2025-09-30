@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/certificates/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/certinsight_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_certinsight -o IdentitiesOnly=yes client@sftp.cert-insight.net:/clients/acme_corp/certificates/active.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c active.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cert-insight\\\",\\\"artifact\\\":\\\"%s/active.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"cert-insight\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Retrieves a closed-source TLS certificate inventory feed (JSON) for the target org via SFTP, with checksum validation and structured logging, aligning with closed-source reconnaissance.",
+  "rationale_steps": [
+    "Authenticate with SSH key and verify host key.",
+    "Download active certificate inventory and checksum.",
+    "Verify integrity with sha256sum.",
+    "Log a JSON summary to track collection activity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-0884e74a",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

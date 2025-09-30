@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";GetObject(\"script:C:\\\\Users\\\\Public\\\\localtask.sct\")",
+  "explanation": "Proxies execution via MSHTML and the script: moniker to run a local scriptlet under user context, avoiding direct execution mechanisms.",
+  "rationale_steps": [
+    "From PowerShell, call rundll32 to reach MSHTML's RunHTMLApplication.",
+    "In JScript, use GetObject with a local scriptlet path to execute embedded code.",
+    "Execution path uses trusted components; monitoring should focus on script: moniker usage and local .sct targets via rundll32."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-ed07df0f",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

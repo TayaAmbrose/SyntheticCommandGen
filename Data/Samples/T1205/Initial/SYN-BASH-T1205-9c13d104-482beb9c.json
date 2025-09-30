@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for s in 13 37 73; do ping -c1 -s \"$s\" 203.0.113.7 >/dev/null; sleep 0.2; done",
+  "explanation": "Uses a sequence of ICMP echo requests with specific payload sizes as a covert knock to signal a remote listener to enable a service. No local privileges required to send. Detection: inspect ICMP patterns with unusual, small, sequenced sizes and correlate with service exposure events.",
+  "rationale_steps": [
+    "Select a distinctive sequence of ICMP payload sizes (13, 37, 73).",
+    "Emit single pings spaced closely to form a recognizable pattern.",
+    "Remote sensor interprets the sequence to unlock a port.",
+    "Traffic signaling avoids opening a dedicated control port.",
+    "Detection: NIDS rules for ordered ICMP sizes; track post-knock connection success to new services."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-482beb9c",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

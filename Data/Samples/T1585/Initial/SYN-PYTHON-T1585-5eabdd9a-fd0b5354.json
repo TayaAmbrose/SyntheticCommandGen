@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json, datetime as dt; iam=boto3.client('iam'); user='helpdesk.contractor'; u=iam.create_user(UserName=user, Tags=[{'Key':'Department','Value':'IT Helpdesk'},{'Key':'Title','Value':'Tier1 Contractor'}]); lp=iam.create_login_profile(UserName=user, Password='WelcomeHelpdesk!2025', PasswordResetRequired=True); iam.attach_user_policy(UserName=user, PolicyArn='arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess'); out={'action':'create_helpdesk_persona','user':u['User'],'login_profile_created':True,'attached_policies':['AWSBillingReadOnlyAccess'],'timestamp':dt.datetime.utcnow().isoformat()+'Z'}; print(json.dumps(out))\"",
+  "explanation": "Establishes a helpdesk-style persona with console access and limited billing read permissions, which is common in support roles.",
+  "rationale_steps": [
+    "Assign a mainstream managed policy associated with read-only billing visibility.",
+    "Use service desk-style naming and tags to match routine onboarding patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-fd0b5354",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p icmp --icmp-type echo-request -m length --length 123:123 -m recent --name PINGK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 15 --name PINGK -j ACCEPT'",
+  "explanation": "Uses an ICMP Echo Request (ping) with an unusual exact packet length (123 bytes) as a stealthy signal to temporarily allow SSH from the sender. This aligns with Traffic Signaling by encoding a trigger in the packet characteristics. Detection: Alert on ICMP echo-requests with uncommon lengths and correlate with follow-on SSH from the same source.",
+  "rationale_steps": [
+    "Enable ufw, default deny, and high logging.",
+    "Mark sources that send echo-request packets with exact length 123 using recent:PINGK.",
+    "Allow new TCP/22 only when recent:PINGK is present within 15 seconds.",
+    "Detect by flagging atypical ICMP sizes and immediate SSH attempts in ufw logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-4247cab6",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

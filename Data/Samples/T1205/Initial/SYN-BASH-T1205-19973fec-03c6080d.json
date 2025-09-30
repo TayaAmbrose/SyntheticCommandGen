@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_sip --rcheck --seconds 60 -p tcp --dport 5080 -j ACCEPT; iptables -I INPUT -p udp --dport 5060 -m string --string \"REGISTER sip:knock\" --algo bm -m recent --name t1205_sip --set -j LOG --log-prefix \"T1205-SIP-SIGNAL \"; nc -l -p 5080 -k >/dev/null 2>&1 &",
+  "explanation": "Leverages SIP on UDP/5060 with a crafted REGISTER line to signal. The firewall logs and marks the source, then opens TCP/5080 where nc listens for 60s. Demonstrates SIP-based signaling and firewall interaction.",
+  "rationale_steps": [
+    "Inspect SIP registration lines for a magic pattern",
+    "Emit firewall logs to surface anomalous SIP messages",
+    "Temporarily grant access to a guarded service upon signal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-03c6080d",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

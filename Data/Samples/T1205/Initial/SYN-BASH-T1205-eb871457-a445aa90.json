@@ -1,0 +1,25 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 7001 -m state --state NEW -m recent --name S1 --set && iptables -I ufw-before-input 1 -p tcp --dport 8001 -m tcp --syn -m recent --rcheck --seconds 10 --name S1 -m recent --name S2 --set && iptables -I ufw-before-input 1 -p udp --dport 9001 -m state --state NEW -m recent --rcheck --seconds 10 --name S2 -m recent --name S3 --set && iptables -I ufw-before-input 1 -p tcp --dport 2222 -m recent --rcheck --seconds 20 --name S3 -j ACCEPT'",
+  "explanation": "Implements a mixed-protocol knock: UDP/7001, then TCP SYN to 8001, then UDP/9001. Only after this ordered sequence does TCP/2222 open briefly to the source. This is classic T1205 signaling using a multi-step sequence across protocols. Detection: Look for the precise ordered triplet of connection attempts from the same IP and a short-lived acceptance on TCP/2222.",
+  "rationale_steps": [
+    "Enable ufw and deny incoming by default; enable logging.",
+    "Set recent:S1 on UDP/7001 arrival.",
+    "On TCP SYN to 8001 with S1 set, set S2.",
+    "On UDP/9001 with S2 set, set S3.",
+    "Accept TCP/2222 if S3 is present within 20 seconds.",
+    "Detect by correlating the specific 7001\u21928001(SYN)\u21929001 pattern in ufw/pcap logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-a445aa90",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

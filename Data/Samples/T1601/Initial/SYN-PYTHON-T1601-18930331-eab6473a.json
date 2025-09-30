@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib; p='/boot/vmlinuz-'+os.uname().release; h=hashlib.sha256(open(p,'rb').read()).hexdigest(); b=open('/var/lib/img-baseline/vmlinuz.sha256').read().strip().split()[0]; print('KERNEL', p, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Verifies the kernel image hash against an attacker-maintained baseline to confirm a modified system image persists across reboots.",
+  "rationale_steps": [
+    "Targets a core system image component (/boot/vmlinuz-<rel>) associated with T1601.",
+    "Uses hashlib for checksum comparison to validate integrity post-modification.",
+    "Requires root context to align with privileged verification of boot-critical artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-eab6473a",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

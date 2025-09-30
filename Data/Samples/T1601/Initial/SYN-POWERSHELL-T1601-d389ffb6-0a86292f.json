@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$images = \"C:\\ProgramData\\NetOS\\images\\bankA.img\",\"C:\\ProgramData\\NetOS\\images\\bankB.img\"; $baselineDir = \"C:\\ProgramData\\NetOS\\baseline\"; foreach ($img in $images) { $base = Join-Path $baselineDir ([IO.Path]::GetFileName($img)); if ((Get-FileHash $img -Algorithm SHA256).Hash -ne (Get-FileHash $base -Algorithm SHA256).Hash) { Write-Error \"Bank integrity mismatch: $img\" } }",
+  "explanation": "Checks multiple boot banks' images against their baselines to detect tampering with redundant system image slots used by network devices.",
+  "rationale_steps": [
+    "Enumerate banked image files (admin-only paths).",
+    "Compute SHA256 of each bank image with Get-FileHash.",
+    "Compute SHA256 of the corresponding baseline images.",
+    "Report any bank that does not match its baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-0a86292f",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

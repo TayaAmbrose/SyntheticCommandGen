@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f /var/backups/myapp/backup-*.tar.gz",
+  "explanation": "Overwrites and deletes targeted application backup archives to prevent forensic recovery.",
+  "rationale_steps": [
+    "Limit scope to known backup files in a specific directory using a strict glob.",
+    "Run wipe with -f to avoid prompts and ensure the operation completes non-interactively.",
+    "wipe writes multiple patterns over the file and removes directory entries, thwarting data recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-ec891472",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

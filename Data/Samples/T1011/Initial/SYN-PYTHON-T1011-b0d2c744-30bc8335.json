@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv4 UDP socket to a secondary/non-default local address, optionally set DSCP/TOS, and transmit base64-encoded chunks to a high-numbered port]",
+  "explanation": "Binding to a secondary NIC and using an uncommon UDP port provides an exfiltration path distinct from the primary communication channel, demonstrating T1011.",
+  "rationale_steps": [
+    "Select a non-default local interface to separate the path",
+    "Base64-encode the data to avoid raw binary transmission",
+    "Optionally set IP TOS without altering global configuration",
+    "Chunk and send to a high, uncommon UDP port",
+    "Terminate cleanly without persistent changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-30bc8335",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

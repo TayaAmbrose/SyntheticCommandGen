@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "python3 -c \"from scapy.all import *; send(IP(dst='203.0.113.1', id=4242)/UDP(dport=65000)/Raw(load=b'KNOCK'), verbose=False)\"",
+  "explanation": "Sends a UDP packet to port 65000 with a distinctive IP ID (4242) and short payload acting as a magic signal. A listener can watch for the unusual IP ID value as the trigger to enable functionality. Detection: inspect metadata anomalies such as fixed IP ID values headed to high ports and correlate with rule changes.",
+  "rationale_steps": [
+    "Craft a UDP packet to a high, likely closed port.",
+    "Embed the covert signal in the IP.id field and payload.",
+    "Transmit toward the network device expected to react.",
+    "Detection: IDS/pcap to flag repeated constant IP.id values to infrastructure IPs and subsequent firewall mutations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-da3d2ab5",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

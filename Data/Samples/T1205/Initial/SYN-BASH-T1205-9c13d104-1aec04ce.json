@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc \"nc -u -l -p 40009 | grep -m1 '^MAGIC:OPEN:8080$' >/dev/null && iptables -I INPUT -p tcp --dport 8080 -j ACCEPT\"",
+  "explanation": "Listens on UDP/40009 for a precise magic string and, if seen, opens TCP/8080 via iptables. Requires root for firewall modification; listener port >1024 can be bound by non-root, but context here is root. Detection: flag unexpected UDP listeners and watch for immediate firewall insertions following specific UDP payloads.",
+  "rationale_steps": [
+    "Bind a UDP listener on 40009 using netcat.",
+    "Match a strict magic token for activation.",
+    "On match, modify iptables to expose TCP/8080.",
+    "Implements on-demand service activation via signaling.",
+    "Detection: inventory and alert on rogue listeners; audit firewall changes; DPI for specific trigger strings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-1aec04ce",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

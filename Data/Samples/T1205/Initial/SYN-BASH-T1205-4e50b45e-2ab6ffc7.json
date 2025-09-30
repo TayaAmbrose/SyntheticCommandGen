@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo tcpdump -i eth0 -nn -w /tmp/portknock_seq.pcap 'dst host 192.0.2.10 and (tcp dst port 7000 or tcp dst port 8000 or tcp dst port 9000)'",
+  "explanation": "Sniffs for a specific TCP port-knock sequence destined to a host to aid activation timing or validation. Requires sudo for interface capture. Detection: alert on unauthorized packet captures and on patterns indicating knocking attempts.",
+  "rationale_steps": [
+    "Capture packets for the defined knock ports targeting 192.0.2.10.",
+    "Analyze the pcap to confirm sequence arrival and timing.",
+    "Use timing info to coordinate follow-on access attempts post-activation.",
+    "Blue teams can detect tcpdump processes and unusual BPF filters targeting closed ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-2ab6ffc7",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

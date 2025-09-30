@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import difflib\n\nbase = \"/root/baselines/grub.cfg\"\ncur = \"/boot/grub/grub.cfg\"\n\nbase_lines = open(base).read().splitlines(keepends=True)\ncur_lines = open(cur).read().splitlines(keepends=True)\nprint(\"\".join(difflib.unified_diff(base_lines, cur_lines, fromfile=\"baseline_grub.cfg\", tofile=\"current_grub.cfg\")))",
+  "explanation": "Diffs GRUB configuration (part of the boot image environment) against a baseline to reveal persistence-oriented modifications.",
+  "rationale_steps": [
+    "Load baseline and current GRUB config files.",
+    "Perform a unified diff to expose unauthorized boot parameter changes.",
+    "Report differences for incident response analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-9fb90173",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

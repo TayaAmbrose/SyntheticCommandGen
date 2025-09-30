@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install.wim /Index:1 /MountDir:C:\\mount /ReadWrite | Out-Null; certutil -hashfile C:\\mount\\Windows\\System32\\config\\SOFTWARE SHA256",
+  "explanation": "Mounts the Windows system image read-write and records the SHA256 of the offline SOFTWARE hive to baseline and enable detection of later tampering (T1601).",
+  "rationale_steps": [
+    "Mount the WIM in read-write mode to enable image modification.",
+    "Hash the offline SOFTWARE registry hive as a pre-modification integrity reference using certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-5d216d2d",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

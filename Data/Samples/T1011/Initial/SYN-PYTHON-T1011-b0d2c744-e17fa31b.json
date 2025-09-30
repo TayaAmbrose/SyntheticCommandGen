@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would craft ICMP Echo Request packets (AF_INET/SOCK_RAW, IPPROTO_ICMP) carrying base64-encoded payload segments with proper checksums]",
+  "explanation": "Uses ICMP echo as a non-standard application data carrier, a distinct network medium compared to normal TCP/HTTP flows, consistent with T1011.",
+  "rationale_steps": [
+    "Select ICMP as the exfil medium distinct from standard TCP/UDP",
+    "Encode data with base64",
+    "Construct ICMP echo requests with correct identifiers/sequence",
+    "Transmit in small chunks to an uncommon path",
+    "Avoids changing host network configuration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-e17fa31b",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /tmp/projectX -xdev -maxdepth 1 -type f -exec shred -n 1 -z -u -f {} +",
+  "explanation": "Securely overwrites and deletes only the immediate files in a specific temporary project directory.",
+  "rationale_steps": [
+    "Limit depth and filesystem traversal to avoid affecting unrelated directories.",
+    "Perform an overwrite pass with a final zeroing for irrecoverability.",
+    "Unlink files after shredding to ensure they are fully removed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-329270be",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

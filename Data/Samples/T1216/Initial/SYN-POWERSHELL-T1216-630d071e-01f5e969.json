@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell initiating rundll32.exe to load a signed system library that in turn interprets script/HTML for proxy execution (details redacted).",
+  "explanation": "rundll32.exe can be abused to load trusted components that evaluate script-like content and then spawn additional processes, serving as a proxy for execution.",
+  "rationale_steps": [
+    "Process chain with powershell.exe -> rundll32.exe with suspicious DLL entry point usage.",
+    "Command line includes atypical parameters indicating script/HTML interpretation.",
+    "rundll32.exe spawns an interpreter or unrelated process immediately after launch.",
+    "Lack of corresponding UI or system configuration changes expected for legitimate usage.",
+    "Binary path and signature validate as Microsoft-signed; behavior is the anomaly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-01f5e969",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

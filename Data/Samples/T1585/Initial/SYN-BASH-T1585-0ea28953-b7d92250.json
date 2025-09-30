@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "( crontab -l 2>/dev/null; echo '45 9 15 * * /usr/bin/env GITHUB_TOKEN=$(cat /etc/persona/github.token) curl -sS -X PUT -H \"Authorization: token ${GITHUB_TOKEN}\" -H \"Accept: application/vnd.github+json\" https://api.github.com/user/starred/hashicorp/terraform -o /dev/null -w \"{\\\"http_code\\\":%{http_code}}\\n\" >> /var/log/persona_github_star.json 2>&1' ) | crontab -",
+  "explanation": "Schedules a periodic GitHub action (starring a popular repo) to generate natural activity for the persona.",
+  "rationale_steps": [
+    "Use a benign action that does not contact targets",
+    "Operate with a token-scoped API request via cron",
+    "Log machine-readable results to JSON for review"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-b7d92250",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

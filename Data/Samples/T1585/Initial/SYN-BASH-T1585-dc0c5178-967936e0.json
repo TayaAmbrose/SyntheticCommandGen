@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-blog-register -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-blog.test/v1/users -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"handle\\\":\\\"artisanaloutreach\\\",\\\"email\\\":\\\"artisanal.outreach@example-mail.test\\\",\\\"password\\\":\\\"S3cure!Passw0rd\\\",\\\"profile\\\":{\\\"title\\\":\\\"Cloud Native Notes\\\",\\\"about\\\":\\\"Personal takes on K8s, SRE, and OSS\\\"}}\"'",
+  "explanation": "Registers a blogging platform account to reinforce persona depth and provide long-form content presence.",
+  "rationale_steps": [
+    "Create a blog identity matching the social persona.",
+    "Lay groundwork for future content to bolster legitimacy."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-967936e0",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f /var/crash/*.crash",
+  "explanation": "Permanently destroys crash dump files by overwriting their contents prior to deletion.",
+  "rationale_steps": [
+    "Limit scope to the standard crash dump directory and file extension.",
+    "Use wipe to ensure data is overwritten, not merely unlinked.",
+    "Prevent leakage of memory-resident secrets captured in crashes by making dumps unrecoverable."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-379179aa",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

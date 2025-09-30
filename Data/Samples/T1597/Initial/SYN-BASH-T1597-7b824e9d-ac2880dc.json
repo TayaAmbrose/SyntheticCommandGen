@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/contacts/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/peopledata_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_peopledata -o IdentitiesOnly=yes client@sftp.peopledata.pro:/feeds/org/contacts/acme_corp/current.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c current.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"peopledata-pro\\\",\\\"artifact\\\":\\\"%s/current.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"peopledata-pro\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Pulls a closed-source organizational contacts dataset (JSON) via SFTP, suitable for profiling and relationship mapping under T1597.",
+  "rationale_steps": [
+    "Establish secure SFTP session with key-only auth and host key validation.",
+    "Fetch the latest org contacts JSON and its checksum.",
+    "Use sha256sum to ensure integrity before use.",
+    "Emit a JSON status record and store the dataset under controlled paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-ac2880dc",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

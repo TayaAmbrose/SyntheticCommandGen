@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ssh -o ProxyCommand=\"bash -lc 'for p in 61001 61002 61003; do nc -w1 -z %h \"$p\"; sleep 1; done; exec nc %h %p'\" user@target.example",
+  "explanation": "Uses SSH's ProxyCommand to first emit a TCP knock sequence via netcat to the target host and then proxy the SSH connection through nc once the port is opened. Detection: monitor SSH client options such as ProxyCommand and anomalous child processes; network IDS for ordered TCP connection attempts to non-service ports preceding SSH.",
+  "rationale_steps": [
+    "Leverage SSH ProxyCommand to perform inline port knocking with nc.",
+    "Signal the target to open the SSH service based on the knock sequence.",
+    "Immediately connect through nc as a proxy to complete the SSH handshake.",
+    "Detect by inspecting SSH invocation flags and pre-SSH connection patterns to odd ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-b1ef61fc",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

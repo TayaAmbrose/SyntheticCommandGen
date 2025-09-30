@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); query=os.environ.get('SHODAN_QUERY','hostname:example.com'); key=os.environ['SHODAN_API_KEY']; url='https://api.shodan.io/shodan/host/search'; params={'key': key, 'query': query, 'limit': 50};\\ntry:\\n    r=requests.get(url, params=params, timeout=20); r.raise_for_status(); print(json.dumps({'source':'shodan','query':query,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'shodan','query':query,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Queries the closed-source Shodan database for hosts matching a precise query, limiting results to reduce noise. Data is retrieved via a paid API key and returns JSON without conducting any active probing.",
+  "rationale_steps": [
+    "Leverage Shodan\u2019s subscription API to search its curated dataset.",
+    "Scope the query to avoid unnecessary volume and output results as JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-3d04d7ff",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

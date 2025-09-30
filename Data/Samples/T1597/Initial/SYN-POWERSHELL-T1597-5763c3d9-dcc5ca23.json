@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $vt=$env:VT_API_KEY; if([string]::IsNullOrWhiteSpace($vt)){ throw 'Missing VT_API_KEY'; }; $uri='https://www.virustotal.com/api/v3/domains/example.com'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'x-apikey'=$vt} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[VirusTotal] \" + $_.Exception.Message) }",
+  "explanation": "Queries VirusTotal's API for domain intelligence on example.com. While VT has free tiers, rich access is closed-source/subscription-based. Uses x-apikey header and returns JSON.",
+  "rationale_steps": [
+    "Source the API key from environment for secure handling.",
+    "Perform a scoped domain lookup to avoid excessive data pulls.",
+    "Use HTTPS and explicit Accept header for structured output.",
+    "Convert response to JSON and log any exceptions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-dcc5ca23",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='2001:db8:abcd:1::50'; $seq=@(15001,15002,15003); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 500 }; Test-NetConnection -ComputerName $target -Port 60000 -InformationLevel Detailed",
+  "explanation": "IPv6-based TCP port knocking to evade IPv4-focused monitoring, signaling a service to open port 60000. Detection: ensure IPv6 logging/monitoring parity with IPv4; alert on sequential connection attempts to high, typically closed ports over IPv6.",
+  "rationale_steps": [
+    "Target an IPv6 address to avoid IPv4-only defenses.",
+    "Send a spaced sequence of TCP knocks.",
+    "Attempt to reach the high-numbered hidden port expected to open.",
+    "Defenders: monitor IPv6 flows and firewall logs for sequential probes and port-open transitions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-09302de5",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

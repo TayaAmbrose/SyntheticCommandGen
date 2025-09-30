@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.25'; $seqB64='NzAwMCw4MDAwLDkwMDA='; $ports = [Text.Encoding]::ASCII.GetString([Convert]::FromBase64String($seqB64)).Split(',') | ForEach-Object { [int]$_ }; foreach($p in $ports){ $null = Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet; Start-Sleep -Milliseconds 300 } }",
+  "explanation": "Sends a base64-encoded port-knock sequence (7000, 8000, 9000) using TCP SYN probes to a target. This can unlock a hidden service on the remote if it runs a knock responder. Detection: alert on repeated failed connection attempts to uncommon high ports in rapid succession from the same source; match known knocking sequences. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Decode knock sequence from base64 and iterate ports in order.",
+    "Send TCP SYN via Test-NetConnection to emulate a knock sequence.",
+    "Rely on remote knock daemon to enable functionality upon correct sequence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-23e8f28f",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

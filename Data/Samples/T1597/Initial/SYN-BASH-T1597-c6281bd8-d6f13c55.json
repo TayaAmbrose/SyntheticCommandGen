@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -u \"$RISKIQ_EMAIL:$RISKIQ_KEY\" -H \"Accept: application/json\" \"https://api.riskiq.net/pt/v2/enrichment/subdomains?query=example.com\" -o riskiq_subdomains_example.com.json -w '{\"service\":\"riskiq_subdomains\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries RiskIQ PassiveTotal (commercial) for known subdomains of a target, using Basic auth and returning structured JSON with succinct logging.",
+  "rationale_steps": [
+    "Use a closed-source commercial dataset (RiskIQ PassiveTotal).",
+    "Authenticate via HTTP Basic without exposing credentials in the command history (env vars).",
+    "Target specific enrichment endpoint to minimize noise.",
+    "Save results in JSON for correlation with other findings.",
+    "Log HTTP status to enable error tracking and rate-limit awareness."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-d6f13c55",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

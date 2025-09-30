@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_http --rcheck --seconds 60 -p tcp --dport 4444 -j ACCEPT; iptables -I INPUT -p tcp --dport 80 -m string --string \"X-T1205: OPEN\" --algo bm -m recent --name t1205_http --set -j LOG --log-prefix \"T1205-HTTP-SIGNAL \"; nc -l -p 4444 -k >/dev/null 2>&1 &",
+  "explanation": "Sets a signaling rule that watches for a crafted HTTP header (X-T1205: OPEN) on port 80, logs it, and whitelists the source via iptables recent. If seen, inbound TCP/4444 is allowed for 60s where nc listens. For lab use to simulate HTTP-based traffic signaling and detection.",
+  "rationale_steps": [
+    "Monitor application-layer HTTP header to set a temporary allow-list on match",
+    "Log abnormal HTTP packet content for detection and auditing",
+    "Expose a gated listener only when the signal is observed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-adac09f1",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

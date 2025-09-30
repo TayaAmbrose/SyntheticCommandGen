@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,hashlib,json; assert os.geteuid()==0; meta=json.load(open(\"/bootflash/golden/image_meta.json\")); img=meta[\"path\"]; h=hashlib.sha256(); f=open(img,\"rb\"); [h.update(chunk) for chunk in iter(lambda: f.read(1048576), b\"\")]; f.close(); ok=(h.hexdigest()==meta[\"sha256\"] and os.stat(img).st_size==meta[\"size\"]); print(\"OK\" if ok else \"MISMATCH\"); sys.exit(0 if ok else 7)'",
+  "explanation": "Streams the image to compute SHA-256 and checks file size against a signed metadata file for robust integrity verification.",
+  "rationale_steps": [
+    "Use root to access the image and metadata.",
+    "Compute a streaming SHA-256 to handle large files safely.",
+    "Verify both hash and size against the baseline metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-e3d8900d",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

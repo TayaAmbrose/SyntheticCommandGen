@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(sha256sum /bootflash/kernels/vmlinuz | awk '{print $1}') <(sha256sum /var/tmp/modified_kernels/vmlinuz | awk '{print $1}')",
+  "explanation": "Compares hashes of the baseline vs modified kernel binaries to verify the system image includes a changed kernel.",
+  "rationale_steps": [
+    "Hash the kernel binary from the trusted source and the modified copy.",
+    "Use diff to detect a mismatch, indicating a kernel replacement in the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-f527071f",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

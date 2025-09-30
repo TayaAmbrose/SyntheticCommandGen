@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 443 --tcp-flags FIN,SYN,RST,PSH,ACK,URG SYN -m ttl --ttl-eq 42 -m length --length 60 -m recent --name T1205_TCP_SIG --set -j LOG --log-prefix \"T1205_TCP_SIG \"",
+  "explanation": "Identifies SYN packets to 443 with an unusual fixed TTL and packet length used as a low-level covert activation signal (traffic signaling via crafted TCP parameters).",
+  "rationale_steps": [
+    "Combine TTL and exact packet size constraints to model a magic packet.",
+    "Mark and log such packets to detect signaling patterns atypical of normal TLS."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-91bdc607",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

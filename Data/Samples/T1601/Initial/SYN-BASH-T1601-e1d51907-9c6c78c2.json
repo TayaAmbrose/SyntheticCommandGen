@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/boot/initramfs-$(uname -r).img of=/var/tmp/initramfs.cur bs=1M && md5sum /var/tmp/initramfs.cur baseline/initramfs.img && diff -u <(od -An -tx1 -w16 -v /var/tmp/initramfs.cur) <(od -An -tx1 -w16 -v baseline/initramfs.img)",
+  "explanation": "Copies the active initramfs and compares both checksum and byte-level hex output to detect unauthorized modifications.",
+  "rationale_steps": [
+    "Copy the initramfs image using dd for consistent block-level reads.",
+    "Compute MD5 checksums for a quick comparison against a baseline.",
+    "Use od to produce hex dumps and perform a unified diff for precise change visualization."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-9c6c78c2",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

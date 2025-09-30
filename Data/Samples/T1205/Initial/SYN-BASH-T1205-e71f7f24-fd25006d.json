@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ni eth0 -l \"arp and ether src 00:de:ad:be:ef:00 and arp[6:2]=2\" -c 1 && vtysh -c \"conf t\" -c \"ip route 192.168.200.0/24 192.0.2.254\"'",
+  "explanation": "Treats a gratuitous ARP reply from a specific MAC as a layer-2 magic signal, then adds a static route via vtysh to enable a hidden path. Detection: baseline ARP behavior on infra ports and alert on unexpected ARP replies from unusual MACs coupled with new route insertions.",
+  "rationale_steps": [
+    "Listen for a crafted ARP reply from a preselected MAC address as the trigger.",
+    "On match, perform a configuration change by adding a static route using vtysh.",
+    "Detect with ARP monitoring/DAI and FRR configuration change audits."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-fd25006d",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

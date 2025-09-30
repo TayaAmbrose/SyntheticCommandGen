@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_dns --rcheck --seconds 60 -p tcp --dport 9091 -j ACCEPT; iptables -I INPUT -p udp --dport 53 -m string --string \"MAGICDNS\" --algo bm -m recent --name t1205_dns --set -j LOG --log-prefix \"T1205-DNS-SIGNAL \"; nc -l -p 9091 -k >/dev/null 2>&1 &",
+  "explanation": "Watches for a crafted UDP/53 payload containing the ASCII token MAGICDNS, logs it, and temporarily allows TCP/9091 for the sender. Simulates DNS-layer signaling to activate a gated listener.",
+  "rationale_steps": [
+    "Match unusual DNS application data to set a recent list entry",
+    "Log the anomalous DNS packet for detection",
+    "Enable a hidden listener only for recently signaled sources"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-658bfd28",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

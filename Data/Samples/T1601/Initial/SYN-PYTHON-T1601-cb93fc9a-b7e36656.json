@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, hashlib, difflib\n\ndef sha256_file(p):\n    h = hashlib.sha256()\n    with open(p, \"rb\") as f:\n        for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n            h.update(ch)\n    return h.hexdigest()\n\nentries = []\nfor root, _, files in os.walk(\"/boot\"):\n    for name in sorted(files):\n        p = os.path.join(root, name)\n        rel = os.path.relpath(p, \"/boot\")\n        entries.append(f\"{sha256_file(p)}  {rel}\\n\")\n\nbaseline_list = \"/root/baselines/boot.sha256list\"\nbase_lines = open(baseline_list).read().splitlines(keepends=True)\nprint(\"\".join(difflib.unified_diff(base_lines, entries, fromfile=\"baseline_boot_sha256list\", tofile=\"current_boot_sha256list\")))",
+  "explanation": "Creates a SHA-256 manifest of all files under /boot and diffs it against a baseline to uncover any modified boot image components.",
+  "rationale_steps": [
+    "Traverse /boot and compute per-file SHA-256 hashes.",
+    "Load a baseline manifest of hashes and relative paths.",
+    "Use difflib to highlight added, removed, or changed artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-b7e36656",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

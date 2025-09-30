@@ -1,0 +1,21 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); user='alex.research'; old=iam.list_access_keys(UserName=user)['AccessKeyMetadata']; newk=iam.create_access_key(UserName=user)['AccessKey']; for k in old: iam.update_access_key(UserName=user, AccessKeyId=k['AccessKeyId'], Status='Inactive'); print(json.dumps({'action':'rotate_access_keys','user':user,'new_access_key_id':newk['AccessKey']['AccessKeyId'],'new_secret_access_key':newk['AccessKey']['SecretAccessKey'],'old_keys_deactivated':[k['AccessKeyId'] for k in old]}))\"",
+  "explanation": "Rotates the persona's API credentials, replacing old keys to maintain persistence while aligning with routine hygiene.",
+  "rationale_steps": [
+    "Key rotation resembles standard security practices, reducing suspicion.",
+    "Deactivate prior keys to maintain a clean footprint and avoid unusual key counts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-577fa4d8",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib; rel=os.uname().release; c=['/boot/initramfs-'+rel+'.img','/boot/initrd.img-'+rel]; p=next((x for x in c if os.path.exists(x)), None); assert p, 'initramfs not found'; h=hashlib.sha256(open(p,'rb').read()).hexdigest(); b=open('/var/lib/img-baseline/initramfs.sha256').read().strip().split()[0]; print('INITRAMFS', p, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Checks the initramfs image integrity to ensure any embedded malicious changes remain intact.",
+  "rationale_steps": [
+    "Focuses on initramfs, a key boot-time system image element modified in T1601.",
+    "Leverages hashlib to compare against a stored baseline.",
+    "Operates with elevated access consistent with sensitive image verification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-cdab0361",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

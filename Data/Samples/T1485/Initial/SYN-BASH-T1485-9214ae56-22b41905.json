@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'mp=/mnt/finance; dd if=/dev/zero of=\"$mp/.wipe\" bs=8M oflag=direct status=progress || true; sync; rm -f \"$mp/.wipe\"'",
+  "explanation": "Fills free space on a specific mount with zeros and deletes the filler file to prevent recovery of deleted data remnants.",
+  "rationale_steps": [
+    "Target a specific mount to avoid system-wide impact",
+    "Write a large zero-filled file until the filesystem is full",
+    "Force direct writes to disk",
+    "Sync and delete the filler to clear free space"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-22b41905",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

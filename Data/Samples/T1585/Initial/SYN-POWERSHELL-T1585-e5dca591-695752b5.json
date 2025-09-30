@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam tag-user --user-name emma.j.taylor --tags Key=LinkedIn,Value='linkedin.com/in/emmajtaylor' Key=TimeZone,Value='PST' Key=Phone,Value='+1-206-555-0148'; aws iam list-user-tags --user-name emma.j.taylor --output json",
+  "explanation": "Augments the persona with additional social and contact attributes, then lists tags to produce a structured record for automation and validation.",
+  "rationale_steps": [
+    "Enrich persona metadata to enhance credibility (social link, timezone, phone).",
+    "Retrieve and log tags to ensure consistency across automation.",
+    "Maintain a realistic profile for long-term operations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-695752b5",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

