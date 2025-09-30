@@ -1,0 +1,32 @@
+# Target combinations
+targets = [
+    { "platform": "Windows", "privilege": "standard_user", "shell": "Powershell", "tool": "cmdlets" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "cmdlets" },
+    { "platform": "Linux", "privilege": "standard_user", "shell": "Bash", "tool": "cron" },
+    { "platform": "Linux", "privilege": "admin", "shell": "Bash", "tool": "cron" },
+    { "platform": "Cloud", "privilege": "cloud_user", "shell": "Python", "tool": "boto3" },
+    { "platform": "Cloud", "privilege": "cloud_admin", "shell": "Python", "tool": "boto3" },
+    { "platform": "Linux", "privilege": "docker_group", "shell": "Bash", "tool": "docker" },
+    { "platform": "Linux", "privilege": "docker_admin", "shell": "Bash", "tool": "docker" },
+    { "platform": "Kubernetes", "privilege": "cluster_user", "shell": "Bash", "tool": "kubectl" },
+    { "platform": "Kubernetes", "privilege": "cluster_admin", "shell": "Bash", "tool": "kubectl" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "Azure PowerShell" },
+    { "platform": "Cloud", "privilege": "cloud_user", "shell": "Powershell", "tool": "Azure CLI" },
+    { "platform": "Cloud", "privilege": "cloud_admin", "shell": "Powershell", "tool": "AWS CLI" },
+    { "platform": "Windows", "privilege": "standard_user", "shell": "Powershell", "tool": "AWS CLI" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "iptables" }
+]
+
+# Constraints
+constraints = [
+    "Commands must leverage Personal Account Development for creating or manipulating online personas and accounts.",
+    "Ensure that Powershell commands utilize cmdlets specifically for account manipulation or querying APIs.",
+    "Use Bash in Linux environments to interact directly with system utilities focusing on account creation and service interaction.",
+    "In cloud platforms, use tools like boto3 for AWS and Azure CLI for Azure to manage cloud service accounts and permissions.",
+    "Commands should focus on establishing persistent and believable personas for future operations which avoid detection.",
+    "Avoid using tools or commands that are not documented or are less common as they can arouse suspicion or fail under scrutiny.",
+    "Ensure that all tools and commands used are compatible with the specific shells and operating systems mentioned in the targets.",
+    "Obfuscation methods such as base64 encoding in Powershell or using eval in Bash are recommended to disguise command origins or purposes.",
+    "Commands should remain distinct and not overlap with Initial Access techniques, particularly phishing-based vectors.",
+    "Output from commands should be in a format that supports automation and parsing, preferably JSON or XML where applicable."
+]

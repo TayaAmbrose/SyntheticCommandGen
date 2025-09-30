@@ -1,0 +1,32 @@
+# Target combinations
+targets = [
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "curl" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Invoke-WebRequest" },
+    { "platform": "macOS", "privilege": "admin", "shell": "Bash", "tool": "curl" },
+    { "platform": "ESXi", "privilege": "administrator", "shell": "Bash", "tool": "curl" },
+    { "platform": "Linux", "privilege": "docker_group", "shell": "Bash", "tool": "docker" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "netsh" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "iptables" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "New-Object System.Net.Sockets.TCPClient" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "python-socket" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Test-Connection" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "scapy" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Resolve-DnsName" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "nslookup" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Invoke-Command" },
+    { "platform": "macOS", "privilege": "admin", "shell": "Python", "tool": "scapy" },
+]
+
+# Constraints
+constraints = [
+    "Commands must specifically focus on establishing command and control channels dynamically using the specified shell and tools relevant to T1568.",
+    "Only use Python, Bash, or PowerShell shells with appropriate command structures, avoiding overlap with other MITRE ATT&CK techniques.",
+    "Include network management or interrogation commands such as iptables, netsh, docker network commands, or similar relevant to T1568.",
+    "Utilize tools for network reconnaissance like curl or Invoke-WebRequest to simulate external server communication.",
+    "Ensure commands handle dynamic IP or DNS name resolution, pertinent to T1568 for achieving command and control setup.",
+    "Incorporate domain generation algorithms and actively manage DNS requests as part of the attack vectors.",
+    "Utilize obfuscation techniques where applicable, such as base64 encoding PowerShell scripts or using eval with Bash commands.",
+    "All network traffic generation must be plausible within the attacker's environment, ensuring all actions adhere to realistic administrative or root level capabilities.",
+    "For PowerShell, employ cmdlets that assist in network and domain manipulation, emphasizing stealth and efficacy in context to T1568.",
+    "Command structures should explicitly aim to avoid detection by using irregular network traffic patterns and ports."
+]

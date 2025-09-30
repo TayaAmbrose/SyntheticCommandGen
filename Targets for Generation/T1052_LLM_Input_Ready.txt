@@ -1,0 +1,31 @@
+# Target combinations
+targets = [
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "dd" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "cp" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Copy-Item" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Write-Output" },
+    { "platform": "macOS", "privilege": "user", "shell": "Bash", "tool": "cp" },
+    { "platform": "macOS", "privilege": "user", "shell": "Bash", "tool": "dd" },
+    { "platform": "Linux", "privilege": "sudo", "shell": "Bash", "tool": "tar" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "Compress-Archive" },
+    { "platform": "Linux", "privilege": "sudo", "shell": "Bash", "tool": "gzip" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "Expand-Archive" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "cat" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "mount" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "Mount-DiskImage" },
+    { "platform": "macOS", "privilege": "admin", "shell": "Bash", "tool": "hdiutil" },
+    { "platform": "macOS", "privilege": "admin", "shell": "Bash", "tool": "diskutil" },
+]
+
+# Constraints
+constraints = [
+    "Commands must specifically manage file operations focusing on external drives, adhering to technique T1052.",
+    "Utilize legitimate administrative tools such as 'dd', 'cp', 'Copy-Item' on their respective platforms.",
+    "Commands should either read from or write to the physical media directly, containing methods like 'Mount-DiskImage' for Windows.",
+    "Ensure that the shell environment is limited to Bash, PowerShell, or Python as per the given parameters.",
+    "Scripts or commands must avoid typical network exfiltration and focus on physical media such as USB or external hard drives.",
+    "Implement detection evasion techniques such as using base64 encoding, if transferring data via command-line scripts.",
+    "Target platforms explicitly mentioned in T1052 should only utilize commands applicable to them: Linux, macOS, Windows.",
+    "Return outputs or logs in plain text or JSON format, without additional explanations or markdown syntax.",
+    "Command execution must prioritize the unlinking from network-based command controls, ensuring all actions are local to the device."
+]

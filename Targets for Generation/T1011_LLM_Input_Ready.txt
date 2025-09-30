@@ -1,0 +1,36 @@
+# Target combinations
+targets = [
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Netsh" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "WMIC" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "WMIQuery" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "iptables" },
+    { "platform": "Linux", "privilege": "network_admin", "shell": "Bash", "tool": "tcpdump" },
+    { "platform": "macOS", "privilege": "user", "shell": "Bash", "tool": "networksetup" },
+    { "platform": "macOS", "privilege": "admin", "shell": "Bash", "tool": "ipconfig" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "iwconfig" },
+    { "platform": "Windows", "privilege": "network_admin", "shell": "Powershell", "tool": "Bluetooth manipulation tools" },
+    { "platform": "Linux", "privilege": "network_admin", "shell": "Bash", "tool": "airmon-ng" },
+    { "platform": "macOS", "privilege": "network_admin", "shell": "Bash", "tool": "airport" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "scapy" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "nmap" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Test-Connection" },
+    { "platform": "Linux", "privilege": "user", "shell": "Python", "tool": "socket" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Python", "tool": "socket" },
+    { "platform": "Linux", "privilege": "admin", "shell": "Bash", "tool": "nc" },  # nc for netcat
+    { "platform": "macOS", "privilege": "user", "shell": "Python", "tool": "socket" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "ifconfig" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "iperf" }
+]
+
+# Constraints
+constraints = [
+    "Tools used must directly support network configuration or monitoring, such as Netsh for Windows or iptables for Linux.",
+    "Each command must execute under a shell capable of handling network operations commands: Bash, PowerShell, or Python.",
+    "Commands must not impact any network functionality unrelated to exfiltration.",
+    "Refer to technique T1011 when formulating commands to ensure alignment with documented behaviors.",
+    "Avoid commonly used ports and interfaces in commands to minimize detection.",
+    "Ensure commands explicitly involve the manipulation of network mediums distinct from the primary communication channel.",
+    "Implement typical TCP/IP protocols commands within the constraints of the given tools (e.g., using scapy or netcat).",
+    "Commands should be invisible or obfuscated to casual system observation; consider using base64 or similar encoding methods.",
+    "Monitor configurations should not allow for cross-over detection into other MITRE ATT&CK techniques unless explicitly relevant."
+]

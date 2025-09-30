@@ -1,0 +1,30 @@
+# Target combinations
+targets = [
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "PSExec" },
+    { "platform": "Windows", "privilege": "system", "shell": "Powershell", "tool": "net" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "scp" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "rsync" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "curl" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "WinSCP" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "wget" },
+    { "platform": "Network Devices", "privilege": "admin", "shell": "Python", "tool": "paramiko" },
+    { "platform": "macOS", "privilege": "root", "shell": "Bash", "tool": "curl" },
+    { "platform": "macOS", "privilege": "user", "shell": "Bash", "tool": "scp" },
+    { "platform": "Linux", "privilege": "docker_group", "shell": "Bash", "tool": "docker" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "nc" },
+    { "platform": "Windows", "privilege": "system", "shell": "Powershell", "tool": "Invoke-WebRequest" }
+]
+
+# Constraints
+constraints = [
+    "Each command must operate under shells limited to Bash, Powershell, or Python according to the available platforms.",
+    "Commands specifically designed for exfiltration should avoid using common networking tools in ways that overlap with other ATT&CK techniques, particularly those not focusing on data exfiltration.",
+    "Incorporate obfuscation methods where applicable, such as base64 encoding payloads to avoid detection by conventional security tools.",
+    "Use realistic tooling such as 'scp', 'curl', or PowerShell cmdlets like 'Invoke-WebRequest', reflecting common practices for exfiltration.",
+    "Ensure that commands are executable with the given privilege level; for example, system-level privileges may be required for certain exfiltration activities.",
+    "Commands should be designed to silently perform actions without alerting system monitors or users to their presence on the system.",
+    "Tool usage should seek to exploit features inherent to the tool's primary function to perform the exfiltration (e.g., using 'nc' or 'scp' for direct file transfers).",
+    "Avoid redundant exfiltration by ensuring that scripts and command sequences are designed to uniquely handle data from gathering to transfer.",
+    "Outputs should specifically exclude verbose or debug information to maximize stealth and efficiency during operation.",
+    "Follow the guidance using technique ID T1020 as outlined by MITRE ATT&CK, adhering to structural and conceptual integrity."
+]

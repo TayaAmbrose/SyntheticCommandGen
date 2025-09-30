@@ -1,0 +1,30 @@
+# Target combinations
+targets = [
+    { "platform": "Network Devices", "privilege": "root", "shell": "Bash", "tool": "diff" },
+    { "platform": "Network Devices", "privilege": "root", "shell": "Bash", "tool": "md5sum" },
+    { "platform": "Network Devices", "privilege": "root", "shell": "Python", "tool": "os" },
+    { "platform": "Network Devices", "privilege": "root", "shell": "Powershell", "tool": "Get-FileHash" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "dd" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "cmp" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "hashlib" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "Powershell", "tool": "certutil" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "Powershell", "tool": "Compare-Object" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "Powershell", "tool": "fc" },
+    { "platform": "Network Devices", "privilege": "root", "shell": "Python", "tool": "filecmp" },
+    { "platform": "Network Devices", "privilege": "root", "shell": "Bash", "tool": "sha256sum" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "difflib" },
+]
+
+# Constraints
+constraints = [
+    "Commands must specifically focus on modifying or verifying the integrity of system images when using technique T1601.",
+    "Use Bash, PowerShell, or Python shells only for executing commands relevant to system image modifications.",
+    "Ensure the commands avoid functionalities overlapping with other ATT&CK techniques such as data exfiltration or privilege escalation.",
+    "Commands should involve realistic tooling such as 'diff', 'sha256sum', 'md5sum' on Bash, 'Get-FileHash' on PowerShell, and 'hashlib' and 'difflib' in Python.",
+    "Involve checksum comparisons or file integrity verifications as a way to detect unauthorized changes.",
+    "Commands must be executable on devices running the operating systems corresponding to the given platforms (e.g., Network Devices, Linux, Windows).",
+    "Verification techniques should include powerful system commands/platform-specific features that regular users cannot access (e.g., root on Linux/Unix systems, Administrator on Windows systems).",
+    "Use Python libraries like 'os', 'hashlib', 'difflib', 'filecmp' for file comparisons and integrity checking if scripting in Python.",
+    "Utilize base64 and hex escapes for obfuscation only if the scenario realistically requires hiding command functionalities from rudimentary detection mechanisms.",
+    "Prioritize output in JSON format whenever applicable to align with automated parsing systems and incident response procedures."
+]

@@ -1,0 +1,27 @@
+# Target combinations
+targets = [
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "cscript" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "cscript" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "wscript" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "wscript" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "mshta" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "mshta" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "rundll32" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "rundll32" },
+    { "platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "PubPrn.vbs" },
+    { "platform": "Windows", "privilege": "admin", "shell": "Powershell", "tool": "PubPrn.vbs" },
+]
+
+# Constraints
+constraints = [
+    "Commands must be executed within a PowerShell shell.",
+    "Scripts like cscript, wscript, mshta, rundll32, or PubPrn.vbs should be leveraged to proxy execution of malicious files.",
+    "Targets must be within a Windows platform environment as specified by the MITRE ATT&CK technique T1216.",
+    "All commands and scripts should ensure they bypass application control systems.",
+    "Malicious files or scripts executed must avoid detection by typical security mechanisms, suggesting potential use of obfuscation methods such as base64 encoding or the use of aliases.",
+    "Commands should avoid functionality overlapping with other ATT&CK techniques to maintain the distinctiveness of T1216.",
+    "Use of PowerShell is mandatory for the execution of the described scripts and utilities.",
+    "Ensure the approach taken adheres strictly to system-level execution without the use of third-party tools, relying solely on native Windows script hosts and utilities.",
+    "Monitor and analyze command-line parameters to flag unconventional uses of native tools indicative of proxy execution tactics.",
+    "All interaction must respect the security and privilege context of the operation, differentiating between user and admin privilege requirements."
+]

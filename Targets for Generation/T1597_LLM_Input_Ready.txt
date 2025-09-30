@@ -1,0 +1,35 @@
+# Target combinations
+targets = [
+    {"platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "curl"},
+    {"platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Invoke-WebRequest"},
+    {"platform": "Linux", "privilege": "user", "shell": "Python", "tool": "requests"},
+    {"platform": "Windows", "privilege": "user", "shell": "Powershell", "tool": "Invoke-RestMethod"},
+    {"platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "wget"},
+    {"platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "curl"},
+    {"platform": "Windows", "privilege": "administrator", "shell": "Powershell", "tool": "Invoke-WebRequest"},
+    {"platform": "Linux", "privilege": "root", "shell": "Python", "tool": "http.client"},
+    {"platform": "Windows", "privilege": "administrator", "shell": "Powershell", "tool": "System.Net.WebClient"},
+    {"platform": "Linux", "privilege": "docker_group", "shell": "Bash", "tool": "curl"},
+    {"platform": "Linux", "privilege": "user", "shell": "Python", "tool": "urllib"},
+    {"platform": "Windows", "privilege": "domain_admin", "shell": "Powershell", "tool": "Net.WebSockets"},
+    {"platform": "Kubernetes", "privilege": "cluster_admin", "shell": "Bash", "tool": "kubectl"},
+    {"platform": "Kubernetes", "privilege": "user", "shell": "Python", "tool": "kubernetes-client"},
+    {"platform": "Cloud", "privilege": "cloud_admin", "shell": "Bash", "tool": "aws"},
+    {"platform": "Cloud", "privilege": "cloud_user", "shell": "Python", "tool": "boto3"},
+    {"platform": "Linux", "privilege": "network_admin", "shell": "Bash", "tool": "scp"},
+    {"platform": "Windows", "privilege": "network_admin", "shell": "Powershell", "tool": "pscp"}
+]
+
+# Constraints
+constraints = [
+    "Ensure that tools and commands are executed under the correct shell as specified: Bash, PowerShell, or Python.",
+    "Commands must contain legitimate URIs and must be capable of handling web services securely with proper authentication and data handling practices.",
+    "Avoid overlap with other ATT&CK techniques such as phishing or malware deployment, focus strictly on closed source information gathering as described in T1597.",
+    "Utilize obfuscation methods like base64, hex escapes, or eval for hiding sensitive commands in environments susceptible to monitoring.",
+    "Commands should be designed to maximize the collection of relevant data without generating excessive noise or errors in logs.",
+    "Use the JSON file as ground truth for technique T1597 and adhere to restrictions and platforms mentioned within.",
+    "Return output in a structured format such as JSON or XML when extracting data or interacting with APIs.",
+    "Validate data sources and ensure the use of reputable or credible sources when gathering information.",
+    "Implement consistent error handling and logging within scripts and tools to ensure reliable operation.",
+    "Ensure that each shell and tool used is well-documented and approved for use within the specified platform and privilege context."
+]

@@ -1,0 +1,35 @@
+# Target combinations
+targets = [
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "iptables" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "nc" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "tcpdump" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "PowerShell", "tool": "Netsh" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "PowerShell", "tool": "New-Service" },
+    { "platform": "Network Devices", "privilege": "Administrator", "shell": "Bash", "tool": "iprofilter" },
+    { "platform": "Network Devices", "privilege": "Administrator", "shell": "Bash", "tool": "ethtool" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "knockd" },
+    { "platform": "Linux", "privilege": "user", "shell": "Bash", "tool": "ssh" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "ufw" },
+    { "platform": "Windows", "privilege": "User", "shell": "PowerShell", "tool": "Test-NetConnection" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Invoke-Command" },
+    { "platform": "Network Devices", "privilege": "Administrator", "shell": "Bash", "tool": "ciscoconf" },
+    { "platform": "Network Devices", "privilege": "Administrator", "shell": "Bash", "tool": "vtysh" },
+    { "platform": "macOS", "privilege": "root", "shell": "Bash", "tool": "ipfw" },
+    { "platform": "macOS", "privilege": "user", "shell": "Bash", "tool": "networksetup" },
+    { "platform": "Linux", "privilege": "root", "shell": "Python", "tool": "scapy" },
+    { "platform": "Windows", "privilege": "Administrator", "shell": "PowerShell", "tool": "WakeMeOnLan" }
+]
+
+# Constraints
+constraints = [
+    "Ensure commands specifically involve the manipulation or generation of network traffic to enable device functionality or exploit as per technique T1205.",
+    "Commands must use only the specified shells: Bash for Linux and macOS, PowerShell for Windows.",
+    "Commands should focus on network signaling methods that involve port knocking, magic packets, or similar",
+    "Include realistic detection measures for the commands such as monitoring unusual packets or unauthorized port changes in the network.",
+    "Commands specifically targeting network device authentication must avoid overlapping with network attack techniques such as T1556.",
+    "Tool usage in commands must include legitimate networking tools or scripts like iptables, nc, or PowerShell cmdlets (e.g., New-Service).",
+    "Technique-specific packets like Wake-on-LAN must fit the format specified by the technique: 6 bytes of FF followed by 16 repetitions of the target MAC address.",
+    "Implement commands to sniff network using legitimate tools or scripts like tcpdump or scapy.",
+    "Commands requiring escalated privileges must be specifically highlighted, and controlling mechanisms such as sudo or user account control (UAC) should be mentioned.",
+    "The payload or command formation should include appropriate obfuscation or encoding as necessary, using methods like base64 or encryption."
+]

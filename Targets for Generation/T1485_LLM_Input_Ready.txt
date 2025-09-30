@@ -1,0 +1,34 @@
+# Target combinations
+targets = [
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "SDelete" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Remove-Item" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "rm" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "shred" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Format-Volume" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "dd" },
+    { "platform": "macOS", "privilege": "root", "shell": "Bash", "tool": "srm" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "dd" },
+    { "platform": "IaaS", "privilege": "admin", "shell": "Python", "tool": "boto3" },
+    { "platform": "ESXi", "privilege": "administrator", "shell": "Python", "tool": "pyVmomi" },
+    { "platform": "Containers", "privilege": "docker_group", "shell": "Bash", "tool": "docker" },
+    { "platform": "IaaS", "privilege": "admin", "shell": "Bash", "tool": "azure-cli" },
+    { "platform": "IaaS", "privilege": "admin", "shell": "PowerShell", "tool": "Azure PowerShell" },
+    { "platform": "IaaS", "privilege": "admin", "shell": "Bash", "tool": "gcloud" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "cipher" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "wipe" },
+    { "platform": "Linux", "privilege": "root", "shell": "Bash", "tool": "mkfs" },
+    { "platform": "Windows", "privilege": "administrator", "shell": "PowerShell", "tool": "Clear-Disk" }
+]
+
+# Constraints
+constraints = [
+    "Commands must specifically focus on deleting or wiping data, and must be executable as a single shell command or script.",
+    "Use Bash or PowerShell for the execution of commands designed to qualify for technique T1485.",
+    "Commands in cloud or container environments should leverage native management tools (e.g., Kubernetes kubectl, Docker commands, cloud CLI tools).",
+    "Prefer the use of tools and commands that offer irreversible data destruction capabilities (e.g., shred, SDelete).",
+    "Commands should ensure complete deletion where files are not just unlinked but are actually overwritten.",
+    "Ensure all command activity can be run with available privilege levels listed in the targets without assuming unlisted privileges.",
+    "Tools must be existing and well-documented utilities that are standard for the platform; avoid custom, unknown, or deprecated tools.",
+    "Commands executed should avoid collateral impact and focus purely on targeted data destruction.",
+    "Include obfuscation techniques where applicable, but ensure that commands are still clear in function and intent for auditing purposes."
+]
