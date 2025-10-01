@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell invoking wscript.exe to run SyncAppvPublishingServer.vbs from System32, resulting in an unexpected child interpreter (details redacted).",
+  "explanation": "This reflects proxy execution via a Microsoft-signed script run under wscript.exe. The misuse is indicated by the script spawning an interpreter rather than performing App-V publishing tasks.",
+  "rationale_steps": [
+    "Detect powershell.exe spawning wscript.exe with SyncAppvPublishingServer.vbs.",
+    "Command line contains unusual or malformed parameters not seen in legitimate deployments.",
+    "wscript.exe spawns a secondary interpreter (e.g., powershell.exe) or unrelated executable.",
+    "Script path is a system-signed location; verify digital signature and expected hash.",
+    "Check for lack of concurrent App-V events to validate misuse."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-a589e641",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command string is provided\u2014only a redacted, descriptive fragment\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "The described behavior (PowerShell invoking wscript.exe to run the signed SyncAppvPublishingServer.vbs that spawns an unexpected interpreter) plausibly aligns with T1216 proxy execution on Windows, though lack of exact arguments prevents full verification.",
+        "combined_score": 2.5,
+        "confidence": 0.3,
+        "timestamp": "2025-10-01T21:20:59.830845Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

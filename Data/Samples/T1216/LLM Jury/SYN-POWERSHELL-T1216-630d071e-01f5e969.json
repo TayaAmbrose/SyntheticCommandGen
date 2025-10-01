@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell initiating rundll32.exe to load a signed system library that in turn interprets script/HTML for proxy execution (details redacted).",
+  "explanation": "rundll32.exe can be abused to load trusted components that evaluate script-like content and then spawn additional processes, serving as a proxy for execution.",
+  "rationale_steps": [
+    "Process chain with powershell.exe -> rundll32.exe with suspicious DLL entry point usage.",
+    "Command line includes atypical parameters indicating script/HTML interpretation.",
+    "rundll32.exe spawns an interpreter or unrelated process immediately after launch.",
+    "Lack of corresponding UI or system configuration changes expected for legitimate usage.",
+    "Binary path and signature validate as Microsoft-signed; behavior is the anomaly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-01f5e969",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command string was provided (details redacted), so it is a non-runnable fragment rather than a parseable command.",
+        "semantic_score": 2,
+        "semantic_justification": "Using PowerShell to launch rundll32 to load a signed library for script/HTML interpretation is operationally plausible but aligns with Signed Binary Proxy Execution (rundll32/mshtml) rather than T1216's system script proxies (e.g., cscript/wscript with signed .vbs), and no specific arguments are shown.",
+        "combined_score": 1.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T22:04:08.137266Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 1.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

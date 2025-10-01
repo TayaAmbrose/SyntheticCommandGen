@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell starting cscript.exe to execute SyncAppvPublishingServer.vbs with crafted parameters that cause a downstream process launch (details redacted).",
+  "explanation": "Abuses the signed SyncAppvPublishingServer.vbs (part of App-V) to proxy into another process, taking advantage of the trust boundary of signed scripts to execute additional code.",
+  "rationale_steps": [
+    "Identify powershell.exe -> cscript.exe -> SyncAppvPublishingServer.vbs chain.",
+    "Arguments to the script contain atypical flags or embedded strings inconsistent with normal App-V sync activity.",
+    "Observe cscript.exe or the script starting a non-App-V-related process (e.g., powershell.exe or cmd.exe).",
+    "No corresponding App-V publishing events occur despite the script invocation.",
+    "Time-of-day/user context inconsistent with typical App-V maintenance operations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-84ec6d34",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The entry is a descriptive summary rather than a concrete, parseable command line, so it is not runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "Abusing SyncAppvPublishingServer.vbs via cscript.exe from PowerShell to proxy execution is a known, plausible T1216 method, though missing exact arguments prevents full verification.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T21:23:22.960504Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

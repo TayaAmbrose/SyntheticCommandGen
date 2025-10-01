@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would enforce IPv6-only on a TCP socket and send base64-encoded data to a unique-local IPv6 service listening on an uncommon port]",
+  "explanation": "Using IPv6-only sockets ensures the exfiltrated data traverses an alternate medium relative to typical IPv4 egress, consistent with T1011.",
+  "rationale_steps": [
+    "Create IPv6-only TCP socket",
+    "Base64-encode the target data",
+    "Connect to a unique-local IPv6 address at a non-standard port",
+    "Send and close",
+    "No side effects to unrelated network functions"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-fab8f10d",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command or code is provided\u2014only a narrative description\u2014so nothing is parseable or runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The described IPv6 socket exfiltration does not implement or leverage trusted signed system scripts (e.g., PubPrn.vbs) and thus is misaligned with the stated technique description.",
+        "combined_score": 1.0,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T21:30:49.211598Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

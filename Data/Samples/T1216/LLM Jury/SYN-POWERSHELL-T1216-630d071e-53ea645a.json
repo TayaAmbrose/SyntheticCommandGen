@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell starting cscript.exe to run a Microsoft-signed JS/VBS helper that unexpectedly launches a non-related executable (details redacted).",
+  "explanation": "This captures the broader T1216 behavior where cscript.exe executes a trusted script that is misused to proxy execution of another binary, leveraging the signed script\u2019s trust to evade controls.",
+  "rationale_steps": [
+    "powershell.exe -> cscript.exe lineage with a system-signed script as the target.",
+    "Inconsistent or malformed parameters passed to the signed script.",
+    "Observation of secondary process creation unrelated to the script\u2019s documented purpose.",
+    "No corroborating system configuration changes or expected events follow.",
+    "User context and timing do not align with legitimate administrative activity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-53ea645a",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command string is provided\u2014only a description\u2014so it is not runnable or parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "The described behavior\u2014PowerShell invoking cscript.exe to run a signed Microsoft JS/VBS helper that then launches another binary\u2014matches T1216 system script proxy execution, though details are redacted.",
+        "combined_score": 2.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T22:45:54.857293Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

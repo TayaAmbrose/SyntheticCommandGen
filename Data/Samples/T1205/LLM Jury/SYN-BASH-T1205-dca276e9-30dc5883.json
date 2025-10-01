@@ -1,0 +1,36 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 443 -m string --string \"beacon.example\" --algo bm -m recent --name T1205_TLS_SNI --set -j LOG --log-prefix \"T1205_TLS_SNI \"",
+  "explanation": "Matches TLS ClientHello SNI strings containing a covert keyword/host (beacon.example) as an activation signal, demonstrating application-layer traffic signaling over TLS.",
+  "rationale_steps": [
+    "Leverage visibility of plaintext SNI during TLS handshake to find covert triggers.",
+    "Track and log sources presenting signaling SNI values."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-30dc5883",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed iptables command with valid modules and flags, balanced quotes, and a proper LOG target with prefix.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly detects/logs TLS:443 ClientHello payloads containing the SNI substring and tags sources via recent, but lacks TLS awareness (may miss fragmented/ECH traffic) and the stated privilege level is inconsistent with requiring sudo.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T19:45:44.865849Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

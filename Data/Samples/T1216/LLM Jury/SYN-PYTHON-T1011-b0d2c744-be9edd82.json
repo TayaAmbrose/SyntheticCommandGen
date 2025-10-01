@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv4 UDP socket to an APIPA/isolated adapter address and send base64-encoded chunks to a peer on an uncommon UDP port with low TTL]",
+  "explanation": "Leverages a non-routed/alternate interface (APIPA) and UDP to move data out-of-band relative to the primary egress path, mapping to T1011.",
+  "rationale_steps": [
+    "Select an alternate local interface distinct from the default route",
+    "Encode data with base64",
+    "Use IPv4 UDP with a constrained TTL",
+    "Chunk and send to a high, uncommon destination port",
+    "Ensure no global network settings are altered"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-be9edd82",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete Python command or code is provided, only a descriptive placeholder, so it is not runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The described behavior (UDP exfiltration via APIPA and base64) does not use signed system scripts or script hosts and therefore does not implement the provided System Script Proxy Execution technique.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T22:51:11.477912Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

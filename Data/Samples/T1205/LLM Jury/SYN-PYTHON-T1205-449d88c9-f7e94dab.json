@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff DNS queries (UDP/53) with scapy and treat a specific domain (e.g., up.example.com) as the knock, then adjust iptables to open TCP/8080]",
+  "explanation": "High-level concept: covert signaling via a DNS query to a specific domain. A scapy-based sniffer detects the query name and uses it as the trigger to (maliciously) open a service port. Detection: inspect DNS logs for suspicious trigger domains, alert on local firewall changes following such queries, and restrict local processes initiating iptables modifications.",
+  "rationale_steps": [
+    "Capture UDP/53 with scapy and parse DNS question names.",
+    "If a pre-defined domain is observed, the logic would insert a permissive iptables rule for TCP/8080 (root/sudo needed).",
+    "Detection: DNS telemetry for unusual or internal trigger domains; SIEM correlation with iptables changes; EDR watch for firewall-manipulating subprocesses."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-f7e94dab",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command or code is provided\u2014only a descriptive summary\u2014so it is not runnable or parseable for syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "The concept aligns with T1205 by using a DNS query as a covert trigger to open a port, but it ignores the need for elevated privileges for packet sniffing and iptables changes, reducing operational feasibility.",
+        "combined_score": 2.0,
+        "confidence": 0.5,
+        "timestamp": "2025-10-01T19:33:18.300343Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

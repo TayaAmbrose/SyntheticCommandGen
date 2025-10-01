@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell launching wscript.exe to execute a Microsoft-signed administrative VBScript from System32 that immediately spawns an interpreter (details redacted).",
+  "explanation": "Generalized signed script proxy execution via wscript.exe where a trusted admin script is coerced into creating an unintended child process, often used to sidestep application whitelisting.",
+  "rationale_steps": [
+    "Parent is powershell.exe with user-level token.",
+    "wscript.exe command line references a system-signed VBScript (Printing_Admin_Scripts, App-V, etc.).",
+    "Rapid child process creation of an interpreter or LOLBin not associated with the script\u2019s intended function.",
+    "Arguments include irregular quoting, delimiters, or network paths.",
+    "Cross-check for absence of the administrative action that the script normally performs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-aebdd5f3",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command string is provided\u2014only a description\u2014so it cannot be parsed or validated for syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described behavior aligns with T1216 by using wscript.exe to run a signed System32 VBScript that proxies execution to an interpreter on Windows, though missing specifics prevent full operational verification.",
+        "combined_score": 2.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T22:48:44.631180Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

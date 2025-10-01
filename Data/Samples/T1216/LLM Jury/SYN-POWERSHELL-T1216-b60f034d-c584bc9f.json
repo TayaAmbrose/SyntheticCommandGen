@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: execution of HTA from unexpected system directories via PowerShell",
+  "explanation": "Demonstrates launching mshta from PowerShell to execute HTA content staged in uncommon system or temp directories, relying on script-host trust to proxy execution.",
+  "rationale_steps": [
+    "Stage HTA content in temp/unexpected directories to avoid attention",
+    "Invoke mshta from PowerShell to run the staged content under a signed host",
+    "This leverages system script proxy execution to bypass naive controls",
+    "Hunt for mshta executing files from temp directories and non-standard paths",
+    "Enforce allowlisting for both binary and content locations; disable HTA handling if not required"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-c584bc9f",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual PowerShell/mshta command is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "Without a concrete command it cannot demonstrate mshta execution from PowerShell, and the example is also mismapped to T1216 (mshta aligns with T1218), further reducing alignment with the stated technique.",
+        "combined_score": 1.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T21:41:06.105256Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

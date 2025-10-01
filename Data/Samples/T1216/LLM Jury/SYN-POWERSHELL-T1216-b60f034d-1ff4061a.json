@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: chained to spawn secondary processes from PowerShell",
+  "explanation": "Highlights PowerShell->mshta as a proxy stage where the signed host executes script that then launches secondary system binaries, keeping initial execution under a trusted host.",
+  "rationale_steps": [
+    "PowerShell initiates mshta, which executes controlled script code",
+    "The script within mshta spawns additional native utilities to continue execution",
+    "This indirection obscures the origin under a trusted parent process",
+    "Detect suspicious process trees: PowerShell -> mshta -> unusual child processes",
+    "Apply policy to prevent script hosts from creating child processes beyond a controlled allowlist"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-1ff4061a",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "This is a descriptive placeholder rather than an actual runnable PowerShell command, lacking concrete syntax, arguments, and quoting.",
+        "semantic_score": 2,
+        "semantic_justification": "While PowerShell invoking mshta to proxy execution is plausible, it aligns more with signed binary proxy execution (e.g., mshta) than T1216 system script proxying, and no concrete command is provided to validate behavior.",
+        "combined_score": 1.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T22:49:37.249811Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 1.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

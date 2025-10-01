@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: data-URI based HTA content invoked from PowerShell",
+  "explanation": "Represents mshta executing HTA content supplied via a data URI, enabling in-memory, fileless execution from a signed host started by PowerShell.",
+  "rationale_steps": [
+    "PowerShell launches mshta with an embedded data URI rather than a file or URL",
+    "The content is interpreted directly, minimizing file system traces",
+    "Signed host execution may slip past simplistic application controls",
+    "Flag unusual mshta command lines containing data URIs and spawned by PowerShell",
+    "Consider disabling data-URI handling or blocking mshta outright in enterprise environments"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-f622cf7c",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided entry is a descriptive placeholder without an actual command string, so it is not runnable or parseable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "The described mshta data-URI approach is plausible for fileless execution, but it maps to Signed Binary Proxy Execution (T1218.005) rather than System Script Proxy Execution (T1216) and lacks a concrete command to validate.",
+        "combined_score": 1.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T21:05:06.736018Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 1.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell executes cscript.exe with prnmngr.vbs using abnormal arguments that trigger an unrelated process creation (details redacted).",
+  "explanation": "Leverages a signed printing admin script (prnmngr.vbs) to indirectly launch other processes, relying on the legitimacy of the script to evade application controls.",
+  "rationale_steps": [
+    "Process tree: powershell.exe -> cscript.exe -> prnmngr.vbs.",
+    "Arguments to prnmngr.vbs include unexpected characters, quoting, or paths that are not part of normal printer management.",
+    "Downstream process creation from cscript.exe that is unrelated to printing operations.",
+    "Absence of matching print subsystem events in the event logs.",
+    "User context is a standard user without printer admin activity history."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-390fbe89",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command string is provided (details withheld), so syntax, quoting, and flags cannot be verified and the snippet is not runnable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "Invoking cscript.exe to run a signed admin VBS matches T1216 conceptually, but prnmngr.vbs is not generally known to support argument-driven arbitrary process execution, making the described behavior only partially plausible.",
+        "combined_score": 2.0,
+        "confidence": 0.2,
+        "timestamp": "2025-10-01T21:53:45.370333Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

