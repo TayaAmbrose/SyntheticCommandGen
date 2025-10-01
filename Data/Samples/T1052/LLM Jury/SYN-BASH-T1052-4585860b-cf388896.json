@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find \"$HOME/Documents\" -type f -maxdepth 1 -print0 | tar --null -T - -czf - | dd of=\"/dev/sdb\" bs=4M oflag=direct status=none",
+  "explanation": "Selects files from Documents and streams a compressed archive directly to the raw USB disk, avoiding file creation on the mounted filesystem.",
+  "rationale_steps": [
+    "Enumerate target files and feed them to tar via null-delimited list",
+    "Compress to minimize size and write time",
+    "Write the stream to the USB block device using dd with large blocks and direct I/O"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-cf388896",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with balanced quoting and valid options for find, tar, and dd.",
+        "semantic_score": 4,
+        "semantic_justification": "It streams a compressed archive of selected files directly to a raw USB device aligning with T1052, but writing to /dev/sdb typically requires elevated privileges and correct device identification.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T09:19:59.369547Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for find, tar, and dd commands, and correct piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements T1052 by finding files in the user's Documents directory, creating a compressed tar archive in memory, and writing it directly to a physical USB device (/dev/sdb) without leaving traces on the filesystem.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:20:01.909605Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid syntax for all commands, flags, arguments, and proper piping.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly aligns with the exfiltration technique by staging and compressing data, then attempting to stream it directly to a raw physical medium, but the stated 'Privilege: None' makes the `dd` operation to `/dev/sdb` operationally infeasible on a standard Linux system.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:20:24.374267Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

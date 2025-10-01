@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Automated mirror using robocopy: map \\\\ATTACKER_IP\\sync$ with 'net use' and run a continuous robocopy with monitoring switches to send changes as they occur.",
+  "explanation": "Conceptual use of a persistent directory mirror to a remote SMB share for continuous automated exfiltration using 'net use' and a file mirroring utility.",
+  "rationale_steps": [
+    "Establish SMB session with net use to the attacker-controlled share",
+    "Initiate a mirror/sync operation that tracks and sends file changes",
+    "Throttle or quiet operations to avoid attention",
+    "Tear down SMB mapping when complete"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-8bc64afa",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "This is a descriptive placeholder rather than an actual PowerShell command, so it is not parseable or runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually using a mapped SMB share with net use and a continuously running robocopy with monitoring options is a valid and plausible method for automated exfiltration on Windows, though concrete switches, credentials, and persistence details are omitted.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:49:19.846375Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a conceptual placeholder rather than an actual executable command, containing only a description of the intended action without proper syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach of using robocopy for continuous mirroring to a remote SMB share is semantically aligned with the T1020 Automated Exfiltration technique, though it lacks specific implementation details.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:49:22.390491Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided text is a descriptive placeholder outlining a conceptual process rather than an actual executable command with proper syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The conceptual use of 'net use' to map a remote share and 'robocopy' for continuous file mirroring perfectly aligns with the described intent of automated exfiltration to an external location (T1020).",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:51:51.303453Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

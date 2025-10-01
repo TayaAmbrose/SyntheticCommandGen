@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='198.51.100.10'; $sequence=@(23456,34567,45678); foreach($p in $sequence){ try{ $c=New-Object System.Net.Sockets.TcpClient; $c.Connect($target,$p) }catch{} finally{ if($c){$c.Close()} }; Start-Sleep -Milliseconds 200 }",
+  "explanation": "Implements TCP port knocking by attempting connections to a specific port sequence, potentially triggering a hidden service to open. Detection: watch for sequential connection attempts to uncommon, closed ports from the same source; leverage firewall logs (e.g., Windows Security 5156/5157) and IDS correlation.",
+  "rationale_steps": [
+    "Define a three-port knock sequence on the target.",
+    "Perform rapid TCP connect attempts to transmit the signal.",
+    "Short delays ensure the remote knock daemon records order.",
+    "Detect via correlation of sequential SYNs to unusual ports and firewall denied-connection events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-d90154f2",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced braces and quotes, correct foreach/try-catch-finally structure, and proper statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Performs sequential TCP connection attempts to a specific port sequence with timing delays, effectively implementing port knocking consistent with T1205 Traffic Signaling on Windows without elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:14:16.963660Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct function calls, proper error handling with try/catch/finally blocks, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique (specifically port knocking) by attempting sequential TCP connections to predefined ports on a target system which could trigger a hidden service or backdoor to open, aligning exactly with the T1205 technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:14:20.189251Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignments, loop structure, try-catch-finally block, object instantiation, method calls, and cmdlet usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the client-side of TCP port knocking using a specific port sequence and timing, which directly aligns with the T1205 Traffic Signaling technique as a timing- or sequence-based trigger.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:14:31.489146Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

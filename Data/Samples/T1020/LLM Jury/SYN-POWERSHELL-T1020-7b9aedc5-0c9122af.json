@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Scheduled task: create a task that maps \\\\ATTACKER_IP\\backup$ with 'net use', exports logs/data to a temp archive, copies to the share, and unmaps.",
+  "explanation": "Outlines the use of a scheduled job to periodically exfiltrate data via an SMB share mapped with 'net use', aligning with automated exfiltration behavior.",
+  "rationale_steps": [
+    "Register a scheduled task that runs under a privileged context",
+    "Within the task, map a remote SMB share using net use",
+    "Export or bundle targeted data and copy to the UNC path",
+    "Delete the mapping at the end of each scheduled run"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-0c9122af",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "This is a narrative description with placeholders rather than a concrete PowerShell command, so it is not directly parseable or runnable.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually it aligns with T1020 by automating exfiltration via a scheduled task that maps an SMB share, archives and copies data, then unmaps, though key specifics (credentials, exact schtasks/net use syntax) are omitted.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T04:45:56.112477Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a placeholder description rather than an actual executable command, containing only a high-level explanation of what the scheduled task would do.",
+        "semantic_score": 4,
+        "semantic_justification": "The described process accurately represents automated exfiltration via scheduled tasks using SMB shares for data transfer, though without an actual command implementation, some operational details remain unspecified.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:45:58.967524Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided text is a natural language description of a multi-step task, not a syntactically correct or runnable command.",
+        "semantic_score": 5,
+        "semantic_justification": "The outlined scheduled job, which maps an SMB share, archives data, copies it to the share, and unmaps, perfectly describes an automated exfiltration process.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:09:01.562629Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

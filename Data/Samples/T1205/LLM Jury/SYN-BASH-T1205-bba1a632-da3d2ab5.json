@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "python3 -c \"from scapy.all import *; send(IP(dst='203.0.113.1', id=4242)/UDP(dport=65000)/Raw(load=b'KNOCK'), verbose=False)\"",
+  "explanation": "Sends a UDP packet to port 65000 with a distinctive IP ID (4242) and short payload acting as a magic signal. A listener can watch for the unusual IP ID value as the trigger to enable functionality. Detection: inspect metadata anomalies such as fixed IP ID values headed to high ports and correlate with rule changes.",
+  "rationale_steps": [
+    "Craft a UDP packet to a high, likely closed port.",
+    "Embed the covert signal in the IP.id field and payload.",
+    "Transmit toward the network device expected to react.",
+    "Detection: IDS/pcap to flag repeated constant IP.id values to infrastructure IPs and subsequent firewall mutations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-da3d2ab5",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c command with balanced quotes and parentheses using valid Scapy constructs and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It crafts and sends a UDP packet with a chosen IP ID and payload consistent with traffic signaling (T1205), but typically needs root/CAP_NET_RAW and the platform may lack Scapy/Python on many network devices.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:46:26.598163Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid Python and Scapy syntax, and correct argument formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly achieves the stated intent of sending a custom UDP packet with a specific IP ID and payload, directly implementing the T1205 Traffic Signaling technique; however, sending raw packets with Scapy typically requires root privileges, making the 'Privilege: None' claim unrealistic for most standard environments.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:46:44.717531Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.70'; $ports=@(32123,42124,52125); $udp=New-Object System.Net.Sockets.UdpClient; foreach($p in $ports){ $null=$udp.Send([byte[]]@(0),1,$target,$p); Start-Sleep -Milliseconds 200 }; $udp.Close() }",
+  "explanation": "Performs a UDP port-knocking sequence by sending empty datagrams to a predefined set of high ports. A remote knock daemon may open a hidden service upon receiving the correct sequence. Detection: correlate short-interval UDP hits to closed/uncommon ports; alert on repeated sequences from a single source. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Emit a sequence of UDP packets to designated knock ports.",
+    "Trigger an agent that opens a service only after correct sequence.",
+    "Advise detection via correlation of sequential UDP probes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-065146de",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes and valid use of New-Object and UdpClient.Send inside a foreach loop.",
+        "semantic_score": 5,
+        "semantic_justification": "It conducts a UDP port-knocking sequence by sending timed datagrams to specified high ports, aligning with T1205 Traffic Signaling on Windows without requiring elevation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:12:02.180583Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct syntax for variable assignment, object creation, loops, method calls, and command separation with balanced delimiters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes a UDP port-knocking sequence with specific timing and a sequence of ports, which directly aligns with the 'timing- or sequence-based triggers' aspect of T1205 Traffic Signaling to trigger a remote action.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:12:14.439835Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

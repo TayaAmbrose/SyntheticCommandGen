@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo tcpdump -i eth0 -nn -w /tmp/portknock_seq.pcap 'dst host 192.0.2.10 and (tcp dst port 7000 or tcp dst port 8000 or tcp dst port 9000)'",
+  "explanation": "Sniffs for a specific TCP port-knock sequence destined to a host to aid activation timing or validation. Requires sudo for interface capture. Detection: alert on unauthorized packet captures and on patterns indicating knocking attempts.",
+  "rationale_steps": [
+    "Capture packets for the defined knock ports targeting 192.0.2.10.",
+    "Analyze the pcap to confirm sequence arrival and timing.",
+    "Use timing info to coordinate follow-on access attempts post-activation.",
+    "Blue teams can detect tcpdump processes and unusual BPF filters targeting closed ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-2ab6ffc7",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid tcpdump invocation with correct flags and a well-formed BPF filter and balanced quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "Passively captures traffic matching a port-knock pattern to a specific host and ports, aligning with T1205 traffic signaling observation/validation.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:21:22.215694Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct flag usage, balanced parentheses, and proper BPF filter syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately uses tcpdump to sniff for a port-knock sequence, which is a direct method of 'Traffic Signaling' (T1205) for coordination or activation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:21:33.196956Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

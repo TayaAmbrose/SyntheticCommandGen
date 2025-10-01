@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p udp --dport 9 -m string --algo bm --hex-string \"|FFFFFFFFFFFF|\" -m recent --name T1205_WOL --set -j LOG --log-prefix \"T1205_WOL_SIG \"",
+  "explanation": "Detects Wake-on-LAN style magic packets (leading 6x 0xFF bytes) to use as a covert activation signal, consistent with T1205 traffic signaling patterns.",
+  "rationale_steps": [
+    "Match application-specific WOL magic packet signature on UDP/9 to identify covert triggers.",
+    "Record source via recent list and log for anomaly detection without permitting access."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-5521fb42",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid iptables rule with correct flags, balanced quoting for hex-string and log-prefix, and proper use of string, recent, and LOG targets.",
+        "semantic_score": 4,
+        "semantic_justification": "Effectively detects and logs UDP port 9 packets containing the WoL magic 0xFF sequence and tags them via recent, aligning with T1205 traffic signaling, though it only targets port 9 and does not anchor/validate the full WoL pattern.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:21:01.218184Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid iptables syntax, flags, modules, and arguments without any parsing errors or structural issues.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1205 technique by detecting the characteristic magic string of a Wake-on-LAN packet on UDP port 9, utilizing a seemingly legitimate but specialized traffic pattern for covert signaling and tracking the source via the recent module.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:21:14.362669Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

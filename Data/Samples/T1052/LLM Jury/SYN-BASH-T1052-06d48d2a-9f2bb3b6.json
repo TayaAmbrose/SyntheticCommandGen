@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/NO NAME/.D1\" && cp -Rp \"$HOME/Desktop\" \"/Volumes/NO NAME/.D1/\"",
+  "explanation": "Transfers the Desktop directory to a hidden folder on an external drive labeled 'NO NAME'.",
+  "rationale_steps": [
+    "Target commonly used files on the Desktop.",
+    "Create a hidden directory on the removable media to reduce visibility.",
+    "Use cp -Rp to maintain original metadata and directory structure.",
+    "Ensure the entire operation is local and offline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-9f2bb3b6",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted paths with spaces, valid combined flags (-Rp), and correct use of mkdir -p with && then cp syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates a hidden dot-folder on the external volume '/Volumes/NO NAME' and recursively copies the user's Desktop into it, aligning with exfiltration to removable media on macOS.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:43:34.371268Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators (&&), and appropriate path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating a hidden directory (.D1) on an external drive and copying the user's Desktop contents to it, enabling physical exfiltration of data.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:43:36.859384Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for mkdir and cp, correct command separators (&&), and proper path specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by copying the Desktop directory to a hidden folder on an external volume, directly fulfilling the T1052 technique of exfiltration over a physical medium using obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:43:44.604112Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

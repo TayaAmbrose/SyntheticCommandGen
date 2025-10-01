@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff IPv6 traffic for Hop-by-Hop extension headers using scapy and treat their presence (to a specific dst) as a trigger to toggle IP forwarding]",
+  "explanation": "High-level concept: signal via IPv6 Hop-by-Hop extension headers to a specific address; the listener toggles routing or firewall behavior upon detection. Detection: log/drop unexpected IPv6 HbH headers at the edge, monitor sysctl changes, and alert on sudden enablement of forwarding or filter changes.",
+  "rationale_steps": [
+    "Capture IPv6 frames with scapy and check for IPv6ExtHdrHopByHop to a monitored destination.",
+    "On detection, the logic would write to /proc/sys/net/ipv4/ip_forward and/or alter iptables (root-only).",
+    "Detection: IDS rules for IPv6 HbH; system audit for forwarding toggles; SIEM correlation with network policy changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-7056ad35",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command/script is provided\u2014only a withheld placeholder\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "The concept matches T1205 by signaling via IPv6 Hop-by-Hop headers and triggering behavior, but practical execution would likely fail without elevated privileges for packet sniffing and toggling IP forwarding.",
+        "combined_score": 2.0,
+        "confidence": 0.3,
+        "timestamp": "2025-10-01T15:03:53.218048Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command itself was withheld, making direct evaluation of its syntax impossible; it cannot be run as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "While the use of IPv6 Hop-by-Hop headers for traffic signaling perfectly aligns with T1205 and Scapy is an appropriate tool, the claimed 'Privilege: None' is semantically incorrect as toggling IP forwarding or modifying firewall rules fundamentally requires elevated privileges.",
+        "combined_score": 2.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:04:18.793289Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

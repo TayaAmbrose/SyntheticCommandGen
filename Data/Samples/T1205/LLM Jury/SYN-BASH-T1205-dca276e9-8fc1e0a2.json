@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p udp --dport 53 -m string --string \"knock.example\" --algo bm -m recent --name T1205_DNS --set -j LOG --log-prefix \"T1205_DNS_SIG \"",
+  "explanation": "Detects DNS queries containing a specific domain token used as a covert signal (e.g., TXT/A query with knock.example), consistent with T1205 signaling via DNS.",
+  "rationale_steps": [
+    "Use application-aware payload matching on UDP/53 to detect encoded control tokens.",
+    "Record and log sources sending DNS-based activation queries."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-8fc1e0a2",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid iptables syntax with correct modules and options (-m string/--algo bm, -m recent --set, -j LOG) and balanced quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually aligns with detecting DNS-based signaling, but --string matches ASCII (not DNS wire-format labels) and targets only inbound UDP/53 to the host, so it will often miss the intended covert token despite using sudo for required privileges.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T16:20:08.851353Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct iptables syntax, valid flags, and balanced quoting for all arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by filtering UDP port 53 traffic, using the string module to detect the specified token within DNS queries, and logging/tracking the source, which directly implements T1205 Traffic Signaling detection via DNS.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:20:27.939898Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

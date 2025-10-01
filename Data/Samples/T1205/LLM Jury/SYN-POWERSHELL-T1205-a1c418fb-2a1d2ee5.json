@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup 00-11-22-33-44-55",
+  "explanation": "Sends a Wake-on-LAN magic packet to trigger a sleeping host to power on (Traffic Signaling). The tool constructs the packet as 6 bytes of 0xFF followed by the target MAC repeated 16 times. Detection: monitor outbound UDP broadcasts to port 7/9 and process execution of WakeMeOnLan; review NetFlow and Sysmon (Event ID 3) for unusual magic packet bursts.",
+  "rationale_steps": [
+    "Invoke WakeMeOnLan to generate a valid WOL magic packet for MAC 00-11-22-33-44-55.",
+    "Broadcasts the signal to elicit device wake-up per T1205.",
+    "As Administrator, ensure PowerShell is elevated if local firewall/UAC policies restrict broadcast sending.",
+    "Detect via IDS for UDP port 9 broadcasts and EDR alerts on WakeMeOnLan.exe usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-2a1d2ee5",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell call operator with a properly quoted executable path and simple arguments is well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "WakeMeOnLan is appropriate for sending WOL magic packets and this usage plausibly signals a target via MAC, though exact support for providing a raw MAC with /wakeup may depend on the tool\u2019s CLI expectations.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T15:59:14.815601Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing the PowerShell call operator `&` for external executable execution with properly quoted paths and valid flag/argument formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent of sending a Wake-on-LAN magic packet using the specified tool and directly aligns with T1205 Traffic Signaling by using network traffic to trigger a host's power state as a form of command or signal.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:59:27.314375Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

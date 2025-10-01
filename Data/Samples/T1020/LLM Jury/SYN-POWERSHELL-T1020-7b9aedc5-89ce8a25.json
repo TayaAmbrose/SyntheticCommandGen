@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Periodic loop: map \\\\ATTACKER_IP\\drop$ with 'net use', on a timed interval compress new files from a directory and copy to the UNC path, then unmap.",
+  "explanation": "Illustrates a timed loop that automatically batches and transfers newly found files to a remote SMB share established via 'net use'.",
+  "rationale_steps": [
+    "Use net use to map a remote SMB share with supplied credentials",
+    "Enumerate new or modified files since last run",
+    "Bundle and copy files to the UNC path on a schedule",
+    "Disconnect the SMB session when finished"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-89ce8a25",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "This is not an executable PowerShell command but a descriptive placeholder, so it is a non-runnable fragment with no concrete syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described workflow plausibly automates exfiltration on Windows by mapping an SMB share with net use, compressing and copying new files on a schedule, then unmapping, aligning with T1020 despite missing specifics like credentials and exact scheduling/compression commands.",
+        "combined_score": 2.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T02:49:26.416102Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a non-executable placeholder/description rather than actual code, containing only a high-level description of the intended functionality without any parseable syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described functionality aligns well with the T1020 Automated Exfiltration technique by implementing timed/scheduled data collection, compression, and exfiltration via SMB, though without seeing the actual implementation code, some operational details remain unverified.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:49:29.694046Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided input is a natural language description of a process, explicitly marked as a non-executable placeholder, and therefore not a syntactically correct or parseable PowerShell command string.",
+        "semantic_score": 5,
+        "semantic_justification": "The described logic perfectly aligns with MITRE ATT&CK T1020 (Automated Exfiltration), detailing a periodic, automated process to compress files and transfer them to a remote SMB share.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:49:51.954218Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

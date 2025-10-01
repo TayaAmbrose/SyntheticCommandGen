@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p icmp -m string --hex-string '|50 49 4E 47 5F 4B 4E 4F 43 4B 5F 39 30 39 30|' --algo bm -j LOG --log-prefix 'T1205_ICMP_SIG ' --log-level 4 && iptables -I INPUT -p icmp -m string --hex-string '|50 49 4E 47 5F 4B 4E 4F 43 4B 5F 39 30 39 30|' --algo bm -m recent --name t1205_icmp --set && iptables -I INPUT -p tcp --dport 9090 -m recent --name t1205_icmp --rcheck --seconds 45 --reap -j ACCEPT\"",
+  "explanation": "Uses a magic ICMP payload containing ASCII 'PING_KNOCK_9090' as the signal. The firewall logs and records the sender, then temporarily opens TCP/9090 to that source.",
+  "rationale_steps": [
+    "Inject iptables rules via Docker to monitor ICMP payloads.",
+    "Analyze for a specific magic string in ICMP traffic (application/tool-specific signaling).",
+    "Allow TCP/9090 for 45 seconds for the signaled IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-0f302b93",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker and iptables invocations with balanced quoting and valid flags chained by &&.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements ICMP payload-based signaling to set a recent list and temporarily accept TCP/9090 from the sender, consistent with T1205, assuming docker/CAP_NET_ADMIN on host.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:38:59.359097Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, all flags and arguments are valid, quotes are balanced, and command separators are correct for `docker`, `sh`, `apk`, and `iptables`.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent of temporarily opening TCP/9090, as using `-I INPUT` for all `iptables` rules causes the TCP `rcheck` rule to be evaluated before the ICMP `set` rule, making the port knocking mechanism non-functional.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:39:38.159943Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

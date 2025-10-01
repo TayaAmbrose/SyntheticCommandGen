@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ethtool -s eth0 wol g sopass 11:22:33:44:55:66; MAC=00:11:22:33:44:55; PASS=112233445566; mac=$(echo $MAC | tr -d :); hex=$(printf ff%.0s {1..6}; for i in {1..16}; do echo -n $mac; done); echo -n ${hex}${PASS} | xxd -r -p | nc -u -w1 192.0.2.10 9'",
+  "explanation": "Sets WoL with a SecureOn password and sends the corresponding magic packet (six FFs + 16x MAC + 6-byte password) to clandestinely signal the device. This leverages a more restrictive magic packet format. Detection: flag WoL packets containing appended SecureOn bytes and audit ethtool sopass usage.",
+  "rationale_steps": [
+    "Configure NIC for magic-packet WoL with SecureOn password (sudo).",
+    "Build magic packet hex including the 6-byte password.",
+    "Convert to binary and transmit to UDP/9 using nc.",
+    "Detection: IDS signature for WoL frames with trailing 6-byte password and change monitoring of sopass settings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-444d5dba",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, proper separators, valid command substitutions, and plausible ethtool/xxd/nc flags.",
+        "semantic_score": 4,
+        "semantic_justification": "It configures SecureOn and crafts/sends a proper WoL magic packet (6xFF + 16*MAC + 6-byte password) suitable for traffic signaling, though setting sopass locally and using unicast UDP instead of broadcast are minor realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:50:16.796583Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flag formats, and proper command substitutions.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly constructs and sends a Wake-on-LAN magic packet with a SecureOn password, directly aligning with the Traffic Signaling technique, though setting `ethtool sopass` on the sending interface is semantically ambiguous in the context of generating an outgoing packet for a remote device.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:50:41.393746Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

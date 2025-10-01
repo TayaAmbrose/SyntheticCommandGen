@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would send a 3-step TCP SYN port-knock (e.g., 7001->8002->9003) using scapy to signal a listener to open SSH via iptables for the source IP]",
+  "explanation": "High-level concept: a port-knocking client emits a precise sequence of TCP SYN packets to closed ports to covertly signal a server-side listener. Upon recognizing the sequence, the listener would (if maliciously configured) insert an iptables rule to allow SSH from the knocker's IP. Detection: monitor for short-interval SYNs to closed/high ports in fixed sequences, correlate with subsequent iptables changes (auditd, /var/log/kern.log), and flag anomalous firewall modifications.",
+  "rationale_steps": [
+    "Craft and transmit a sequence of TCP SYN packets to closed ports using scapy (traffic signaling).",
+    "Server-side logic matches the sequence within a time window and, if matched, would call iptables to open TCP/22 for the source IP (requires root/sudo).",
+    "Detection: use tcpdump/IDS to alert on repeated SYNs to high ports in a pattern; audit iptables rule insertions; compare with baseline port state."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-799566c9",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided entry is a conceptual placeholder rather than an actual runnable command or script, so it is not parseable or executable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "The described port-knocking via TCP SYNs aligns with T1205 and scapy is an appropriate tool, but the stated lack of privileges conflicts with scapy\u2019s typical requirement for raw socket permissions, reducing operational plausibility.",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T13:07:42.188514Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command appears to be a well-structured Python script using Scapy to send TCP SYN packets in a specific sequence, though without seeing the actual code I cannot verify complete syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "The described port-knocking implementation using Scapy to send TCP SYN packets to specific ports in sequence perfectly aligns with the T1205 Traffic Signaling technique as it uses network protocol fields and timing patterns to covertly signal a listening system to modify firewall rules.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T13:07:46.094700Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "While the specific command is withheld, the description implies a standard Scapy script which is perfectly well-formed and parseable in Python for sending TCP SYN packets.",
+        "semantic_score": 4,
+        "semantic_justification": "The described command perfectly aligns with MITRE ATT&CK T1205 (Traffic Signaling) by using port knocking via Scapy to covertly trigger a server-side action (opening SSH), though the stated 'Privilege: None' for a raw Scapy packet send is a minor realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:08:06.006957Z"
+      }
+    ],
+    "llm_average_syntactic": 3.333,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

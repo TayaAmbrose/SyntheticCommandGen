@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='203.0.113.25'; $seq=@(1111,2222,3333); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 400 }; Test-NetConnection -ComputerName $target -Port 8443 -InformationLevel Detailed",
+  "explanation": "Sends a TCP port-knocking sequence (1111, 2222, 3333) to signal a hidden service to open 8443. Detection: correlate multiple failed connection attempts to closed ports followed by a successful connection to a previously closed port; monitor Windows Firewall/WFP logs (e.g., Event IDs 5157/5156) and NetFlow for short-interval sequential connection attempts.",
+  "rationale_steps": [
+    "Define the target host.",
+    "Send short-spaced TCP connect attempts to a specific sequence of ports to act as the knock.",
+    "Attempt final connection to the hidden service port expected to open upon correct knock.",
+    "Defenders: alert on sequential failed connection attempts to uncommon ports followed by success on a new port; inspect WFP/Firewall and NetFlow logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-88c82c98",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes and braces, correct foreach loop and separators, and proper parameters for Test-NetConnection and Start-Sleep.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements a realistic port-knocking sequence via TCP connection attempts with timing and then checks 8443, which aligns with T1205 traffic signaling behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T17:14:11.635438Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for variable assignment, array creation, loops, cmdlet calls, and statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of a TCP port-knocking sequence, which is a direct example of 'timing- or sequence-based triggers' for 'Traffic Signaling' (T1205).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:14:20.912183Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

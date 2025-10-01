@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wakeonlan -i 255.255.255.255 11:22:33:44:55:66",
+  "explanation": "Broadcasts a Wake-on-LAN magic packet (6 bytes of 0xFF followed by 16 repetitions of the MAC) to remotely power on or wake a device as part of traffic signaling. Detection: monitor for WOL packets on ports 7/9 and correlate with unauthorized device wake events.",
+  "rationale_steps": [
+    "Transmit a WOL packet to the broadcast address for MAC 11:22:33:44:55:66.",
+    "The target NIC interprets the magic sequence and wakes the device.",
+    "Once awake, hidden services can be contacted by the operator.",
+    "Defenders watch for WOL frames and unusual power state changes in asset inventory logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-61809a22",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command using a valid flag (-i) and properly formatted MAC address with no quoting or separator issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately uses wakeonlan to broadcast a WoL magic packet consistent with signaling, though success depends on WoL enablement and broadcast reachability (255.255.255.255 may be filtered or not routed).",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:33:10.432948Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with a valid utility name, correct flag for broadcast IP, and a properly formatted MAC address.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly broadcasts a Wake-on-LAN magic packet, and the act of sending or timing such a packet is a plausible method for covert traffic signaling to trigger actions or convey status, aligning perfectly with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:33:27.752324Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'iptables -I INPUT -p tcp --dport 1111 -m recent --name K1 --set -j DROP; iptables -I INPUT -p tcp --dport 2222 -m recent --rcheck --seconds 10 --name K1 -m recent --name K2 --set -j DROP; iptables -I INPUT -p tcp --dport 3333 -m recent --rcheck --seconds 10 --name K2 -m recent --name K3 --set -j DROP; iptables -I INPUT -p tcp --dport 22 -m recent --rcheck --seconds 20 --name K3 -j ACCEPT; vtysh -c \"conf t\" -c \"ip route 198.51.100.0/24 192.0.2.254\"'",
+  "explanation": "Configures iptables-based port knocking (1111\u21922222\u21923333) to temporarily open SSH (22) upon correct sequence; then sets a supporting static route via vtysh. Detection: flag ephemeral rule insertions and kernel log rate spikes; monitor unauthorized changes in ssh exposure and FRRouting static routes.",
+  "rationale_steps": [
+    "Use iptables 'recent' module to implement a three-port knock sequence controlling SSH access.",
+    "After enabling the covert access window, add a route to facilitate management reachability.",
+    "Detect via configuration auditing (iptables-save diffs), syslog for INPUT rule changes, and FRR route change monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-edc6b878",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and separators with valid iptables recent-module and vtysh flags make the composite sudo bash -c command well-formed.",
+        "semantic_score": 5,
+        "semantic_justification": "The rules implement port-knocking via iptables recent lists to signal and temporarily open SSH (T1205), and the vtysh static route is a plausible supporting change under sudo.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:10:49.566968Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, employing correct `sudo bash -c` encapsulation, valid `iptables` flags and module usage, proper command separators, and correctly quoted `vtysh -c` arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a multi-stage port knocking sequence using `iptables -m recent` to enable SSH access, a clear example of Traffic Signaling (T1205), followed by a plausible `vtysh` command to establish a static route for further C2 or data movement.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:11:10.620199Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

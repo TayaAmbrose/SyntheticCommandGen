@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar -C \"$HOME\" -czf - Pictures | dd of=\"/dev/disk/by-uuid/1234-ABCD\" bs=2M oflag=direct iflag=fullblock status=none",
+  "explanation": "Archives the Pictures directory and writes it to the USB partition via its UUID, ensuring stability across reboots and avoiding filesystem-level writes.",
+  "rationale_steps": [
+    "Create a compressed archive stream of target data",
+    "Reference the external partition via by-uuid path",
+    "Use dd with large block size and direct I/O to write the stream to raw media"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-8932b4b9",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with valid tar and dd options, balanced quoting, and proper piping.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly streams a gzipped tar of $HOME/Pictures to a USB block device by UUID (aligning with exfiltration to physical media and bypassing filesystem writes), but it generally requires root to write to block devices and would likely corrupt any existing filesystem on the target, reducing operational plausibility under the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T10:38:09.889885Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, and correct piping syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by efficiently archiving user pictures and writing them directly to a physical USB device identified by UUID, bypassing filesystem monitoring and ensuring reliable exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:38:12.744552Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, featuring balanced quotes, valid flags, correct command separators, and no impossible constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly employs `tar` and `dd` to package and attempt raw exfiltration to a physical medium, the specified 'Privilege: None' makes the `dd` component operationally unfeasible, as writing directly to a raw block device typically requires elevated privileges.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:38:36.977547Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

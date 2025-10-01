@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_syslog --rcheck --seconds 60 -p tcp --dport 6010 -j ACCEPT; iptables -I INPUT -p udp --dport 514 -m string --string \"<133>T1205\" --algo bm -m recent --name t1205_syslog --set -j LOG --log-prefix \"T1205-SYSLOG-SIGNAL \"; nc -l -p 6010 -k >/dev/null 2>&1 &",
+  "explanation": "Watches syslog (UDP/514) for a crafted PRI-tagged message containing T1205. On match, logs and temporarily opens TCP/6010 for the sender, where nc is listening. Simulates syslog-based signaling.",
+  "rationale_steps": [
+    "Match a specific syslog PRI and message token",
+    "Use iptables LOG target to flag the anomaly",
+    "Whitelist the emitter for a short window to a controlled port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-899e9fe2",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with valid flags, balanced quotes, correct separators, and proper redirections.",
+        "semantic_score": 4,
+        "semantic_justification": "The rules detect a crafted syslog UDP packet to set a recent list and temporarily allow TCP/6010 where nc listens, matching traffic signaling behavior, but it needs root privileges and specific iptables modules/order to function reliably.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:16:00.534283Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid syntax for all tools including `iptables` and `nc` (assuming a modern `nc` implementation like `ncat`), and employs proper command separators and flag formats.",
+        "semantic_score": 2,
+        "semantic_justification": "While the conceptual flow perfectly demonstrates T1205 traffic signaling via syslog and dynamic firewall rules, the `iptables` commands fundamentally require root privileges, directly contradicting the stated 'Privilege: None' and making the command inoperable as described.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:16:34.375740Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

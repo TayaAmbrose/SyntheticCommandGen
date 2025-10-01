@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ping -c 1 -p 4f50454e 198.51.100.60",
+  "explanation": "Sends a single ICMP echo request with payload bytes spelling 'OPEN' (0x4f50454e) that a backdoor may use as a magic trigger. Detection: inspect ICMP payloads for static patterns and alert on devices acting upon such traffic.",
+  "rationale_steps": [
+    "Craft an ICMP echo with a recognizable data pattern.",
+    "A covert listener watching ICMP payloads recognizes the magic and enables access.",
+    "Operator follows up with a connection to the newly available service.",
+    "SOC can baseline typical ICMP payload patterns and alert on anomalous fixed-content pings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-4db0fe36",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed using valid ping flags (-c, -p) with a proper hex pattern and a valid IPv4 address.",
+        "semantic_score": 5,
+        "semantic_justification": "It sends exactly one ICMP echo request whose payload is filled with the hex bytes 4f50454e ('OPEN'), consistent with using ICMP payload signaling for a trigger (T1205).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:10:07.021055Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid ping syntax, using the -c flag to limit to 1 packet, -p flag to specify the payload pattern in hexadecimal, and a valid IP address target.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by embedding the 'OPEN' signal (in hex) within an ICMP packet that could serve as a trigger for a backdoor listening for this specific pattern.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:10:10.192125Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard Linux ping flags and arguments correctly.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of using ICMP payload for traffic signaling, directly aligning with the T1205 technique description of embedding signals within network traffic as a trigger.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:10:16.013712Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

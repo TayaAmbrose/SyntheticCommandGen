@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$buf = [byte[]](0xDE,0xAD,0xBE,0xEF,0xCA,0xFE,0xBA,0xBE); [System.Net.NetworkInformation.Ping]::new().Send('198.51.100.50', 100, $buf) | Out-Null",
+  "explanation": "Uses a crafted ICMP echo request with a recognizable payload as a covert signal to activate remote behavior (similar to port knocking but via ICMP). Detection: alert on unusual ICMP payload signatures or short-interval bursts; analyze IDS/IPS logs for repeated identical ICMP payloads from administrative hosts.",
+  "rationale_steps": [
+    "Create an ICMP payload with a static signature.",
+    "Send a single echo request with timeout suitable for signaling.",
+    "Remote listener may use payload match to trigger functionality.",
+    "Detect via ICMP payload inspection and anomaly detection for non-standard ping traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-806faa55",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with a correct byte[] cast, proper command separator, and valid use of Ping.Send(host, timeout, buffer) piped to Out-Null.",
+        "semantic_score": 5,
+        "semantic_justification": "It sends an ICMP echo request containing a crafted 8-byte payload as a covert signal, which aligns with T1205 traffic signaling and requires no elevated privileges on Windows.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:03:46.978440Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, proper array declaration, correct method invocation, and appropriate piping to Out-Null.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a specially crafted ICMP packet with a recognizable payload (0xDEADBEEFCAFEBABE) that could serve as a covert signal to a listening system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:03:50.037348Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax for variable assignment, type casting, method invocation, and argument passing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively embeds a custom byte payload into an ICMP echo request for covert signaling, directly aligning with the described MITRE ATT&CK T1205 technique and operational intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:04:01.297372Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

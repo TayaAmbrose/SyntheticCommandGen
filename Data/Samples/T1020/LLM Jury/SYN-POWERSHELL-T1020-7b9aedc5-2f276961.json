@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Automated exfiltration via SMB mapping would typically: map \\\\ATTACKER_IP\\drop$ with 'net use', Compress-Archive a target folder, Copy-Item the archive to the UNC path, then delete the mapping.",
+  "explanation": "High-level example of an automated file-package-and-transfer workflow leveraging an SMB share mapped using the 'net' utility. Details are intentionally withheld.",
+  "rationale_steps": [
+    "Use net use to authenticate and map a remote SMB share",
+    "Compress target data into a single archive to reduce size and detection",
+    "Copy the archive to the mapped UNC path for exfiltration",
+    "Remove the SMB mapping to minimize traces"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-2f276961",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "It is a descriptive placeholder rather than an actual PowerShell command sequence, so it is not runnable or parseable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "The outlined workflow (net use mapping, Compress-Archive, Copy-Item to SMB, cleanup) is plausible and aligns with automated exfiltration via SMB on Windows, though it omits concrete details like credentials and scheduling.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:44:27.852374Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a non-executable placeholder/description rather than an actual command with proper syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The description accurately outlines a plausible automated exfiltration workflow using SMB mapping that aligns with the T1020 technique, though it lacks specific implementation details.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:44:30.109480Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is an English description of a workflow, explicitly labeled as a 'non-executable placeholder', and does not contain any syntactically correct or parseable command-line input.",
+        "semantic_score": 5,
+        "semantic_justification": "The described workflow outlines a highly plausible and common method for automated exfiltration using native Windows commands and PowerShell cmdlets to package data via compression and transfer it to an external SMB share, directly aligning with MITRE ATT&CK T1020.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:49:39.968894Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

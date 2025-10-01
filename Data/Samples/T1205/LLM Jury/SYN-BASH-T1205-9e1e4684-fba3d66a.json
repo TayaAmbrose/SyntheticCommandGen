@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo hping3 -c 1 -S -p 45001 target.example && sleep 1 && sudo hping3 -c 1 -A -p 45002 target.example && sleep 1 && sudo hping3 -c 1 -F -p 45003 target.example && ssh -p 22 user@target.example",
+  "explanation": "Crafts a TCP knock sequence with specific flags (SYN, ACK, FIN) using hping3 to signal a port-unlock workflow on the remote device, then connects via SSH. Requires sudo for raw packet crafting. Detection: alert on hping3 invocation by non-admin users; IDS signatures for low-rate TCP probes with unusual flag combinations to high ports; monitor firewall for transient SSH ALLOW.",
+  "rationale_steps": [
+    "Send crafted TCP packets with specific flags to designated knock ports (requires sudo).",
+    "Remote system validates the sequence and modifies rules to allow SSH.",
+    "Connect via SSH as soon as the rule opens.",
+    "Detect via EDR/IDS monitoring of hping3 usage and flag pattern anomalies to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-fba3d66a",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The chained commands use valid && separators with correct hping3 (-c, -S/-A/-F, -p) and ssh (-p) flags and no quoting or parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "It performs a realistic TCP knock sequence via specific TCP flags and ports using hping3 (with sudo) followed by an SSH attempt, aligning with T1205 traffic signaling behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:27:21.522844Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct command separators, valid `hping3` flags and arguments, and proper `ssh` syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes a TCP port knock sequence using specific flags and timing, which perfectly aligns with 'Traffic Signaling' for a 'port-unlock workflow', using appropriate tools and arguments.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T16:27:35.372681Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

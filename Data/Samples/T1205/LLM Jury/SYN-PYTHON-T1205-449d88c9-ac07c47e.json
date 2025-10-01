@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would sniff UDP packets to a high-numbered port containing a specific cleartext passphrase and, on match, enable NAT or port-forwarding via iptables]",
+  "explanation": "High-level concept: a UDP magic packet with a cleartext passphrase signals the host to enable routing or NAT, effectively changing device functionality. Detection: monitor for UDP packets to odd ports with suspicious static payloads, alert on writes to net.ipv4.ip_forward and iptables NAT table modifications by root.",
+  "rationale_steps": [
+    "Use scapy to sniff for UDP packets to a chosen port and check Raw payload for a passphrase.",
+    "On match, the logic would set /proc/sys/net/ipv4/ip_forward and add iptables NAT rules (requires root).",
+    "Detection: sysctl/audit logs for ip_forward changes; iptables-save diffs; IDS payload matching on that UDP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-ac07c47e",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "Only a high-level description is provided with no actual Python or shell syntax, so it is not runnable or parseable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "The concept aligns with T1205 traffic signaling, but it is not operationally feasible under 'Privilege: None' because sniffing and modifying iptables/sysctl require root.",
+        "combined_score": 1.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T15:27:17.311253Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "As the command's specific code is withheld, it is assumed a syntactically correct Python script, capable of performing the described actions, could be written.",
+        "semantic_score": 2,
+        "semantic_justification": "While the use of a UDP magic packet for signaling aligns well with MITRE ATT&CK T1205 (Traffic Signaling), the core action of enabling NAT or port-forwarding via iptables unequivocally requires root privileges, directly contradicting the stated 'Privilege: None' and making the claimed intent unachievable.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:28:00.273338Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

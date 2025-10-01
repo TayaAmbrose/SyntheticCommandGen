@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 2345 3456 4567; do nc -z -w1 203.0.113.20 \"$p\"; sleep 0.2; done",
+  "explanation": "Uses netcat in zero-I/O mode to rapidly attempt TCP connects (knocks) to a sequence of ports, a common method to activate knockd rules. Detection: alert on sequential connection attempts to closed ports from a single source within seconds.",
+  "rationale_steps": [
+    "Iterate over the port list and send short-lived TCP connection attempts.",
+    "Remote knockd correlates the sequence and opens a hidden port for the source IP.",
+    "Operator proceeds to connect to the unlocked service.",
+    "Defenders monitor firewall/IDS logs for ordered port hits and subsequent allow rules for the same source."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-db381c36",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash for-loop with correct separators, balanced quoting, and valid nc options (-z, -w1) and sleep usage.",
+        "semantic_score": 5,
+        "semantic_justification": "Sequential zero-I/O TCP connects with brief delays implement classic port knocking to signal a remote service, aligning with T1205 traffic signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:55:35.010527Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper loop syntax, balanced quotes, valid netcat flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements port knocking (a Traffic Signaling technique) by sending sequential connection attempts to specific ports with appropriate timing, which could trigger a hidden service or firewall rule.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:55:37.878861Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard bash for-loop syntax, correct `netcat` flags and arguments, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent of performing a port knock sequence, which is a classic example of traffic signaling (T1205) using sequence-based triggers to activate a service or change system state.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:55:44.973434Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

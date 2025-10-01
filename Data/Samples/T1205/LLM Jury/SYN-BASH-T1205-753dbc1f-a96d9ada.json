@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 10443 10554 10665; do nc -z -w1 192.0.2.10 \"$p\"; sleep 0.5; done; nc -z -v -w2 192.0.2.10 22",
+  "explanation": "Performs TCP port-knocking with nc -z (no data) to trigger an access control change, then probes SSH to confirm it opened. Detection: inspect firewall logs for SYNs to unusual sequences preceding an allowed SSH connection.",
+  "rationale_steps": [
+    "Leverages nc -z to send TCP SYN-only probes as the signaling mechanism.",
+    "Maintains ordering and short timing between knocks to match server expectations.",
+    "Follows up with a verification SYN to TCP/22.",
+    "Detect by alerting on clustered SYNs to unusual high ports followed by SSH acceptance."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-a96d9ada",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash for-loop with balanced quoting and correct nc flags; commands are properly separated and parseable.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses netcat to send a timed sequence of TCP connection attempts as a port-knock then checks SSH, which aligns with Traffic Signaling (T1205) and is operationally plausible on Linux.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:57:34.592782Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Bash loop syntax, valid `nc` flags, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a TCP port-knocking sequence with specific timing to signal an access control change, aligning directly with the T1205 Traffic Signaling technique's description of 'sequence-based triggers' and 'timing patterns'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:57:47.226174Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

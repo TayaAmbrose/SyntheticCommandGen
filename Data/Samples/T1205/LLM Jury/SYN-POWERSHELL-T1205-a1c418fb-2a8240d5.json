@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$mac='00-11-22-33-44-55'; $bcast='192.0.2.255'; $port=9; $m=$mac -replace '[-:]',''; $mb = for ($i=0; $i -lt 12; $i+=2) { [Convert]::ToByte($m.Substring($i,2),16) }; $packet = [byte[]](@(0xFF,0xFF,0xFF,0xFF,0xFF,0xFF) + ($mb * 16)); $udp = New-Object System.Net.Sockets.UdpClient; $udp.EnableBroadcast=$true; $udp.Send($packet,$packet.Length,$bcast,$port) | Out-Null; $udp.Close()",
+  "explanation": "Manually crafts and transmits a WOL magic packet (6x 0xFF + 16x MAC) to the broadcast address, directly demonstrating Traffic Signaling mechanics without third-party binaries. Detection: inspect outbound UDP broadcasts to port 9, and consider NIDS signatures for the WOL byte pattern.",
+  "rationale_steps": [
+    "Format the MAC address and construct the magic packet bytes per the WOL specification.",
+    "Use UdpClient with broadcast enabled to send on UDP/9.",
+    "No obfuscation: payload is clear and structurally identifiable.",
+    "Detect with NIDS pattern-matching on the WOL byte sequence and NetFlow for UDP/9 anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-2a8240d5",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and separators, valid array operations, and correct UdpClient usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It constructs and sends a proper WOL magic packet over UDP broadcast on port 9, illustrating signaling mechanics, though it uses a non-generic example broadcast address and is not a covert channel.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:09:33.740022Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with no syntax errors, balanced constructs, and valid PowerShell operations, ensuring it is fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by correctly crafting and transmitting a standard Wake-on-LAN magic packet, directly demonstrating the mechanics of embedded signaling within legitimate network traffic relevant to T1205.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T15:09:50.128303Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

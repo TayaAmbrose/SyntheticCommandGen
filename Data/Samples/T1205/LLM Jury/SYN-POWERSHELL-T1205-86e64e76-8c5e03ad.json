@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='203.0.113.88'; $base=(Get-Date).DayOfYear; $seq=@((($base%1000)+1000), (($base+7)%1000 + 2000), (($base+14)%1000 + 3000)); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 450 }; Test-NetConnection -ComputerName $target -Port 9001 -InformationLevel Detailed",
+  "explanation": "Time-derived TCP knock sequence changes daily to reduce reuse detection, then connects to 9001. Detection: look for algorithmic patterns (e.g., shifting but consistently spaced sequential probes); detect correlations between daily-changing knock ranges and subsequent new service availability.",
+  "rationale_steps": [
+    "Compute a date-based knock sequence to avoid static signatures.",
+    "Transmit the knocks with consistent timing.",
+    "Attempt the hidden port that opens after correct signaling.",
+    "Defenders: deploy anomaly detection for time-correlated sequential probes and monitor for temporal port state shifts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-8c5e03ad",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, valid parameter names for Test-NetConnection and Start-Sleep, and correct use of separators and pipelines.",
+        "semantic_score": 5,
+        "semantic_justification": "It computes a daily-varying three-port knock sequence with timing gaps and then probes port 9001, aligning with traffic signaling/port knocking behavior for T1205 on Windows without special privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:06:26.865012Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, correct variable assignments, valid cmdlet calls, and proper use of command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements a time-derived TCP port knocking sequence to signal or trigger an action, directly aligning with the T1205 Traffic Signaling technique, where a pattern in seemingly legitimate network traffic conveys hidden intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:06:39.980111Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

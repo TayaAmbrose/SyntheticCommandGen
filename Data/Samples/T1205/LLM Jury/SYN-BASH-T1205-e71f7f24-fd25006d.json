@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ni eth0 -l \"arp and ether src 00:de:ad:be:ef:00 and arp[6:2]=2\" -c 1 && vtysh -c \"conf t\" -c \"ip route 192.168.200.0/24 192.0.2.254\"'",
+  "explanation": "Treats a gratuitous ARP reply from a specific MAC as a layer-2 magic signal, then adds a static route via vtysh to enable a hidden path. Detection: baseline ARP behavior on infra ports and alert on unexpected ARP replies from unusual MACs coupled with new route insertions.",
+  "rationale_steps": [
+    "Listen for a crafted ARP reply from a preselected MAC address as the trigger.",
+    "On match, perform a configuration change by adding a static route using vtysh.",
+    "Detect with ARP monitoring/DAI and FRR configuration change audits."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-fd25006d",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses balanced quotes, valid tcpdump/vtysh flags, correct BPF filter syntax, and proper chaining with && within sudo bash -c.",
+        "semantic_score": 4,
+        "semantic_justification": "It waits for an ARP reply from a specific MAC and then adds a static route via vtysh (a traffic-triggered action aligned with T1205), but it does not specifically verify that the ARP reply is gratuitous.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:16:52.678505Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no discernible syntax errors in the BPF filter or vtysh commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using tcpdump to act as a listener for a specific L2 ARP signal and then dynamically adding a static route via vtysh, directly embodying the T1205 Traffic Signaling technique to enable a hidden path.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:17:07.831921Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-NetIPAddress -InterfaceAlias 'Bluetooth Network Connection' -IPAddress 192.168.55.10 -PrefixLength 24 -ErrorAction SilentlyContinue; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-s -p 59321 -B 192.168.55.10\"",
+  "explanation": "Configures a private IPv4 on the Bluetooth PAN and starts an iperf3 server bound to that interface, enabling nearby peer pull over Bluetooth as an alternate path (T1011).",
+  "rationale_steps": [
+    "Assign a non-conflicting private IP to the Bluetooth PAN.",
+    "Bind an iperf3 server to the Bluetooth address on an uncommon port.",
+    "Allow a nearby receiver to connect over the Bluetooth medium only.",
+    "Run hidden to reduce casual discovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-39f12534",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, valid parameters for both cmdlets, and proper use of the semicolon separator.",
+        "semantic_score": 2,
+        "semantic_justification": "Assigning an IP requires admin rights (not provided) and the iperf3 server does not facilitate data exfiltration or peer pull of host data, making the technique alignment and operational feasibility weak.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:01:33.953417Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid cmdlet names, appropriate parameters, and correct use of semicolon as a command separator.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements the T1011 technique by configuring a Bluetooth network interface with a private IP address and starting an iperf3 server on that interface to enable data exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:01:38.976048Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct Powershell cmdlet syntax, valid parameters, proper quoting for strings and arguments, and a correct command separator.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its stated intent of configuring a new IP address on the Bluetooth interface and binding iperf3 to it, as `New-NetIPAddress` requires administrator privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:22:30.538078Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

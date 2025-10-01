@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo hping3 -S -c 1 -p 22221 203.0.113.10 && sleep 1 && sudo hping3 -S -c 1 -p 22222 203.0.113.10 && sleep 1 && sudo hping3 -S -c 1 -p 22223 203.0.113.10 && networksetup -setwebproxy \"Wi-Fi\" 127.0.0.1 3128 && networksetup -setwebproxystate \"Wi-Fi\" on",
+  "explanation": "Crafts a three-step TCP SYN knock with hping3 to activate a hidden service, then enables an HTTP proxy to a local port. Requires sudo to send raw packets. Detection: monitor raw packet crafting tools and sequences of single SYNs to specific high ports.",
+  "rationale_steps": [
+    "Send a precise SYN knock sequence with raw packets to ports 22221, 22222, 22223.",
+    "Trigger the remote listener to open or reconfigure a service.",
+    "Enable a local HTTP proxy to route traffic post-activation.",
+    "Detect by auditing hping3 invocations and port-knock patterns in outbound traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-a03e4ad9",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are properly chained with &&, quotes are balanced, and the flags used for hping3 and networksetup are valid.",
+        "semantic_score": 4,
+        "semantic_justification": "It performs a plausible three-step SYN knock consistent with T1205 and then enables a local HTTP proxy on macOS, though networksetup may require sudo and the use of a documentation-only IP reduces operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T12:58:02.459865Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags for hping3 and networksetup, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a specific sequence of TCP SYN packets to predetermined ports as a covert signal, followed by enabling a proxy that could be used for subsequent C2 communications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:58:05.429112Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for all commands, flags, arguments, and proper use of command separators and quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a port knocking sequence as a timing/sequence-based trigger (Traffic Signaling) to activate a service, followed by a plausible post-trigger action of enabling a local proxy, fully aligning with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:58:23.454220Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

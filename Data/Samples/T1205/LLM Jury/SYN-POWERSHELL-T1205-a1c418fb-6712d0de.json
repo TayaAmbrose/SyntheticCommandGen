@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$mac='00-11-22-33-44-99'; foreach($i in 1..3){ & 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup $mac; Start-Sleep -Milliseconds 250 }",
+  "explanation": "Sends multiple WOL magic packets for a single target MAC to reliably trigger device wake across networks that may drop broadcasts. Detection: correlate repetitive UDP 7/9 broadcast spikes with WakeMeOnLan.exe execution from administrative sessions.",
+  "rationale_steps": [
+    "Issue repeated WOL signals to the same device to overcome packet loss.",
+    "Each iteration constructs the valid WOL byte pattern (FF*6 + MAC*16).",
+    "Short delay reduces chance of flooding and preserves reliability.",
+    "Detect via NetFlow/IDS for repeated magic packets and process telemetry for tool invocation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-6712d0de",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes/braces, proper foreach syntax, call operator on a quoted path, and correctly separated commands.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly sends multiple WOL magic packets using WakeMeOnLan without admin, but this is not a covert traffic-signaling use aligned with T1205 and repetition does not circumvent broadcast filtering across subnets.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:53:47.423744Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, foreach loop syntax, balanced quotes, correct parameter passing to the external executable, and appropriate use of Start-Sleep.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with the Traffic Signaling technique by sending multiple Wake-on-LAN packets with specific timing patterns (250ms intervals) that could serve as a covert signaling mechanism, though it's using a legitimate tool rather than a fully custom implementation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:53:50.934984Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignment, loop syntax, external command execution using the call operator, and cmdlet usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command uses a sequence of legitimate Wake-on-LAN packets with a specific timing pattern to potentially trigger a device wake, aligning directly with T1205's description of using 'timing- or sequence-based triggers' within network traffic to coordinate actions or trigger payloads.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:54:05.891780Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

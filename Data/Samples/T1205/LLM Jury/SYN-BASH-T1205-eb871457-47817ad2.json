@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 53 -m string --algo bm --string \"MAGTOKEN\" -m recent --name DNSTK --set && iptables -I ufw-before-input 1 -p tcp --dport 2222 -m recent --rcheck --seconds 25 --name DNSTK -j ACCEPT'",
+  "explanation": "Keys on a DNS UDP/53 packet whose payload contains the string \"MAGTOKEN\" (e.g., in a crafted TXT/QNAME) as a covert signal to open TCP/2222 for 25s. This is application-layer signaling observed by the firewall. Detection: Monitor for DNS requests with suspicious payload tokens and immediate connections to atypical admin ports.",
+  "rationale_steps": [
+    "Enable ufw, set deny incoming, and logging.",
+    "Set recent:DNSTK when a UDP/53 payload contains the token MAGTOKEN.",
+    "Allow TCP/2222 for the marked source within 25 seconds.",
+    "Detect by parsing DNS payloads for secret tokens and correlating with new inbound connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-47817ad2",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, correct chaining, and valid ufw/iptables options.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements signaling via DNS payload token to temporarily allow TCP/2222 using iptables string and recent matches (aligned with T1205), but requires root privileges and presumes UFW chain existence and a literal ASCII token in DNS traffic.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-01T13:41:35.387793Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for ufw and iptables, correct command separators, and appropriate syntax for string matching and recent module usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by configuring the firewall to watch for a specific string ('MAGTOKEN') in DNS packets and temporarily opening port 2222 when detected, creating a covert signaling channel exactly as described in T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:41:38.658655Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, and valid flag formats for all utilities.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent due to a critical privilege misstatement (ufw/iptables require root), and a fundamental flaw in iptables rule ordering that prevents the signaling logic from functioning as described.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:41:58.276155Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

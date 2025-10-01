@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,UDP,Raw; sniff(filter=\"udp and port 9\", prn=lambda p: (hasattr(p, \"load\") and len(p[Raw].load) >= 102 and p[Raw].load.startswith(b\"\\xff\"*6) and print(f\"WOL-like packet from {p[0][1].src}\")))'",
+  "explanation": "Sniffs for WoL magic packet patterns (6x FF header) on UDP/9 using scapy to identify signaling. Requires root (sudo). Detection: alert on unexpected WoL traffic originating from non-management hosts.",
+  "rationale_steps": [
+    "Uses scapy to inspect UDP payloads for WoL signature bytes.",
+    "Prints source IP when a valid magic frame is observed.",
+    "Supports security monitoring of signaling behavior.",
+    "Detect via alerts on WoL frames outside of authorized maintenance windows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-21c640cd",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced shell and Python quoting with valid Scapy imports and function call; the command is well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly detects WoL-like signaling on UDP/9 using Scapy and prints the source, though the hasattr/Raw check and layer indexing are somewhat brittle and may miss some cases.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T13:50:47.645452Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and proper Python syntax within a Bash shell command using sudo.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements traffic signaling detection by monitoring for specific patterns (6 FF bytes) in UDP packets on port 9 (WoL), which aligns perfectly with the T1205 technique of identifying covert signaling in legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:50:50.925630Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command contains significant Scapy object access errors: `hasattr(p, \"load\")` will always be `False` for a Scapy Packet object `p`, and `p[0][1].src` is an incorrect way to access the source IP address, which would cause a runtime error if reached.",
+        "semantic_score": 2,
+        "semantic_justification": "While the conceptual intent to detect WoL magic packets (UDP/9, specific payload length, and FF prefix) is semantically correct for the T1205 technique, the execution is fundamentally broken by the syntactic errors, preventing the command from achieving its claimed detection purpose.",
+        "combined_score": 2.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T13:51:26.159591Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

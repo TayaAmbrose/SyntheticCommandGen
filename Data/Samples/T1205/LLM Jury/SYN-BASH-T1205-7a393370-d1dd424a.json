@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'import socket,binascii; mac=\"001122334455\"; payload=binascii.unhexlify(\"FF\"*6 + mac*16); s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1); s.sendto(payload,(\"255.255.255.255\",9)); s.close()'",
+  "explanation": "Generates a valid Wake-on-LAN magic packet (6xFF + 16 repeats of MAC) to wake a downstream management host, enabling remote access paths. Requires sudo for broadcast socket options on some systems.",
+  "rationale_steps": [
+    "Form the exact WoL payload format and send to UDP/9 broadcast.",
+    "Waking a sleeping admin box can covertly enable management reachability (traffic signaling).",
+    "No obfuscation or encoding used.",
+    "Detection: monitor broadcast UDP to ports 7/9 and validate WoL pattern; alert on unexpected wake events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-d1dd424a",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed sudo Python one-liner with balanced quotes, valid Python statements, and correct socket operations.",
+        "semantic_score": 4,
+        "semantic_justification": "It constructs and broadcasts a valid Wake-on-LAN magic packet that can serve as a network trigger consistent with Traffic Signaling, though effectiveness depends on being in the same broadcast domain and sudo is typically unnecessary.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:07:00.895774Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for socket operations, string manipulation, and binary data handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements the Traffic Signaling technique by creating and sending a Wake-on-LAN magic packet to a broadcast address, which serves as a covert signal to activate a specific system identified by the MAC address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:07:03.647786Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command within the single quotes is perfectly well-formed with correct syntax, balanced delimiters, and valid function calls, and the shell wrapper is also correct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command semantically aligns perfectly with T1205 by using a standard Wake-on-LAN packet as a 'signal' to 'trigger' the activation of a host for subsequent adversarial 'remote access paths', a direct application of the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:07:12.374256Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

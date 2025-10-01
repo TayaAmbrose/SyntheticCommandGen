@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data via IPv6 UDP to a link-local target using a specified scope ID, segmenting payload to avoid detection and common ports]",
+  "explanation": "IPv6 link-local unicast with interface scoping provides an alternative medium localized to a specific segment, exemplifying T1011.",
+  "rationale_steps": [
+    "Choose IPv6 link-local to avoid primary routed channels",
+    "Encode target content with base64",
+    "Specify scope ID to force a particular NIC",
+    "Send to a non-standard UDP port in fixed-size chunks",
+    "No cross-technique activities performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-0799af38",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is a descriptive placeholder rather than an actual, parseable Python or shell command, so it is not runnable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "Although IPv6 UDP link-local exfiltration is plausible, it does not constitute a different network medium as defined by T1011 (e.g., cellular, Wi-Fi, Bluetooth), and no concrete command is given to verify behavior.",
+        "combined_score": 1.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T01:12:01.011795Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a Python implementation that appears to have proper structure for IPv6 UDP communication, but cannot verify syntax completeness.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach of using IPv6 link-local addressing with interface scoping for exfiltration aligns well with T1011 (exfiltration over alternative network medium), though actual effectiveness would depend on implementation details not provided.",
+        "combined_score": 3.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T01:12:07.659911Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "While the actual command was withheld, the described actions (base64 encoding, IPv6 UDP via link-local, interface scoping, payload segmentation, non-common ports) are all perfectly implementable and syntactically valid within a Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The use of IPv6 link-local unicast with interface scoping provides a logically distinct communication channel localized to a specific network segment, effectively serving as an 'other network medium' for exfiltration that bypasses monitoring of standard routed traffic, perfectly exemplifying T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:26:07.156820Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

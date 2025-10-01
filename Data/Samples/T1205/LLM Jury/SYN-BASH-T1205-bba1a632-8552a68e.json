@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "nc -w1 -u 203.0.113.1 11111 </dev/null; nc -w1 -u 203.0.113.1 22222 </dev/null; nc -w1 -u 203.0.113.1 33333 </dev/null",
+  "explanation": "Sends a UDP port-knock sequence to 11111, 22222, and 33333 to act as a covert signal to a listening device to temporarily enable a service (e.g., open an administrative port). This does not require elevated privileges to transmit. Detection: correlate NetFlow/pcap for rapid hits to closed high ports from the same source and alert on defined knock sequences.",
+  "rationale_steps": [
+    "Generate a three-step knock sequence using nc to UDP ports.",
+    "Rely on a listener on the network device to recognize the sequence and unlock a firewall rule.",
+    "No privilege required to send; transmission is user space only.",
+    "Detection: monitor for repetitive access attempts to uncommon ports and sequence-based anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-8552a68e",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with proper semicolon separators, valid nc flags, and correct input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While it aligns with port-knock signaling, nc without -z or payload and with </dev/null may send no UDP datagrams on many implementations, making the knock unreliable.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T16:48:27.681902Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid `nc` flags, correct use of command separators, and proper redirection from `/dev/null`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of sending a UDP port-knock sequence for traffic signaling, utilizing `nc` effectively for this well-established technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:48:37.051932Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

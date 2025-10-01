@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data in fixed-size chunks via IPv6 UDP (AF_INET6/SOCK_DGRAM) to a unique-local address with a low hop-limit]",
+  "explanation": "Exfiltration over IPv6 UDP to a unique-local destination with reduced hop count constitutes using a different medium/path than the typical enterprise IPv4 traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Choose IPv6 unique-local addressing to avoid the primary IPv4 egress",
+    "Encode data with base64",
+    "Use UDP and set a low hop limit to confine traffic",
+    "Chunk and send to a high, uncommon UDP port",
+    "No network configuration changes are performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-01844f99",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is a narrative placeholder rather than executable Python or shell code, so it is not parseable or runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "It describes network exfiltration over IPv6/UDP, which is operationally plausible but misaligned with T1011 (physical medium exfiltration).",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:38:33.580950Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "No command was provided to evaluate as it was explicitly marked as [withheld \u2014 non-actionable].",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate the semantic correctness of a withheld command.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:38:35.957247Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld, making it impossible to assess its syntactic correctness.",
+        "semantic_score": 1,
+        "semantic_justification": "The described command, sending data via IPv6 UDP, constitutes network exfiltration, which is fundamentally distinct from T1011 'Exfiltration Over Physical Medium' that involves transferring data onto physical storage and transport.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:38:51.518767Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.667,
+    "llm_average_score": 0.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

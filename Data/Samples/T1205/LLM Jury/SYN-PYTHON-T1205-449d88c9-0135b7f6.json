@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would implement timing-based port knocking with scapy where precise inter-packet delays encode the signal, then modify iptables to allow a hidden service]",
+  "explanation": "High-level concept: encode the knock not just as a set of ports, but via specific timing between packets. A listener measures inter-arrival times and only opens a port if the temporal pattern matches. Detection: flow analytics for repeated timing patterns to closed ports, alert on iptables changes, and baseline normal scanning behavior to find anomalies.",
+  "rationale_steps": [
+    "Transmit TCP SYNs with precise inter-packet delays using scapy to carry the signal.",
+    "Listener measures timing; on match, would adjust iptables to expose a hidden service (root needed).",
+    "Detection: Zeek/tcpdump timing analysis; correlation with firewall state changes; anomaly detection on scan-like but patterned traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-0135b7f6",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is a descriptive placeholder rather than an executable or parseable command/script.",
+        "semantic_score": 2,
+        "semantic_justification": "Although Scapy-based timing signals and iptables changes align with T1205, no actual implementation is provided and the stated lack of privileges conflicts with the need for root/CAP_NET_RAW and root for iptables, making it operationally infeasible.",
+        "combined_score": 1.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:21:40.212746Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command string was explicitly withheld, preventing any assessment of its syntax, parsing, or well-formedness.",
+        "semantic_score": 4,
+        "semantic_justification": "The described concept perfectly aligns with T1205's timing-based triggers and uses appropriate tools, but the claim of 'Privilege: None' for a command that would modify iptables is incorrect.",
+        "combined_score": 2.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T16:22:03.351943Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

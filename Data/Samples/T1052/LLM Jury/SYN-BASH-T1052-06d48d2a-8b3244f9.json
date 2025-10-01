@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "diskutil mount disk2s1 && mkdir -p \"/Volumes/ARCHIVE/.dl\" && cp -Rp \"$HOME/Downloads\" \"/Volumes/ARCHIVE/.dl/\"",
+  "explanation": "Mounts a detected external partition and copies the Downloads folder to a concealed location on the USB.",
+  "rationale_steps": [
+    "Mount the removable media partition locally using diskutil.",
+    "Prepare a hidden destination directory on the USB volume.",
+    "Copy data preserving attributes to minimize anomalies.",
+    "Remain fully local to avoid network-based monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-8b3244f9",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting, valid flags, and proper && separators make the pipeline well-formed and parseable on macOS.",
+        "semantic_score": 3,
+        "semantic_justification": "While it uses appropriate tools to mount and copy data to a hidden directory, it assumes the volume will mount at /Volumes/ARCHIVE (which may not match the actual mountpoint) and could thus fail or target an unintended/non-mounted path.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T06:51:33.941680Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for the cp command (-Rp), and correct path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by mounting an external disk, creating a hidden directory (.dl), and copying user data to the removable storage in a concealed location.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:51:36.632266Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid macOS commands, flags, path structures, balanced quotes, and proper logical separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of mounting an external partition and copying the Downloads folder to a concealed location on it, directly aligning with T1052 for exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T06:51:46.176143Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

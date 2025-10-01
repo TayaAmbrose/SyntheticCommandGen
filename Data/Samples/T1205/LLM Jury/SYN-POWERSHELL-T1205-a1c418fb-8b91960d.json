@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "pktmon filter remove; pktmon filter add -t TCP -p 23456; pktmon filter add -t TCP -p 34567; pktmon filter add -t TCP -p 45678; pktmon start --capture --pkt-size 0 --file-name C:\\Temp\\knock_capture.etl",
+  "explanation": "Captures TCP traffic to a set of knock ports to observe or validate a port-knocking sequence (requires Administrator). Detection: alert on administrative packet capture tools being used and watch for sequences of SYNs to atypical ports.",
+  "rationale_steps": [
+    "Configure pktmon filters for the knock ports.",
+    "Start a capture to collect evidence of the signaling sequence.",
+    "Requires elevated privileges; ensure UAC handling.",
+    "Detect via EDR for pktmon usage and network analytics for sequential connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-8b91960d",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Semicolon-delimited PowerShell commands are well-formed with plausible pktmon subcommands/flags and no quoting issues, though --capture/--file-name support can vary by pktmon version.",
+        "semantic_score": 4,
+        "semantic_justification": "It configures TCP filters for the specified knock ports and starts a full-packet capture to an ETL file to observe port-knock sequences, aligning with Traffic Signaling detection, but requires Administrator and may be version-dependent.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T16:26:37.580962Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct `pktmon` syntax, valid flags, proper subcommand usage, and appropriate semicolon separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely captures TCP traffic on specified 'knock ports' using `pktmon`, directly aligning with the explanation's intent to observe port-knocking, which is a textbook example of T1205 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:26:51.524482Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

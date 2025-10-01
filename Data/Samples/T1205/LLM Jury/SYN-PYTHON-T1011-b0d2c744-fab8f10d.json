@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would enforce IPv6-only on a TCP socket and send base64-encoded data to a unique-local IPv6 service listening on an uncommon port]",
+  "explanation": "Using IPv6-only sockets ensures the exfiltrated data traverses an alternate medium relative to typical IPv4 egress, consistent with T1011.",
+  "rationale_steps": [
+    "Create IPv6-only TCP socket",
+    "Base64-encode the target data",
+    "Connect to a unique-local IPv6 address at a non-standard port",
+    "Send and close",
+    "No side effects to unrelated network functions"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-fab8f10d",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command or code is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable.",
+        "semantic_score": 2,
+        "semantic_justification": "While Python on Windows could send base64 data over an IPv6-only TCP socket, the described behavior aligns poorly with T1011\u2019s signaling focus and lacks concrete evidence of covert signaling beyond transport choice.",
+        "combined_score": 1.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T14:56:53.889032Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, preventing any assessment of its syntactic correctness or parseability.",
+        "semantic_score": 5,
+        "semantic_justification": "The described action of using IPv6-only sockets, uncommon ports, and base64-encoded data for exfiltration perfectly aligns with T1011's techniques for employing alternate mediums, encoded payloads, and covert channels to evade monitoring.",
+        "combined_score": 2.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T14:57:05.882014Z"
+      }
+    ],
+    "llm_average_syntactic": 0.5,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

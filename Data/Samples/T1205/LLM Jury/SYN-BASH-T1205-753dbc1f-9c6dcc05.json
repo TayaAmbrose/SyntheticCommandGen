@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 7001 8002 9003; do nc -u -w1 192.0.2.10 \"$p\" </dev/null; sleep 0.75; done",
+  "explanation": "Sends a timed UDP port-knock sequence using nc to covertly signal a host to unlock a service. Detection: monitor firewall or NetFlow for repeated hits to closed high ports from the same source within short intervals.",
+  "rationale_steps": [
+    "Use nc to generate silent UDP datagrams as a knock sequence (no obfuscation).",
+    "Time the knocks to fit typical iptables recent module windows.",
+    "Relies on server-side logic to open a hidden port only after correct sequence.",
+    "Detection via correlation of repeated connection attempts to uncommon/closed ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-9c6dcc05",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash for-loop with proper separators, balanced quoting, valid nc flags, and correct redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "The timed UDP sequence matches port-knock signaling intent, but reading from /dev/null without -z or payload often results in no UDP datagram being sent, so it may not actually signal.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T14:45:15.609538Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Bash loop syntax, valid netcat flags, proper variable expansion, and balanced structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a timed UDP port-knock sequence using appropriate tools and arguments, directly fulfilling the description of T1205 Traffic Signaling via timing patterns and protocol fields.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:45:24.822486Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

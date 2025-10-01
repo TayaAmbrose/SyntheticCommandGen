@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "printf 'MAGIC-OPEN:%s\\n' \"$(hostname -I | awk '{print $1}')\" | nc -u -w1 knock.gateway 7000 && ssh -o ConnectTimeout=5 -p 5522 user@target.example",
+  "explanation": "Transmits a magic-string UDP packet to a gateway knock service to temporarily allow SSH to target.example:5522 from the sender's IP, then attempts SSH. Detection: monitor gateway logs for specific magic-string events; alert on UDP to 7000 followed by access control changes and immediate SSH sessions from the same source.",
+  "rationale_steps": [
+    "Send a magic UDP payload to the gateway knock service identifying the source.",
+    "Gateway updates ACLs/NAT to allow SSH transit for a short period.",
+    "Use SSH during the granted window to reach the internal target.",
+    "Detect by correlating magic-string UDP events with short-lived firewall ACL changes and SSH connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-664af2c4",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and command substitution with valid nc/ssh flags, proper piping, and && chaining make it well-formed.",
+        "semantic_score": 5,
+        "semantic_justification": "It sends a magic-string via UDP to a knock service to trigger an allow rule and then attempts SSH, which is a realistic application of Traffic Signaling (T1205).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T16:01:11.645289Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command syntax, proper piping and conditional execution, balanced quotes, and valid flags for all tools used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates T1205 by sending a specific UDP signal to a gateway to trigger an access control change, enabling a subsequent SSH connection, which is a textbook example of traffic signaling to coordinate actions and trigger payloads.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:01:23.857550Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

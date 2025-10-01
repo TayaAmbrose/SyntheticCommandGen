@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data via IPv6 UDP to a link-local target using a specified scope ID, segmenting payload to avoid detection and common ports]",
+  "explanation": "IPv6 link-local unicast with interface scoping provides an alternative medium localized to a specific segment, exemplifying T1011.",
+  "rationale_steps": [
+    "Choose IPv6 link-local to avoid primary routed channels",
+    "Encode target content with base64",
+    "Specify scope ID to force a particular NIC",
+    "Send to a non-standard UDP port in fixed-size chunks",
+    "No cross-technique activities performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-0799af38",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command is provided\u2014only a descriptive placeholder\u2014so it is not runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "Transmitting base64 data over IPv6 UDP is network-based exfiltration rather than using a physical medium, so it does not exemplify T1011 as described.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:32:45.540803Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:32:47.794649Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld as '[withheld \u2014 non-actionable]', rendering any assessment of its syntactic correctness impossible.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's description details sending data via IPv6 UDP, which is a network transfer method and fundamentally misaligned with T1011 'Exfiltration Over Physical Medium,' which requires transferring data to a physical storage medium for transport.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:32:57.775162Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.667,
+    "llm_average_score": 0.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

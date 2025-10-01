@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList \"New-NetEventSession -Name SigMon; Add-NetEventPacketCaptureProvider -SessionName SigMon; Add-NetEventNetworkAdapter -SessionName SigMon -All; Set-NetEventSession -Name SigMon -CaptureMode SaveToFile -LocalFilePath $env:TEMP\\sigmon.etl; Start-NetEventSession -Name SigMon\"; $target='192.0.2.10'; foreach($p in 3456,4567,5678){ Test-NetConnection -ComputerName $target -UdpPort $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 250 }; Test-NetConnection -ComputerName $target -Port 8081 -InformationLevel Detailed; Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList 'Stop-NetEventSession -Name SigMon; Remove-NetEventSession -Name SigMon'",
+  "explanation": "Enables an elevated ETW packet capture (UAC prompt) to observe UDP knocks (3456, 4567, 5678) and then attempts TCP/8081. Detection: audit use of ETW packet capture cmdlets and alert on unauthorized capture sessions; analyze captured traffic for sequential UDP probes.",
+  "rationale_steps": [
+    "Create and start an ETW packet capture session (requires admin privileges).",
+    "Send a timed UDP knock sequence.",
+    "Attempt to reach the hidden TCP service presumed to open after signaling.",
+    "Defenders: monitor for NetEvent session creation/removal and review PCAP/ETW data for knock sequences."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-26c91158",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "The command is parseable with balanced quoting and separators, but it uses an invalid -UdpPort parameter and omits -Command when invoking Start-Process PowerShell, making the arguments not valid for execution.",
+        "semantic_score": 2,
+        "semantic_justification": "While it intends to implement signaling via UDP port knocks and capture via ETW, the elevated sessions will not run the specified cmdlets (missing -Command) and Test-NetConnection cannot perform UDP knocks, so the intended T1205 behavior is not achieved.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T17:59:56.940693Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flag formats, and proper use of environment variables.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by initiating an ETW packet capture, generating sequential UDP probes (port knocks) as a form of traffic signaling, and then attempting a TCP connection, which directly aligns with MITRE ATT&CK T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:00:12.634734Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 3.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

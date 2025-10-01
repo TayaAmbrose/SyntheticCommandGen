@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 443 --tcp-flags FIN,SYN,RST,PSH,ACK,URG SYN -m ttl --ttl-eq 42 -m length --length 60 -m recent --name T1205_TCP_SIG --set -j LOG --log-prefix \"T1205_TCP_SIG \"",
+  "explanation": "Identifies SYN packets to 443 with an unusual fixed TTL and packet length used as a low-level covert activation signal (traffic signaling via crafted TCP parameters).",
+  "rationale_steps": [
+    "Combine TTL and exact packet size constraints to model a magic packet.",
+    "Mark and log such packets to detect signaling patterns atypical of normal TLS."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-91bdc607",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed iptables rule with valid modules, flags, and balanced quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "Detects and logs TCP SYNs to port 443 with specific TTL and packet length, plausibly identifying covert traffic signaling consistent with T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:07:40.908584Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, arguments, and correctly balanced quoting for the log prefix.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly defines a highly specific signature for a crafted SYN packet using destination port, TCP flags, exact TTL, and exact packet length, aligning precisely with the T1205 technique of traffic signaling via tailored TCP parameters.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:07:54.548618Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

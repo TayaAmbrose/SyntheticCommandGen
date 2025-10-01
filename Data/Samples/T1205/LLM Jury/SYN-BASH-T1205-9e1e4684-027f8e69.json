@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -lc \"iptables -I INPUT -p tcp --dport 22 -m recent --rcheck --seconds 30 --name KNOCK --rsource -j ACCEPT; iptables -A INPUT -p tcp --dport 22 -j DROP; iptables -A INPUT -p udp --dport 9999 -m recent --set --name KNOCK --rsource\" && printf 'knock' | nc -u -w1 127.0.0.1 9999 && ssh localhost",
+  "explanation": "Configures iptables (requires sudo) to drop SSH by default but accept it for 30 seconds after a UDP knock to port 9999 from the same source IP. Sends a local knock packet to open the window, then tests with SSH. Detection: monitor for unauthorized iptables changes altering SSH exposure; log UDP hits to 9999 followed by SSH accepts; integrity-check firewall rulesets.",
+  "rationale_steps": [
+    "Install iptables rules that hide SSH unless a UDP knock is observed (sudo required).",
+    "Send the magic UDP packet to populate the 'recent' list for the source.",
+    "Verify SSH access during the allowed window.",
+    "Detect by auditing netfilter rule changes and correlating UDP knocks to SSH accepts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-027f8e69",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and valid iptables/nc/ssh flags with proper separators and && chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements iptables recent-based port knocking to gate SSH using a UDP signal and then tests, aligning with Traffic Signaling, though typical loopback-accept rules and rule ordering may prevent the knock from being set or the SSH drop from taking effect.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T16:51:28.019495Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators (;, &&, |), valid flags for all utilities, and no apparent syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a port-knocking-like traffic signaling mechanism using iptables' 'recent' module and a UDP 'knock' to temporarily open SSH access, which directly aligns with the T1205 technique description of using 'timing- or sequence-based triggers' and 'protocol fields' for coordinated actions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:51:53.505570Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

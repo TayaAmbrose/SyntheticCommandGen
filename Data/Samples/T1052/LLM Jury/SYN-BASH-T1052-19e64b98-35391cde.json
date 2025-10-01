@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo hdiutil create -srcdevice /dev/rdisk0s1 -format UDZO /Volumes/USB/.rdisk0s1_backup.dmg",
+  "explanation": "Images a raw internal partition into a compressed DMG directly on the external drive to stage a block-level snapshot for offline removal.",
+  "rationale_steps": [
+    "Read directly from a raw device for comprehensive capture.",
+    "Write the image to removable media in a single artifact.",
+    "Compression reduces footprint and write time.",
+    "All actions occur locally, enabling physical-media exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-35391cde",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed hdiutil create invocation with valid -srcdevice and -format flags and a proper output path, no quoting or parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Creates a compressed DMG of a specified raw partition directly onto an external USB volume using sudo, effectively staging data for physical exfiltration consistent with T1052.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:22:55.936615Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the hdiutil command, proper flag formats, and correct parameter structure for creating a disk image on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) as it creates a compressed disk image of an internal partition directly onto an external volume (/Volumes/USB/) for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:22:59.144324Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, and no syntax errors or unbalanced constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the stated intent of imaging a raw partition into a compressed DMG on an external drive, aligning directly with T1052 Exfiltration Over Physical Medium by staging data for physical removal; the `sudo` prefix correctly addresses the necessary privilege for accessing a raw device.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:23:07.251472Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

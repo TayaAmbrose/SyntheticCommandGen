@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_wol --rcheck --seconds 60 -p tcp --dport 2223 -j ACCEPT; iptables -I INPUT -p udp --dport 9 -m string --hex-string \"|ffffffffffff|\" -m recent --name t1205_wol --set -j LOG --log-prefix \"T1205-WOL-SIGNAL \"; nc -l -p 2223 -k >/dev/null 2>&1 &",
+  "explanation": "Uses a Wake-on-LAN style magic packet pattern (six 0xFF bytes) on UDP/9 as the signal. The firewall logs and adds the source to a recent list, opening TCP/2223 for 60s where nc listens. Illustrates network-level signaling via WoL characteristics.",
+  "rationale_steps": [
+    "Detect WoL magic frame signature at the firewall",
+    "Log unusual UDP/9 broadcasts/unicasts for detection",
+    "Permit gated access to a hidden service after WoL-style signal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-15a11008",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quotes, valid iptables and nc flags, proper separators/redirects, and correct backgrounding.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a WoL-like UDP signal that logs and sets a recent list to open TCP/2223 for 60 seconds while nc listens, but it actually requires root privileges (contradicting the claim) and depends on the availability of the string/recent modules.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T19:18:42.976630Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

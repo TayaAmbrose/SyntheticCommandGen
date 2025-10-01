@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p gre -m length --length 88:88 -m recent --name GREK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 45 --name GREK -j ACCEPT'",
+  "explanation": "Treats a GRE (protocol 47) packet of exact length 88 as a signaling event to allow SSH from that source for 45s. This uses a less common IP protocol and size as the trigger. Detection: Alert on unexpected GRE traffic to hosts not running GRE and correlate with immediate SSH acceptance.",
+  "rationale_steps": [
+    "Enable ufw and deny incoming by default with logging.",
+    "Match GRE protocol packets with exact length 88 and set recent:GREK.",
+    "Allow TCP/22 if the source is in recent:GREK within 45 seconds.",
+    "Detect via IDS/pcap for unexpected GRE to the host and a subsequent SSH allow."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-b15cc9e4",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command has balanced quotes, valid flags/modules, proper chain insertion, and correct use of && separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses a GRE packet of exact length with iptables recent to signal and temporarily allow SSH via UFW chains, aligning with traffic signaling, but it requires root and assumes UFW/iptables availability despite stating 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.88,
+        "timestamp": "2025-10-01T18:52:15.828662Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid `ufw` and `iptables` commands, and correct flag formats and usage for the modules involved.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to semantically achieve its stated intent because the `iptables -I 1` insertion order places the SSH acceptance rule before the GRE signaling rule, making the 'signal to immediately allow SSH' logic fail, and it requires root privileges which contradicts the 'Privilege: None' statement.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:52:39.369001Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

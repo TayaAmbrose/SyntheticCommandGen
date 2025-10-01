@@ -1,0 +1,39 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for p in 7000 8001 9002; do nc -w1 -u 192.0.2.10 \"$p\" </dev/null; sleep 0.5; done",
+  "explanation": "Sends a covert UDP port-knock sequence to 192.0.2.10 intended to signal a remote port-knocking daemon to temporarily open a filtered service (e.g., SSH). Requires no local privileges, but the remote reaction often modifies firewall state. Detection: monitor for short-burst UDP probes to uncommon sequential ports and correlate with immediate inbound ACL changes or new successful connections.",
+  "rationale_steps": [
+    "Define a knock sequence using high UDP ports 7000, 8001, 9002.",
+    "Use netcat to transmit empty UDP datagrams (low-noise signaling).",
+    "Space knocks with brief sleeps to match expected timing.",
+    "Expect remote to open a hidden service upon correct sequence.",
+    "Detection: NIDS rule for sequential UDP hits to closed ports; NetFlow for micro-bursts; alert on subsequent firewall rule changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-34b90742",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash for-loop with correct separators, quoting, and valid nc flags/redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "Intended UDP port-knock sequence aligns with Traffic Signaling, but without -z or payload many nc variants may send no packet, reducing reliability.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T19:06:54.643797Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

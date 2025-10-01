@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc \"nc -u -l -p 40009 | grep -m1 '^MAGIC:OPEN:8080$' >/dev/null && iptables -I INPUT -p tcp --dport 8080 -j ACCEPT\"",
+  "explanation": "Listens on UDP/40009 for a precise magic string and, if seen, opens TCP/8080 via iptables. Requires root for firewall modification; listener port >1024 can be bound by non-root, but context here is root. Detection: flag unexpected UDP listeners and watch for immediate firewall insertions following specific UDP payloads.",
+  "rationale_steps": [
+    "Bind a UDP listener on 40009 using netcat.",
+    "Match a strict magic token for activation.",
+    "On match, modify iptables to expose TCP/8080.",
+    "Implements on-demand service activation via signaling.",
+    "Detection: inventory and alert on rogue listeners; audit firewall changes; DPI for specific trigger strings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-1aec04ce",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes and valid nc/grep/iptables flags joined by correct pipe and && operators.",
+        "semantic_score": 5,
+        "semantic_justification": "It passively listens on UDP/40009 for the exact magic string and, on match, inserts an iptables ACCEPT rule for TCP/8080, implementing a traffic-triggered action consistent with T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T12:58:53.869917Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both nc and iptables, correct command separators (|, &&), and follows proper bash syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by listening for a specific magic string on UDP port 40009 and only opening TCP port 8080 when the precise trigger 'MAGIC:OPEN:8080' is received, creating a covert port-knocking mechanism.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:58:57.018596Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, and valid flags for all utilities used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent, using appropriate tools to listen for a magic string on UDP and then dynamically modify the firewall to open a TCP port, which directly aligns with the T1205 Traffic Signaling technique as a trigger mechanism.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:59:21.722533Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

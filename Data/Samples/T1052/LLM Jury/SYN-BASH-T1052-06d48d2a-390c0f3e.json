@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/PRIVATE/.mail\" && cp -Rp \"$HOME/Library/Containers/com.apple.mail/Data/Library/Mail\" \"/Volumes/PRIVATE/.mail/\"",
+  "explanation": "Copies local Apple Mail data to a hidden directory on a USB device for offline removal.",
+  "rationale_steps": [
+    "Identify local mail store under the user's Library path.",
+    "Create a hidden target folder on the attached external drive.",
+    "Copy recursively preserving timestamps and permissions.",
+    "Keep operations entirely local to the host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-390c0f3e",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quotes, proper use of &&, and valid macOS cp flags and quoted paths.",
+        "semantic_score": 5,
+        "semantic_justification": "Recursively stages Apple Mail data into a hidden directory on a likely removable volume under /Volumes, aligning with exfiltration over physical media.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:07:10.136850Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper use of mkdir -p for directory creation, balanced quotes, correct path references, and proper command chaining with &&.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by copying Apple Mail data to a hidden directory on an external volume named 'PRIVATE', making it ready for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:07:13.221838Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for both `mkdir` and `cp`, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by correctly locating Apple Mail data and copying it recursively to a hidden directory on a simulated USB device, fully aligning with Exfiltration Over Physical Medium (T1052).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:07:20.950281Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

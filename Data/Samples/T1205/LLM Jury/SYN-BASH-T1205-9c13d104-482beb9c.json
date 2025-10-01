@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "for s in 13 37 73; do ping -c1 -s \"$s\" 203.0.113.7 >/dev/null; sleep 0.2; done",
+  "explanation": "Uses a sequence of ICMP echo requests with specific payload sizes as a covert knock to signal a remote listener to enable a service. No local privileges required to send. Detection: inspect ICMP patterns with unusual, small, sequenced sizes and correlate with service exposure events.",
+  "rationale_steps": [
+    "Select a distinctive sequence of ICMP payload sizes (13, 37, 73).",
+    "Emit single pings spaced closely to form a recognizable pattern.",
+    "Remote sensor interprets the sequence to unlock a port.",
+    "Traffic signaling avoids opening a dedicated control port.",
+    "Detection: NIDS rules for ordered ICMP sizes; track post-knock connection success to new services."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-482beb9c",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash for-loop with valid separators, balanced quotes, and correct ping and sleep flags.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements ICMP payload-size sequencing with timed packets to covertly signal a listener, aligning with T1205 traffic signaling and typically requiring no special privileges on Linux.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:24:12.160276Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard Bash loop syntax, valid `ping` and `sleep` flags, proper quoting for variables, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1205 by using a sequenced series of ICMP echo requests with specific, unusual payload sizes and timing to signal a remote listener, exactly as described in the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:24:25.088110Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

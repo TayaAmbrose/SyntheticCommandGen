@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo python3 -c \"from scapy.all import sniff,Raw; pkts=sniff(filter='udp and port 4000', count=20, timeout=30); [print(p[Raw].load) for p in pkts if Raw in p]\"",
+  "explanation": "Passively sniffs for UDP magic-payload beacons on port 4000 to detect when a signaling event has occurred. Requires sudo for promiscuous capture. Detection: monitor for processes opening raw sockets and capturing traffic.",
+  "rationale_steps": [
+    "Open a packet sniffer with a BPF filter for UDP/4000.",
+    "Extract any payloads to spot the magic trigger string.",
+    "Coordinate subsequent access (e.g., attempt connecting to a port expected to open).",
+    "Defenders should track raw-socket usage and unusual sniffing activity on endpoints."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-fbdc2abe",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The sudo python3 -c invocation has balanced quoting and parentheses, valid Scapy import and BPF filter syntax, and well-formed Python statements.",
+        "semantic_score": 5,
+        "semantic_justification": "It passively sniffs UDP traffic on port 4000 and prints Raw payloads using Scapy under sudo, which aligns with detecting signaling beacons consistent with T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:25:13.200262Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct usage of sudo and python3 -c, properly balanced quotes, and valid Python/Scapy syntax for sniffing and processing packets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the claimed intent of passively sniffing for UDP beacons on a specific port and extracting raw payloads, which is a highly plausible and effective method for detecting the T1205 Traffic Signaling technique, particularly beaconing with embedded data.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:25:26.948710Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

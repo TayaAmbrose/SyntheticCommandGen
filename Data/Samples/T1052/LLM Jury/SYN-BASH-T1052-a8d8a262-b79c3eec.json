@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -o NAME,TRAN -nr | awk \"$2==\\\"usb\\\"{print \\\"/dev/\\\"$1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /var/log | gzip -9 > /mnt/usb/syslogs.tar.gz && sync && umount /mnt/usb'",
+  "explanation": "Mounts the first detected USB partition, compresses /var/log with gzip, writes the archive to the USB, and then unmounts. All actions occur locally on a physical medium.",
+  "rationale_steps": [
+    "Identify an attached USB block device via lsblk with TRAN=usb.",
+    "Mount the USB partition to a local mountpoint.",
+    "Create a tar stream of local log files and compress with gzip.",
+    "Write the compressed archive to the USB and flush caches.",
+    "Unmount the USB to finalize local-only exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-b79c3eec",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Quotes and separators are balanced and flags are valid, but the awk script is double-quoted without escaping $1/$2, causing shell expansion and an awk syntax error.",
+        "semantic_score": 3,
+        "semantic_justification": "It conceptually aligns with T1052 by mounting a USB and archiving logs to it, but due to the quoting bug UPART becomes empty so mount (and thus exfiltration) fails, and it also assumes a '1' partition suffix and requires sudo.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:41:39.920209Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, variable assignment, command substitution, redirection, and logical operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by detecting a USB device, mounting it, compressing system logs, writing them to the physical medium, and cleaning up afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:41:42.215565Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and proper command separators, handling nested string escaping for the `awk` script correctly within the `bash -c` context.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately identifies a physical USB medium, stages system logs by compressing them, writes the archive to the USB, and unmounts it, directly fulfilling the T1052 technique with operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T07:42:08.991166Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

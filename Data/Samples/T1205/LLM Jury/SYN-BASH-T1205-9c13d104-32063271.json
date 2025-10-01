@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc \"iptables -A INPUT -p tcp --dport 10001 -m recent --name K1 --set -j DROP; iptables -A INPUT -p tcp --dport 11002 -m recent --rcheck --seconds 15 --name K1 -m recent --name K2 --set -j DROP; iptables -A INPUT -p tcp --dport 12003 -m recent --rcheck --seconds 15 --name K2 -m recent --name K3 --set -j DROP; iptables -A INPUT -p tcp --dport 22 -m recent --rcheck --seconds 30 --name K3 -j ACCEPT\"",
+  "explanation": "Implements a 3-step TCP port-knocking mechanism using the iptables recent module to only allow SSH after the correct knock sequence. Requires root (or sudo) to modify firewall rules. Detection: continuously audit iptables for recent-module chains and alert on ephemeral acceptance of SSH.",
+  "rationale_steps": [
+    "Track knock 1 on TCP/10001 and mark K1.",
+    "Validate knock 2 on TCP/11002 within 15s and mark K2.",
+    "Validate knock 3 on TCP/12003 within 15s and mark K3.",
+    "Permit TCP/22 only if K3 is set within last 30s.",
+    "Detection: configuration drift checks for recent-based rules; SIEM correlation of sequential connection attempts and temporary SSH openings."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-32063271",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash command with balanced quotes, proper separators, and valid iptables/recent-module flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Correctly implements a recent-based port-knocking sequence consistent with T1205 traffic signaling to gate SSH, though it requires root privileges and may fail in a non-privileged context.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:11:02.861524Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid iptables syntax, correct flag formats, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a port-knocking sequence using iptables that perfectly aligns with the Traffic Signaling technique by requiring a specific sequence of connection attempts to ports 10001, 11002, and 12003 within time windows before allowing SSH access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:11:05.705598Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct bash `-lc` syntax to execute multiple `iptables` commands separated by semicolons, with all flags and module arguments correctly applied.",
+        "semantic_score": 4,
+        "semantic_justification": "The `iptables` logic correctly implements a 3-step TCP port-knocking mechanism, which is an excellent example of a timing- and sequence-based trigger under the T1205 Traffic Signaling technique; however, the command cannot achieve its claimed intent under the specified 'Privilege: None' as `iptables` requires root privileges to modify firewall rules.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T13:11:37.341521Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

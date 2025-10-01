@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c \"from scapy.all import sendp,Ether,IP,UDP,Raw; mac='00:11:22:33:44:55'; payload=b'\\xff'*6+bytes.fromhex(mac.replace(':',''))*16; sendp(Ether(dst='ff:ff:ff:ff:ff:ff')/IP(dst='255.255.255.255')/UDP(sport=40000,dport=9)/Raw(payload),iface='eth0',verbose=0)\"",
+  "explanation": "Crafts and sends a Wake-on-LAN magic packet (6x FF followed by the MAC 16 times) via broadcast to wake a sleeping host, enabling it to accept subsequent connections. Requires root for raw packet send; typically performed via sudo if not already root. Detection: monitor for WOL frames (UDP/9 or UDP/7 with 0xFF*6 + MAC*16) especially outside business hours.",
+  "rationale_steps": [
+    "Construct exact WoL payload: 6 bytes FF then 16x target MAC.",
+    "Send as L2/L3 broadcast to reach sleeping NICs.",
+    "Target wakes, enabling remote access workflows.",
+    "Root is required to craft and transmit raw Ethernet frames.",
+    "Detection: packet inspection for WoL signature; alert on anomalous broadcast storms or off-hours WoL events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9c13d104-602ae79b",
+  "source_prompt_hash": "9c13d104",
+  "timestamp_utc": "2025-09-30T05:40:25.546732Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid Python/Scapy syntax for sendp/Ether/IP/UDP/Raw.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly crafts and broadcasts a WOL magic packet (UDP/9 with 0xFF*6 + MAC*16) consistent with a trigger-style traffic signal, though it requires root/CAP_NET_RAW and the specified interface must exist.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:32:37.312253Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command enclosed in double quotes is perfectly well-formed, with balanced syntax, valid Scapy constructs, and correct flag usage for `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately crafts and sends a Wake-on-LAN magic packet as described, fulfilling the intent of using network traffic (WoL packet) as a signal to trigger a host to wake and accept subsequent connections, aligning perfectly with T1205's 'trigger payloads' or 'coordinate actions' aspect.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T16:32:51.951588Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

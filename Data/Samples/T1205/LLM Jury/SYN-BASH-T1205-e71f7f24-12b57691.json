@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'python3 -c \"from scapy.all import Ether,IP,UDP,Raw,sendp; mac=\\\"00:11:22:33:44:55\\\"; magic=b\\\"\\\\xff\\\"*6+bytes.fromhex(mac.replace(\\\":\\\",\\\"\\\"))*16; pkt=Ether(dst=\\\"ff:ff:ff:ff:ff:ff\\\")/IP(dst=\\\"255.255.255.255\\\")/UDP(sport=40000,dport=9)/Raw(load=magic); sendp(pkt,iface=\\\"eth0\\\",count=3,inter=0.2)\"; vtysh -c \"conf t\" -c \"ip route 203.0.113.10/32 192.0.2.1\"'",
+  "explanation": "Sends a Wake-on-LAN magic packet (6x FF bytes + 16x target MAC) as a covert signal, then adds a static route via vtysh to enable a management path once the target host wakes. Detection: alert on WoL packets originating from routers/switches, and audit unauthorized static route additions via FRR/vtysh logs.",
+  "rationale_steps": [
+    "Craft and transmit a standards-compliant WoL magic packet to UDP/9 broadcast using scapy (requires sudo for raw packet crafting).",
+    "On completion, modify routing via vtysh to enable post-signal connectivity to the awakened host.",
+    "Detect by monitoring for WoL frames from infrastructure devices and reviewing vtysh configuration change logs or NetFlow showing unexpected UDP/7 or UDP/9 traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-12b57691",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Quoting is balanced with proper command separation, valid scapy Python one-liner, and correct vtysh -c syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It broadcasts a valid WoL magic packet as a covert signal and adds a static route via vtysh (consistent with Traffic Signaling intent), but assumes sudo/python3/scapy/FRR availability on a network device and contradicts the 'Privilege: None' claim.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:48:49.842773Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

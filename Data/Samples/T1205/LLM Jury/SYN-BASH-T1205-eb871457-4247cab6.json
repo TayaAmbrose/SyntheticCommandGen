@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p icmp --icmp-type echo-request -m length --length 123:123 -m recent --name PINGK --set && iptables -I ufw-before-input 1 -p tcp --dport 22 -m recent --rcheck --seconds 15 --name PINGK -j ACCEPT'",
+  "explanation": "Uses an ICMP Echo Request (ping) with an unusual exact packet length (123 bytes) as a stealthy signal to temporarily allow SSH from the sender. This aligns with Traffic Signaling by encoding a trigger in the packet characteristics. Detection: Alert on ICMP echo-requests with uncommon lengths and correlate with follow-on SSH from the same source.",
+  "rationale_steps": [
+    "Enable ufw, default deny, and high logging.",
+    "Mark sources that send echo-request packets with exact length 123 using recent:PINGK.",
+    "Allow new TCP/22 only when recent:PINGK is present within 15 seconds.",
+    "Detect by flagging atypical ICMP sizes and immediate SSH attempts in ufw logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-4247cab6",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash -lc string with balanced quotes, correct && chaining, and valid UFW/iptables options and argument formats.",
+        "semantic_score": 4,
+        "semantic_justification": "Plausibly encodes a trigger via ICMP packet length to populate a recent list and temporarily allow SSH, aligning with T1205, but it requires root privileges and assumes UFW\u2019s iptables backend and ufw-before-input chain exist.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T16:05:10.083773Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags, correct command separators, and no discernible syntax errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the conceptual use of `ufw` and `iptables` for traffic signaling aligns with T1205, the `iptables` rules are inserted in an order that prevents the ICMP signal from being processed before the SSH check, and the command requires root privileges, not 'None'.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:05:27.667629Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

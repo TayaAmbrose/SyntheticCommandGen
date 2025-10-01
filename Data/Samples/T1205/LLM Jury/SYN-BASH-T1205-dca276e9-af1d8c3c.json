@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 22222 --syn -m recent --rcheck --seconds 15 --name T1205_K1 -m recent --name T1205_K2 --set -j LOG --log-prefix \"T1205_KNOCK2 \"",
+  "explanation": "Second step in a timed port-knocking sequence: a TCP SYN to 22222 within 15s of the first signal, modeling covert activation signaling.",
+  "rationale_steps": [
+    "Require temporal correlation with prior knock using recent rcheck to reduce noise.",
+    "Track progression to stage 2 (T1205_K2) and log for behavioral detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-af1d8c3c",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed iptables rule with balanced quotes and valid flags, correctly invoking -m recent twice and a proper LOG target.",
+        "semantic_score": 5,
+        "semantic_justification": "Accurately models a second knock in a timed port-knocking sequence by rchecking list T1205_K1 within 15s, setting T1205_K2, and logging, aligning with T1205 traffic signaling (sudo acknowledges needed privilege).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:31:11.692236Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid iptables flags and module options without any syntax errors or misconfigurations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the second step of a timed port-knocking sequence using the `recent` module, checking for a previous signal within 15 seconds and marking the current signal, perfectly aligning with covert activation signaling under T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:31:23.507875Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

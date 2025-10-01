@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_ssh --rcheck --seconds 60 -p tcp --dport 2200 -j ACCEPT; iptables -I INPUT -p tcp --dport 22 -m string --string \"SSH-2.0-KNOCK\" --algo bm -m recent --name t1205_ssh --set -j LOG --log-prefix \"T1205-SSH-SIGNAL \"; nc -l -p 2200 -k >/dev/null 2>&1 &",
+  "explanation": "Uses a non-standard SSH client identification string (SSH-2.0-KNOCK) as the magic signal on port 22. On match, iptables logs and marks the source to permit TCP/2200 for 60s where nc awaits. Demonstrates SSH banner-based signaling.",
+  "rationale_steps": [
+    "Parse SSH banner text to trigger a short-lived allow rule",
+    "Record anomalous SSH identifiers in logs for detection",
+    "Gate a separate port behind the signaling condition"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-f2a3753a",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Three well-formed commands separated by semicolons with valid iptables and nc options and balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements SSH-banner-based signaling with iptables recent to gate port 2200 and log, matching T1205 behavior, but assumes root privileges and an active SSH listener on port 22 to be effective.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T17:35:47.505431Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid iptables options, correct string matching syntax, proper netcat flags, and appropriate command separators without any parsing errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the core logic of using an SSH banner string with iptables and recent module for traffic signaling is well-aligned with T1205, the critical claim of 'Privilege: None' renders the iptables commands inoperable without root access, significantly reducing its operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:36:29.286272Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

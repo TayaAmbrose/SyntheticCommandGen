@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_mqtt --rcheck --seconds 60 -p tcp --dport 18830 -j ACCEPT; iptables -I INPUT -p tcp --dport 1883 -m string --string \"ClientId:t1205\" --algo bm -m recent --name t1205_mqtt --set -j LOG --log-prefix \"T1205-MQTT-SIGNAL \"; nc -l -p 18830 -k >/dev/null 2>&1 &",
+  "explanation": "Monitors MQTT (TCP/1883) for a custom ClientId field token to signal activation. Matching packets are logged and the sender is allowed to connect to TCP/18830 for 60s, where nc listens. Demonstrates application-aware signaling.",
+  "rationale_steps": [
+    "Inspect MQTT CONNECT fields for a trigger value",
+    "Log suspicious MQTT client identifiers",
+    "Open a secondary port only for recently signaled peers"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-db37c692",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with valid iptables options, balanced quotes, proper separators, and correct redirection/backgrounding.",
+        "semantic_score": 4,
+        "semantic_justification": "Effectively implements traffic signaling using iptables string match to trigger a time-limited allow-list and a listener, but it requires root privileges and assumes the MQTT payload contains the specified token.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T17:24:18.317859Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with no syntax errors, valid flags, balanced quotes, and correct command separators for a bash shell.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's logic for T1205 Traffic Signaling is sound, the crucial `iptables` components require root privileges, directly contradicting the stated 'Privilege: None' and preventing the claimed conditional access from being established.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:24:51.716006Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

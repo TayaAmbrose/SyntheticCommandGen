@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=\"$HOME/Downloads/backup.img\" of=\"/dev/disk/by-id/usb-SanDisk_Ultra_Fit_1234-0:0\" bs=4M oflag=direct,dsync status=none",
+  "explanation": "Writes a pre-staged image containing sensitive content directly to the raw USB disk, enabling fast offline transfer without creating files on the USB filesystem.",
+  "rationale_steps": [
+    "Select a local image file containing aggregated data",
+    "Address the target USB by stable by-id path",
+    "Use dd with large blocks and direct, synced writes to push data to the device efficiently and quietly"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-9b076855",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes and valid dd options (if=, of=, bs=, oflag=direct,dsync, status=none) and a proper device path.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly writes an image directly to the raw USB device to avoid filesystem artifacts, but realistically requires elevated privileges to write to /dev/disk, contradicting the 'Privilege: None' claim.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:40:30.165589Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid dd parameters (if, of, bs, oflag, status), and correct path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by directly writing a pre-staged image to a physical USB device using dd with appropriate block size and flags for efficient transfer, bypassing file system detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:40:33.005731Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid `dd` options, correct quoting for paths, and proper flag syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command uses the correct tool and arguments for writing to a raw USB disk as intended for exfiltration, the claim of \"Privilege: None\" is unrealistic as this operation almost always requires root privileges on Linux, preventing the command from achieving its stated intent.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:40:55.301836Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

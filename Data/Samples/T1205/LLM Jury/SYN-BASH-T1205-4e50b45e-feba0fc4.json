@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "knock -u 198.51.100.25 321 654 987 -d 100",
+  "explanation": "Sends a UDP-based knock sequence likely to bypass stateful TCP monitoring; knockd can be configured to react to UDP patterns. Detection: watch for short-burst UDP probes to uncommon ports and validate against authorized knock sequences.",
+  "rationale_steps": [
+    "Generate UDP packets to ports 321, 654, 987 in order with minimal delay.",
+    "Remote knockd detects the ordered UDP hits and triggers its open-command (e.g., iptables rule insertion).",
+    "The opened service becomes reachable only to the knocking source IP.",
+    "Blue teams can detect via netflow/pcap for repeated UDP hits on closed ports in tight timing windows."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4e50b45e-feba0fc4",
+  "source_prompt_hash": "4e50b45e",
+  "timestamp_utc": "2025-09-30T05:51:10.007150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Shell syntax and flags are valid, but placing -d after the port list may not be parsed by knock which typically expects options before the host/ports.",
+        "semantic_score": 4,
+        "semantic_justification": "The knock client with -u sends a UDP knock sequence to specified ports consistent with Traffic Signaling, though the misplaced -d may prevent the intended 100ms inter-packet delay.",
+        "combined_score": 4.0,
+        "confidence": 0.74,
+        "timestamp": "2025-10-01T15:58:34.331537Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid flags, arguments, and standard shell syntax without any errors or ambiguities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes a port knock sequence using UDP, which is a textbook example of traffic signaling to trigger an action on a remote host, perfectly aligning with the T1205 technique's description of sequence-based triggers and protocol signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:58:43.367453Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

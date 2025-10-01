@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "MAC=001122334455; HEX=\"FFFFFFFFFFFF$(yes \"$MAC\" | head -n16 | tr -d '\\n')\"; echo -n \"$HEX\" | xxd -r -p | sudo nc -u -w1 255.255.255.255 9",
+  "explanation": "Crafts and sends a Wake-on-LAN magic packet (6x FF followed by 16 repetitions of the MAC) via nc to UDP/9 broadcast to signal a device to wake. Requires root (sudo) for broadcast. Detection: monitor for UDP/9 broadcasts matching WoL pattern and unusual after-hours device wake events.",
+  "rationale_steps": [
+    "Builds correct WoL payload in hex and converts to binary with xxd.",
+    "Transmits over UDP/9 broadcast using nc.",
+    "Matches the technique\u2019s magic packet format precisely.",
+    "Detect via IDS signatures for WoL magic frames and broadcast anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-c4b62cdb",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid pipelines, proper command substitutions, and standard flags for xxd and nc.",
+        "semantic_score": 4,
+        "semantic_justification": "It constructs a valid WoL magic packet and broadcasts it via UDP (consistent with T1205 signaling), though success can depend on nc requiring -b for broadcast and sudo/root is not universally required.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:59:01.895856Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly crafts and sends a Wake-on-LAN magic packet, which serves as a 'signal' embedded in legitimate network traffic to trigger an action (device wake-up), perfectly aligning with the T1205 Traffic Signaling technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:59:15.826380Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

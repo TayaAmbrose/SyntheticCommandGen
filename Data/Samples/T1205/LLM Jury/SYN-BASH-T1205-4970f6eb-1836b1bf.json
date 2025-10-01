@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p udp --dport 5060 -m string --string 'X-Open-Media: yes' --algo bm -j LOG --log-prefix 'T1205_SIP_SIG ' --log-level 4 && iptables -I INPUT -p udp --dport 5060 -m string --string 'X-Open-Media: yes' --algo bm -m recent --name t1205_sip --set && iptables -I INPUT -p udp --dport 10000 -m recent --name t1205_sip --rcheck --seconds 40 --reap -j ACCEPT\"",
+  "explanation": "Uses a SIP header 'X-Open-Media: yes' on UDP/5060 as the signal. Matching traffic is logged and triggers a temporary allowance of UDP/10000 (RTP-like) for the source IP.",
+  "rationale_steps": [
+    "From Docker, add iptables rules to monitor SIP signaling packets.",
+    "Detect an uncommon application-layer SIP header as the covert trigger.",
+    "Grant short-lived UDP/10000 access tied to the signaling source."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-1836b1bf",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with balanced quoting, valid docker and iptables flags, and correct use of chaining and modules.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately implements T1205-style signaling by matching a SIP header on UDP/5060 to set a recent list and temporarily ACCEPT UDP/10000, though it depends on docker/root networking privileges and host iptables/module availability.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:35:56.693335Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, balanced quotes, valid iptables flags, and correct command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a SIP header as a covert signal to temporarily allow traffic on another port, creating a hidden trigger mechanism exactly as described in T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:35:59.454613Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Docker syntax, balanced quoting, valid iptables flags, and proper command sequencing using '&&'.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements Traffic Signaling (T1205) by using a custom SIP header on UDP/5060 as a signal to temporarily open UDP/10000 for the signaling source, demonstrating a highly plausible and realistic scenario for covert communication or triggered actions within legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:36:20.470729Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

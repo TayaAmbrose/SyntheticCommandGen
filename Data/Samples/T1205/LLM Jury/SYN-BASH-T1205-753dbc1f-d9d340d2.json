@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo tcpdump -i eth0 -nn 'tcp[tcpflags] & tcp-syn != 0 and (port 10443 or port 10554 or port 10665)' -w /var/log/portknock_attempts.pcap",
+  "explanation": "Sniffs for TCP SYNs to the knock ports to detect signaling activity. Requires root (sudo). Detection: SOC can analyze the pcap for repeated sequences from the same source IP within short windows.",
+  "rationale_steps": [
+    "Uses tcpdump to capture knock attempts on specific ports.",
+    "Records to a pcap for correlation and incident response.",
+    "Facilitates identification of port-knocking patterns typical of T1205.",
+    "Detect via alerting on sequence patterns in captured traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-753dbc1f-d9d340d2",
+  "source_prompt_hash": "753dbc1f",
+  "timestamp_utc": "2025-09-30T05:37:53.725688Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed tcpdump command with valid flags, balanced quoting, and a valid BPF filter expression.",
+        "semantic_score": 4,
+        "semantic_justification": "Effectively captures TCP SYNs to specified knock ports for signaling detection, though it does not restrict to destination ports and may include SYN-ACK or rare source-port matches.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:03:11.619381Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quotes, valid flags, and correct BPF filter expression syntax for tcpdump.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements port knock detection (a form of traffic signaling) by capturing TCP SYN packets to specific ports, though it's more of a detection mechanism rather than an adversarial implementation of the technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:03:14.373455Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for tcpdump, valid flags, balanced quotes, and a properly structured BPF filter.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of sniffing TCP SYNs on specified ports for port knocking, which is a direct method of traffic signaling (T1205) and is operationally plausible for detection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:03:23.236021Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

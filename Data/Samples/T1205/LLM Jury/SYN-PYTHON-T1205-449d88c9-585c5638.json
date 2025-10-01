@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "[withheld due to safety: would generate and transmit a Wake-on-LAN magic packet via scapy: 6 bytes of 0xFF followed by 16 repetitions of the target MAC, UDP dport 9]",
+  "explanation": "High-level concept: emit a standards-compliant WoL magic packet to trigger device wake or serve as a covert signal. The packet must be 6x 0xFF followed by 16x target MAC and can be broadcast to UDP/9. Detection: monitor for unusual WoL frames sent by unexpected hosts, alert on broadcast UDP/9 traffic with WoL payloads, and restrict who can send WoL in network policy.",
+  "rationale_steps": [
+    "Construct the WoL payload: FF FF FF FF FF FF + (MAC repeated 16 times).",
+    "Send as Ethernet broadcast with UDP/9 using scapy (requires root to transmit raw frames).",
+    "Detection: tcpdump filter udp port 9; IDS signatures for WoL payload; inventory which hosts are allowed to originate WoL."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1205-449d88c9-585c5638",
+  "source_prompt_hash": "449d88c9",
+  "timestamp_utc": "2025-09-30T06:12:17.631164Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete, runnable command is provided, so syntax cannot be validated and is effectively a non-executable fragment.",
+        "semantic_score": 4,
+        "semantic_justification": "The described WoL magic packet via UDP/9 matches the technique and intent for traffic signaling, but practical execution with Scapy typically needs elevated privileges and may require L2 broadcast on the local segment.",
+        "combined_score": 2.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-01T15:43:14.225237Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The description of the command's intended function and parameters (Scapy, WoL packet structure, UDP/9 broadcast) is perfectly well-formed and provides sufficient detail to infer a syntactically correct Python/Scapy implementation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command concept precisely aligns with T1205 Traffic Signaling by repurposing legitimate WoL network traffic as a covert signal or trigger, using `scapy` to craft a standards-compliant packet and noting the operational feasibility including privilege considerations.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:43:42.080736Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 3.75,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

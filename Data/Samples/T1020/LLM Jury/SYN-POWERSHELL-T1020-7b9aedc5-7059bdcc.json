@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Background watcher: map \\\\ATTACKER_IP\\watch$ with 'net use', start a FileSystemWatcher to auto-copy new files to the UNC path, then remove the mapping on exit.",
+  "explanation": "Describes an automated event-driven exfiltration that reacts to file changes and silently transfers them over an SMB share opened with 'net use'.",
+  "rationale_steps": [
+    "Create an SMB connection to a remote share using net use",
+    "Initialize a file system watcher on sensitive directories",
+    "On change events, queue and copy files to the UNC path",
+    "Cleanly remove the SMB mapping to reduce footprints"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-7059bdcc",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "It is a narrative placeholder rather than an actual command string, so it is not parseable or runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually sound for automated exfiltration on Windows via SMB using net use and a PowerShell FileSystemWatcher, though it hinges on credentials/share availability and implementation details.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:32:26.532104Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a descriptive placeholder rather than an actual executable command, containing only a high-level description of functionality without proper syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described functionality aligns well with the T1020 Automated Exfiltration technique by establishing an automated file watcher that would silently exfiltrate new files over SMB, though without actual code it's impossible to verify complete implementation details.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:32:30.115771Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided text is a natural language description of actions and not an executable command string, making it unparseable and not runnable as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "The described actions perfectly align with T1020 Automated Exfiltration, utilizing appropriate Windows tools (`net use`, `FileSystemWatcher`) to establish an SMB exfiltration channel and automatically transfer data upon file changes.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:32:44.090718Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

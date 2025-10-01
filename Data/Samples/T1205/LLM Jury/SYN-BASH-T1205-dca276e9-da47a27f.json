@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p tcp --dport 80 -m string --string \"X-Activate: 1\" --algo bm -m recent --name T1205_HTTP --set -j LOG --log-prefix \"T1205_HTTP_SIG \"",
+  "explanation": "Flags HTTP requests containing a covert control header (X-Activate: 1) as a signaling mechanism, aligning with T1205 application-layer signaling.",
+  "rationale_steps": [
+    "Inspect HTTP headers with string match to detect nonstandard control fields.",
+    "Set recent state and log to support alerting on covert HTTP signals."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-da47a27f",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed iptables command with valid modules, options, and balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "It logs inbound TCP/80 packets containing the specified covert header and sets a recent list, aligning with T1205 detection, but it requires root privileges despite 'Privilege: None' and may miss segmented or encrypted traffic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T15:28:41.114348Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, arguments, and proper quoting, and will parse and execute without syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1205 technique by using iptables to detect and log application-layer HTTP header signaling (`X-Activate: 1`), and uses the `recent` module to track the source IP of the signal.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:28:56.432217Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

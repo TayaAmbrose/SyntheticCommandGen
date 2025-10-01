@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 40000 -m string --algo bm --string \"MAGIC\" -m recent --name UMAG --set && iptables -I ufw-before-input 1 -p tcp --dport 4444 -m recent --rcheck --seconds 30 --name UMAG -j ACCEPT'",
+  "explanation": "Uses a UDP magic packet containing the ASCII string \"MAGIC\" sent to UDP/40000 as a covert trigger to allow TCP/4444 from the sender for 30 seconds. This is traffic signaling via application-specific payload matching at the firewall. Detection: Look for UDP to uncommon high ports with specific payload substrings and a following TCP/4444 acceptance from the same host.",
+  "rationale_steps": [
+    "Enable ufw with default deny and logging.",
+    "Match UDP/40000 packets whose payload contains the literal string MAGIC and mark the source with recent:UMAG.",
+    "Permit TCP/4444 only if the source is in recent:UMAG within 30 seconds.",
+    "Detect by inspecting packet payloads to high UDP ports and correlating with immediate TCP/4444 connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-db168fe3",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and proper use of ufw/iptables flags with correctly chained commands make it well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly sets a UDP payload-triggered recent list to allow TCP/4444 for 30 seconds (clear traffic signaling), but it requires root privileges despite 'Privilege: None' and the rules are non-persistent under UFW reload.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:58:40.620245Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command separators, and correct flag formats for ufw and iptables.",
+        "semantic_score": 2,
+        "semantic_justification": "While the iptables logic correctly implements the traffic signaling technique to create a temporary firewall bypass, the explicit statement of 'Privilege: None' renders the command operationally infeasible as both ufw and iptables require root access to modify firewall rules.",
+        "combined_score": 3.5,
+        "confidence": null,
+        "timestamp": "2025-10-01T17:59:10.768008Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

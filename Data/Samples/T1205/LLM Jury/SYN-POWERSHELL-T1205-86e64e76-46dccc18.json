@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList \"netsh trace start capture=yes tracefile=$env:TEMP\\sigtrace.etl maxsize=128\"; $target='203.0.113.200'; foreach($p in 1500,1600,1700){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 200 }; Test-NetConnection -ComputerName $target -Port 9443 -InformationLevel Detailed; Start-Process PowerShell -Verb RunAs -WindowStyle Hidden -ArgumentList 'netsh trace stop'",
+  "explanation": "Starts an elevated packet capture (UAC prompt) to observe the knock, performs a TCP knocking sequence (1500, 1600, 1700), then attempts 9443. Detection: centralized packet captures can reveal short-interval sequential SYNs to closed ports followed by success; ensure controls around ad-hoc packet captures (netsh trace) and alert on unauthorized tracing.",
+  "rationale_steps": [
+    "Request UAC elevation and start a system packet capture (requires admin).",
+    "Send a timed TCP knock sequence to the target.",
+    "Attempt final connection to the signaled port.",
+    "Defenders: monitor for unauthorized use of netsh trace and analyze captures for port-knocking patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-46dccc18",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell line is well-formed with balanced quotes/braces, valid separators, and recognizable parameters/cmdlets.",
+        "semantic_score": 3,
+        "semantic_justification": "It performs a plausible TCP port-knock sequence and follow-up probe (aligning with T1205), but the elevated packet capture likely fails because Start-Process PowerShell lacks -Command for the netsh invocations.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T13:17:20.208755Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper semicolon separators, valid PowerShell syntax including proper variable usage, cmdlet parameters, and pipeline operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by performing a port knocking sequence (sending packets to specific ports in sequence) that could signal a listening system while capturing the traffic for analysis, which aligns with the MITRE ATT&CK T1205 description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:17:23.898322Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard PowerShell syntax with balanced quotes, valid parameters, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a TCP port knocking sequence, which is a direct example of Traffic Signaling (T1205), and includes a realistic method for local observation via `netsh trace`.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:17:40.048883Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

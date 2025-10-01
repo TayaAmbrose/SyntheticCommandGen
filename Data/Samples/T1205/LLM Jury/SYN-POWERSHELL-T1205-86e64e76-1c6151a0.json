@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='198.51.100.120'; $ports=@(3211,4322,5433); $delays=@(100,300,500); for($i=0;$i -lt $ports.Count;$i++){ Test-NetConnection -ComputerName $target -Port $ports[$i] -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds $delays[$i] }; Test-NetConnection -ComputerName $target -Port 6001 -InformationLevel Detailed",
+  "explanation": "Uses an inter-packet timing signature (100ms, 300ms, 500ms) as part of the knock to open TCP/6001. Detection: identify connection sequences with consistent yet unusual timing intervals; cross-reference with subsequent opening of a high port.",
+  "rationale_steps": [
+    "Define a timing-based knock pattern to encode the signal.",
+    "Send TCP connect attempts with specific inter-knock delays.",
+    "Connect to the service expected to open after the timing-based signal.",
+    "Defenders: apply timing-aware analytics to detect encoded signaling sequences."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-1c6151a0",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell syntax with balanced quotes/braces, correct parameters, and proper separators within the for-loop.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements a timed sequence of TCP connection attempts as a signaling/port-knock pattern and then probes port 6001, aligning well with T1205 traffic signaling via timing.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:39:49.485620Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell syntax for variable assignments, array definitions, a for loop, cmdlet calls, parameters, and flow control.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements an inter-packet timing signature using `Test-NetConnection` and `Start-Sleep`, which perfectly aligns with T1205's description of 'timing patterns' and 'timing- or sequence-based triggers' for traffic signaling (e.g., port knocking).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:40:02.305085Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

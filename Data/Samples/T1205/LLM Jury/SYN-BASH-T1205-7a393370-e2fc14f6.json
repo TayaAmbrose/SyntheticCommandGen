@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sudo python3 -c 'from scapy.all import sniff,ARP; import os; p=sniff(filter=\"arp\", lfilter=lambda x: x.haslayer(ARP) and x[ARP].psrc==x[ARP].pdst and x[ARP].hwsrc==\"66:77:88:99:aa:bb\", count=1)[0]; os.system(\"ciscoconf --apply \\\"interface GigabitEthernet0/1; no shutdown\\\" && (sleep 120; ciscoconf --apply \\\"interface GigabitEthernet0/1; shutdown\\\") &\")'",
+  "explanation": "Treats a gratuitous ARP from a specific MAC as a magic signal to bring up Gi0/1 for 2 minutes via ciscoconf. Requires sudo to sniff ARP frames.",
+  "rationale_steps": [
+    "Sniff ARP frames and identify gratuitous ARP (psrc==pdst) from a whitelisted MAC.",
+    "Enable the interface temporarily to allow management or lateral traffic.",
+    "No obfuscation; relies on ARP-based signaling channel.",
+    "Detection: monitor gratuitous ARP patterns and short-lived interface state changes in logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-7a393370-e2fc14f6",
+  "source_prompt_hash": "7a393370",
+  "timestamp_utc": "2025-09-30T06:01:37.763989Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses are maintained across the shell and embedded Python, with valid scapy and os.system usage and properly escaped inner quotes.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses a specific gratuitous ARP as a covert trigger to execute a timed interface toggle consistent with Traffic Signaling, though it assumes a nonstandard 'ciscoconf' tool and appropriate device environment.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T17:54:21.023011Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, proper escape sequences for nested quotes within the Python string, and valid syntax for both Python and the embedded shell command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements Traffic Signaling (T1205) by using specific protocol fields (gratuitous ARP from a specific MAC) as a trigger to execute a pre-defined action (bringing up a network interface for a set duration), aligning perfectly with the technique's description and the command's explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:54:40.616348Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

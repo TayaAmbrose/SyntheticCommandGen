@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "echo -n K1 > /dev/udp/target.example/32100; sleep 1; echo -n K2 > /dev/udp/target.example/32101; sleep 1; echo -n K3 > /dev/udp/target.example/32102; ssh -p 4422 user@target.example",
+  "explanation": "Uses Bash's /dev/udp pseudo-device to send three small UDP payload knocks (K1, K2, K3) to specific ports, signaling the remote host to open SSH on 4422, then connects. Detection: look for unusual use of /dev/udp in shell histories; packet inspection for small, ordered UDP payloads to uncommon ports; correlate with subsequent SSH connections from the same source IP.",
+  "rationale_steps": [
+    "Issue three distinct UDP knocks using Bash's /dev/udp to minimize tool footprint.",
+    "Remote knock service recognizes the payload sequence and opens SSH.",
+    "Initiate SSH once the port is exposed.",
+    "Detect by auditing shell history for /dev/udp usage and analyzing UDP-to-SSH correlation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-9e1e4684-63490949",
+  "source_prompt_hash": "9e1e4684",
+  "timestamp_utc": "2025-09-30T05:53:05.592837Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash pipeline with correct redirections to /dev/udp, valid flags, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Sends specific UDP knocks (K1,K2,K3) to designated ports using Bash /dev/udp and then attempts SSH on 4422, aligning with Traffic Signaling/port knocking on Linux.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:34:32.365288Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Bash syntax for I/O redirection to /dev/udp, proper command separators, and correct flag usage for echo, sleep, and ssh.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the described port knocking sequence using /dev/udp for traffic signaling, which directly aligns with T1205's concept of timing/sequence-based triggers to enable a subsequent SSH connection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:34:42.269981Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

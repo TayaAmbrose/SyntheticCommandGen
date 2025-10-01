@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'for p in 12345 23456 34567; do nc -u -w1 198.51.100.20 \"$p\" < /dev/null; sleep 1; done'",
+  "explanation": "Generates a UDP port-knock sequence to a remote host (198.51.100.20) using netcat, signaling it to unlock an access rule. Executed as root to highlight privileged operator context.",
+  "rationale_steps": [
+    "Send time-separated UDP packets to a predefined sequence of high ports as the knock.",
+    "This acts as an activation signal to a remote listener implementing T1205.",
+    "Detection: monitor outbound UDP to unusual high ports without payload and repeated in sequence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-a9cc4c62",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed sudo bash -c invocation with balanced single quotes, a valid for-loop, proper separators, and valid nc flags.",
+        "semantic_score": 3,
+        "semantic_justification": "The sequence reflects UDP port knocking for Traffic Signaling, but on macOS/OpenBSD nc it may not send any packets without -z or payload, so the signaling may fail.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T13:04:50.535434Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat (-u for UDP, -w1 for timeout), correct loop syntax, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending UDP packets to specific ports in sequence (port knocking), which is a common method for signaling a remote system to open access without maintaining persistent open ports.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:04:53.589348Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct bash syntax, valid netcat flags, proper quoting, and balanced control structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes a UDP port-knock sequence using netcat, directly aligning with the technique's description of using timing and sequence-based triggers within network traffic to signal actions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:05:04.560118Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

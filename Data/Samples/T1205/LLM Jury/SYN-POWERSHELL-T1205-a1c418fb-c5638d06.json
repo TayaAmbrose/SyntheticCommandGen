@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$macs = @('00-11-22-33-44-55','00-11-22-33-44-66','00-11-22-33-44-77'); foreach ($m in $macs) { & 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup $m; Start-Sleep -Milliseconds 300 }",
+  "explanation": "Iteratively sends WOL magic packets to multiple targets, enabling several devices via network signaling. Detection: alert on repeated outbound UDP 7/9 broadcasts in short intervals and correlate with process lineage invoking WakeMeOnLan.exe.",
+  "rationale_steps": [
+    "Loop through a list of target MAC addresses.",
+    "Generate a valid WOL magic packet for each target to wake devices.",
+    "Throttle with short sleeps to avoid packet drops.",
+    "Detect by monitoring bursty UDP 9 traffic and execution of the WOL utility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-c5638d06",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quoting, proper use of the call operator, statement separators, and parseable arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "WakeMeOnLan appropriately sends WOL magic packets in a loop consistent with traffic signaling, though using /wakeup directly with MACs may depend on the tool\u2019s accepted arguments or preconfigured entries.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:27:01.691279Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignment, loop syntax, external command execution, and cmdlet usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1205 Traffic Signaling by using Wake-on-LAN (a form of network signaling) to coordinate actions across multiple targets with an embedded timing pattern, directly matching the technique's description of using legitimate network traffic for adversarial purposes.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T14:27:16.926558Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "sudo iptables -A INPUT -p icmp --icmp-type echo-request -m length --length 96 -m recent --rcheck --seconds 15 --name T1205_K2 -m recent --name T1205_K3 --set -j LOG --log-prefix \"T1205_KNOCK3 \"",
+  "explanation": "Final knock of a multi-protocol signaling chain: an ICMP echo-request of specific size within 15s of step 2, emulating covert multi-packet activation.",
+  "rationale_steps": [
+    "Use an ICMP payload length constraint to encode a signaling feature.",
+    "Confirm proper sequence with recent before marking completion and logging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-dca276e9-7e97cf28",
+  "source_prompt_hash": "dca276e9",
+  "timestamp_utc": "2025-09-30T03:32:21.448422Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid iptables syntax with correct modules (icmp, length, recent), proper flag usage, and balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "The rule detects an ICMP echo-request of exact length within a 15s window tied to a prior recent list, sets a final knock marker and logs (consistent with T1205 signaling), but it requires root privileges so may fail under the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T19:12:25.983532Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

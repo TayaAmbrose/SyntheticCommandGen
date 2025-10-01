@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "1..5 | ForEach-Object { & 'C:\\Tools\\WakeMeOnLan\\WakeMeOnLan.exe' /wakeup 00-11-22-33-44-AA; Start-Sleep -Milliseconds 400 }",
+  "explanation": "Sends repeated magic packets to ensure wake across unreliable network paths (common for WOL). Detection: identify repeated WOL attempts to the same MAC and unusual persistence of UDP port 9 traffic from an admin session; UAC elevation may be required depending on local policy.",
+  "rationale_steps": [
+    "Invoke WakeMeOnLan five times to increase wake reliability.",
+    "Each invocation constructs the 0xFF*6 + MAC*16 magic packet.",
+    "Short delay helps mitigate loss or filtering.",
+    "Detect via network telemetry for repeated UDP 9 broadcasts and host-based logging of the tool execution."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-a1c418fb-e981f48f",
+  "source_prompt_hash": "a1c418fb",
+  "timestamp_utc": "2025-09-30T06:14:26.674858Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell pipeline with balanced braces, correct use of the call operator, proper separators, and a correctly quoted executable path with arguments.",
+        "semantic_score": 3,
+        "semantic_justification": "It reliably sends repeated Wake-on-LAN magic packets as described, but this overt WOL activity only loosely aligns with MITRE T1205\u2019s covert traffic signaling intent.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:00:48.474614Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using valid operators, cmdlets, external program execution, and balanced syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command sends repeated, timed network packets using a standard protocol (WOL), which perfectly aligns with T1205 Traffic Signaling by using timing patterns or specific protocol fields (MAC address) as a covert signal.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:01:02.194955Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

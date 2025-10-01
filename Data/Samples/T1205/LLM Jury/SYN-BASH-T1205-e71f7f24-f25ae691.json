@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "bash -c 'nc -u -w1 198.51.100.10 12345 < /dev/null && nc -u -w1 198.51.100.10 23456 < /dev/null && nc -u -w1 198.51.100.10 34567 < /dev/null && sudo vtysh -c \"conf t\" -c \"ip route 10.10.99.0/24 198.51.100.10\"'",
+  "explanation": "Performs a UDP port-knocking sequence (12345, 23456, 34567) to signal a remote controller to open access, then adds a static route via vtysh to leverage the newly opened path. Detection: monitor NetFlow/IPFIX for unusual sequential UDP hits to high ports and verify route table changes.",
+  "rationale_steps": [
+    "Generate a 3-step UDP knock sequence using nc to the controller.",
+    "Assume controller opens an inbound path; install a static route to pivot traffic through it.",
+    "Detect by correlating sequential UDP hits to uncommon ports from network devices and auditing routing changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-e71f7f24-f25ae691",
+  "source_prompt_hash": "e71f7f24",
+  "timestamp_utc": "2025-09-30T06:04:49.943820Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced single/double quotes, valid nc and vtysh flags, proper redirections, and && separators make it cleanly parseable by bash.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements UDP port-knocking consistent with Traffic Signaling and then adds a route via vtysh, but some nc variants won\u2019t send a UDP packet without -z or input and the sudo route change requires appropriate privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T18:56:43.537576Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "iptables -I INPUT -m recent --name t1205_smtp --rcheck --seconds 60 -p tcp --dport 2525 -j ACCEPT; iptables -I INPUT -p tcp --dport 25 -m string --string \"EHLO T1205\" --algo bm -m recent --name t1205_smtp --set -j LOG --log-prefix \"T1205-SMTP-SIGNAL \"; nc -l -p 2525 -k >/dev/null 2>&1 &",
+  "explanation": "Uses a crafted SMTP EHLO token on TCP/25 as the signaling packet. On match, logs and whitelists the source for 60s to reach TCP/2525, where nc listens. Emulates SMTP-layer signaling for conditional access.",
+  "rationale_steps": [
+    "Match SMTP client greeting for a hidden token",
+    "Log irregular SMTP commands to system logs",
+    "Enable a gated port only after the magic EHLO"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-19973fec-946e4953",
+  "source_prompt_hash": "19973fec",
+  "timestamp_utc": "2025-09-30T03:30:48.198488Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quoting, proper separators, and valid iptables/nc flags on common Linux implementations.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses an SMTP EHLO string to signal and set a recent list to temporarily permit port 2525 and log the event, aligning with T1205, but it requires root privileges and relies on existing firewall policy for the gating to be effective.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:36:02.444494Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for iptables, nc, command separators, and proper quoting.",
+        "semantic_score": 2,
+        "semantic_justification": "While the conceptual design aligns with the T1205 technique, the iptables commands fundamentally require root privileges to function, which contradicts the specified 'Privilege: None' context, preventing the signaling mechanism from ever being established.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:36:24.980940Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

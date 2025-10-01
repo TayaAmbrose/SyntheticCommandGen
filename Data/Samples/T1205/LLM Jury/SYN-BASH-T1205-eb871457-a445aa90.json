@@ -1,0 +1,50 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -lc 'ufw --force enable && ufw default deny incoming && ufw logging high && iptables -I ufw-before-input 1 -p udp --dport 7001 -m state --state NEW -m recent --name S1 --set && iptables -I ufw-before-input 1 -p tcp --dport 8001 -m tcp --syn -m recent --rcheck --seconds 10 --name S1 -m recent --name S2 --set && iptables -I ufw-before-input 1 -p udp --dport 9001 -m state --state NEW -m recent --rcheck --seconds 10 --name S2 -m recent --name S3 --set && iptables -I ufw-before-input 1 -p tcp --dport 2222 -m recent --rcheck --seconds 20 --name S3 -j ACCEPT'",
+  "explanation": "Implements a mixed-protocol knock: UDP/7001, then TCP SYN to 8001, then UDP/9001. Only after this ordered sequence does TCP/2222 open briefly to the source. This is classic T1205 signaling using a multi-step sequence across protocols. Detection: Look for the precise ordered triplet of connection attempts from the same IP and a short-lived acceptance on TCP/2222.",
+  "rationale_steps": [
+    "Enable ufw and deny incoming by default; enable logging.",
+    "Set recent:S1 on UDP/7001 arrival.",
+    "On TCP SYN to 8001 with S1 set, set S2.",
+    "On UDP/9001 with S2 set, set S3.",
+    "Accept TCP/2222 if S3 is present within 20 seconds.",
+    "Detect by correlating the specific 7001\u21928001(SYN)\u21929001 pattern in ufw/pcap logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-eb871457-a445aa90",
+  "source_prompt_hash": "eb871457",
+  "timestamp_utc": "2025-09-30T03:48:01.284804Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with proper && chaining and valid ufw/iptables/recent/state flags, including permissible match-only iptables rules with side effects.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately implements a multi-step port-knock sequence using iptables recent lists in the UFW chain to briefly allow TCP/2222 for the knocking source, but it requires root privileges (contradicting 'Privilege: None') and depends on UFW/iptables backend presence.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T17:07:23.480167Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no impossible constructs.",
+        "semantic_score": 2,
+        "semantic_justification": "While the iptables rules correctly implement the described port-knocking sequence for T1205, the command fails to achieve its claimed intent operationally as `ufw` and `iptables` require root privileges, which are explicitly stated as 'None'.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T17:07:52.360532Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

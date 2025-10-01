@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "nc -z -w1 203.0.113.1 42111; nc -z -w1 203.0.113.1 42222; nc -z -w1 203.0.113.1 42333",
+  "explanation": "Performs a TCP SYN knock sequence to three high-numbered ports using netcat's zero-I/O scan mode (-z). This acts as a signaling mechanism to trigger a hidden rule change on the device. No admin rights are needed to send SYNs. Detection: alert on repeated short-lived TCP connection attempts to closed ports in a specific order.",
+  "rationale_steps": [
+    "Transmit SYN probes to a predefined set of ports in order.",
+    "Leverage a hidden listener to recognize the ordered sequence.",
+    "Upon recognition, the device may open another service port.",
+    "Detection: use firewall logs/NetFlow to correlate ordered SYN attempts to uncommon ports."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-bba1a632-d76fab3b",
+  "source_prompt_hash": "bba1a632",
+  "timestamp_utc": "2025-09-30T05:49:31.290544Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Three netcat invocations are correctly formed with valid flags and arguments, separated by semicolons and requiring no quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "The sequence sends zero-I/O TCP connection attempts (SYN knocks) to specified high ports to signal a remote device, aligning with T1205 Traffic Signaling without needing elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T14:07:14.634790Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid netcat flags, IP addresses, port numbers, and command separators, ensuring it will execute without error.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a SYN knock sequence using netcat's zero-I/O mode to specific ports, which is a classic and operationally plausible method for Traffic Signaling (T1205) to trigger a hidden rule change without requiring elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:07:25.266661Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

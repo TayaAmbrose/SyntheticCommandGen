@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv6 TCP socket to a non-default link-local source address (scope-indexed) before connecting to a unique-local IPv6 target on a high port, then send base64 data]",
+  "explanation": "Binding to a non-default interface and using IPv6 constitutes an alternative network medium/path for exfiltration per T1011.",
+  "rationale_steps": [
+    "Bind AF_INET6 socket to a specific link-local source (alternate NIC)",
+    "Base64-encode the data",
+    "Connect to a unique-local IPv6 destination on an uncommon TCP port",
+    "Send and close cleanly",
+    "No interference with unrelated network services"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-6b0d34f2",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is a narrative placeholder with no concrete syntax, so it is not runnable or parseable.",
+        "semantic_score": 3,
+        "semantic_justification": "While feasible on Windows with Python to bind an IPv6 socket with a scope ID and send base64 data\u2014supporting low-bandwidth beaconing\u2014the description does not clearly hide signals within legitimate-looking traffic as emphasized by the Traffic Signaling technique.",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T18:25:00.074646Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, making it impossible to evaluate for syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "The described action\u2014binding to a non-default IPv6 link-local source, connecting to a unique-local IPv6 target on a high port, and sending base64 data\u2014perfectly aligns with T1011's focus on using alternative network paths, encoded payloads, and specific network configurations for covert communication and exfiltration.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:25:27.677072Z"
+      }
+    ],
+    "llm_average_syntactic": 0.5,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.25,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

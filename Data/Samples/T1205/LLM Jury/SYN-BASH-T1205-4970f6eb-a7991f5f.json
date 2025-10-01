@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1205",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "docker run --rm --net=host --cap-add=NET_ADMIN alpine sh -c \"apk add --no-cache iptables >/dev/null && iptables -I INPUT -p tcp --dport 443 --tcp-flags SYN SYN -m tcpmss --mss 1337:1337 -j LOG --log-prefix 'T1205_TCPMSS_SIG ' --log-level 4 && iptables -I INPUT -p tcp --dport 443 --tcp-flags SYN SYN -m tcpmss --mss 1337:1337 -m recent --name t1205_tcpmss --set && iptables -I INPUT -p tcp --dport 8080 -m recent --name t1205_tcpmss --rcheck --seconds 30 --reap -j ACCEPT\"",
+  "explanation": "Interprets an unusual TCP SYN with MSS exactly 1337 to port 443 as a low-level signaling packet. Logs the event and briefly opens TCP/8080 for the source IP. This leverages protocol-specific fields for covert signaling.",
+  "rationale_steps": [
+    "From Docker, add iptables rules targeting TCP option MSS as a signal.",
+    "Detect SYN packets with an uncommon MSS value as the trigger.",
+    "Grant short-lived access to TCP/8080 for the IP that sent the signal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-4970f6eb-a7991f5f",
+  "source_prompt_hash": "4970f6eb",
+  "timestamp_utc": "2025-09-30T03:38:51.523409Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, proper chaining, and valid docker and iptables flags/options.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses an MSS=1337 SYN on 443 to log and set a recent list that briefly accepts 8080 traffic for the source, matching T1205 traffic signaling, but relies on host permissions and kernel/iptables extensions (e.g., xt_recent) being available.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T14:08:30.101251Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Docker and iptables syntax, correct flag formats, balanced quoting, and proper command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of interpreting a specific TCP MSS value as a signal to log an event and temporarily open a port for the signaling source, directly aligning with T1205's use of protocol fields and timing-based triggers for covert communication.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T14:08:47.930325Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.5,
+    "llm_average_score": 4.75,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

