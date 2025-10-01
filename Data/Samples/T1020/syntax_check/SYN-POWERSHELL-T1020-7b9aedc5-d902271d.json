@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Event-log exfil loop: map \\\\ATTACKER_IP\\logs$ with 'net use', periodically export logs and append a hostname/timestamp, copy to UNC, then unmap.",
+  "explanation": "Conceptual periodic export-and-send of system logs to a remote SMB share created with 'net use', supporting automated, silent exfiltration.",
+  "rationale_steps": [
+    "Establish a credentialed SMB connection using net use",
+    "Export relevant event logs to a timestamped file",
+    "Copy the export to the remote UNC location",
+    "Remove the SMB mapping after transfer completes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-d902271d",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The entry is a prose placeholder rather than executable PowerShell, lacking concrete syntax and thus not parseable or runnable.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually it matches Automated Exfiltration by mapping an SMB share with net use, periodically exporting logs, tagging them, copying to UNC, and unmapping on Windows, though standard user permissions may limit access to certain event logs.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:29:53.782819Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a conceptual description rather than an actual executable command, containing only a placeholder with a high-level description of the intended functionality.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach aligns well with the T1020 Automated Exfiltration technique by establishing a scheduled process to collect and transfer event logs to an attacker-controlled SMB share, though it lacks specific implementation details like scheduling mechanisms and error handling.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:29:57.034306Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided input is a descriptive placeholder, not an actual runnable command string and therefore lacks parseable syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described actions effectively outline a periodic, automated exfiltration of logs to an SMB share, directly aligning with T1020, but the claim of 'Privilege: None' for exporting all system logs introduces a minor realism gap.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:05:09.890910Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

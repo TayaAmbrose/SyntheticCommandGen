@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - ~/Pictures | dd of=/Volumes/USB/.thumbs.db bs=1m",
+  "explanation": "Streams a compressed archive of local pictures into a disguised file on the external drive using dd for efficient large writes.",
+  "rationale_steps": [
+    "Compress target data locally to reduce transfer size.",
+    "Write sequentially to USB to minimize IO artifacts.",
+    "Use a benign-looking filename to reduce scrutiny.",
+    "No network channels are involved; data leaves via the device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-b963ad30",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline using tar with gzip to stdout and dd with valid options, no quoting or flag issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Compresses the Pictures directory and writes the stream to a hidden, innocuously named file on an external USB volume, aligning with exfiltration over physical media.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:13:32.734680Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper pipe syntax, valid flags for both tar (-czf) and dd (of=, bs=), and correct path specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing user pictures and exfiltrating them to a removable USB drive with the file disguised as a system file (.thumbs.db) to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:13:35.793719Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and operators, and exhibits no syntax errors or impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by archiving and compressing pictures, streaming them to a disguised file on a mounted USB drive using `dd`, perfectly aligning with the T1052 technique for exfiltration over a physical medium with data disguise.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:13:44.011801Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

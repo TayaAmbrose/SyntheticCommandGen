@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "gzip -c \"$HOME/Documents/finances.xlsx\" | dd of=\"/dev/disk/by-id/usb-Generic_Flash_Disk_8GB-0:0-part1\" bs=1M seek=1 conv=notrunc,fsync status=none",
+  "explanation": "Compresses a single sensitive file and writes it starting 1 MiB into the USB partition to avoid the partition header area and reduce casual discovery.",
+  "rationale_steps": [
+    "Compress the target file into a stream to reduce size",
+    "Select a partition device path for the USB",
+    "Use dd with a 1 MiB seek offset and notrunc to embed data past the initial sectors"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-4585860b-a9745670",
+  "source_prompt_hash": "4585860b",
+  "timestamp_utc": "2025-09-30T05:09:05.177002Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with valid gzip and dd options, balanced quoting, and correct use of dd operands (of, bs, seek, conv, status).",
+        "semantic_score": 4,
+        "semantic_justification": "It compresses the file and writes it 1 MiB into the USB partition to hide data outside the filesystem, aligning with T1052, but typically requires elevated permissions and risks filesystem corruption if the partition is mounted or in use.",
+        "combined_score": 4.5,
+        "confidence": 0.88,
+        "timestamp": "2025-10-01T07:44:04.093686Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper piping, valid flags for both gzip and dd commands, correct quoting, and appropriate parameter syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing a sensitive financial file and writing it to a specific offset on a USB device in a way that avoids casual detection, making it an effective exfiltration technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:44:06.916033Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with no syntax errors, balanced quoting, valid flags, and correct command piping.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command uses appropriate tools and arguments for the core exfiltration technique, it fundamentally fails to achieve its claimed intent because writing directly to a block device like `/dev/disk/...` requires root privileges, contradicting the specified 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:44:27.154112Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

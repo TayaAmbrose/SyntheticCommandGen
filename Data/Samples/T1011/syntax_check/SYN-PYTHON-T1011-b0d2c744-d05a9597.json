@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld — non-actionable: would open an IPv6 TCP socket (AF_INET6) scoped to a link-local interface and transmit base64-encoded file data to a high, uncommon port]",
+  "explanation": "Conceptually demonstrates T1011 by using an alternate network medium (IPv6 link-local) instead of the likely primary IPv4/HTTPS channel to exfiltrate data in base64 form over TCP to a non-standard port.",
+  "rationale_steps": [
+    "Select IPv6 link-local as the medium distinct from primary IPv4",
+    "Base64-encode the target data to avoid binary anomalies",
+    "Open AF_INET6/SOCK_STREAM and connect using a scope ID for the specific interface",
+    "Send data to a high-numbered, uncommon TCP port",
+    "Close the socket"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-d05a9597",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No executable command is provided—only a conceptual description—so it is not parseable or runnable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "While using a Python IPv6 link-local TCP socket to send base64 data is operationally feasible, it does not constitute a different network medium per T1011 (e.g., cellular or Bluetooth) and would also require a scope ID on Windows.",
+        "combined_score": 1.5,
+        "confidence": 0.72,
+        "timestamp": "2025-10-01T00:20:42.420564Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is described as a well-formed Python script that would correctly open an IPv6 socket and transmit base64-encoded data to a specific port.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by using an alternate network medium (IPv6 link-local) instead of the primary network channel to exfiltrate encoded data over a non-standard port.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:20:49.674851Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The description outlines operations (IPv6 TCP socket, link-local scope, base64 encoding, non-standard port, Python script on Windows) that are all perfectly well-formed and implementable within a syntactically correct Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command perfectly aligns with T1011 by explicitly using an 'alternate network medium' (IPv6 link-local connection) to exfiltrate data, bypassing a likely primary IPv4 channel, which is the core concept of the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:21:02.775917Z"
+      }
+    ],
+    "llm_average_syntactic": 3.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "Python syntax check failed (py_compile). Command '['C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\python.exe', '-m', 'py_compile', 'C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Temp\\\\tmp04rrgnc9.py']' returned non-zero exit status 1."
+  }
+}

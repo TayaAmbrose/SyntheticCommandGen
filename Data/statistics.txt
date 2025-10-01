@@ -1,0 +1,10 @@
+Initial number of rows: 1051
+Number of rows after filtering: 523
+Number of rows removed: 528
+Number of rows marked as duplicated: 528
+Percentage of rows removed: 50.24%
+Average similarity of removed rows: 1.00
+Highest similarity of removed rows: 1.00
+Lowest similarity of removed rows: 1.00
+Highest similarity value in the matrix: 1.00
+Lowest similarity value in the matrix: -0.24

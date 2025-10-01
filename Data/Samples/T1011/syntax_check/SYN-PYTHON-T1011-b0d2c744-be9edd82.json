@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld — non-actionable: would bind an IPv4 UDP socket to an APIPA/isolated adapter address and send base64-encoded chunks to a peer on an uncommon UDP port with low TTL]",
+  "explanation": "Leverages a non-routed/alternate interface (APIPA) and UDP to move data out-of-band relative to the primary egress path, mapping to T1011.",
+  "rationale_steps": [
+    "Select an alternate local interface distinct from the default route",
+    "Encode data with base64",
+    "Use IPv4 UDP with a constrained TTL",
+    "Chunk and send to a high, uncommon destination port",
+    "Ensure no global network settings are altered"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-be9edd82",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided input is a narrative description rather than an actual Python command, so it is not directly parseable or runnable.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually it would bind to a link-local interface and exfiltrate data via UDP with base64 chunking and low TTL, aligning with out-of-band use of an alternate interface, but it lacks concrete implementation details and does not clearly employ a distinct network medium (e.g., cellular/Wi-Fi/Bluetooth) as emphasized by T1011.",
+        "combined_score": 2.0,
+        "confidence": 0.5,
+        "timestamp": "2025-10-01T01:14:42.453949Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a Python script that would be syntactically valid but may have implementation challenges with socket binding to specific interfaces.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach of using an APIPA address on an isolated adapter with UDP for exfiltration over a non-primary network path aligns well with T1011, though real-world effectiveness would depend on network segmentation and monitoring controls.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:14:50.864422Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The 'command' provided is a descriptive placeholder text marked as 'non-actionable', not an actual runnable command, therefore it cannot be parsed or executed as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "The described method of leveraging an APIPA interface for out-of-band UDP data transfer perfectly aligns with T1011, 'Exfiltration Over Other Network Medium,' and is operationally plausible via a Python script.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:27:13.948383Z"
+      }
+    ],
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "Python syntax check failed (py_compile). Command '['C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\python.exe', '-m', 'py_compile', 'C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Temp\\\\tmpd5mwnanv.py']' returned non-zero exit status 1."
+  }
+}

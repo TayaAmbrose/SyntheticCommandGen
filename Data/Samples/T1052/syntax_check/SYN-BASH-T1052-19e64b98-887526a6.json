@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo dd if=/dev/rdisk0s1 of=/Volumes/USB/.cache.db bs=4m count=512",
+  "explanation": "Reads a raw slice of the internal disk and writes it into a hidden file on the external drive, facilitating offline data removal.",
+  "rationale_steps": [
+    "Access raw device to read data directly from the internal drive.",
+    "Write captured bytes to external media as a hidden file.",
+    "Operate entirely locally to avoid network detection.",
+    "Limit size via count to reduce write time and footprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-887526a6",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed sudo dd command with valid flags (if=, of=, bs=, count=) and no syntax or quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It reads raw data from an internal disk slice and writes to a hidden file on a mounted USB volume consistent with physical exfiltration, but it requires root and the external path to exist, conflicting with the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:53:54.089135Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the dd utility, using proper parameters (if, of, bs, count) with appropriate values and paths.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by using dd to copy 2GB (512 blocks of 4MB) of raw disk data to a hidden file (.cache.db) on an external volume, enabling physical exfiltration of potentially sensitive information.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T09:53:57.152066Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, arguments, and paths, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively uses `dd` with `sudo` to copy a raw disk slice to a hidden file on a USB drive, directly fulfilling the technique's goal of exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T09:54:05.398083Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

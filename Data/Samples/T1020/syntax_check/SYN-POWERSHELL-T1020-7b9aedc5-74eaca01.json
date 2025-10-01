@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Differential exfil: map \\\\ATTACKER_IP\\delta$ with 'net use', track hashes/mtime to identify new files, copy only deltas to UNC, and disconnect.",
+  "explanation": "Describes an automated approach that minimizes noise by sending only changed files over an SMB share established via 'net use'.",
+  "rationale_steps": [
+    "Map the attacker-controlled share using net use",
+    "Compute or compare metadata to find newly changed files",
+    "Copy only the differential set to the UNC path",
+    "Tear down the SMB mapping and update local state"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-74eaca01",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "It is a natural-language description with a placeholder and no runnable PowerShell, so it is not parseable as a command.",
+        "semantic_score": 4,
+        "semantic_justification": "Mapping a remote SMB share with net use and copying only changed files based on hashes/mtime is a realistic automated exfiltration workflow on Windows, albeit lacking concrete commands and parameters.",
+        "combined_score": 2.5,
+        "confidence": 0.68,
+        "timestamp": "2025-10-01T01:59:46.176412Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a descriptive placeholder rather than an actual executable command, containing only a high-level description of the technique without proper syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach aligns well with the Automated Exfiltration technique by establishing an SMB connection to an attacker-controlled share and selectively exfiltrating only changed files based on hash/modification time tracking, though it lacks implementation details.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:59:49.343504Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided input is a natural language description of an action, explicitly marked as a 'non-executable placeholder,' not a syntactically runnable command string.",
+        "semantic_score": 5,
+        "semantic_justification": "The described actions—mapping an SMB share, tracking file changes by hashes/mtime, and copying only the deltas to the share—are a highly plausible and effective method for automated exfiltration, aligning perfectly with T1020.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T01:59:59.939503Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

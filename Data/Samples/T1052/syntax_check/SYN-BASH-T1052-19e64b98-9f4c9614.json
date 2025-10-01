@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p /Volumes/USB/.Trashes/501 && cp -pR ~/Documents/HR /Volumes/USB/.Trashes/501/.syslog",
+  "explanation": "Copies sensitive files into a hidden trash-like directory on the USB, preserving timestamps to evade simple detection.",
+  "rationale_steps": [
+    "Create a hidden path on the removable drive to store data.",
+    "Copy data with preserved metadata to avoid alerting by mtimes.",
+    "Keep all operations local to the host.",
+    "Stage for physical exfiltration via the external drive."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-19e64b98-9f4c9614",
+  "source_prompt_hash": "19e64b98",
+  "timestamp_utc": "2025-09-30T05:31:52.812086Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash with correct use of &&, mkdir -p, and cp -pR flags and well-formed paths.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates a hidden Trash-like directory on the USB and recursively copies the HR data there with preserved timestamps, aligning with stealthy exfiltration to removable media on macOS.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:53:43.026333Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags (-p, -pR), and correct path specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by creating a hidden directory (.Trashes/501) on a USB drive and copying HR documents there with preserved timestamps (-pR flag), making the exfiltration difficult to detect.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T06:53:46.114491Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, paths, and proper use of the logical AND operator `&&`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent, using appropriate tools and arguments to copy sensitive data to a hidden, system-like directory on a USB drive, preserving timestamps and renaming the file for evasion, which directly aligns with T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:53:54.608795Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

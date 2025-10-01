@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "mkdir -p \"/Volumes/BACKUP/.proj\" && cp -Rp \"$HOME/Projects\" \"/Volumes/BACKUP/.proj/\"",
+  "explanation": "Copies project files to a hidden folder on an external drive for physical exfiltration.",
+  "rationale_steps": [
+    "Select a rich data source directory ($HOME/Projects).",
+    "Use a mounted USB at /Volumes/BACKUP as the egress medium.",
+    "Preserve file metadata using cp -Rp to avoid attention.",
+    "No network use ensures offline exfiltration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-06d48d2a-ff6447d9",
+  "source_prompt_hash": "06d48d2a",
+  "timestamp_utc": "2025-09-30T05:16:28.232349Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted, uses valid && separator, and employs macOS-valid mkdir -p and cp -Rp flags with no syntax issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Recursively copies the user's Projects directory into a hidden folder on a mounted external volume, aligning with exfiltration over physical medium without needing elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:20:46.712189Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper use of mkdir -p for directory creation, balanced quotes, valid flags (-Rp for recursive and preserving attributes), and correct command chaining with &&.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by creating a hidden directory (.proj) on an external volume and recursively copying user project files to it for potential physical exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:20:49.738535Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command appropriately uses `mkdir` to create a hidden directory on an external volume and `cp` with recursive and preserve attributes flags to copy sensitive project files, perfectly aligning with the described exfiltration technique and intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:20:57.695464Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

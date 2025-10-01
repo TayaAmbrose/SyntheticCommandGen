@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[REDACTED: Non-executable placeholder] Service/daemon-style loop: use 'net use' to open an SMB session once, run a long-lived loop that batches and ships data quietly to the UNC path, then close the session.",
+  "explanation": "Illustrates a persistent, low-noise automated exfiltration routine that maintains a single SMB session using 'net use' while periodically sending data.",
+  "rationale_steps": [
+    "Create a long-lived SMB session to a remote share with net use",
+    "Batch and queue data for transfer at controlled intervals",
+    "Send data to the UNC path without interactive prompts",
+    "Close the SMB session and remove traces on termination"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-7b9aedc5-073ff4f6",
+  "source_prompt_hash": "7b9aedc5",
+  "timestamp_utc": "2025-09-30T08:57:58.671267Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The entry is a non-executable placeholder with a prose description, so it is not a parseable or runnable PowerShell command.",
+        "semantic_score": 1,
+        "semantic_justification": "Although the concept aligns with automated exfiltration via SMB, no actual command or parameters are provided, so it cannot achieve the stated behavior.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:38:23.261028Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is a placeholder marked as [REDACTED] with only a description of functionality rather than actual executable code.",
+        "semantic_score": 3,
+        "semantic_justification": "The description aligns with T1020 (Automated Exfiltration) by describing a persistent SMB-based exfiltration loop that batches and transfers data, but without actual code it's impossible to verify implementation details.",
+        "combined_score": 2.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:38:31.630598Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided 'command' is a descriptive placeholder, explicitly labeled as non-executable, and lacks any specific syntax for parsing or execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The described routine of using 'net use' to establish a persistent SMB session and then automate batching and shipping data to a UNC path perfectly embodies the T1020 Automated Exfiltration technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:07:22.697973Z"
+      }
+    ],
+    "llm_average_syntactic": 1.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 2.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

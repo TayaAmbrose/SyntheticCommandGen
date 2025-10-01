@@ -1,0 +1,8 @@
+Initial number of rows: 140
+Number of rows after filtering: 139
+Number of rows removed: 1
+Number of rows marked as duplicated: 1
+Percentage of rows removed: 0.71%
+No rows were removed based on similarity threshold.
+Highest similarity value in the matrix: 1.00
+Lowest similarity value in the matrix: -0.08

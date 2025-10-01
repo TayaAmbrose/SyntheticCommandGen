@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld — non-actionable: would set SO_DONTROUTE on an IPv4 TCP socket, bind to a non-default local address, connect to a high, uncommon port, and send base64-encoded data]",
+  "explanation": "Disables routing and forces an alternate path/interface, differentiating the exfil path from the primary channel in line with T1011.",
+  "rationale_steps": [
+    "Bind TCP socket to a non-default local address",
+    "Set SO_DONTROUTE to keep traffic off the default route",
+    "Base64-encode the payload",
+    "Connect to an uncommon remote port and transmit",
+    "Close without modifying system-wide settings"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-349cea43",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete Python command is provided—only a conceptual description—so it is not parseable or runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "Binding to a non-default local address can steer traffic over an alternate interface/medium consistent with T1011, though SO_DONTROUTE is largely ineffective for TCP on Windows and base64 adds no exfil advantage.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T01:32:24.199390Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a well-formed Python socket implementation with proper socket options, though minor formatting issues might exist.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command perfectly aligns with T1011 by using SO_DONTROUTE to force traffic over an alternate network path/interface and sending base64-encoded data to an uncommon high port, effectively implementing exfiltration over a different network medium.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:32:28.894727Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The description outlines standard Python socket operations for setting socket options, binding, connecting, and sending data, all of which are syntactically correct and well-formed within the Python language.",
+        "semantic_score": 4,
+        "semantic_justification": "The combination of setting `SO_DONTROUTE` and explicitly binding to a non-default local IP address can effectively force traffic out a specific alternative network interface, aligning well with the technique's goal of exfiltrating data over a different network medium to bypass monitoring on the primary channel.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:33:11.433737Z"
+      }
+    ],
+    "llm_average_syntactic": 3.333,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "Python syntax check failed (py_compile). Command '['C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\python.exe', '-m', 'py_compile', 'C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Temp\\\\tmpz7oh73of.py']' returned non-zero exit status 1."
+  }
+}

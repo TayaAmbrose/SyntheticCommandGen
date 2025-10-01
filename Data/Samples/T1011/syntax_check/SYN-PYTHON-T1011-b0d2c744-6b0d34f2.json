@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld — non-actionable: would bind an IPv6 TCP socket to a non-default link-local source address (scope-indexed) before connecting to a unique-local IPv6 target on a high port, then send base64 data]",
+  "explanation": "Binding to a non-default interface and using IPv6 constitutes an alternative network medium/path for exfiltration per T1011.",
+  "rationale_steps": [
+    "Bind AF_INET6 socket to a specific link-local source (alternate NIC)",
+    "Base64-encode the data",
+    "Connect to a unique-local IPv6 destination on an uncommon TCP port",
+    "Send and close cleanly",
+    "No interference with unrelated network services"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-6b0d34f2",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": false,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "There is no actual command or code provided—only a descriptive placeholder—so it is not runnable or parseable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "While IPv6 binding and sending data could exfiltrate, this does not constitute a different network medium per T1011 (e.g., cellular/Bluetooth) and instead aligns more with alternative protocol/interface use.",
+        "combined_score": 1.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-01T01:15:14.893130Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command appears to be well-formed Python code for socket binding and data transmission, though without seeing the actual code I cannot verify complete syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "Using IPv6 with a non-default interface binding to transmit base64-encoded data over a high port aligns perfectly with T1011 (Exfiltration Over Other Network Medium) as it leverages an alternative network path that might evade standard monitoring.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T01:15:17.991898Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, preventing any evaluation of its syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command's description of binding to a non-default interface with IPv6 to a unique-local target for exfiltration perfectly aligns with T1011's concept of using an alternative network path or medium to evade primary network monitoring.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:27:36.386077Z"
+      }
+    ],
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": "Python syntax check failed (py_compile). Command '['C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\python.exe', '-m', 'py_compile', 'C:\\\\Users\\\\flacman\\\\AppData\\\\Local\\\\Temp\\\\tmph2mc7nzk.py']' returned non-zero exit status 1."
+  }
+}

