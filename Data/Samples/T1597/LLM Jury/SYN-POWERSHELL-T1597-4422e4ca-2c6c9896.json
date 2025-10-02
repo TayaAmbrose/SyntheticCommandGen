@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $headers=@{ 'hibp-api-key'=$env:HIBP_API_KEY; 'user-agent'='ReconClient/1.0'; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://haveibeenpwned.com/api/v3/breachedaccount/ceo@example.com?truncateResponse=true' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\hibp_ceo_example_com.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts HIBP success ceo@example.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts HIBP error: $($_.Exception.Message)\" }",
+  "explanation": "Queries the Have I Been Pwned v3 API (closed, key-gated) for a specific account to gather breach intelligence about the victim using authenticated access, then stores structured JSON output and logs outcome.",
+  "rationale_steps": [
+    "Authenticate to a closed-source data provider via API key and UA header.",
+    "Request minimal, relevant breach data for a specific account.",
+    "Parse and save JSON to disk to avoid console leakage.",
+    "Log success/error with timestamps without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-2c6c9896",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, correct error handling with try/catch, and appropriate variable declarations and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the Have I Been Pwned API (a closed source requiring an API key) to gather breach intelligence about a specific email address, storing the results, and logging the outcome.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:39:13.856260Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid cmdlet usage, and proper variable expansions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by querying a key-gated, 'closed' API (HIBP) for target intelligence, directly aligning with the 'Search Closed Sources' technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:39:22.207334Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes, valid hashtable and cmdlet usage, and proper separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses an API key to query the closed, paid HIBP v3 endpoint for breach data on a specific account, storing JSON and logging results, which aligns with T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:39:35.483972Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

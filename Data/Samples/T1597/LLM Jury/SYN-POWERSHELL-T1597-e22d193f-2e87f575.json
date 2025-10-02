@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\clearbit_company_find_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $token=$env:CLEARBIT_API_KEY; if([string]::IsNullOrWhiteSpace($token)){ throw 'CLEARBIT_API_KEY not set'; } $headers=@{ 'Authorization'=\"Bearer $token\"; 'Accept'='application/json' }; $uri=\"https://company.clearbit.com/v2/companies/find?domain=$domain\"; $resp=Invoke-WebRequest -Uri $uri -Headers $headers -Method Get -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) Clearbit non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) Clearbit error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Uses Clearbit\u2019s paid company lookup API (closed-source) to obtain organization details tied to the domain and securely persist results.",
+  "rationale_steps": [
+    "Authenticate using a bearer token without exposing it in logs.",
+    "Request company details from the closed-source API over TLS.",
+    "Check for JSON response and store it in structured form.",
+    "Log failures consistently."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-2e87f575",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and correct use of PowerShell cmdlets and methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using Clearbit's paid API service to gather non-public company information about a domain, with proper error handling, logging, and secure storage of results.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:53:33.820427Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, valid parameters, proper separators, and no obvious parsing errors.",
+        "semantic_score": 5,
+        "semantic_justification": "Queries Clearbit\u2019s paid company API using bearer auth to retrieve organization data for a domain and saves JSON results, directly exemplifying use of a closed commercial source per T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:53:45.951867Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper syntax for variables, cmdlets, parameters, and flow control (try-catch, if-else).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a known paid, closed-source intelligence API (Clearbit) to gather organization details for a domain, matching the technique's goal of acquiring non-public information for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:53:46.844709Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

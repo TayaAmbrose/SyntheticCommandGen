@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-blog-register -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-blog.test/v1/users -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"handle\\\":\\\"artisanaloutreach\\\",\\\"email\\\":\\\"artisanal.outreach@example-mail.test\\\",\\\"password\\\":\\\"S3cure!Passw0rd\\\",\\\"profile\\\":{\\\"title\\\":\\\"Cloud Native Notes\\\",\\\"about\\\":\\\"Personal takes on K8s, SRE, and OSS\\\"}}\"'",
+  "explanation": "Registers a blogging platform account to reinforce persona depth and provide long-form content presence.",
+  "rationale_steps": [
+    "Create a blog identity matching the social persona.",
+    "Lay groundwork for future content to bolster legitimacy."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-967936e0",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid kubectl syntax, correct JSON escaping in the curl payload, and appropriate use of flags and parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a user account on a blogging platform with a crafted persona, which aligns with establishing accounts for persistent access and blending into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:08:47.891249Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct escaping for the JSON payload within the shell command, and valid kubectl flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly registers a new user account on an external blogging platform via an API call, which perfectly aligns with the MITRE ATT&CK T1585 'Establish Accounts' technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:08:53.680498Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced single/double quotes and braces, valid kubectl and curl flags, and correctly escaped JSON inside a sh -lc context.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses kubectl to run a curl POST that submits valid registration JSON to a blogging API, directly implementing account creation consistent with T1585 (assuming network reachability and a shell in the image).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:09:30.955126Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

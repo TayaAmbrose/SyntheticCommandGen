@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'gcloud iam service-accounts create persona-automation --description=\"Automation persona for community posts\" --display-name=\"Persona Automation\" >/dev/null 2>&1; gcloud iam service-accounts describe \"persona-automation@$(gcloud config get-value project -q).iam.gserviceaccount.com\" --format=json'",
+  "explanation": "Establishes a Google Cloud service account to act as a backend persona for automation and service interactions.",
+  "rationale_steps": [
+    "Create a service account with a benign description and display name.",
+    "Describe the newly created identity to capture its full JSON representation.",
+    "Use this identity to carry out low-profile automated tasks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-c103b2f7",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators, and appropriate redirection of output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a service account with a plausible name and description, then verifying its creation, which aligns with establishing accounts for persistent access and follow-on actions.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:44:05.192160Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flag formats, and proper command substitution within the `bash -c` string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly creates a Google Cloud service account using the official `gcloud` tool, perfectly aligning with the MITRE ATT&CK T1585 'Establish Accounts' technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:44:13.069747Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid separators and flags, and proper redirection and command substitution.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses gcloud to create and then describe a GCP service account, directly aligning with establishing accounts (T1585) and operationally plausible given configured credentials and project.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:44:22.995381Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

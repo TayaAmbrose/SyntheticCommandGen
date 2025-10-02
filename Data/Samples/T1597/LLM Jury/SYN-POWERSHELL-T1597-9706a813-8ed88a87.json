@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.domaintools.com'; $user=$env:DT_USER; $key=$env:DT_PPK; $hostkey=$env:DT_HOSTKEY; $remote='/bulk/pdns/daily/pdns-2025-09-30.json.gz'; $dest='C:\\Intel\\DomainTools\\pdns-2025-09-30.json.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Acquires a commercial passive DNS daily export from DomainTools using SCP with host key pinning and logs a concise JSON result.",
+  "rationale_steps": [
+    "Reach a closed-source DNS intelligence provider using SSH key auth and pinned host key.",
+    "Download a specific date-scoped dataset to minimize unnecessary transfers.",
+    "Compute a file hash and log structured metadata for validation and audit.",
+    "Stay within the scope of closed-source collection per T1597."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-8ed88a87",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving a commercial passive DNS dataset from DomainTools using secure SCP with proper authentication, error handling, and logging mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:09:35.631880Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper command execution, correct cmdlet usage, and a well-structured try/catch/finally block.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by using `pscp` to acquire a commercial passive DNS export from a known intelligence provider (DomainTools), demonstrating a realistic acquisition from a closed source with appropriate authentication and logging.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:09:47.092271Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quoting, valid PuTTY pscp flags, and correct separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1597 by fetching a paid DomainTools dataset via SCP and logging results, but attempts to assign to the read-only $host variable (likely causing immediate failure), targets a C:\\ path that may require elevated rights, and forces SCP where the service may be SFTP-only, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:10:45.437083Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

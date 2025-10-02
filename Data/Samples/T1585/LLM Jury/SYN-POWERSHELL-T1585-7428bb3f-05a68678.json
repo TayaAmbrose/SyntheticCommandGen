@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$post = @{ userId=12; title=\"Designing Minimalist Logos\"; body=\"Principles, grids, and iteration workflows for clean brand marks.\" } | ConvertTo-Json; Invoke-RestMethod -Method Post -Uri \"https://jsonplaceholder.typicode.com/posts\" -ContentType \"application/json; charset=UTF-8\" -Body $post | ConvertTo-Json -Depth 5",
+  "explanation": "Publishes initial long-form content to build a believable activity history for the persona using a public test API.",
+  "rationale_steps": [
+    "Construct a realistic article payload with a relevant topic.",
+    "POST the content to a documented placeholder API to simulate public posting with JSON output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-05a68678",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, piping, method calls, balanced quotes, braces, and parentheses, and correct parameter usage for both ConvertTo-Json and Invoke-RestMethod cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command aligns perfectly with T1585 (Establish Accounts) by creating content to build a believable persona history using a public API, which is a common technique for establishing credibility for fake accounts before using them for malicious purposes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:57:46.030404Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, with correct syntax for variable assignment, hash tables, pipelining, and Invoke-RestMethod parameters.",
+        "semantic_score": 1,
+        "semantic_justification": "The command simulates publishing content for a persona, which is an activity performed by an account, but it does not involve the creation, modification, or abuse of an account as defined by the T1585 'Establish Accounts' technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:57:52.547009Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quoting/braces, correct hashtable literal, proper use of pipelines/semicolons, and valid Invoke-RestMethod parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "While it successfully posts JSON data to a public test endpoint, it neither creates nor abuses any account or identity and involves no authentication, so it does not implement T1585 Establish Accounts.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:58:14.567678Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

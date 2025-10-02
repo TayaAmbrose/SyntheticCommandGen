@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -sS -X PATCH https://api.github.com/user -H \"Authorization: token ${GITHUB_TOKEN}\" -H \"Accept: application/vnd.github+json\" -d '{\"name\":\"Evelyn Hart\",\"bio\":\"Open-source enthusiast and tech blogger.\",\"blog\":\"https://evehart.example\",\"company\":\"Freelance\"}'",
+  "explanation": "Populates and refines an existing GitHub account profile to build a believable public persona.",
+  "rationale_steps": [
+    "Use the official GitHub API to update public-facing profile attributes.",
+    "Align the profile details with other persona assets for consistency.",
+    "Rely on JSON request/response for automated validation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-320124c4",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper curl syntax, balanced quotes, valid HTTP headers, and correctly formatted JSON payload.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by updating a GitHub profile with personal details to establish a believable persona that could be used for follow-on actions or to blend into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:52:14.619100Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and a correctly structured JSON payload.",
+        "semantic_score": 4,
+        "semantic_justification": "The command refines an existing account's profile to build a believable persona, aligning with the 'abuse accounts...to blend into normal activity' aspect of T1585, although it doesn't represent the initial account establishment.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:52:27.131825Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed curl command with balanced quotes, valid flags, and a properly formatted JSON payload.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately updates a GitHub user profile to build a persona, but omits a Content-Type: application/json header and assumes a token with sufficient user scope.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:52:49.398382Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

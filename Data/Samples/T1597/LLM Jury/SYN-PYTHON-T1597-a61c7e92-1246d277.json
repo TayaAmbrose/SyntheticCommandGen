@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, re, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\napi_key = json.loads(secrets.get_secret_value(SecretId='securitytrails/api')['SecretString'])['api_key']\ndomain = 'example.com'\nif not re.match(r'^[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$', domain):\n    raise SystemExit('Invalid domain format')\nurl = f'https://api.securitytrails.com/v1/domain/{domain}/subdomains'\ntry:\n    r = requests.get(url, headers={'APIKEY': api_key, 'Accept': 'application/json', 'User-Agent': 'cloud-intel-client/1.0'}, params={'children_only': 'true'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'securitytrails/{domain}_subdomains.json'\n    boto3.client('s3').put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'securitytrails', 'domain': domain, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'securitytrails', 'requestUrl': url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('SecurityTrails query failed: %s', e)",
+  "explanation": "Queries the paid SecurityTrails API for subdomains of a target domain via HTTPS using an API key from Secrets Manager. This is closed-source reconnaissance under T1597.",
+  "rationale_steps": [
+    "Restrict query to a single domain to minimize noise.",
+    "Use a commercial dataset (SecurityTrails) with authenticated requests.",
+    "Persist structured results to S3 for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-1246d277",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, error handling, balanced parentheses/braces, appropriate function calls, and follows Python syntax conventions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries SecurityTrails, a paid closed-source intelligence platform, retrieves subdomain information for a target domain using an API key stored in AWS Secrets Manager, and stores the results in S3.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:35:56.156512Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced structures, and valid function calls and variable assignments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly queries a commercial, paid intelligence source (SecurityTrails API) for non-public information (subdomains) and stores the results, directly aligning with T1597's description of 'querying paid technical databases' to 'collect intelligence'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:36:03.818574Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid, parseable Python with balanced structures, correct imports, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the paid SecurityTrails API using a secret-managed API key and stores results to S3, aligning with closed-source reconnaissance under T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:36:20.019590Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

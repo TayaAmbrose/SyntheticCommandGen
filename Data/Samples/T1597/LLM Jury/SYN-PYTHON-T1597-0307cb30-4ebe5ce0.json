@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,base64; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); auth=base64.b64encode((os.environ[\"CENSYS_API_ID\"]+\":\"+os.environ[\"CENSYS_API_SECRET\"]).encode()).decode(); c=http.client.HTTPSConnection(\"search.censys.io\",timeout=20); h={\"Authorization\":\"Basic \"+auth,\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}; payload=json.dumps({\"q\":f\"services.tls.certificates.leaf_data.subject.common_name:{dom} or services.dns.names:{dom}\",\"per_page\":10}).encode(); c.request(\"POST\",\"/api/v2/hosts/search\",body=payload,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Performs a Censys v2 hosts search (requires account) for certificates and DNS names matching the target domain, limiting results to reduce noise.",
+  "rationale_steps": [
+    "Use Basic Auth with API ID and secret from environment variables.",
+    "POST a scoped query to Censys hosts/search with per_page limits.",
+    "Return JSON results and handle errors robustly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-4ebe5ce0",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and braces, proper error handling, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using the Censys API, a paid/closed intelligence source, to gather information about a target domain's certificates and DNS records for potential targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:55:56.002980Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with correct syntax for imports, variable assignments, dictionary definitions, f-strings, API calls, and error handling within a single line.",
+        "semantic_score": 5,
+        "semantic_justification": "The command makes an authenticated request to the Censys API (a 'closed source' requiring an account and API keys) to gather intelligence on a target domain, directly aligning with the technique's description of acquiring non-public information for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T12:56:06.161268Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is properly quoted and indented, with balanced delimiters and valid http.client usage for a POST request.",
+        "semantic_score": 4,
+        "semantic_justification": "It authentically queries the closed Censys v2 API for hosts using Basic auth and a domain-focused search on certificates/DNS, though specific field names may not perfectly match the current schema.",
+        "combined_score": 4.5,
+        "confidence": 0.84,
+        "timestamp": "2025-10-02T12:56:48.364083Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$comment = @{ postId=1; name=\"Alex D.\"; email=\"alex.designer.persona@example.org\"; body=\"Great insights on brand consistency\u2014thanks for sharing!\" } | ConvertTo-Json; Invoke-RestMethod -Method Post -Uri \"https://jsonplaceholder.typicode.com/comments\" -ContentType \"application/json; charset=UTF-8\" -Body $comment | ConvertTo-Json -Depth 5",
+  "explanation": "Generates social interactions (comments) to seed normal-looking engagement patterns for the persona.",
+  "rationale_steps": [
+    "Create a comment payload matching the persona\u2019s voice and expertise.",
+    "POST to a test endpoint to simulate social engagement and receive structured JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-9c5e00fe",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, hashtable creation, piping, method invocation, parameter specification, and balanced quotes/braces.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1585 (Establish Accounts) by creating a social media comment for a persona, though it's using a test API rather than actually establishing persistent access to a real account.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:51:19.626149Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for hash tables, pipelining, and cmdlet arguments, with balanced quotes and valid flags.",
+        "semantic_score": 1,
+        "semantic_justification": "The command simulates posting a comment to a test API, which is an interaction *using* an assumed persona, not an action that establishes or abuses an account as described by MITRE ATT&CK T1585.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:51:25.784787Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid separators, and correct Invoke-RestMethod flags.",
+        "semantic_score": 1,
+        "semantic_justification": "Posts a comment to a mock API without creating or abusing any account, which is not aligned with T1585 (Establish Accounts).",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:51:42.015122Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

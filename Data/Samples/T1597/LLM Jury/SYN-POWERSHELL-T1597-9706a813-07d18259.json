@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.whoisxmlapi.com'; $user=$env:WX_USER; $key=$env:WX_PPK; $hostkey=$env:WX_HOSTKEY; $remote='/bulk/reverse-whois/2025/09/30/reverse-whois-2025-09-30.csv'; $dest='C:\\Intel\\WhoisXML\\reverse-whois-2025-09-30.csv'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Downloads a paid bulk reverse WHOIS dataset from WhoisXML API via SCP with key authentication; verifies integrity and emits JSON output for records.",
+  "rationale_steps": [
+    "Use authenticated, closed-source bulk data access for targeted enterprise research.",
+    "Execute quiet, non-interactive transfer to reduce noise in system logs.",
+    "Validate integrity and produce JSON metadata for downstream processing.",
+    "Avoids public OSINT and focuses on subscription-only content."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-07d18259",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1597 (Search Closed Sources) by downloading paid WHOIS data from a private API using secure authentication, logging the activity, and verifying file integrity - all realistic operational steps for this technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:28:06.248996Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct syntax for variable assignments, external command execution, control flow, object manipulation, and path operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by programmatically downloading a bulk paid reverse WHOIS dataset from a specific external API, which directly constitutes acquiring intelligence from a closed source for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:28:11.110601Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell is well-formed with balanced quoting, valid try/catch/finally blocks, proper separators, and plausible pscp flags and argument formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "It operationally aligns with T1597 by pulling a paid dataset from WhoisXML via authenticated SSH copy and logging JSON, though it forces SCP (many such services are SFTP-only), computes but does not validate the hash, and may hit permission issues writing to C:\\Intel/ProgramData without elevated rights.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:28:47.326087Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

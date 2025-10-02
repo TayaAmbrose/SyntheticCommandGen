@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl create cronjob persona-keepalive -n personas --image=curlimages/curl:8.8.0 --schedule=\"17 */8 * * *\" -- sh -lc 'curl -sS -X POST https://api.example-social.test/v1/users/artisanal_outreach/posts -H \"Authorization: Bearer tok_test_123456\" -H \"Content-Type: application/json\" -d \"{\\\"text\\\":\\\"Quick tip: kubelet logs are your friend when debugging node issues. #kubernetes #sre\\\"}\"' -o json",
+  "explanation": "Schedules periodic low-noise posts to keep the persona active and credible over time.",
+  "rationale_steps": [
+    "Create a CronJob that executes a small JSON POST on a predictable cadence.",
+    "Maintains steady, benign activity to avoid account dormancy flags."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-b494c80c",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper kubectl syntax, balanced quotes, correct JSON escaping in the curl payload, and appropriate use of flags and arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by maintaining a persistent social media presence through automated, scheduled posts that appear legitimate and technical to maintain credibility of an established account.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:26:51.010621Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The `kubectl create cronjob` command is perfectly well-formed, including proper flag usage, balanced quotes for the nested shell command, and correctly escaped JSON within the curl data payload.",
+        "semantic_score": 2,
+        "semantic_justification": "The command schedules periodic activity to maintain an *existing* persona's credibility, which is account usage, not the establishment or abuse of account creation/privilege flows as defined by MITRE ATT&CK T1585.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T09:27:01.968107Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid flags, but puts -o json after -- so it is passed to the container instead of kubectl.",
+        "semantic_score": 3,
+        "semantic_justification": "It aims to schedule periodic persona posts and mostly aligns with T1585\u2019s account maintenance, but may fail operationally because curlimages/curl likely lacks sh for 'sh -lc' and the 'None' privilege claim ignores required Kubernetes RBAC.",
+        "combined_score": 3.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T09:29:35.783559Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

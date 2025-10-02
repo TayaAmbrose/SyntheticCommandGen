@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\shodan_search_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $key=$env:SHODAN_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'SHODAN_API_KEY not set'; } $q=\"hostname:$domain\"; $uri=\"https://api.shodan.io/shodan/host/search?key=$key&query=$([Uri]::EscapeDataString($q))\"; $resp=Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) Shodan non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) Shodan error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Queries Shodan\u2019s paid API for hosts matching the target domain, a closed-source search provider, and saves results in structured JSON.",
+  "rationale_steps": [
+    "Authenticate to Shodan with an API key stored securely as an environment variable.",
+    "Execute a constrained query to avoid noisy results.",
+    "Validate and parse JSON response, writing to disk.",
+    "Log failure conditions without exposing the query key."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-8aa2d5db",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and valid parameter usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using the Shodan API (a paid closed-source intelligence service) to gather information about a target domain and storing the results for later analysis.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:52:56.551862Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses correct syntax for cmdlets and .NET calls, and has balanced delimiters throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying Shodan's paid API, which is a closed source for intelligence gathering, and employs operationally sound PowerShell practices to achieve this.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:53:07.191676Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes/braces, valid parameters (including UseBasicParsing and TimeoutSec on Windows), proper separators, and correct try/catch and pipeline usage.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses a Shodan API key to query the closed-source Shodan host search for the target domain and saves the JSON results to disk with error logging, aligning directly with T1597 closed-source reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:53:20.876128Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

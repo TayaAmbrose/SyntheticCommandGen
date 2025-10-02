@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; wm=boto3.client('workmail'); org_id='m-1234567890'; resp=wm.create_user(OrganizationId=org_id, Name='linda', DisplayName='Linda Park', Password='TempMail!2025'); user_id=resp['UserId']; wm.register_to_work_mail(OrganizationId=org_id, EntityId=user_id, Email='linda.park@brand-support.example'); print(json.dumps({'action':'create_workmail_persona','organization_id':org_id,'user_id':user_id,'email':'linda.park@brand-support.example'}))\"",
+  "explanation": "Creates a WorkMail user and registers a realistic corporate-style email address to support an email persona.",
+  "rationale_steps": [
+    "Provision a mailbox with a plausible display name and address under an existing organization.",
+    "Use a temporary password to mirror normal onboarding with first-login reset."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-b2705599",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, valid AWS boto3 API calls, and correct JSON output formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by creating a new WorkMail user with a realistic corporate email address that could be used for social engineering or persistence in AWS environments.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:05:01.309644Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced quotes and parentheses, and valid Boto3 API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of creating a WorkMail user and registering an email, directly aligning with the 'Establish Accounts' (T1585) technique by creating a new identity for adversarial use.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:05:11.029843Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The inline Python is well-formed with balanced quotes and parentheses, proper semicolon separators, and valid-looking boto3 WorkMail method usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It programmatically creates a WorkMail user and registers an email, aligning with account establishment (T1585), but it assumes appropriate AWS credentials/permissions and a valid associated domain.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:05:27.610817Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

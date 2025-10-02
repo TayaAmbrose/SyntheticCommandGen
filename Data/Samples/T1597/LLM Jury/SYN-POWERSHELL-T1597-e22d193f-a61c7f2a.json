@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\builtwith_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $key=$env:BUILTWITH_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'BUILTWITH_API_KEY not set'; } $uri=\"https://api.builtwith.com/v21/api.json?KEY=$key&LOOKUP=$domain\"; $resp=Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) BuiltWith non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) BuiltWith error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Retrieves technology fingerprinting from BuiltWith\u2019s paid API, a closed-source commercial database, and stores the normalized JSON.",
+  "rationale_steps": [
+    "Access a subscription API using a key provided via environment variable.",
+    "Request technology profile for the domain over HTTPS.",
+    "Parse and persist JSON output.",
+    "Handle and log errors without exposing the API key."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-a61c7f2a",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and valid parameter usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the paid BuiltWith API service to gather technology fingerprinting data about a domain, storing the results for intelligence gathering purposes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:41:51.899899Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper syntax for variable assignment, function calls, error handling, and logical operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a commercial, closed-source API (BuiltWith) using an API key to collect domain-specific technology intelligence, precisely matching the description of acquiring non-public information from paid feeds for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:41:59.672531Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes/braces, valid cmdlets/parameters, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It aligns with T1597 by querying a paid BuiltWith API and normalizing JSON, but writing to C:\\ProgramData\\recon may fail without elevated permissions despite claiming none.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:42:23.415514Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

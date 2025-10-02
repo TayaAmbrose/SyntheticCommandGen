@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\nsecret = secrets.get_secret_value(SecretId='greynoise/api')['SecretString']\napi_key = json.loads(secret)['api_key']\nip = '198.51.100.14'  # example IP for testing\nbucket = 'intel-results-bucket-123456'\nkey = f'greynoise/{ip}.json'\nurl = f'https://api.greynoise.io/v2/noise/context/ip/{ip}'\ntry:\n    r = requests.get(url, headers={'key': api_key, 'Accept': 'application/json', 'User-Agent': 'cloud-intel-client/1.0'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'greynoise', 'ip': ip, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'greynoise', 'requestUrl': url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('GreyNoise query failed: %s', e)",
+  "explanation": "Queries the paid GreyNoise API for IP context via HTTPS using an API key stored in AWS Secrets Manager, then stores structured results in S3. This leverages a closed-source commercial dataset for reconnaissance.",
+  "rationale_steps": [
+    "Securely retrieve vendor API credentials from AWS Secrets Manager.",
+    "Call a reputable commercial intelligence API (GreyNoise) over TLS with minimal scope.",
+    "Persist structured JSON results to S3 for downstream analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-6b295365",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable definitions, error handling, balanced parentheses/braces, and follows standard Python syntax conventions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving data from GreyNoise (a paid threat intelligence service) using proper API authentication, storing the results securely, and implementing appropriate error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:48:39.720376Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with correct syntax, balanced delimiters, and proper function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by querying a commercial closed-source threat intelligence API (GreyNoise) and storing the results, directly embodying the T1597 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:48:47.704678Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python script with balanced syntax, correct imports, f-strings, and exception handling that will parse under Python 3.",
+        "semantic_score": 5,
+        "semantic_justification": "It retrieves a paid GreyNoise API key from AWS Secrets Manager, queries the closed-source API for IP context, and stores results in S3, which aligns directly with T1597\u2019s use of non-public sources for reconnaissance given appropriate credentials and IAM permissions.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:49:00.486577Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

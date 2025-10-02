@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,base64; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); auth=base64.b64encode((os.environ[\"RISKIQ_EMAIL\"]+\":\"+os.environ[\"RISKIQ_API_KEY\"]).encode()).decode(); c=http.client.HTTPSConnection(\"api.riskiq.net\",timeout=15); h={\"Authorization\":\"Basic \"+auth,\"Accept\":\"application/json\"}; c.request(\"GET\",\"/pt/v2/whois/search?query=\"+dom,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries RiskIQ PassiveTotal (paid service) for historical WHOIS data related to the target domain using Basic authentication, returning structured JSON.",
+  "rationale_steps": [
+    "Read credentials and target domain from environment variables to avoid hardcoding secrets.",
+    "Establish HTTPS connection to api.riskiq.net with Basic Auth and request WHOIS search.",
+    "Parse JSON response and print structured output; handle and log HTTP/parse errors."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-f9461abb",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by authenticating to and querying the paid RiskIQ PassiveTotal service for WHOIS data about a target domain, which is a classic example of leveraging closed intelligence sources for reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:03:29.241041Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed, uses standard library functions, and is runnable with proper environment variables set, including correct use of newlines for code structure within the `-c` argument.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely queries a paid, closed-source intelligence platform (RiskIQ) for domain-related data, directly aligning with the 'Search Closed Sources' technique (T1597) for intelligence gathering and operational feasibility.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T13:03:35.523119Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and parentheses with valid Python try/except and if/else blocks make it runnable via python3 -c.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses Basic-auth to query the paid RiskIQ PassiveTotal WHOIS search endpoint and returns JSON, aligning with acquiring data from a closed source per T1597.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:04:04.764208Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json, datetime as dt; iam=boto3.client('iam'); user='helpdesk.contractor'; u=iam.create_user(UserName=user, Tags=[{'Key':'Department','Value':'IT Helpdesk'},{'Key':'Title','Value':'Tier1 Contractor'}]); lp=iam.create_login_profile(UserName=user, Password='WelcomeHelpdesk!2025', PasswordResetRequired=True); iam.attach_user_policy(UserName=user, PolicyArn='arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess'); out={'action':'create_helpdesk_persona','user':u['User'],'login_profile_created':True,'attached_policies':['AWSBillingReadOnlyAccess'],'timestamp':dt.datetime.utcnow().isoformat()+'Z'}; print(json.dumps(out))\"",
+  "explanation": "Establishes a helpdesk-style persona with console access and limited billing read permissions, which is common in support roles.",
+  "rationale_steps": [
+    "Assign a mainstream managed policy associated with read-only billing visibility.",
+    "Use service desk-style naming and tags to match routine onboarding patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-fd0b5354",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, valid AWS boto3 API calls, and correct JSON formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a new AWS IAM user with console access, setting initial credentials, attaching a policy for limited permissions, and documenting the action - all consistent with establishing accounts for persistent access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:45:08.476928Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Python syntax, balanced quotes, parentheses, and braces, making it entirely parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent of establishing an AWS IAM user with console access, a temporary password, and limited billing read permissions, directly aligning with the T1585 'Establish Accounts' technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:45:15.058660Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/brackets and valid boto3 calls separated by semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "It creates an IAM user with a console login profile, tags, and a read-only billing policy, directly implementing cloud account establishment (T1585) assuming valid AWS credentials/permissions.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:45:29.343120Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

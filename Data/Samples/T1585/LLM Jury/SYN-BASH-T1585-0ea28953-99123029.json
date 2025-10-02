@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "aws cognito-idp admin-create-user --user-pool-id us-east-1_Abc12345 --username alex.morgan --user-attributes Name=email,Value=alex.morgan.persona@example.com Name=name,Value='Alex Morgan' Name=zoneinfo,Value='America/New_York' --message-action SUPPRESS --output json",
+  "explanation": "Creates a managed application user via AWS Cognito, suitable for maintaining a distinct persona identity.",
+  "rationale_steps": [
+    "Target a known user pool",
+    "Provide realistic profile attributes (email, name, timezone)",
+    "Suppress automated messaging to avoid external signals"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-99123029",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correctly formatted flags, balanced quotes, and valid parameter structure for the cognito-idp admin-create-user operation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a user account in AWS Cognito with specific attributes that could be used for establishing a persistent identity, and the --message-action SUPPRESS flag prevents notification emails which aligns with covert account establishment.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:02:11.464242Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, proper quoting for attribute values, and a correct overall structure for the AWS CLI.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique, using the correct tool and arguments to create an account, but the stated 'Privilege: None' makes it operationally infeasible without elevated AWS permissions for 'cognito-idp:AdminCreateUser'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:02:19.004359Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed AWS CLI command with valid flags, balanced quoting, and correctly formatted user-attributes.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately creates a Cognito user for persona establishment with suppressed messaging, but operationally requires AWS IAM admin permissions despite the 'Privilege: None' note.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:02:29.419438Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

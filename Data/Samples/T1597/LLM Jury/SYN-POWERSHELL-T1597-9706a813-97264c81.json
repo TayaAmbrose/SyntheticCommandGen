@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.domainsdb.com'; $user=$env:DDB_USER; $key=$env:DDB_PPK; $hostkey=$env:DDB_HOSTKEY; $remote='/enterprise/daily/new-registrations-2025-09-30.json.gz'; $dest='C:\\Intel\\DomainsDB\\new-registrations-2025-09-30.json.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Fetches a closed-source enterprise domain registrations feed via SCP using key-based auth and outputs a JSON status for traceability.",
+  "rationale_steps": [
+    "Utilize authenticated access to a proprietary registry dataset.",
+    "Limit scope to a specific daily file and transfer quietly.",
+    "Compute integrity hash and log structured metadata.",
+    "Remain within T1597 by gathering non-public, subscription data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-97264c81",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/braces, correct error handling with try/catch/finally blocks, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using pscp to securely retrieve a non-public domain registration database file from a closed source (sftp.domainsdb.com) with proper authentication, logging, and error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:47:06.866260Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, uses proper PowerShell command separators, and employs valid flag formats for both PowerShell cmdlets and the external pscp.exe executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of fetching a closed-source enterprise domain registration feed via SCP, utilizing appropriate tools and arguments that directly map to the MITRE ATT&CK T1597 'Search Closed Sources' technique, demonstrating high operational plausibility and realism.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T12:47:18.281296Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes, valid separators, and correct PSCP flags and invocation syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "Downloads a closed-source enterprise feed via SCP using key/hostkey and logs JSON status, directly aligning with T1597 closed-source data acquisition.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:47:45.118211Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

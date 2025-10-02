@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would set SO_DONTROUTE on an IPv4 TCP socket, bind to a non-default local address, connect to a high, uncommon port, and send base64-encoded data]",
+  "explanation": "Disables routing and forces an alternate path/interface, differentiating the exfil path from the primary channel in line with T1011.",
+  "rationale_steps": [
+    "Bind TCP socket to a non-default local address",
+    "Set SO_DONTROUTE to keep traffic off the default route",
+    "Base64-encode the payload",
+    "Connect to an uncommon remote port and transmit",
+    "Close without modifying system-wide settings"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-349cea43",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntax as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T14:11:34.230179Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "It is a descriptive placeholder rather than concrete Python code or a runnable command, so it is not parseable or executable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The behavior describes manipulating a network exfiltration path, which does not align with the provided T1011 description of searching closed sources for information.",
+        "combined_score": 1.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T14:11:49.577467Z"
+      }
+    ],
+    "llm_average_syntactic": 0.5,
+    "llm_average_semantic": 0.5,
+    "llm_average_score": 0.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

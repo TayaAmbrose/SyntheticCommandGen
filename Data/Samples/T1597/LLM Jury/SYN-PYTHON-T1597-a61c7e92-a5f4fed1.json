@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, time\nlogging.basicConfig(level=logging.INFO)\nregion = boto3.session.Session().region_name or 'us-east-1'\ndx = boto3.client('dataexchange', region_name=region)\ns3 = boto3.client('s3', region_name=region)\nkeywords = ['whois','dns','breach','intel']\nconsumer_bucket = 'adx-consumer-bucket-123456'\ns3_prefix = 'intel/exports/'\nrole_arn = 'arn:aws:iam::123456789012:role/ADX-Export-Role'  # Role with s3:PutObject to consumer_bucket\ntry:\n    # pick first relevant entitled dataset\n    dataset = None\n    for page in dx.get_paginator('list_data_sets').paginate(Origin='ENTITLED'):\n        for ds in page.get('DataSets', []):\n            if any(k in (ds.get('Name','').lower()) for k in keywords):\n                dataset = ds; break\n        if dataset: break\n    if not dataset:\n        raise RuntimeError('No relevant entitled dataset found')\n    # latest revision\n    revs = dx.list_revisions(DataSetId=dataset['Id']).get('Revisions', [])\n    if not revs:\n        raise RuntimeError('No revisions in dataset')\n    latest = sorted(revs, key=lambda r: r['CreatedAt'], reverse=True)[0]\n    assets = dx.list_assets(DataSetId=dataset['Id'], RevisionId=latest['Id']).get('Assets', [])\n    # choose up to 2 small-looking assets (by name heuristic) to reduce noise\n    selected = [a for a in assets if any(a.get('Name','').endswith(ext) for ext in ['.json','.csv'])][:2]\n    if not selected:\n        raise RuntimeError('No CSV/JSON assets to export')\n    dests = []\n    for a in selected:\n        key = f\"{s3_prefix}{dataset['Id']}/{latest['Id']}/{a['Name']}\"\n        dests.append({'AssetId': a['Id'], 'Bucket': consumer_bucket, 'Key': key})\n    job = dx.create_job(\n        Type='EXPORT_ASSETS_TO_S3',\n        Details={'ExportAssetsToS3': {'AssetDestinations': dests, 'DataSetId': dataset['Id'], 'RevisionId': latest['Id']}},\n        RoleArn=role_arn\n    )\n    dx.start_job(JobId=job['Id'])\n    # wait with backoff\n    for _ in range(30):\n        j = dx.get_job(JobId=job['Id'])\n        if j['State'] in ['COMPLETED','ERROR','CANCELLED']:\n            break\n        time.sleep(4)\n    if j['State'] != 'COMPLETED':\n        raise RuntimeError(f\"Export job not completed: {j['State']}\")\n    # presign S3 URIs for secure, time-limited HTTPS access\n    outputs = []\n    for d in dests:\n        url = s3.generate_presigned_url('get_object', Params={'Bucket': d['Bucket'], 'Key': d['Key']}, ExpiresIn=300)\n        outputs.append({'s3Uri': f\"s3://{d['Bucket']}/{d['Key']}\", 'httpsUrl': url})\n    print(json.dumps({'dataSetId': dataset['Id'], 'revisionId': latest['Id'], 'exported': outputs}))\nexcept Exception as e:\n    logging.exception('ADX export and presign failed: %s', e)",
+  "explanation": "Exports a small subset of assets from a subscribed AWS Data Exchange dataset to a controlled S3 bucket and generates time-limited HTTPS URLs. This securely accesses closed-source commercial data for reconnaissance.",
+  "rationale_steps": [
+    "Identify a relevant subscribed dataset that likely contains WHOIS/DNS/breach intelligence.",
+    "Export only select assets to minimize data volume and logging noise.",
+    "Use presigned S3 HTTPS URLs to securely access the data for analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-a5f4fed1",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper indentation, balanced parentheses/brackets, correct function calls, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The script correctly implements the T1597 technique by accessing closed-source intelligence through AWS Data Exchange, filtering for relevant datasets containing threat intelligence, exporting selected assets to S3, and generating time-limited access URLs.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:02:52.022341Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The multi-line Python script is perfectly well-formed, uses standard libraries and boto3 correctly, and contains no syntax errors or structural issues.",
+        "semantic_score": 5,
+        "semantic_justification": "The script directly accesses and exports data from AWS Data Exchange (a commercial data marketplace), which is a prime example of acquiring intelligence from 'paid feeds' or 'private databases' as described by T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:03:04.855000Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed, runnable Python with balanced delimiters and valid boto3 calls; no syntax errors evident.",
+        "semantic_score": 5,
+        "semantic_justification": "Enumerates entitled AWS Data Exchange datasets, exports selected assets to a private S3 bucket, and presigns URLs, accurately modeling closed-source data acquisition aligned with T1597.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:03:20.523213Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

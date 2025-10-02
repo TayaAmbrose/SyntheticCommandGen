@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"VT_API_KEY\"]; c=http.client.HTTPSConnection(\"www.virustotal.com\",timeout=15); h={\"x-apikey\":key,\"Accept\":\"application/json\"}; c.request(\"GET\",\"/api/v3/domains/\"+dom,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries VirusTotal (API key required) for reputation/intel on the target domain and outputs structured JSON.",
+  "rationale_steps": [
+    "Use x-apikey header to authenticate securely over HTTPS.",
+    "Request domain intelligence from the v3 API endpoint.",
+    "Parse JSON safely and handle errors without dumping secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-309e76a4",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid Python syntax throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively queries VirusTotal's API for domain intelligence which aligns with T1597 (Search Closed Sources), but it's a legitimate security tool usage rather than adversarial behavior.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:43:38.891369Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced syntax, valid library calls, proper statement separation, and correct error handling within the script passed to `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command queries VirusTotal via an API key for domain intelligence, which aligns perfectly with T1597's description of acquiring intelligence from 'paid feeds' or 'private databases' (accessible via an API key, implying non-public or privileged access) for targeting purposes.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:43:49.089845Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses balanced quoting and valid Python code with proper imports, headers, and control flow.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the VirusTotal closed-source API for domain intelligence with an API key and returns JSON, aligning with T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:43:55.728724Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

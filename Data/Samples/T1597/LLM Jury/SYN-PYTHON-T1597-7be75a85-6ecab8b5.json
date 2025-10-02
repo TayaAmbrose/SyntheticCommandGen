@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('SECURITYTRAILS_API_KEY'); h={'APIKEY':k,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; ctx=ssl.create_default_context();\nimport builtins; \nprint_err=lambda m: print(m, file=sys.stderr); \n\nimport json as _j; \n\n\n\n\n\n\n\n\n\n\n\nif not k: print_err(_j.dumps({'source':'securitytrails','query':d,'error':'missing SECURITYTRAILS_API_KEY'})); sys.exit(1); \ntry:\n    u='https://api.securitytrails.com/v1/domain/'+urllib.parse.quote(d); req=urllib.request.Request(u,headers=h); r=urllib.request.urlopen(req,timeout=15,context=ctx); \n    print(_j.dumps({'source':'securitytrails','query':d,'data':_j.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print_err(_j.dumps({'source':'securitytrails','query':d,'error':str(e)})); sys.exit(2)",
+  "explanation": "Queries the closed-source SecurityTrails API for domain profile data using an API key over HTTPS, handling authentication via header and returning JSON.",
+  "rationale_steps": [
+    "Authenticate to SecurityTrails (closed commercial source) with API key header.",
+    "Query the domain endpoint to collect DNS/metadata.",
+    "Parse and emit structured JSON; use timeouts and a single request to reduce noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-6ecab8b5",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, error handling, balanced quotes/parentheses/braces, and correct syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the private SecurityTrails API with proper authentication, error handling, and data processing to gather intelligence about a target domain.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:51:06.187417Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, contains no syntax errors, and correctly uses all language constructs and function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 as it queries a known commercial closed-source intelligence platform (SecurityTrails) for domain data using an API key, directly matching the technique's intent of acquiring non-public information for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:51:13.537706Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python with proper imports, balanced syntax, and correct use of semicolons and inline if/try blocks.",
+        "semantic_score": 5,
+        "semantic_justification": "Accurately queries the closed SecurityTrails API with an API key to retrieve domain data, aligning with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 0.96,
+        "timestamp": "2025-10-02T13:51:33.060662Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

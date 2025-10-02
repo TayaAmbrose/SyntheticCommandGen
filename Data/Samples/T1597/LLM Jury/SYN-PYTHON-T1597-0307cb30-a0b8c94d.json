@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"BUILTWITH_API_KEY\"]; qs=urllib.parse.urlencode({\"KEY\":key,\"LOOKUP\":dom}); c=http.client.HTTPSConnection(\"api.builtwith.com\",timeout=15); c.request(\"GET\",\"/v21/api.json?\"+qs,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries BuiltWith (paid API) for technology stack details of the target domain and prints structured JSON.",
+  "rationale_steps": [
+    "Read API key from environment and build a properly encoded query string.",
+    "Perform HTTPS GET to BuiltWith v21 API for the domain.",
+    "Parse and output JSON while handling errors without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-a0b8c94d",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, error handling, and correct syntax for HTTP requests and JSON processing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries BuiltWith, a paid API service, to gather intelligence about a target domain's technology stack that could be used for further targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:25:44.560265Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script passed to `python3 -c` is perfectly well-formed with balanced delimiters, valid Python syntax, and correct command invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries the `BuiltWith` (a known paid commercial intelligence service) API for domain technology details using an API key, which is a textbook example of searching closed sources for targeting intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:25:53.956519Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python command with balanced quotes, valid imports, correct block indentation, and proper use of semicolons and newlines.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses a paid BuiltWith API with an API key to retrieve domain technology data, fitting T1597\u2019s use of closed sources.",
+        "combined_score": 5.0,
+        "confidence": 0.94,
+        "timestamp": "2025-10-02T13:26:15.227302Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

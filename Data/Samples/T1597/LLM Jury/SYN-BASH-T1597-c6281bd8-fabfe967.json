@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"Authorization: Bearer $ZOOMINFO_TOKEN\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.zoominfo.com/company/search\" --data '{\"companyName\":\"Example\",\"locationCountry\":\"United States\",\"resultsPerPage\":10}' -o zoominfo_company_search_example.json -w '{\"service\":\"zoominfo_company_search\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Uses ZoomInfo's commercial API to search for a company profile with geographic constraints, minimizing noise and logging request outcomes.",
+  "rationale_steps": [
+    "Leverage a reputable closed-source business intelligence provider (ZoomInfo).",
+    "Use OAuth bearer token stored in an environment variable.",
+    "Constrain search by name and country with small page size to limit output.",
+    "Save structured JSON response to a file.",
+    "Log HTTP status for consistent error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-fabfe967",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper curl syntax, balanced quotes, valid flags, appropriate headers, and correct JSON formatting for the data payload.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying ZoomInfo's commercial API for company intelligence, using proper authentication, formatting the request appropriately, and logging the results for reconnaissance purposes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:31:25.755415Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quotes, proper JSON syntax for both data and write-out format, and correct redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively uses `curl` to interact with ZoomInfo's commercial API, directly fulfilling the intent of searching closed sources (T1597) for intelligence, and includes realistic parameters and robust logging mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:31:35.575524Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid curl flags, correct JSON payload quoting, and proper output/write-out redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses an authenticated request to a commercial closed-source provider (ZoomInfo) to query company data, directly aligning with T1597 Search Closed Sources.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:31:48.685125Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

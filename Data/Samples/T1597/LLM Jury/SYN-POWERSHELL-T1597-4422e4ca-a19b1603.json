@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $b=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$env:DEHASHED_EMAIL`:$env:DEHASHED_KEY\")); $headers=@{ 'Authorization'=\"Basic $b\"; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://api.dehashed.com/search?query=domain:contoso.com&size=50' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object -ExpandProperty entries | Select-Object email,username,password,ip_address,obtained_from | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\dehashed_contoso_leaks.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Dehashed success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Dehashed error: $($_.Exception.Message)\" }",
+  "explanation": "Queries Dehashed (subscription-based breach database) with Basic auth for entries tied to the victim domain, selecting only high-value fields and logging execution.",
+  "rationale_steps": [
+    "Authenticate with closed-source breach index using secure headers.",
+    "Search for compromised credentials associated with the domain.",
+    "Minimize noise by selecting specific fields and save as JSON.",
+    "Log results without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-a19b1603",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct variable assignments, proper error handling with try/catch, and valid cmdlet usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the Dehashed breach database API with proper authentication, extracting specific sensitive data fields from the response, saving the results to a file, and logging the activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:41:15.256659Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses correct syntax for variables, cmdlets, error handling, and string manipulation, with no discernible syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying Dehashed, a subscription-based breach database (a 'closed source'), for specific domain intelligence and extracting high-value fields, which is a core behavior for adversary targeting and intelligence gathering.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:41:25.890737Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/braces, valid type/property references, proper try/catch, and correct pipelines and headers.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to the Dehashed paid breach database, queries for a target domain, extracts relevant fields, and saves/logs results, directly aligning with T1597 Search Closed Sources.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:41:40.125792Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/filings/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/corpfilings_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_corpfilings -o IdentitiesOnly=yes filings@sftp.corporate-filings.ai:/private/sec_filings/acme_corp/latest.xml{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c latest.xml.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corporate-filings\\\",\\\"artifact\\\":\\\"%s/latest.xml\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"corporate-filings\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Acquires aggregated, paywalled corporate filings (XML) from a subscription repository via SFTP, verifying integrity and logging in JSON for traceability per T1597.",
+  "rationale_steps": [
+    "Establish a secure SFTP session to the filings aggregator.",
+    "Download the latest filings XML and checksum.",
+    "Validate checksum and archive in a date-specific directory.",
+    "Produce a JSON status message for reliable observability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-aaf65d37",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, appropriate error handling with set -euo pipefail, and correct variable usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1597 (Search Closed Sources) by securely retrieving non-public corporate filings via SFTP with proper authentication, integrity verification, and structured logging that explicitly references the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:32:34.159257Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command chaining, valid flags for scp and sha256sum, and proper bash brace expansion.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of acquiring paywalled corporate filings via SFTP, verifies their integrity, and logs the action in JSON, directly aligning with the 'Search Closed Sources' (T1597) technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:32:51.701170Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid scp options, correct brace expansion, subshell/grouping, and properly escaped printf JSON strings.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly acquires paywalled data via key-based SFTP, verifies integrity, and logs per T1597, but writing to /opt and /var/log may require elevated permissions inconsistent with the stated 'None' privilege.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:33:25.614571Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

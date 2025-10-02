@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"DNSDB_API_KEY\"]; c=http.client.HTTPSConnection(\"api.dnsdb.info\",timeout=20); h={\"X-API-Key\":key,\"Accept\":\"application/json\"}; c.request(\"GET\",\"/lookup/rrset/name/\"+urllib.parse.quote(dom)+\"?limit=50\",headers=h); r=c.getresponse(); b=r.read(); lines=b.decode(\"utf-8\",\"ignore\").splitlines();\ntry:\n res=[json.loads(x) for x in lines if x.strip()]; print(json.dumps({\"results\":res}))\nexcept Exception:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries Farsight DNSDB (paid access) for historical DNS RRsets for the target domain, limiting results and returning structured JSON.",
+  "rationale_steps": [
+    "Authenticate using the X-API-Key header and request JSON lines.",
+    "Limit results with a query parameter to reduce noise.",
+    "Aggregate JSON lines into a single JSON object and handle errors."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-ebe43bc3",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper error handling, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying Farsight DNSDB, a paid/private intelligence source, using an API key to gather historical DNS data about a target domain for reconnaissance purposes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:34:29.898391Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script passed to `python3 -c` is perfectly well-formed with correct syntax, balanced quotes, valid function calls, and proper error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely queries Farsight DNSDB, a paid closed source for historical DNS data, directly aligning with the technique's goal of acquiring non-public intelligence for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:34:36.962726Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The single-quoted Python one-liner has balanced quotes/braces, valid separators, and acceptable newlines/indentation, making it parseable by python3 -c.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly queries a paid closed-source DNSDB API with an API key and parses NDJSON to structured JSON, but may require the /dnsdb/v2 path or a different Accept header depending on API version/configuration.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T13:35:00.251861Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

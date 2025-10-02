@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -X POST -H \"Authorization: Bearer $FULLCONTACT_KEY\" -H \"Content-Type: application/json\" -H \"Accept: application/json\" \"https://api.fullcontact.com/v3/company.enrich\" --data '{\"domain\":\"example.com\"}' -o fullcontact_company_example.com.json -w '{\"service\":\"fullcontact_company\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Uses FullContact's paid enrichment API to retrieve company data for a domain via authenticated POST, capturing structured JSON and logging status.",
+  "rationale_steps": [
+    "Select a paid, reputable proprietary source (FullContact).",
+    "Authenticate using bearer token sourced from environment variables.",
+    "Post a minimal JSON body to constrain the query (reduce noise).",
+    "Persist returned JSON to disk for later analysis.",
+    "Log HTTP code and effective URL to track success/failures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-e0c44456",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper flag formats, valid JSON data structure, and correct HTTP headers.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying FullContact's paid API service with proper authentication to gather non-public company intelligence about a domain, with appropriate logging of the activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:38:21.921753Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct syntax for all `curl` arguments and shell redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by using `curl` to query FullContact's paid API for company enrichment, which represents accessing a 'closed source' to collect intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:38:28.959099Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The curl command is well-formed with valid flags, balanced quoting for headers/data and the -w template, and correct stdout redirection alongside -o for the body.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses an authenticated POST to FullContact\u2019s paid company enrichment API to obtain non-public data and logs the result, matching T1597\u2019s use of closed sources for intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:38:43.859789Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

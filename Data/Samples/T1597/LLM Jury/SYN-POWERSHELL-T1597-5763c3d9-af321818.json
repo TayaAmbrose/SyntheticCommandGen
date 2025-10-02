@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $key=$env:GREYNOISE_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'Missing GREYNOISE_API_KEY'; }; $ip='1.1.1.1'; $uri=\"https://api.greynoise.io/v2/noise/context/$ip\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{key=$key; Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[GreyNoise] \" + $_.Exception.Message) }",
+  "explanation": "Fetches enterprise GreyNoise noise context for an IP, a subscription-only closed-source dataset that profiles scanning behavior. Uses API key header and outputs JSON.",
+  "rationale_steps": [
+    "Read API key from environment and validate presence.",
+    "Target a single IP to minimize operational noise.",
+    "Set Accept to JSON and use a conservative timeout.",
+    "Serialize output and log errors without exposing secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-af321818",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced braces, parentheses, quotes, correct error handling via try-catch, and appropriate use of PowerShell cmdlets and syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries GreyNoise's paid threat intelligence API using an API key to retrieve non-public information about an IP address, which is exactly the type of closed-source intelligence gathering described in the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:22:02.442148Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, valid commandlets, parameters, variable assignments, and flow control structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of querying a subscription-only, closed-source threat intelligence feed (GreyNoise) for IP context, directly aligning with the T1597 technique of searching closed sources for intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:22:10.174862Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and braces, proper separators, valid cmdlets, and a correctly structured headers hashtable.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries GreyNoise\u2019s subscription API using an API key to retrieve closed-source IP context, directly aligning with T1597\u2019s use of paid/private data sources.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:22:24.672758Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.dnb.com'; $user=$env:DNB_USER; $key=$env:DNB_PPK; $hostkey=$env:DNB_HOSTKEY; $remote='/firmographics/daily/duns-enrichment-2025-09-30.json.gz'; $dest='C:\\Intel\\DnB\\duns-enrichment-2025-09-30.json.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Transfers a proprietary Dun & Bradstreet firmographic dataset securely via SCP and records a JSON log for auditing.",
+  "rationale_steps": [
+    "Authenticate to a closed-source firmographic data provider using SSH key and host key pinning.",
+    "Download a date-specific JSON export in quiet mode to reduce noise.",
+    "Hash the file and emit a structured JSON summary for validation.",
+    "Focuses on proprietary data acquisition consistent with T1597."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-4ffe4fce",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by securely retrieving proprietary Dun & Bradstreet firmographic data via SCP, using environment variables for credentials, and implementing comprehensive logging for audit purposes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:21:24.022197Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced elements, valid flag formats for `pscp.exe`, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by transferring a proprietary firmographic dataset from a 'closed source' (D&B) using realistic tools and authentication, consistent with an adversary collecting intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:21:34.158767Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, proper separators, and valid PSCP flags so it parses cleanly.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1597 by retrieving a proprietary D&B dataset and logging it, but likely fails operationally because $host is a read-only automatic variable and it forces SCP against an SFTP-labeled endpoint, reducing plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T11:22:22.971247Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

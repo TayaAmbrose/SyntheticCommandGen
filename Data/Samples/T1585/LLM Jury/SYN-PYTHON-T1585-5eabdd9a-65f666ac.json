@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); group='MarketingContractors'; user='alex.research'; try: g=iam.create_group(GroupName=group)['Group']; except iam.exceptions.EntityAlreadyExistsException: g=iam.get_group(GroupName=group)['Group']; iam.attach_group_policy(GroupName=group, PolicyArn='arn:aws:iam::aws:policy/ReadOnlyAccess'); iam.add_user_to_group(GroupName=group, UserName=user); print(json.dumps({'action':'ensure_group_and_membership','group':g,'attached_policies':['ReadOnlyAccess'],'user_added':user}))\"",
+  "explanation": "Establishes a plausible contractor group with ReadOnlyAccess and adds the persona user to it, reinforcing believable role-based access.",
+  "rationale_steps": [
+    "Use a common managed policy and a role-based group name to match typical organizational patterns.",
+    "Place the persona inside a group rather than attaching many user policies to avoid standing out."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-65f666ac",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid boto3 API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating an AWS IAM group (or using existing), attaching a policy, and adding a user to establish persistent access with plausible operational context.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:33:31.152869Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced quotes, and valid method calls within the single command line string, ensuring it would execute without parsing errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 by creating an AWS IAM group, assigning a policy, and adding a user to that group, directly establishing or modifying account access consistent with an adversary's goals of persistence and blending in.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:33:39.181002Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Balanced quoting and valid boto3 calls, but Python try/except cannot be written on a single line so this will raise a SyntaxError.",
+        "semantic_score": 4,
+        "semantic_justification": "If corrected, it uses boto3 IAM to create or get a group, attach ReadOnlyAccess, and add a user\u2014consistent with establishing/abusing accounts (T1585)\u2014but it requires IAM privileges and the user must exist.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:34:05.476857Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

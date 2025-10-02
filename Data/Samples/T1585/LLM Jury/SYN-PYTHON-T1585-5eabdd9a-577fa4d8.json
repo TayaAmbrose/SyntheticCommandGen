@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); user='alex.research'; old=iam.list_access_keys(UserName=user)['AccessKeyMetadata']; newk=iam.create_access_key(UserName=user)['AccessKey']; for k in old: iam.update_access_key(UserName=user, AccessKeyId=k['AccessKeyId'], Status='Inactive'); print(json.dumps({'action':'rotate_access_keys','user':user,'new_access_key_id':newk['AccessKey']['AccessKeyId'],'new_secret_access_key':newk['AccessKey']['SecretAccessKey'],'old_keys_deactivated':[k['AccessKeyId'] for k in old]}))\"",
+  "explanation": "Rotates the persona's API credentials, replacing old keys to maintain persistence while aligning with routine hygiene.",
+  "rationale_steps": [
+    "Key rotation resembles standard security practices, reducing suspicion.",
+    "Deactivate prior keys to maintain a clean footprint and avoid unusual key counts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-577fa4d8",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, valid AWS boto3 API calls, and correct JSON formatting for the output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by creating new AWS IAM access keys for persistence while deactivating old ones to avoid detection, maintaining access to the AWS environment through credential rotation.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:24:45.761653Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 3,
+        "syntactic_justification": "The command is mostly well-formed but contains a runtime syntax error in the final print statement, attempting to access `newk['AccessKey']['AccessKeyId']` and `newk['AccessKey']['SecretAccessKey']` where `newk` is already the AccessKey dictionary, leading to a KeyError.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent of rotating API credentials for an existing user to maintain persistence, using appropriate Boto3 calls to list, create, and inactivate keys, which directly supports the 'abuse accounts to gain persistent access' aspect of T1585.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:25:01.469685Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c one-liner is well-formed with balanced quotes, proper separators, and valid Python syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It appropriately uses boto3 IAM calls to create a new access key and deactivate old ones (aligning with establishing/abusing credentials under T1585), but it contains a minor bug referencing newk['AccessKey'][...] instead of newk[...] and assumes privileges that are not declared.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T09:25:27.955949Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

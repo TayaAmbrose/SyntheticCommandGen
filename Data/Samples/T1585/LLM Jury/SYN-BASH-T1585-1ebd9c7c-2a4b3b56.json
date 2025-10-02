@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "az ad user create --display-name \"Evelyn Hart\" --user-principal-name \"evelyn.hart@exampletenant.onmicrosoft.com\" --password \"Str0ngPass!2345\" --force-change-password-next-login false --mail-nickname \"evelyn.hart\" --output json",
+  "explanation": "Creates an Azure AD user to serve as an online persona within an attacker-controlled tenant.",
+  "rationale_steps": [
+    "Leverage Azure CLI to create a user with convincing profile details.",
+    "Disable forced password change to allow continuous persona use.",
+    "Emit the created user as JSON for downstream automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-2a4b3b56",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Azure CLI syntax, balanced quotes, valid flags, and correct parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique by creating a new Azure AD user account with a specified username, password, and configuration that disables forced password change, enabling persistent access to the Azure environment.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:03:16.131143Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Azure CLI syntax, valid flags, balanced quotes for arguments, and proper structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly creates an Azure AD user account, perfectly aligning with the T1585 'Establish Accounts' technique by creating an online persona within an attacker-controlled tenant, and is operationally plausible.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:03:22.866313Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with balanced quoting and valid Azure CLI flags, including a recognized global --output option.",
+        "semantic_score": 4,
+        "semantic_justification": "The command would create an Azure AD user aligned with T1585 if run under an authenticated context with user-creation privileges, but the stated 'Privilege: None' is unrealistic for this action.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T10:03:45.467246Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

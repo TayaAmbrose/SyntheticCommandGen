@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.bvdinfo.com'; $user=$env:BVD_USER; $key=$env:BVD_PPK; $hostkey=$env:BVD_HOSTKEY; $remote='/orbis/exports/enriched-orgs-2025-09-30.xml.gz'; $dest='C:\\Intel\\BvD\\enriched-orgs-2025-09-30.xml.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Obtains closed-source corporate registry intelligence (Bureau van Dijk Orbis export) via SCP with host key pinning and logs a JSON status.",
+  "rationale_steps": [
+    "Leverage authenticated access to a proprietary data broker.",
+    "Perform a quiet, non-interactive transfer of a single targeted export.",
+    "Compute SHA-256 and store a structured acquisition log.",
+    "Stay aligned to closed-source data gathering activities."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-34f8e367",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper error handling with try/catch/finally blocks, and correct variable assignments and function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving non-public corporate intelligence data from a commercial database (Bureau van Dijk) using secure SCP with proper authentication, logging, and error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:34:23.197524Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, correct command separators, valid flag formats for PSCP, and proper PowerShell cmdlet usage within a robust try-catch-finally block.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by using PSCP to retrieve a named 'closed-source' intelligence export from a specific SFTP host, employing robust operational practices like host key pinning, error handling, and structured logging.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T12:34:35.381963Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid PSCP flags, and proper separators; no parsing hazards apparent.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses PSCP to retrieve a paid BvD Orbis export over SSH with host key pinning and logs JSON status, matching T1597\u2019s use of closed-source data and operationally plausible on Windows with provided credentials.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:35:22.105841Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

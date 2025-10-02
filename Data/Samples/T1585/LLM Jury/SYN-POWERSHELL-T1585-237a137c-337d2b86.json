@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid) -Method PATCH -Body (@{otherMails=@('averyreed.personal@outlook.com','avery.media@proton.me')} | ConvertTo-Json) -ContentType 'application/json'; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '?$select=userPrincipalName,otherMails') -Method GET | ConvertTo-Json",
+  "explanation": "Adds alternate email addresses to the persona, supporting a believable cross-service presence and recovery scenarios.",
+  "rationale_steps": [
+    "Use Az token to authenticate to Graph.",
+    "Patch the user\u2019s otherMails to reflect external, plausible accounts tied to the persona.",
+    "Query and output the updated fields in JSON for automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-337d2b86",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, appropriate semicolons separating commands, and correct parameter usage for Azure PowerShell and REST API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique by obtaining an access token, identifying a user account, modifying its alternate email addresses via Microsoft Graph API, and verifying the changes - all supporting the establishment of a cross-service presence as claimed.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:35:03.092638Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, correctly using PowerShell command separators and valid parameter formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command successfully modifies an existing user's 'otherMails' property in Azure AD via Microsoft Graph, aligning with the 'abuse accounts' aspect of T1585 to enable follow-on actions and blend into normal activity through changes to identity configurations.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:35:19.466273Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid hashtables, and correctly structured Invoke-RestMethod calls including PATCH body and content type.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly updates a user's otherMails via Microsoft Graph using a bearer token and verifies the change, but it modifies an existing account rather than establishing one (T1585) and requires appropriate privileges despite the 'None' claim.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T09:35:44.733865Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

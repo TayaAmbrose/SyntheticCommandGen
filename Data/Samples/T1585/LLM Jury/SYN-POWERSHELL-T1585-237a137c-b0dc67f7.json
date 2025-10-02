@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $grp=Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri 'https://graph.microsoft.com/v1.0/groups' -Method POST -Body (@{displayName='Brand Outreach'; mailEnabled=$true; mailNickname='brand.outreach'; securityEnabled=$false; groupTypes=@('Unified')} | ConvertTo-Json) -ContentType 'application/json'; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/groups/' + $grp.id + '/members/$ref') -Method POST -Body (@{'@odata.id'=('https://graph.microsoft.com/v1.0/directoryObjects/' + $uid)} | ConvertTo-Json) -ContentType 'application/json'; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/groups/' + $grp.id + '?$select=id,displayName,mail,groupTypes') -Method GET | ConvertTo-Json",
+  "explanation": "Creates a Microsoft 365 group and adds the persona as a member, embedding the identity in plausible team structures.",
+  "rationale_steps": [
+    "Create a mail-enabled Unified group via Graph to simulate an active team.",
+    "Add the persona as a member to reflect normal collaboration patterns.",
+    "Fetch and return the group\u2019s core properties as JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-b0dc67f7",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, appropriate semicolons as command separators, and correct parameter usage for all the Azure and REST API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique by obtaining an access token, creating a Microsoft 365 group, adding a specific user to that group, and then verifying the creation - all steps that establish a persistent account within the Microsoft environment.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:36:39.341797Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid PowerShell parameters, and proper syntax for interacting with the Microsoft Graph API.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 by establishing a new Microsoft 365 group (an identity-related resource) and embedding an existing user into it, which directly supports the goal of blending into normal activity within plausible team structures.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:36:50.973068Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes/braces and parentheses with proper semicolon separators and valid Invoke-RestMethod usage for headers, body, and content type.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly creates a Microsoft 365 group and adds a user via Graph, but this manipulates a group/mailbox rather than establishing an account per T1585 and also assumes Graph permissions (e.g., Group.ReadWrite.All).",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T08:37:18.819447Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

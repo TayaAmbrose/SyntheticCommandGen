@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\nhibp_key = json.loads(secrets.get_secret_value(SecretId='hibp/api')['SecretString'])['api_key']\naccount = 'security@example.com'\nurl = f'https://haveibeenpwned.com/api/v3/breachedaccount/{account}'\ntry:\n    r = requests.get(url, params={'truncateResponse': 'true'}, headers={'hibp-api-key': hibp_key, 'User-Agent': 'cloud-intel-client/1.0', 'Accept': 'application/json'}, timeout=10)\n    if r.status_code == 404:\n        data = []  # no breaches found per HIBP spec\n    else:\n        r.raise_for_status(); data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'hibp/{account}_breaches.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'hibp', 'account': account, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'hibp', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('HIBP query failed: %s', e)",
+  "explanation": "Checks the paid Have I Been Pwned API for breach records related to a specific account and writes structured results to S3. This uses a closed-source subscription to gather reconnaissance data.",
+  "rationale_steps": [
+    "Use authenticated HTTPS to query a commercial breach database.",
+    "Handle 404 semantics to avoid noisy error conditions.",
+    "Persist the response in JSON with provenance for later review."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-e9d0e049",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, error handling, balanced parentheses/braces, and correct function calls to the boto3 and requests libraries.",
+        "semantic_score": 5,
+        "semantic_justification": "The code perfectly aligns with the T1597 technique by querying the paid Have I Been Pwned API (a closed source), retrieving breach data for a specific email account, and storing the intelligence in S3 for later use in targeting or assessment.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:27:22.851811Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, using standard library imports, valid AWS SDK calls, correct HTTP requests, and proper error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1597 by querying a paid, closed-source API (Have I Been Pwned enterprise/subscriber API) for specific account breach data and storing the collected intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:27:30.911962Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced delimiters, valid imports, and correct statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses a paid HIBP API key from AWS Secrets Manager to query a closed-source breach dataset and stores results to S3, aligning precisely with T1597.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:27:43.571206Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

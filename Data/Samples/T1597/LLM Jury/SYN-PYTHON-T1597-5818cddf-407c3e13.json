@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url='https://company.clearbit.com/v2/companies/find'; params={'domain': domain}; key=os.environ['CLEARBIT_KEY'];\\ntry:\\n    r=requests.get(url, params=params, auth=(key, ''), timeout=15); r.raise_for_status(); print(json.dumps({'source':'clearbit','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'clearbit','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Uses Clearbit\u2019s closed-source company enrichment API (Basic Auth) to retrieve company metadata for a domain, returning structured JSON.",
+  "rationale_steps": [
+    "Authenticate to Clearbit and query for company details using the domain.",
+    "Limit scope to a single domain to avoid excessive API usage and log noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-407c3e13",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the inner Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it uses the Clearbit API, a paid closed-source intelligence service, to gather company metadata about a target domain, which could be used for reconnaissance and targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:38:48.081244Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, with correct syntax for imports, variable assignments, Kubernetes client interactions, string formatting, and error handling, including the embedded Python command string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by explicitly querying Clearbit, a known closed-source commercial API, to collect company intelligence for a specified domain, representing a direct and plausible adversary action for targeting or reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:39:00.025473Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python code with balanced quoting and parentheses, correct Kubernetes client stream usage, and no parsing errors apparent.",
+        "semantic_score": 5,
+        "semantic_justification": "Executes within a Kubernetes pod to query Clearbit\u2019s paid company enrichment API via Basic Auth and output structured results, which aligns directly with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 0.96,
+        "timestamp": "2025-10-02T13:39:26.078370Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

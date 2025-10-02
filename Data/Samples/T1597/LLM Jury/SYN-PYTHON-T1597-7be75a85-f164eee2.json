@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('DNSDB_API_KEY'); \nif not k: print(json.dumps({'source':'dnsdb','query':d,'error':'missing DNSDB_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://api.dnsdb.info/dnsdb/v2/lookup/rrset/name/'+urllib.parse.quote(d)+'?limit=50'; ctx=ssl.create_default_context(); hdr={'X-API-Key':k,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=25,context=ctx); print(json.dumps({'source':'dnsdb','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'dnsdb','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Queries Farsight DNSDB (subscription service) for RRset data associated with the domain, using the X-API-Key header.",
+  "rationale_steps": [
+    "Access a closed-source passive DNS database (DNSDB).",
+    "Request limited results to reduce footprint while gathering high-value data.",
+    "Handle errors and print JSON to maintain structured logging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-f164eee2",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper syntax, balanced quotes/parentheses, correct exception handling, and appropriate variable usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying Farsight DNSDB, a paid intelligence service, using an API key to access non-public DNS information about a target domain.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:58:12.344011Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is a perfectly well-formed, single-line Python script with correct syntax for imports, variable assignments, conditional logic, function calls, dictionary literals, string formatting, and error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying Farsight DNSDB, which is a subscription-based 'closed source' for intelligence gathering, using an API key, directly matching the technique's description of querying paid feeds or private databases.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:58:19.793138Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced quotes and a valid try/except block; statements and headers are correctly constructed.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately queries a closed-source DNSDB API with an API key matching T1597, though parsing assumes a JSON body and may fail if the service returns NDJSON instead.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T12:58:39.624526Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

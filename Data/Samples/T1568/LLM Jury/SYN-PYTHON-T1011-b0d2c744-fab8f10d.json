@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would enforce IPv6-only on a TCP socket and send base64-encoded data to a unique-local IPv6 service listening on an uncommon port]",
+  "explanation": "Using IPv6-only sockets ensures the exfiltrated data traverses an alternate medium relative to typical IPv4 egress, consistent with T1011.",
+  "rationale_steps": [
+    "Create IPv6-only TCP socket",
+    "Base64-encode the target data",
+    "Connect to a unique-local IPv6 address at a non-standard port",
+    "Send and close",
+    "No side effects to unrelated network functions"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-fab8f10d",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:35:38.740960Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command itself is withheld and described as 'non-actionable', making the provided string a fragment that is not runnable as a command.",
+        "semantic_score": 1,
+        "semantic_justification": "The described action of sending data to a 'unique-local IPv6 service' implies a fixed, internal target, which fundamentally contradicts T1011's core concept of 'Dynamic Resolution' involving algorithmically determined and often changing external network endpoints.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:35:53.855061Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command text is provided (withheld), so it is not runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "Using an IPv6-only socket to send base64 data to a unique-local address does not perform dynamic resolution (no DGA/DNS/endpoint rotation), so it is not aligned with T1011 as described.",
+        "combined_score": 1.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T05:35:58.922957Z"
+      }
+    ],
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 0.667,
+    "llm_average_score": 0.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

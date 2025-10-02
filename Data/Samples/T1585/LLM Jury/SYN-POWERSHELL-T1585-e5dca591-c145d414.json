@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam attach-user-policy --user-name emma.j.taylor --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess; aws iam list-attached-user-policies --user-name emma.j.taylor --output json",
+  "explanation": "Attaches a benign, common AWS managed policy (ReadOnlyAccess) to avoid suspicion and then retrieves attached policies for records, reinforcing the persona as low-risk.",
+  "rationale_steps": [
+    "Assign non-invasive permissions typical of analysts/observers.",
+    "Immediately verify and log the granted permissions.",
+    "Keep privileges minimal to reduce scrutiny while maintaining realism."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-c145d414",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correct parameter names, valid policy ARN format, proper command separator (semicolon), and appropriate output formatting option.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by attaching a policy to an existing user account to establish persistence while using a benign ReadOnlyAccess policy to avoid suspicion, followed by verification of the action.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:40:41.454269Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct AWS CLI syntax, valid flags, arguments, and a proper command separator for Powershell.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of attaching the ReadOnlyAccess policy and then listing attached policies, aligning with an adversary's plausible attempt to establish low-profile account access under the T1585 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:40:49.427399Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two valid AWS CLI commands are correctly separated by a PowerShell semicolon with proper flags and no quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Modifying an existing IAM user\u2019s permissions and enumerating attached policies fits abusing/modifying accounts under T1585, but it requires IAM rights despite 'Privilege: None' and does not create a new account.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:41:09.867271Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

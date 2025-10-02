@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data via IPv6 UDP to a link-local target using a specified scope ID, segmenting payload to avoid detection and common ports]",
+  "explanation": "IPv6 link-local unicast with interface scoping provides an alternative medium localized to a specific segment, exemplifying T1011.",
+  "rationale_steps": [
+    "Choose IPv6 link-local to avoid primary routed channels",
+    "Encode target content with base64",
+    "Specify scope ID to force a particular NIC",
+    "Send to a non-standard UDP port in fixed-size chunks",
+    "No cross-technique activities performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-0799af38",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:23:14.035498Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The literal string '[withheld \u2014 non-actionable: ...]' is a placeholder and not a syntactically correct or runnable command in any shell.",
+        "semantic_score": 0,
+        "semantic_justification": "The described action of sending base64-encoded data via IPv6 UDP is a method of communication (e.g., C2 or exfiltration), completely unrelated to the T1011 technique of 'Establish Accounts' which involves creating or modifying user accounts.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:23:21.571281Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is withheld and presented only as a descriptive placeholder, leaving no concrete, parseable syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The described action pertains to IPv6 UDP data transfer/exfiltration and does not align with the provided technique description for Establish Accounts, and no concrete command is available to verify feasibility.",
+        "combined_score": 1.0,
+        "confidence": 0.34,
+        "timestamp": "2025-10-02T10:23:46.365895Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.333,
+    "llm_average_score": 0.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

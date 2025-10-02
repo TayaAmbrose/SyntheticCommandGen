@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-access-key --user-name emma.j.taylor --output json",
+  "explanation": "Generates programmatic credentials for the persona, enabling API usage consistent with real users who perform automated or scripted tasks.",
+  "rationale_steps": [
+    "Provision access keys to simulate typical developer/analyst automation.",
+    "Capture AccessKeyId and SecretAccessKey in JSON for controlled storage.",
+    "Aligns with establishing functional, long-lived personas."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-3feb1fae",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid AWS CLI syntax, correct flags, and proper argument formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "Creating an AWS access key directly aligns with the T1585 technique, which explicitly lists 'creating service/API keys' as a typical behavior for establishing persistent account access.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:04:34.731637Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The AWS CLI command is perfectly well-formed with valid syntax, proper parameter formatting, and correct output specification.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating AWS access keys for an existing user account, enabling programmatic access that could be used for persistence or follow-on actions.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:04:44.764519Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The AWS CLI command is well-formed with valid flags and no quoting or parsing issues for PowerShell.",
+        "semantic_score": 4,
+        "semantic_justification": "The command will create programmatic credentials for the specified IAM user as described, but it requires existing IAM permissions/credentials and more closely reflects adding credentials than establishing a new account under T1585.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:05:02.460218Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

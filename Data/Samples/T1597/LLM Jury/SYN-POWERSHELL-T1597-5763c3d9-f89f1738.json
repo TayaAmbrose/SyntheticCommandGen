@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $dnsdb=$env:DNSDB_API_KEY; if([string]::IsNullOrWhiteSpace($dnsdb)){ throw 'Missing DNSDB_API_KEY'; }; $uri='https://api.dnsdb.info/dnsdb/v2/lookup/rrset/name/example.com?limit=25'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'X-API-Key'=$dnsdb} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[Farsight DNSDB] \" + $_.Exception.Message) }",
+  "explanation": "Queries Farsight DNSDB, a commercial closed-source historical DNS repository, for RRsets related to example.com. Uses API key header and returns JSON.",
+  "rationale_steps": [
+    "Read DNSDB API key from environment to protect credentials.",
+    "Limit results via the 'limit' parameter to prevent noisy output.",
+    "Ensure JSON response and set timeouts to handle network issues.",
+    "Convert to JSON and log failures without leaking secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-f89f1738",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced braces, parentheses, quotes, correct error handling via try-catch, and valid parameter usage for Invoke-RestMethod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying Farsight DNSDB, a commercial closed-source threat intelligence database, using proper API authentication and handling the response appropriately.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:10:46.553689Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct syntax for `try-catch` blocks, variable assignments, `if` statements, `Invoke-RestMethod` with headers, piping, and error logging.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries Farsight DNSDB, a commercial closed-source historical DNS database, for intelligence, which perfectly aligns with the T1597 technique of 'Search Closed Sources' for non-public information.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:10:51.236205Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell try/catch, variable assignment, hashtable headers, quoting, and separators are all valid and balanced with no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses an API key to query the commercial Farsight DNSDB v2 endpoint for RRset data and outputs JSON, matching T1597\u2019s use of closed-source data.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:11:13.008458Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $headers=@{ 'Authorization'=\"Bearer $env:FULLCONTACT_API_KEY\"; 'Accept'='application/json' }; $body=@{ domain='contoso.com' } | ConvertTo-Json; $r=Invoke-WebRequest -Uri 'https://api.fullcontact.com/v3/company.enrich' -Headers $headers -Method Post -ContentType 'application/json' -Body $body -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object organization,website,employees,location,linkedin | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\fullcontact_company_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts FullContact success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts FullContact error: $($_.Exception.Message)\" }",
+  "explanation": "Posts to FullContact's closed company enrichment API with Bearer auth to retrieve structured corporate intelligence for the target domain, minimizing fields and logging the process.",
+  "rationale_steps": [
+    "Authenticate securely to a paid enrichment provider.",
+    "Submit a JSON body with the target domain.",
+    "Extract salient fields and save as JSON.",
+    "Implement error-handled logging for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-86303559",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, correct error handling, and appropriate use of PowerShell cmdlets and operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using the FullContact API (a paid intelligence source) with proper authentication to gather non-public company information about a target domain and storing the results locally.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:29:53.629013Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, valid try/catch, correct header/body creation, and proper use of Invoke-WebRequest and piping.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses a Bearer-authenticated request to the paid FullContact company enrichment API to gather organization data for a target domain and logs/saves results, aligning with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T14:30:33.183235Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

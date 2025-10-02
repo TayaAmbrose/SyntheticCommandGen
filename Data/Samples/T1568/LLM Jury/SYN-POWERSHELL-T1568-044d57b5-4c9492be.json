@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domains=(Get-DnsClientCache).Name | Select-Object -Unique; $sus=$domains | Where-Object { $label=($_ -split '\\.')[0]; $label.Length -ge 15 -or ($label -replace '\\D','').Length -ge 5 }; foreach($d in $sus){ try{ $rdap=Invoke-WebRequest -UseBasicParsing \"https://rdap.org/domain/$d\" -TimeoutSec 8; $j=$rdap.Content|ConvertFrom-Json; $changed=([datetime]($j.events | Where-Object {$_.eventAction -eq 'last changed'} | Select-Object -First 1 -ExpandProperty eventDate)); if([datetime]::UtcNow - $changed -lt [TimeSpan]::FromDays(7)){ Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; lastChanged=$changed.ToString('o')}|ConvertTo-Json) 'https://siem.example.local/api/ingest/rdap-recent-change' } } catch{} }",
+  "explanation": "Defensive prioritization for T1568: flags cached domains with long/numeric-heavy labels and recent RDAP 'last changed' events, a behavior aligned with dynamic resolution activity.",
+  "rationale_steps": [
+    "Identify suspicious label structures from cache.",
+    "Query RDAP for each domain.",
+    "Prioritize domains with recent change events.",
+    "Send prioritized list to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-4c9492be",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with properly balanced parentheses, braces, and quotes, correct pipeline operators, valid cmdlet names and parameters, and proper error handling with try/catch blocks.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements a defensive detection for T1568 by analyzing DNS cache entries for suspicious domain patterns (long or numeric-heavy labels) and checking their RDAP registration data for recent changes, which aligns perfectly with detecting algorithmically generated domains used in dynamic resolution techniques.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:12:13.499859Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, correct command separators, and valid flags for all PowerShell cmdlets and operators used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements heuristics (long/numeric-heavy labels and recent RDAP 'last changed' events) to identify domains consistent with T1568 'Dynamic Resolution' activity, making it operationally plausible as a defensive detection mechanism.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:12:25.692017Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner has balanced braces and quotes, valid cmdlets and parameters, proper separators, and a parseable mix of named and positional arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly detects T1568-like activity by filtering cached domains with DGA-style labels and correlating with recent RDAP changes before reporting to a SIEM, though it omits direct indicators like TTL churn, NXDOMAIN rates, or endpoint rotation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:12:56.361594Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

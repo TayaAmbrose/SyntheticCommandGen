@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); c=http.client.HTTPSConnection(\"api.securitytrails.com\",timeout=15); h={\"APIKEY\":os.environ[\"SECURITYTRAILS_API_KEY\"],\"Accept\":\"application/json\"}; c.request(\"GET\",\"/v1/domain/\"+dom,headers=h); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Retrieves domain intelligence from SecurityTrails (subscription service) for the specified domain, using API key authentication and secure HTTPS.",
+  "rationale_steps": [
+    "Load API key and target domain from environment variables.",
+    "Send authenticated GET request to SecurityTrails domain endpoint.",
+    "Output parsed JSON while handling HTTP and decoding errors cleanly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-1cefa0f6",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1597 technique by querying SecurityTrails (a closed-source intelligence platform) using API authentication to gather domain intelligence, which aligns perfectly with searching closed sources for targeting information.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:16:02.763513Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c string is properly single-quoted with balanced quotes/braces, valid Python syntax (including f-strings and indentation), and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries SecurityTrails via an authenticated paid API over HTTPS to obtain domain intelligence, precisely matching T1597\u2019s use of closed/paid sources.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T14:16:30.287629Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

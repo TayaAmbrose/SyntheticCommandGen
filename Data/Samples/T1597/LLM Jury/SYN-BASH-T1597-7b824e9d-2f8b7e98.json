@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/whois/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/domaintools_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_domaintools -o IdentitiesOnly=yes whois@sftp.domaintools-pro.net:/feeds/history/acme_corp/whois_history.xml{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c whois_history.xml.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"domaintools-pro\\\",\\\"artifact\\\":\\\"%s/whois_history.xml\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"domaintools-pro\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Collects a paywalled WHOIS history dataset (XML) for the target organization from a closed-source provider over SFTP, with checksum verification and JSON logging.",
+  "rationale_steps": [
+    "Connect to the provider's SFTP endpoint with key-based auth and host key pinning.",
+    "Download closed-source WHOIS history XML and checksum.",
+    "Verify integrity via sha256sum.",
+    "Persist data and emit structured JSON for auditability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-2f8b7e98",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, appropriate error handling with set -euo pipefail, and correct variable usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by securely retrieving non-public WHOIS data from a paid provider (DomainTools) using SFTP with proper authentication, verification, and logging mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:27:34.561430Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Bash one-liner has balanced quotes and parentheses, valid scp/ssh options, proper command chaining, and correctly escaped printf JSON strings.",
+        "semantic_score": 5,
+        "semantic_justification": "It acquires a paywalled WHOIS history file from a closed-source provider via authenticated SSH file transfer, verifies its checksum, organizes it by date, and logs a T1597-tagged JSON event, aligning with Search Closed Sources.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:28:15.654651Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

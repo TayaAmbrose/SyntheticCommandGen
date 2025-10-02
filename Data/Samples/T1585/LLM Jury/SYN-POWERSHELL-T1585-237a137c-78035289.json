@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/mailboxSettings') -Method PATCH -Body (@{timeZone='Pacific Standard Time'; language=@{locale='en-US'; displayName='English (United States)'}; workingHours=@{startTime='09:00:00'; endTime='17:00:00'; timeZone=@{name='Pacific Standard Time'}; daysOfWeek=@('Monday','Tuesday','Wednesday','Thursday','Friday')}} | ConvertTo-Json) -ContentType 'application/json'; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/mailboxSettings') -Method GET | ConvertTo-Json -Depth 5",
+  "explanation": "Configures mailbox time zone and working hours to align with the persona\u2019s location and schedule, reinforcing believability.",
+  "rationale_steps": [
+    "Authenticate to Graph with Az token.",
+    "Patch mailboxSettings with consistent locale, time zone, and working hours.",
+    "Retrieve and output mailboxSettings as JSON to verify configuration."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-78035289",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, correct use of variables, proper JSON conversion, and appropriate API calls with required parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by configuring mailbox settings for an existing account to make it appear legitimate and actively used, which helps adversaries blend in and establish persistence.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:16:44.005774Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, featuring balanced syntax, valid PowerShell cmdlets, proper parameter usage, and correct command separation and object literals.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly performs its stated action of modifying mailbox settings to 'reinforce believability,' which aligns with the 'blend into normal activity' aspect of T1585, it does not directly 'establish accounts' as the primary focus of the technique, and the claim of 'Privilege: None' is semantically incorrect as it requires specific Graph API permissions to execute successfully.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:17:08.028341Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/parentheses, valid hashtables, proper use of ConvertTo-Json for the PATCH body, and correct command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It realistically updates a user\u2019s mailbox settings via Microsoft Graph as described, but it does not establish or create an account (T1585) and would require appropriate Graph permissions despite the 'Privilege: None' claim, so alignment with the technique is only partial.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:17:35.677108Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

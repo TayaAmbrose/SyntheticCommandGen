@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.team-cymru.com'; $user=$env:CYMRU_USER; $key=$env:CYMRU_PPK; $hostkey=$env:CYMRU_HOSTKEY; $remote='/bulk/ip2asn/2025-09/ip2asn-2025-09.csv.gz'; $dest='C:\\Intel\\TeamCymru\\ip2asn-2025-09.csv.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Pulls a subscription IP-to-ASN mapping dataset from Team Cymru via SCP, verifying integrity and emitting a JSON audit record.",
+  "rationale_steps": [
+    "Access a restricted commercial dataset with SSH key authentication.",
+    "Transfer only a targeted monthly file to minimize operational footprint.",
+    "Hash and log the acquisition for provenance and future validation.",
+    "No engagement with open sources; strictly closed-source collection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-64a1f91f",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling via try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving subscription-based threat intelligence data from Team Cymru (a closed source), with proper authentication, logging, and verification mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:22:27.890644Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, utilizing correct variable assignments, cmdlet syntax, external executable calling, conditional logic, and robust error handling with proper quoting and flag usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by acquiring a specific, potentially subscription-based intelligence dataset (IP-to-ASN mapping from Team Cymru) from a closed source via a secure transfer protocol (SCP), which is a highly plausible and realistic adversary action for intelligence gathering.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:22:38.339088Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and parentheses, valid separators, and plausible pscp flags, plus correctly structured try/catch/finally and JSON logging.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to a closed Team Cymru endpoint to acquire a subscription dataset via SCP, verifies the file hash, and records an audit JSON, matching T1597\u2019s use of paid/private sources.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:23:05.168098Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

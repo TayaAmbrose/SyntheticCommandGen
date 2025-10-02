@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$doms=(Get-DnsClientCache).Name | Where-Object { ($_ -split '\\.')[0].Length -gt 12 } | Select-Object -Unique; $stats=@(); foreach($d in $doms){ $fails=0; 1..3 | ForEach-Object { try{ $r=Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\"; if(((($r.Content|ConvertFrom-Json).Status) -ne 0)){ $fails++ } } catch { $fails++ } }; $stats+=[pscustomobject]@{Domain=$d; NX=$fails} }; $flag=$stats | Where-Object { $_.NX -ge 2 } | Select-Object -ExpandProperty Domain; if($flag){ Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{ts=(Get-Date).ToUniversalTime().ToString('o'); suspected=$flag}|ConvertTo-Json) 'https://siem.example.local/api/ingest/nxdomain-suspects' }",
+  "explanation": "Defensive NXDOMAIN scoring for T1568: evaluates repetitive NXDOMAIN responses for suspicious domains, which is common in DGA/dynamic resolution probing.",
+  "rationale_steps": [
+    "Select high-suspicion domains from cache by length.",
+    "Resolve each domain multiple times via DoH.",
+    "Count NXDOMAIN occurrences per domain.",
+    "Report domains with high NXDOMAIN ratios to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-303da1e6",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with properly balanced parentheses, braces, and quotes, correct pipeline operators, valid method calls, and proper variable assignments throughout the entire script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with detecting T1568 (Dynamic Resolution) by identifying suspicious domains with long random-looking names, testing them for NXDOMAIN responses (characteristic of DGAs), and reporting potential DGA activity to a SIEM endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:00:30.199345Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, proper command separators, valid parameters, and correct PowerShell constructs throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the claimed defensive intent by identifying DGA-like domains from the DNS cache, repeatedly querying them via DoH for NXDOMAIN responses, and reporting high-churn failures to a SIEM, directly addressing T1568 detection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:00:43.529740Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with valid cmdlets/parameters and balanced quoting; the over-parenthesized if condition is slightly awkward but likely still parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It collects candidate domains from the DNS client cache, probes them via DNS-over-HTTPS, scores repeated failures, and reports suspects to a SIEM\u2014consistent with defensive detection of dynamic resolution/DGA behavior, though it flags any non-zero DNS status (not strictly NXDOMAIN) and uses a placeholder SIEM endpoint.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T08:02:09.389919Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"Authorization: Bearer $CLEARBIT_KEY\" -H \"Accept: application/json\" \"https://company.clearbit.com/v2/companies/find?domain=example.com\" -o clearbit_company_example.com.json -w '{\"service\":\"clearbit_company\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries Clearbit's closed-source Company API for an organization profile by domain, retrieving structured JSON for company enrichment while using bearer token auth and writing results and minimal logs.",
+  "rationale_steps": [
+    "Use a reputable closed-source data provider (Clearbit) requiring authentication.",
+    "Limit query scope by targeting a single domain to reduce noise.",
+    "Enforce TLS and secure headers with proper auth handling from environment variables.",
+    "Store JSON output to a file for downstream parsing.",
+    "Append concise HTTP status logging for reliability and auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-b712644e",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper curl syntax, balanced quotes, valid flags, and correct JSON formatting in the output specification.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying Clearbit's private API with proper authentication to gather intelligence about a target organization, which aligns perfectly with the technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:00:58.314515Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct shell redirection, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly aligns with T1597, as it queries Clearbit, a recognized closed-source data provider, for company intelligence using an API key, which is a realistic implementation of searching paid/private databases.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:01:06.109407Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes, valid curl flags, proper headers, a correctly quoted write-out format, and appropriate redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses curl with a bearer token to query Clearbit\u2019s paid Company API for organization data and logs results, aligning directly with T1597 closed-source intelligence collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:01:34.108652Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

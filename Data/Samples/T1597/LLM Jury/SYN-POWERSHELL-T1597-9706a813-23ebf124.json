@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.riskiq.net'; $user=$env:RISKIQ_USER; $key=$env:RISKIQ_PPK; $hostkey=$env:RISKIQ_HOSTKEY; $remote='/illumination/exports/assets-expanded-2025-09-30.json.gz'; $dest='C:\\Intel\\RiskIQ\\assets-expanded-2025-09-30.json.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Transfers a subscription RiskIQ asset intelligence export over SCP with host key pinning and emits a JSON completion record.",
+  "rationale_steps": [
+    "Authenticate to a paid asset intelligence provider using SSH keys.",
+    "Quietly collect a targeted export to reduce operational footprint.",
+    "Hash and log a JSON summary for downstream processing and audit.",
+    "Focused on closed-source collection, not delivery or exploitation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-23ebf124",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving intelligence data from a paid threat intelligence source (RiskIQ) using proper authentication, logging the activity, and storing the retrieved data securely.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:29:25.952541Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct cmdlet usage within a robust try/catch/finally block.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely aligns with T1597 by retrieving an 'asset intelligence export' from 'sftp.riskiq.net' (a known threat intelligence provider), which represents acquiring non-public information from a paid feed or private database, using operationally plausible methods like SCP with host key pinning and robust logging.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:29:36.763443Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/braces, valid parameters, proper separators, and correct try/catch/finally and hashtable usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It credibly downloads a paid RiskIQ export via SCP with host key pinning and logs a JSON record consistent with T1597, though using SCP against an SFTP-designated host may not work universally.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T11:29:55.841201Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url='https://api.riskiq.net/pt/v2/dns/passive'; params={'query': domain}; user=os.environ['RISKIQ_EMAIL']; key=os.environ['RISKIQ_API_KEY'];\\ntry:\\n    r=requests.get(url, params=params, auth=(user, key), timeout=20); r.raise_for_status(); print(json.dumps({'source':'passivetotal','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'passivetotal','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Collects passive DNS records for a target domain from RiskIQ PassiveTotal (closed-source, subscription API), which is a non-intrusive way to gather historical DNS relationships.",
+  "rationale_steps": [
+    "Use authenticated RiskIQ PassiveTotal API to fetch passive DNS data.",
+    "Constrain query to a single domain to avoid unnecessary data volume."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-039ff228",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the inner Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries RiskIQ PassiveTotal, a paid/subscription-based threat intelligence service, to gather passive DNS data about a target domain using API credentials.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:29:23.271729Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced quotes and valid Kubernetes exec/stream usage; the inline inner script is correctly quoted and parseable.",
+        "semantic_score": 5,
+        "semantic_justification": "Queries RiskIQ PassiveTotal (a paid closed-source API) for passive DNS via credentials from env within a Kubernetes-exec context, directly aligning with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T14:29:50.656682Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

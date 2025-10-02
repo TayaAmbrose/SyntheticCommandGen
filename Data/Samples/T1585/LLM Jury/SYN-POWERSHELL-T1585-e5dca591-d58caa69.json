@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-login-profile --user-name emma.j.taylor --password 'TempPassw0rd!23' --password-reset-required --output json",
+  "explanation": "Enables AWS Console login for the persona with an initial password and forced reset, mimicking normal onboarding behavior for an authentic account lifecycle.",
+  "rationale_steps": [
+    "Provide console access so the persona appears to be a real interactive user.",
+    "Use a temporary password with reset to match standard corporate practices.",
+    "Emit JSON to support auditing and automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-d58caa69",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correctly formatted parameters, balanced quotes, and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by creating a login profile for an existing IAM user with an initial password and forced reset requirement, which is a realistic implementation of account establishment in AWS.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:50:40.335931Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct AWS CLI syntax, valid flags, and proper quoting for arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly achieves the claimed intent of enabling AWS Console login for an existing user, which perfectly aligns with the T1585 'Establish Accounts' technique by creating persistent access and blending into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:50:50.898933Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed AWS CLI command with valid flags and balanced quoting suitable for PowerShell.",
+        "semantic_score": 5,
+        "semantic_justification": "Creates an IAM login profile to enable console access with a temporary password and forced reset, aligning with establishing/abusing accounts in cloud environments per T1585.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:50:58.244173Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

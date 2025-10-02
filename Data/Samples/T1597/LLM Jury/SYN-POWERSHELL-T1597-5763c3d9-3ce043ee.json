@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $rf=$env:RF_TOKEN; if([string]::IsNullOrWhiteSpace($rf)){ throw 'Missing RF_TOKEN'; }; $uri='https://api.recordedfuture.com/v2/ip/risk?ip=8.8.8.8'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'X-RFToken'=$rf} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[RecordedFuture] \" + $_.Exception.Message) }",
+  "explanation": "Requests risk intelligence for an IP from Recorded Future, a paid closed-source threat intelligence provider. Authenticates via RF token and outputs JSON.",
+  "rationale_steps": [
+    "Validate availability of the RF token from environment.",
+    "Make a single targeted risk query to keep a low footprint.",
+    "Set headers for JSON and implement a timeout.",
+    "Serialize the response and log errors for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-3ce043ee",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced braces, proper error handling in a try-catch block, appropriate variable assignments, correct method calls, and proper parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries Recorded Future's paid threat intelligence API using an authentication token to gather risk information about an IP address, which is exactly the type of closed-source intelligence gathering described in the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:56:50.257483Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, braces, correct variable assignments, cmdlet usage, and error handling structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by querying Recorded Future, a paid closed-source threat intelligence provider, which directly exemplifies MITRE ATT&CK T1597 (Search Closed Sources).",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T13:56:57.616538Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/braces, valid separators, and parseable parameters within a proper try/catch.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to a paid Recorded Future API and retrieves risk data for an IP, which is consistent with searching closed sources for threat intelligence (T1597).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:57:27.491684Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

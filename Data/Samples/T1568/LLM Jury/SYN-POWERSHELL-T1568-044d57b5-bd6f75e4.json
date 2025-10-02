@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d=((Get-DnsClientCache).Name | Where-Object { $_ -match '\\.' } | Select-Object -Unique | Get-Random); $ips=@(); 1..5 | ForEach-Object { $res=Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\"; $ips+=((($res.Content|ConvertFrom-Json).Answer).data); Start-Sleep -Seconds 12 }; $uniq=($ips | Where-Object {$_} | Select-Object -Unique); if ($uniq.Count -ge 3) { Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; ipCount=$uniq.Count; ips=$uniq; ts=(Get-Date).ToUniversalTime().ToString('o')}|ConvertTo-Json -Depth 3) 'https://siem.example.local/api/ingest/fastflux' }",
+  "explanation": "Defensive fast-flux check for T1568: repeats DNS resolution via DoH and flags rapid IP churn indicative of dynamic resolution C2 infrastructure.",
+  "rationale_steps": [
+    "Select a domain from the DNS cache.",
+    "Resolve it multiple times via DoH over a short interval.",
+    "Count distinct IPs to detect churn.",
+    "Report fast-flux suspects to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-bd6f75e4",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements a defensive fast-flux detection mechanism by retrieving DNS records for a random domain, checking for IP address churn over time, and reporting suspicious domains with multiple rapidly changing IPs to a SIEM endpoint, which aligns perfectly with detecting T1568 Dynamic Resolution techniques.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:21:57.197206Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct cmdlet usage, parameter syntax, pipeline operations, control flow, and variable handling, including proper object property access and JSON construction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by performing repeated DoH resolutions for a cached domain and correctly identifies rapid IP churn (fast-flux) indicative of dynamic resolution C2 infrastructure (T1568) before reporting to a simulated SIEM.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:22:16.162056Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid pipelines, parameters, and control structures; no obvious parse errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It repeatedly resolves a domain via DoH, measures unique A record churn, and reports to a SIEM\u2014consistent with a defensive check for T1568\u2014though it naively picks a random cached domain and relies on a public resolver\u2019s caching, which limits robustness.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:22:46.350302Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

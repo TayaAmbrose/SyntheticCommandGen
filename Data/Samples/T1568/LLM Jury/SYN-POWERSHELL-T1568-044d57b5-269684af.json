@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domains=(Get-DnsClientCache).Name | Select-Object -Unique; function Get-Entropy([string]$s){ if(!$s){return 0} $freq=@{}; $s.ToCharArray()|ForEach-Object{ $freq[$_]=1+($freq[$_] -as [int]) }; $len=$s.Length; ( $freq.Keys | ForEach-Object{ $p=$freq[$_]/$len; -($p*[math]::Log($p,2)) } ) | Measure-Object -Sum | Select-Object -ExpandProperty Sum }; $sus=$domains | Where-Object { Get-Entropy (($_ -split '\\.')[0]) -gt 3.5 }; $json=@{ ts=(Get-Date).ToUniversalTime().ToString('o'); suspect=$sus }|ConvertTo-Json -Depth 3; $json | Set-Content -Path \"$env:TEMP\\dga_suspects.json\"; Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body $json 'https://soc.example.local/webhook/dga-alert'",
+  "explanation": "Defensive heuristic for T1568: calculates Shannon entropy of first labels to identify DGA-like domains in cache and alerts a SOC webhook.",
+  "rationale_steps": [
+    "Enumerate unique domains from DNS cache.",
+    "Compute entropy for the first label of each domain.",
+    "Select domains with high entropy indicative of DGAs.",
+    "Store results locally and notify SOC via webhook."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-269684af",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid function definition, and correct pipeline operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a DGA detection mechanism by retrieving DNS cache entries, calculating Shannon entropy to identify algorithmically generated domains, storing results in JSON format, and alerting a SOC webhook, which aligns perfectly with detecting the T1568 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:20:29.906653Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, with balanced syntax for functions, variables, pipelines, and command parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a common defensive heuristic for T1568 by calculating Shannon entropy of DNS cache entries and sending a plausible alert to a SOC webhook, aligning perfectly with the claimed intent and operational feasibility.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T05:20:39.217074Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced delimiters, valid pipelines, and a properly defined function and comparisons.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a reasonable DGA-detection heuristic over the DNS client cache and reports to a webhook, though using the Name property from Get-DnsClientCache may fail on some systems where RecordName/Entry is used instead.",
+        "combined_score": 4.5,
+        "confidence": 0.68,
+        "timestamp": "2025-10-02T05:21:18.258456Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

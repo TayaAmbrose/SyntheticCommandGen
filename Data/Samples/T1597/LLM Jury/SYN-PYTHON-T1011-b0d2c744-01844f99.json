@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data in fixed-size chunks via IPv6 UDP (AF_INET6/SOCK_DGRAM) to a unique-local address with a low hop-limit]",
+  "explanation": "Exfiltration over IPv6 UDP to a unique-local destination with reduced hop count constitutes using a different medium/path than the typical enterprise IPv4 traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Choose IPv6 unique-local addressing to avoid the primary IPv4 egress",
+    "Encode data with base64",
+    "Use UDP and set a low hop limit to confine traffic",
+    "Chunk and send to a high, uncommon UDP port",
+    "No network configuration changes are performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-01844f99",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is withheld and described only conceptually, making it impossible to evaluate its syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "The described command involves exfiltration over IPv6 UDP which is misaligned with T1011 (Search Closed Sources) as it describes data exfiltration rather than intelligence gathering from non-public sources.",
+        "combined_score": 1.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:03:38.700001Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The provided text is a descriptive placeholder explaining a command's function, not an actual parseable or runnable command itself.",
+        "semantic_score": 1,
+        "semantic_justification": "The described action of 'exfiltration over IPv6 UDP' is fundamentally about sending data out from a compromised system, which is antithetical to T1011's focus on acquiring intelligence from external closed sources.",
+        "combined_score": 0.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T12:03:48.357852Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command or code is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The described behavior concerns data exfiltration over IPv6 UDP, which does not align with the provided technique description of Search Closed Sources (T1011 per prompt).",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:03:52.482267Z"
+      }
+    ],
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

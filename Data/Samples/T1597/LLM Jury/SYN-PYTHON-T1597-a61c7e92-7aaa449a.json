@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging\nlogging.basicConfig(level=logging.INFO)\ndx = boto3.client('dataexchange')\nresults = []\ntry:\n    paginator = dx.get_paginator('list_data_sets')\n    for page in paginator.paginate(Origin='ENTITLED'):\n        for ds in page.get('DataSets', []):\n            name = (ds.get('Name') or '').lower()\n            if any(k in name for k in ['whois','dns','breach','threat','intel','exposure','subdomain']):\n                results.append({\n                    'DataSetId': ds['Id'],\n                    'Name': ds['Name'],\n                    'Arn': ds['Arn'],\n                    'Origin': ds['Origin'],\n                    'CreatedAt': ds['CreatedAt'].isoformat()\n                })\n    print(json.dumps({'entitled_intelligence_datasets': results}, default=str))\nexcept Exception as e:\n    logging.exception('Failed to enumerate AWS Data Exchange entitlements: %s', e)",
+  "explanation": "Enumerates entitled AWS Data Exchange datasets relevant to commercial threat/WHOIS/DNS/breach intelligence sources. This searches closed, subscription-restricted sources for reconnaissance data, aligning with T1597.",
+  "rationale_steps": [
+    "Authenticate to AWS Data Exchange using boto3 within the cloud account.",
+    "Page through ENTITLED datasets (closed-source subscriptions) and filter for relevant intelligence keywords.",
+    "Return structured JSON minimizing noise while capturing key metadata for follow-on collection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-7aaa449a",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, error handling, balanced parentheses/braces, and correct function calls to the boto3 AWS SDK.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1597 by querying AWS Data Exchange for entitled (paid/subscription) threat intelligence datasets, filtering for relevant security data sources that could be used for reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:58:32.391087Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python snippet is well-formed with balanced syntax, valid boto3 paginator usage, and proper JSON output handling.",
+        "semantic_score": 4,
+        "semantic_justification": "It enumerates entitled AWS Data Exchange datasets and filters by threat intel-related keywords, consistent with searching closed paid sources, though it only lists metadata and still requires appropriate AWS credentials/permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T13:59:13.592119Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, uses standard library and Boto3 functions correctly, and exhibits no syntax errors or logical parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by enumerating entitled AWS Data Exchange datasets, which represent access to closed, subscription-restricted intelligence sources, directly aligning with T1597's 'Search Closed Sources' objective for reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T16:44:28.560140Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

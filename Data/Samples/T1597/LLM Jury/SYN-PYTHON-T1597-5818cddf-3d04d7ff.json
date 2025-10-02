@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); query=os.environ.get('SHODAN_QUERY','hostname:example.com'); key=os.environ['SHODAN_API_KEY']; url='https://api.shodan.io/shodan/host/search'; params={'key': key, 'query': query, 'limit': 50};\\ntry:\\n    r=requests.get(url, params=params, timeout=20); r.raise_for_status(); print(json.dumps({'source':'shodan','query':query,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'shodan','query':query,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Queries the closed-source Shodan database for hosts matching a precise query, limiting results to reduce noise. Data is retrieved via a paid API key and returns JSON without conducting any active probing.",
+  "rationale_steps": [
+    "Leverage Shodan\u2019s subscription API to search its curated dataset.",
+    "Scope the query to avoid unnecessary volume and output results as JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-3d04d7ff",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the inner Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries the paid Shodan database API using an API key to collect intelligence on specific hosts without active scanning.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:32:22.523905Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script, including the nested script executed within the Kubernetes pod, is perfectly well-formed with correct syntax, balanced delimiters, and valid function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly queries the Shodan API, a well-known closed-source technical database, using an API key to collect host intelligence, which directly aligns with the T1597 'Search Closed Sources' technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:32:31.519224Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The multi-line Python code is well-formed with balanced quotes, valid imports, proper try/except blocks, and a correctly constructed Kubernetes exec call with a well-quoted inner command string.",
+        "semantic_score": 4,
+        "semantic_justification": "It executes a Python snippet inside a Kubernetes pod to query Shodan\u2019s closed-source API using an API key and returns JSON, matching T1597, but relies on the target pod having python3, requests, and SHODAN_API_KEY set, which may reduce operational reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:33:05.688576Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

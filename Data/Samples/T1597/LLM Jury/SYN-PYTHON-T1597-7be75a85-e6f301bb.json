@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('FULLHUNT_API_KEY'); \nif not k: print(json.dumps({'source':'fullhunt','query':d,'error':'missing FULLHUNT_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://api.fullhunt.io/v1/domain/'+urllib.parse.quote(d)+'/subdomains'; ctx=ssl.create_default_context(); hdr={'X-Api-Key':k,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=20,context=ctx); print(json.dumps({'source':'fullhunt','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'fullhunt','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Uses the FullHunt commercial API to enumerate subdomains for the target, authenticating via an API key header.",
+  "rationale_steps": [
+    "Authenticate to a closed-source reconnaissance provider (FullHunt).",
+    "Retrieve subdomain list to expand asset inventory.",
+    "Limit to a single HTTPS request with structured JSON output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-e6f301bb",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with balanced quotes, proper syntax, appropriate error handling, and correct use of libraries for HTTP requests and JSON processing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by using the commercial FullHunt API with proper authentication to gather subdomain intelligence about a target domain, which is precisely the type of closed-source intelligence gathering described in the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:25:31.957337Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax for imports, variable assignments, conditional logic, API requests, and JSON handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command queries a commercial API (FullHunt) requiring an API key to enumerate subdomains, which directly aligns with an adversary using 'paid feeds' or 'private databases' (closed sources) for intelligence collection as described in T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:25:38.210915Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid, well-formed Python with proper separators and control flow; no syntax or quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Uses a commercial FullHunt API with an API key to enumerate subdomains, matching T1597 closed-source querying, though the exact API endpoint/header casing may differ in practice.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:26:13.999657Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

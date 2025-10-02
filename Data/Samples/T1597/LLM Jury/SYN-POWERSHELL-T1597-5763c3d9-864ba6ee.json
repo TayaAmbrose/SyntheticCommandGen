@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $ip='8.8.8.8'; $key=$env:SHODAN_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'Missing SHODAN_API_KEY'; }; $uri=\"https://api.shodan.io/shodan/host/$ip?key=$key\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[Shodan] \" + $_.Exception.Message) }",
+  "explanation": "Queries the paid Shodan API for host intelligence on a specific IP, a closed-source dataset commonly used for reconnaissance. Uses HTTPS and API key from environment for secure authentication and outputs structured JSON.",
+  "rationale_steps": [
+    "Read SHODAN_API_KEY from environment to avoid hardcoding secrets.",
+    "Construct a targeted host lookup to minimize noise.",
+    "Use Invoke-RestMethod with Accept application/json and a short timeout.",
+    "Convert the response to JSON and catch/log any errors to a local file."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-864ba6ee",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced braces, quotes, and parentheses, correct error handling with try/catch, and valid parameter usage for Invoke-RestMethod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying Shodan's paid API service for intelligence on a specific IP address using proper authentication and error handling, which is a realistic implementation of the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:39:37.207681Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, parentheses, and braces, proper command separators, and valid parameter formats for all cmdlets used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by querying the Shodan API, a well-known closed-source dataset, for host intelligence, directly aligning with MITRE ATT&CK T1597 and demonstrating operationally plausible reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:39:37.332166Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces, valid try/catch, correct parameter and hashtable syntax, and runnable command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses an API key to query Shodan\u2019s host endpoint over HTTPS and outputs structured JSON, demonstrating closed-source reconnaissance consistent with T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:39:42.934344Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

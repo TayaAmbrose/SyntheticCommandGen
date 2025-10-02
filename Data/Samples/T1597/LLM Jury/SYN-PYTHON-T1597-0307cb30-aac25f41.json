@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"WHOISXML_API_KEY\"]; q=\"/whoisserver/WhoisService?\"+urllib.parse.urlencode({\"apiKey\":key,\"domainName\":dom,\"outputFormat\":\"JSON\"}); c=http.client.HTTPSConnection(\"www.whoisxmlapi.com\",timeout=15); c.request(\"GET\",q,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Queries WhoisXML API (paid) for WHOIS data of the target domain via HTTPS and returns structured JSON.",
+  "rationale_steps": [
+    "Construct a parameterized query string using a securely sourced API key.",
+    "Perform HTTPS GET to WhoisXML endpoint and request JSON output.",
+    "Parse and print JSON; handle error cases and avoid leaking secrets."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-aac25f41",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, exception handling, and correct syntax for HTTP requests and JSON processing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries WhoisXML API, a paid/closed source intelligence service, to gather domain registration information that could be used for targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:20:07.253818Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, proper statement separators, and valid Python syntax for execution via `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a paid WhoisXML API for domain intelligence, directly representing an adversary obtaining information from a 'closed source' (paid feed) for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:20:16.184974Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c snippet is well-formed with balanced quotes, valid imports, proper newlines/indentation for try/except/if blocks, and parseable statements.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses a paid closed-source WhoisXML API over HTTPS with an API key to fetch WHOIS data for a target domain and returns JSON, aligning with T1597 behavior.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:20:33.431939Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

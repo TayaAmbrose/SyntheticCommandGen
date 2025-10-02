@@ -1,0 +1,46 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url=f'https://www.virustotal.com/api/v3/domains/{domain}'; headers={'x-apikey': os.environ['VT_API_KEY']};\\ntry:\\n    r=requests.get(url, headers=headers, timeout=15); r.raise_for_status(); print(json.dumps({'source':'virustotal','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'virustotal','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Retrieves domain intelligence from the closed-source VirusTotal API using an API key, focusing on domain metadata and related observations without performing any active scans.",
+  "rationale_steps": [
+    "Authenticate to VirusTotal with API key header.",
+    "Query a single domain and return the JSON result for downstream analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-dfd16b24",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the inner Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries VirusTotal's private API using an API key to collect domain intelligence from a closed/paid source, which is exactly the technique described.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:04:00.768441Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The multi-line Python script is well-formed with balanced quotes (including the embedded -c code) and a valid Kubernetes stream exec invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "It execs into a Kubernetes pod and queries the private VirusTotal API with an API key to retrieve domain intelligence, directly matching T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T14:04:46.826400Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

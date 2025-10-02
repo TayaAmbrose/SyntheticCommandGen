@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "python3 -c 'import boto3, json; iam=boto3.client(\"iam\"); k=iam.create_access_key(UserName=\"persona_blog_writer\"); print(json.dumps({\"UserName\":\"persona_blog_writer\",\"AccessKeyId\":k[\"AccessKey\"][\"AccessKeyId\"],\"SecretAccessKey\":k[\"AccessKey\"][\"SecretAccessKey\"]}))'",
+  "explanation": "Generates programmatic credentials for the newly established AWS IAM persona, enabling API interactions.",
+  "rationale_steps": [
+    "Create an access key for the persona IAM user with boto3.",
+    "Return the credentials as JSON for secure storage and automated use.",
+    "Facilitates low-interaction activities that maintain the persona's presence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-ea62d97c",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, and uses valid Python syntax within the `-c` argument for script execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent and T1585 by using the appropriate AWS SDK call to generate programmatic access keys for an IAM user, which directly enables API interactions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:51:04.933162Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code executed via the command line with properly balanced quotes, parentheses, and braces, correct JSON handling, and appropriate use of the boto3 library.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) as it creates AWS programmatic access credentials (access key and secret) for an established IAM user, enabling persistent access to AWS services.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:51:09.966163Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The bash one-liner and embedded Python are well-formed with balanced quotes/braces and valid boto3 calls.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses IAM to create access keys for the specified user and outputs them as JSON, directly generating programmatic credentials consistent with T1585 behaviors (creating service/API keys).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:51:33.510090Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

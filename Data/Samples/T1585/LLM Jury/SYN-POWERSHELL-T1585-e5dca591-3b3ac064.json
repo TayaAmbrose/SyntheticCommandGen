@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-login-profile --user-name liam.w.nolan --password 'TempPassw0rd!45' --password-reset-required --output json",
+  "explanation": "Enables console authentication for the finance persona with a temporary password workflow, mirroring standard user provisioning.",
+  "rationale_steps": [
+    "Activate interactive login to simulate routine console usage.",
+    "Apply forced password reset to emulate HR/IT onboarding.",
+    "Produce structured output for follow-on automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-3b3ac064",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The AWS CLI command is perfectly well-formed with proper syntax, balanced quotes, valid parameter names, and correct formatting for the AWS IAM service.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating console access for an existing IAM user with a temporary password, which aligns with establishing accounts for persistent access in AWS environments.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:00:01.680859Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid AWS CLI syntax, correct flags, and proper quoting for the password.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 by establishing console login capability for an IAM user, mirroring legitimate provisioning workflows often abused by adversaries.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T10:00:09.640217Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed AWS CLI command with valid flags and balanced single quotes suitable for PowerShell.",
+        "semantic_score": 4,
+        "semantic_justification": "Enables console login by creating an IAM login profile for an existing user, fitting establishment/abuse of cloud accounts, but it requires IAM permissions and an existing user so 'Privilege: None' is unrealistic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:00:35.822012Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

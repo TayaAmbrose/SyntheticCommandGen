@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-AzADUser -DisplayName 'Avery Reed' -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com' -MailNickname 'avery.reed' -PasswordProfile @{Password='P@ssw0rd!234'; ForceChangePasswordNextLogin=$false} -AccountEnabled $true -GivenName 'Avery' -Surname 'Reed' -JobTitle 'Marketing Associate' -Department 'Brand' -UsageLocation 'US' | Select-Object Id,DisplayName,UserPrincipalName,JobTitle,Department,AccountEnabled | ConvertTo-Json -Depth 4",
+  "explanation": "Creates a new cloud-only Azure AD user that serves as a believable marketing persona, establishing an account for future operations.",
+  "rationale_steps": [
+    "Invoke Az PowerShell to create a fully enabled Azure AD user with realistic profile attributes.",
+    "Ensure mailbox eligibility via UsageLocation and MailNickname for a plausible email identity.",
+    "Return essential properties in JSON for automation and tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-f28a87c0",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes and braces, valid parameter names and values, and correct piping to Select-Object and ConvertTo-Json.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by creating a fully configured Azure AD user with a realistic persona, disabled password change requirement, and enabled account status - all essential elements for establishing persistent access in cloud environments.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:49:27.867435Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct cmdlet names, parameter usage, argument types, balanced quoting, and valid piping.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses `New-AzADUser` to create an Azure AD user with a believable persona, directly aligning with T1585, but the stated 'Privilege: None' is fundamentally incorrect and renders the command operationally unfeasible, as significant Azure AD administrator privileges are required.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:49:42.689772Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid pipeline, and correctly structured parameters including the PasswordProfile hashtable.",
+        "semantic_score": 5,
+        "semantic_justification": "Appropriately uses New-AzADUser to create a new Azure AD user\u2014directly aligning with T1585 Establish Accounts\u2014and then selects and outputs details to JSON (assuming requisite privileges and module availability).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:50:10.107185Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

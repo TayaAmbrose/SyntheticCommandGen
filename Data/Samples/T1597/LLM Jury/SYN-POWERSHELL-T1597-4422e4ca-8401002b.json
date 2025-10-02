@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; $ts=Get-Date -Format o; try { $headers=@{ 'APIKEY'=$env:SECURITYTRAILS_KEY; 'Accept'='application/json' }; $r=Invoke-WebRequest -Uri 'https://api.securitytrails.com/v1/domain/contoso.com/subdomains?children_only=false' -Headers $headers -Method Get -ErrorAction Stop; ($r.Content | ConvertFrom-Json | Select-Object -Property subdomains,record_type,endpoint | ConvertTo-Json -Depth 6) | Out-File -FilePath \"$env:TEMP\\securitytrails_subdomains_contoso.json\" -Encoding utf8; Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts SecurityTrails success contoso.com\" } catch { Add-Content -Path \"$env:TEMP\\recon.log\" -Value \"$ts SecurityTrails error: $($_.Exception.Message)\" }",
+  "explanation": "Retrieves subdomains from SecurityTrails (paid access) for a target domain with an API key, extracting relevant fields and writing structured output while logging activity.",
+  "rationale_steps": [
+    "Provide API key via header to access closed-source dataset.",
+    "Request subdomain inventory for the victim's domain.",
+    "Filter to relevant fields and save as JSON.",
+    "Record success/failure in a local log."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-4422e4ca-8401002b",
+  "source_prompt_hash": "4422e4ca",
+  "timestamp_utc": "2025-09-30T06:22:12.312465Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper error handling with try/catch, and correct syntax for setting TLS, making web requests, and file operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using a paid API service (SecurityTrails) with an API key to gather subdomain intelligence about a target domain, storing the results for later use in targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:29:30.447915Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, correct cmdlet usage, valid parameters, and proper flow control.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries a paid, closed-source intelligence platform (SecurityTrails) for target reconnaissance data (subdomains) using an API key, perfectly aligning with the T1597 technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:29:39.531877Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced braces/quotes, valid cmdlet parameters, proper try/catch structure, and appropriate separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the paid SecurityTrails API with an API key to enumerate subdomains, processes the JSON, writes structured output, and logs the result, which directly matches T1597\u2019s use of closed sources.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:29:55.612997Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

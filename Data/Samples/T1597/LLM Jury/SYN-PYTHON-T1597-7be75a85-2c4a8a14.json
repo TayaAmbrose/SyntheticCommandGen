@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('CLEARBIT_API_KEY'); \nif not k: print(json.dumps({'source':'clearbit','query':d,'error':'missing CLEARBIT_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://company.clearbit.com/v2/companies/find?domain='+urllib.parse.quote(d); ctx=ssl.create_default_context(); hdr={'Authorization':'Bearer '+k,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=15,context=ctx); print(json.dumps({'source':'clearbit','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'clearbit','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Uses Clearbit's paid Company API to enrich organizational information for the target domain via Bearer token authentication.",
+  "rationale_steps": [
+    "Authenticate to a closed-source business intelligence provider (Clearbit).",
+    "Retrieve organization profile for the target domain.",
+    "Emit structured JSON and use a single, time-bounded HTTPS request."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-2c4a8a14",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper syntax, balanced quotes, correct exception handling, and appropriate use of libraries and functions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using Clearbit's paid API with proper authentication to gather non-public company information about a target domain, which is exactly the technique described.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:25:54.098610Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced delimiters, valid try/except and inline statements, and proper use of urllib and SSL context.",
+        "semantic_score": 5,
+        "semantic_justification": "Accurately queries a paid Clearbit Company API using a Bearer token to enrich a target domain, aligning with T1597 closed-source intelligence collection.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:26:25.502838Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

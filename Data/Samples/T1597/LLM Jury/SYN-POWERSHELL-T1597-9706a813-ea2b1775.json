@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.fsisac.com'; $user=$env:FSISAC_USER; $key=$env:FSISAC_PPK; $hostkey=$env:FSISAC_HOSTKEY; $remote='/members/intel/daily/fsisac-intel-2025-09-30.json'; $dest='C:\\Intel\\FSISAC\\fsisac-intel-2025-09-30.json'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Fetches member-only FS-ISAC intelligence JSON via SCP with key authentication and logs a structured JSON status entry.",
+  "rationale_steps": [
+    "Use authenticated access to a closed member community feed.",
+    "Transfer a specific daily file in a non-interactive, quiet manner.",
+    "Verify integrity and record an acquisition log for compliance.",
+    "Adheres to closed-source reconnaissance without delivery or execution."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-ea2b1775",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving non-public threat intelligence from FS-ISAC (a closed financial sector information sharing platform) using proper authentication, logging the activity, and storing the intelligence for analysis.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:06:21.040888Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variables, cmdlets, external executable execution, control flow structures, and proper argument formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly demonstrates fetching intelligence from a closed source via SCP with key authentication as per T1597, but the stated 'Privilege: None' conflicts with typical write permissions for the specified log and destination paths, presenting a minor realism gap for full execution.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:06:42.355063Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces/quotes, proper separators, and valid PSCP options and cmdlet usage.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses PSCP with key-based auth and hostkey pinning to fetch a members-only FS-ISAC intel file, then hashes and logs it, matching acquisition of closed-source intelligence under T1597.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:06:45.027243Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

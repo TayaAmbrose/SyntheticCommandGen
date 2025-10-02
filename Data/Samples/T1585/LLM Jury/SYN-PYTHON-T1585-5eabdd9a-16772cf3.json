@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import boto3, json; iam=boto3.client('iam'); user='alex.research'; iam.put_user_permissions_boundary(UserName=user, PermissionsBoundary='arn:aws:iam::aws:policy/job-function/ViewOnlyAccess'); iam.tag_user(UserName=user, Tags=[{'Key':'Manager','Value':'c.nguyen'},{'Key':'Location','Value':'Remote-US'},{'Key':'Onboarded','Value':'2025-09-01'}]); print(json.dumps({'action':'harden_persona_boundaries','user':user,'permissions_boundary':'job-function/ViewOnlyAccess','tags_added':['Manager','Location','Onboarded']}))\"",
+  "explanation": "Sets a permissions boundary and realistic HR-style tags to keep the persona believable and constrained.",
+  "rationale_steps": [
+    "Use a permissions boundary to mimic guardrails typical of contractor accounts.",
+    "Add HR-style tags that align with onboarding processes and directory data."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-16772cf3",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, correct AWS boto3 API calls, and valid JSON output formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements account hardening rather than account establishment (which would be the malicious technique T1585), as it applies a restrictive permissions boundary and adds plausible metadata tags to an existing AWS IAM user, though it assumes the user 'alex.research' already exists.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:51:06.244458Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, uses correct Boto3 syntax for IAM operations, and has balanced quotes, parentheses, and braces throughout.",
+        "semantic_score": 1,
+        "semantic_justification": "The command modifies an *existing* IAM user by applying a *restrictive* permissions boundary and adding HR-style tags, which is an account governance or hardening action, not the establishment or abuse of an account for adversarial gain as described by T1585.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:51:17.481104Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python one-liner with balanced quoting/brackets, correct boto3 IAM method names, and proper statement separators.",
+        "semantic_score": 2,
+        "semantic_justification": "While it correctly sets an IAM permissions boundary and tags as described, it neither creates nor meaningfully abuses an account for persistence per T1585 and also requires IAM privileges to succeed.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T09:51:40.226640Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

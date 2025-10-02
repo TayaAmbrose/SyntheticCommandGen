@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data in fixed-size chunks via IPv6 UDP (AF_INET6/SOCK_DGRAM) to a unique-local address with a low hop-limit]",
+  "explanation": "Exfiltration over IPv6 UDP to a unique-local destination with reduced hop count constitutes using a different medium/path than the typical enterprise IPv4 traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Choose IPv6 unique-local addressing to avoid the primary IPv4 egress",
+    "Encode data with base64",
+    "Use UDP and set a low hop limit to confine traffic",
+    "Chunk and send to a high, uncommon UDP port",
+    "No network configuration changes are performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-01844f99",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is withheld and described only conceptually, making it impossible to evaluate its syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "While IPv6 UDP exfiltration to a unique-local address with low hop-limit could be a valid exfiltration technique, it doesn't align with T1011 (Dynamic Resolution) which involves algorithmic determination of C2 endpoints, not simply using an alternative protocol.",
+        "combined_score": 1.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:34:14.774427Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld, making syntactic evaluation impossible as no runnable syntax was provided.",
+        "semantic_score": 1,
+        "semantic_justification": "The explanation describes exfiltration via an alternate network path (IPv6 UDP to a unique-local address) but lacks any elements of dynamic endpoint resolution, generated names, or rotating endpoints, which are central to T1011.",
+        "combined_score": 0.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T05:34:24.125824Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The entry is a descriptive placeholder rather than executable Python code, so it is not runnable or parseable as a command.",
+        "semantic_score": 1,
+        "semantic_justification": "It describes IPv6 UDP exfiltration and does not involve dynamic resolution behaviors (e.g., DGA, fast-flux, dynamic DNS) required by the stated technique.",
+        "combined_score": 1.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T05:34:25.865726Z"
+      }
+    ],
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

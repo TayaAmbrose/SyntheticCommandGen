@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\fullcontact_company_enrich_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $token=$env:FULLCONTACT_API_KEY; if([string]::IsNullOrWhiteSpace($token)){ throw 'FULLCONTACT_API_KEY not set'; } $headers=@{ 'Authorization'=\"Bearer $token\"; 'Accept'='application/json'; 'Content-Type'='application/json' }; $body=@{ domain=$domain } | ConvertTo-Json; $uri='https://api.fullcontact.com/v3/company.enrich'; $resp=Invoke-WebRequest -Uri $uri -Headers $headers -Method Post -Body $body -UseBasicParsing -TimeoutSec 45 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) FullContact non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) FullContact error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Leverages FullContact\u2019s paid company enrichment API to gather corporate metadata (a closed-source source) and saves validated JSON output.",
+  "rationale_steps": [
+    "Authenticate with bearer token stored securely in environment variables.",
+    "POST a minimal JSON body to limit request noise.",
+    "Verify JSON content, parse, and store results.",
+    "Log errors with sanitized messages."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-4f8a1b7e",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and valid parameter usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1597 technique by querying FullContact's paid API (a closed source) to gather corporate intelligence about a domain, storing the results for later use in targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:48:54.521529Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignments, cmdlet calls, piping, conditional logic, try-catch blocks, and API interaction parameters without any discernible errors or formatting issues.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1597 technique, as it programmatically queries a known paid closed-source API (FullContact) to gather company enrichment data, directly matching the definition of acquiring non-public intelligence for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T11:49:10.490577Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/braces, valid cmdlets/parameters, correct hashtable and JSON handling, and proper try/catch usage.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries FullContact\u2019s paid company enrichment API with a domain using a bearer token and saves validated JSON results, which aligns directly with leveraging a closed paid source per T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:49:14.176877Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

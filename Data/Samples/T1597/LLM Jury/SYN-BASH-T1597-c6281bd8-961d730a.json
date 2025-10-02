@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"x-api-key: $SPYCLOUD_KEY\" -H \"Accept: application/json\" \"https://api.spycloud.com/enterprise-v2/breaches?domain=example.com\" -o spycloud_breaches_example.com.json -w '{\"service\":\"spycloud_breaches\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Checks SpyCloud's enterprise API (paid) for breach records related to the target domain, collecting structured results with controlled logging.",
+  "rationale_steps": [
+    "Consult a proprietary breach intelligence provider (SpyCloud).",
+    "Authenticate using an API key in a secure header.",
+    "Limit scope to a single domain to avoid unnecessary data retrieval.",
+    "Write JSON to disk for validation and cross-referencing.",
+    "Record HTTP status to support consistent error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-961d730a",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper curl syntax, balanced quotes, valid flags, and correct JSON formatting in the output specification.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying SpyCloud's paid breach intelligence API with proper authentication, targeting a specific domain, and logging the results in a structured format.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:20:41.135659Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid curl flags, correct quoting for arguments, proper variable expansion, and appropriate file redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a paid, closed-source API (SpyCloud) for non-public breach intelligence related to a target domain, which is a textbook example of searching closed sources.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:20:49.441249Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed curl invocation with valid flags, balanced quoting, proper redirection, and a correctly quoted --write-out JSON format string.",
+        "semantic_score": 5,
+        "semantic_justification": "It uses a paid SpyCloud enterprise API to query breach data for a target domain, saving structured results and logging metadata, which aligns with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:21:20.892415Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

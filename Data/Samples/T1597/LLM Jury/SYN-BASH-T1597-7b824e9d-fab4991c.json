@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/breach_monitor/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/breachmonitor_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_breachmonitor -o IdentitiesOnly=yes client@sftp.breachmonitoring.co:/clients/acme_corp/alerts/today.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c today.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"breach-monitoring\\\",\\\"artifact\\\":\\\"%s/today.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"breach-monitoring\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Collects a private breach monitoring alert feed (JSON) delivered via a subscription SFTP service, validates checksum, and logs a JSON status, consistent with closed-source information gathering under T1597.",
+  "rationale_steps": [
+    "Connect securely to the breach monitoring provider with SSH key auth and host key pinning.",
+    "Fetch the current alert JSON and checksum.",
+    "Validate integrity and store under date-based directory.",
+    "Record a JSON status for reliable, low-noise auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-fab4991c",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, appropriate error handling with set -euo pipefail, and correct variable usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by securely retrieving private breach monitoring data via SFTP, validating it with checksums, and logging the activity in a structured format that enables tracking of closed-source intelligence gathering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:17:09.706641Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing correct bash syntax, variable assignments, conditional logic, command substitutions, brace expansion, and proper quoting for paths and JSON output.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the claimed intent of collecting, validating, and logging closed-source threat intelligence from a subscription SFTP service, directly aligning with MITRE ATT&CK T1597 and demonstrating high operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:17:24.895033Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid flags, correct brace expansion, and properly structured conditionals and pipelines.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly acquires a closed-source alert feed via SSH, verifies integrity, and logs status consistent with T1597, but practical execution may be hindered by likely permission requirements for /opt and /var/log paths and private key access.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:18:05.170645Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

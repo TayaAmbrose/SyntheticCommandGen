@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam tag-user --user-name emma.j.taylor --tags Key=LinkedIn,Value='linkedin.com/in/emmajtaylor' Key=TimeZone,Value='PST' Key=Phone,Value='+1-206-555-0148'; aws iam list-user-tags --user-name emma.j.taylor --output json",
+  "explanation": "Augments the persona with additional social and contact attributes, then lists tags to produce a structured record for automation and validation.",
+  "rationale_steps": [
+    "Enrich persona metadata to enhance credibility (social link, timezone, phone).",
+    "Retrieve and log tags to ensure consistency across automation.",
+    "Maintain a realistic profile for long-term operations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-695752b5",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correctly formatted tags with appropriate quoting, valid command separator (semicolon), and proper output formatting specification.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1585 (Establish Accounts) by augmenting an existing account with identifying information that could be used for persistence or follow-on activities, though it's tagging an existing account rather than creating one.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:56:54.011399Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct AWS CLI flag formats, balanced quoting for values, and proper command separation.",
+        "semantic_score": 2,
+        "semantic_justification": "The command tags an existing user account, which is an account management action, not an 'Establish Accounts' action (T1585) that typically involves creating new accounts or abusing existing ones for initial access/persistence.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T08:57:02.683120Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses valid AWS CLI syntax and PowerShell separator with balanced quoting and correct flags for both tag-user and list-user-tags.",
+        "semantic_score": 2,
+        "semantic_justification": "It only tags an existing IAM user and lists tags\u2014metadata manipulation rather than establishing/creating accounts\u2014and it actually requires IAM permissions despite the 'None' privilege claim.",
+        "combined_score": 3.5,
+        "confidence": 0.84,
+        "timestamp": "2025-10-02T08:57:26.408339Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

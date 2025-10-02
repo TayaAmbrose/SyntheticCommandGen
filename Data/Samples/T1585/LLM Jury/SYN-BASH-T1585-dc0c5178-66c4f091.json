@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-social-register -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-social.test/v1/users/register -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"username\\\":\\\"artisanal_outreach\\\",\\\"email\\\":\\\"artisanal.outreach@example-mail.test\\\",\\\"password\\\":\\\"S3cure!Passw0rd\\\",\\\"profile\\\":{\\\"display_name\\\":\\\"A. Outreach\\\",\\\"bio\\\":\\\"Cloud-native tinkerer and OSS enthusiast\\\"}}\"'",
+  "explanation": "Registers a social media persona using the newly created email, establishing a credible public presence.",
+  "rationale_steps": [
+    "Use persona email to sign up at a social platform API endpoint.",
+    "Seed the profile with believable details for cover and persistence."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-66c4f091",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid kubectl syntax, correct JSON escaping in the curl payload, and appropriate use of flags and parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a social media account with a crafted persona, complete with username, email, password and profile details that could be used for follow-on social engineering or persistence.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:03:48.296478Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct escape sequences for the nested JSON payload within the curl command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly registers a user account via an API call, perfectly aligning with the T1585 'Establish Accounts' technique description of creating accounts to blend into normal activity or enable follow-on actions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:03:53.797102Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command structure, quoting, escaping, and kubectl/curl flags are well-formed and balanced, making it parseable as written.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly registers a new social media account via an API from a Kubernetes pod (aligning with T1585), though success depends on the namespace existing and the image providing sh.",
+        "combined_score": 4.5,
+        "confidence": 0.79,
+        "timestamp": "2025-10-02T10:05:16.031144Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

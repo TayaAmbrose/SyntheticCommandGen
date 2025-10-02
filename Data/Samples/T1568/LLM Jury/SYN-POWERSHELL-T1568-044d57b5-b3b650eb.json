@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$d = (Get-DnsClientCache).Name | Where-Object { $_ -match '\\.' } | Select-Object -Unique | Get-Random; $cf = Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://cloudflare-dns.com/dns-query?name=$d&type=A\" -TimeoutSec 5; $gd = Invoke-WebRequest -UseBasicParsing -Headers @{accept='application/dns-json'} \"https://dns.google/resolve?name=$d&type=A\" -TimeoutSec 5; $ips1 = ((($cf.Content | ConvertFrom-Json).Answer).data) -join ','; $ips2 = ((($gd.Content | ConvertFrom-Json).Answer).data) -join ','; if ($ips1 -ne $ips2) { Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{domain=$d; cloudflare=$ips1; google=$ips2; ts=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json) 'https://siem.example.local/api/ingest/dns-anomaly' }",
+  "explanation": "Defensive cross-validation for T1568: compares DNS-over-HTTPS answers from multiple resolvers for a cached domain to spot resolution manipulation characteristic of dynamic resolution techniques.",
+  "rationale_steps": [
+    "Pick a random domain from DNS client cache.",
+    "Query two independent DoH resolvers for A records.",
+    "Compare returned IP sets and flag mismatches.",
+    "Report anomalies to SIEM via Invoke-WebRequest."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-b3b650eb",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate escape sequences.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a defensive measure against T1568 by comparing DNS resolution from multiple providers to detect anomalies, though it's more of a detection mechanism than a direct implementation of the technique itself.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:12:59.278044Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, and valid cmdlet usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly implements the claimed defensive cross-validation by comparing external DoH resolver responses for locally cached domains, directly detecting resolution discrepancies relevant to T1568's manipulation aspects.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:13:13.887191Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid pipelines, parameters, and correct use of Invoke-WebRequest, JSON conversion, and conditionals.",
+        "semantic_score": 3,
+        "semantic_justification": "It functionally compares DoH answers and reports discrepancies, but this mainly detects resolver inconsistency/poisoning and is a weak, order-sensitive proxy for T1568 behaviors (e.g., DGA/fast-flux) without analyzing churn, TTLs, or periodic generation.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:13:47.754092Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

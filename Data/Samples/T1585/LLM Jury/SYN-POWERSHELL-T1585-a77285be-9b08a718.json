@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$scope=$(az group show -n \"rg-marketing\" --query id -o tsv); $uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); az role assignment create --assignee-object-id $uid --assignee-principal-type User --role \"Reader\" --scope $scope -o json",
+  "explanation": "Grants low-privilege Reader access at a scoped resource group to make the account's permissions look routine while enabling persistence.",
+  "rationale_steps": [
+    "Identify a common resource group scope with Azure CLI.",
+    "Create a minimal RBAC assignment to avoid suspicion.",
+    "Output the created assignment in JSON for tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-9b08a718",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, command chaining, balanced quotes, and correct Azure CLI syntax for querying and assigning roles.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by granting a user account persistent access with Reader permissions to a resource group, enabling the adversary to maintain access while appearing as routine activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:04:23.319564Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell variable assignment and command substitution, balanced quotes, and valid Azure CLI flags.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command effectively grants persistent Reader access, it modifies an existing account's permissions rather than establishing a new one, making its alignment with T1585 weak, and it incorrectly assumes 'None' privilege is required for execution.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:04:42.877731Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with valid variable assignment, semicolon separators, balanced quotes, and correct Azure CLI flags.",
+        "semantic_score": 3,
+        "semantic_justification": "While it correctly assigns a Reader role to an existing Azure AD user (enabling low-profile persistence), it does not establish a new account per T1585 and also requires elevated permissions to create the role assignment despite the 'Privilege: None' claim.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:04:58.451450Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

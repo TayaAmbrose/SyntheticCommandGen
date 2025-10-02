@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$uid=$(az ad user show --id \"jordan.hall@contosomktg.onmicrosoft.com\" --query id -o tsv); $token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body=@{department=\"Marketing\";jobTitle=\"Content Specialist\";city=\"Seattle\";state=\"WA\";country=\"US\";aboutMe=\"Marketing content specialist focusing on product storytelling and campaign analytics.\"} | ConvertTo-Json; Invoke-RestMethod -Method PATCH -Uri \"https://graph.microsoft.com/v1.0/users/$uid\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body; Invoke-RestMethod -Method GET -Uri \"https://graph.microsoft.com/v1.0/users/$uid`?`$select=displayName,department,jobTitle,city,state,country,aboutMe\" -Headers @{Authorization=\"Bearer $token\"} | ConvertTo-Json",
+  "explanation": "Enriches the persona by setting detailed profile attributes via Microsoft Graph, making the account blend into the organization.",
+  "rationale_steps": [
+    "Obtain a Graph access token through Azure CLI for API calls.",
+    "Patch user attributes such as department, job title, and aboutMe for credibility.",
+    "Query updated fields and output JSON for automation and verification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-8cceb25d",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/braces, correct variable assignments, proper API endpoint construction, and appropriate parameter passing to the Invoke-RestMethod cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1585 technique by modifying an existing user account with detailed profile attributes via Microsoft Graph API to make it blend into the organization, which is a key aspect of establishing accounts for persistence and blending into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:49:18.336255Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses balanced quotes and parentheses, valid flag formats for `az` and `Invoke-RestMethod`, and correctly escapes `$select` in the URL.",
+        "semantic_score": 2,
+        "semantic_justification": "The command modifies an *existing* user's profile attributes, which does not align with the core T1585 'Establish Accounts' technique focused on *creating* or *gaining access to new* accounts; furthermore, the 'Privilege: None' claim is incorrect as Graph API permissions are required for this action.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:49:29.407030Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell is well-formed with balanced quotes/hashtables, proper separators, valid az flags, and correct escaping of $select in the URL.",
+        "semantic_score": 2,
+        "semantic_justification": "It updates an existing user's profile to blend in (operationally plausible) but does not create/register accounts as T1585 entails and incorrectly claims no privileges are required to modify user attributes.",
+        "combined_score": 3.5,
+        "confidence": 0.68,
+        "timestamp": "2025-10-02T08:50:35.134354Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

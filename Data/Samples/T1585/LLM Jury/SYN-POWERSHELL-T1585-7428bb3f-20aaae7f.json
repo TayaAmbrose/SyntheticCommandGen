@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$update = @{ name=\"Alex D.\"; bio=\"Brand identity, typography, and OSS contributor.\" } | ConvertTo-Json; Invoke-RestMethod -Method Patch -Uri \"https://reqres.in/api/users/12\" -ContentType \"application/json\" -Body $update | ConvertTo-Json -Depth 5",
+  "explanation": "Updates persona details to refine credibility by adjusting bio content on the simulated profile.",
+  "rationale_steps": [
+    "Prepare a minimal patch with updated bio text.",
+    "PATCH the mock user resource to emulate incremental profile curation with JSON output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-20aaae7f",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, piping, method calls, balanced quotes and braces, and correct parameter usage for both ConvertTo-Json and Invoke-RestMethod cmdlets.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1585 (Establish Accounts) by updating a user profile to enhance credibility of an established account, though it's using a demo API (reqres.in) rather than a real service which slightly reduces operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:05:43.753465Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses correct cmdlet syntax, balanced quotes, and valid parameter assignments.",
+        "semantic_score": 4,
+        "semantic_justification": "The command semantically aligns with T1585 by demonstrating how an adversary might 'abuse accounts' to 'blend into normal activity' through 'changes to identity configurations' by updating an existing profile's details for credibility.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:05:55.085132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes, correct hashtable-to-JSON assignment, proper command separators, and appropriate Invoke-RestMethod and pipeline usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It programmatically updates persona details via an API consistent with establishing or refining an account for T1585, though it targets a mock endpoint without authentication, reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T11:06:09.139722Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

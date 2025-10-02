@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse; d=os.getenv('TARGET_DOMAIN','example.com'); k=os.getenv('SHODAN_API_KEY'); \nif not k: print(json.dumps({'source':'shodan','query':d,'error':'missing SHODAN_API_KEY'}), file=sys.stderr); sys.exit(1); \nurl='https://api.shodan.io/dns/domain/'+urllib.parse.quote(d)+'?key='+urllib.parse.quote(k); ctx=ssl.create_default_context(); hdr={'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; \ntry:\n    r=urllib.request.urlopen(urllib.request.Request(url,headers=hdr),timeout=15,context=ctx); print(json.dumps({'source':'shodan','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'shodan','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Retrieves domain-related data (e.g., subdomains and DNS) from the commercial Shodan API using an API key.",
+  "rationale_steps": [
+    "Authenticate to a closed-source intelligence platform (Shodan).",
+    "Query domain endpoint for enumerations relevant to infrastructure profiling.",
+    "Respect rate limits via single request and include timeout/error handling."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-2c8d4426",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper syntax, balanced quotes, correct exception handling, and appropriate use of libraries and functions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries Shodan, a commercial closed-source intelligence platform, using an API key to gather domain intelligence that could be used for targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:50:40.970974Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with correct syntax for imports, variable assignments, conditionals, URL construction, dictionary literals, try-except blocks, and standard library function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying the commercial Shodan API (a 'paid feed' or 'private database') using an API key to collect domain-related intelligence for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:50:48.552275Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python snippet is well-formed with balanced parentheses, correct try/except structure, valid semicolon-separated statements, and proper imports and arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries Shodan's DNS domain API using an API key to retrieve domain-related data, accurately reflecting the use of a closed, paid source consistent with T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:51:03.511138Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

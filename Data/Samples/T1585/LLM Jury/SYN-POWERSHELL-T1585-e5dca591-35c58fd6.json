@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam create-user --user-name emma.j.taylor --tags Key=FullName,Value='Emma J Taylor' Key=Department,Value='Marketing' Key=Title,Value='Business Analyst' Key=Email,Value='emma.j.taylor.consulting@outlook.com' Key=Location,Value='Seattle, WA' --output json",
+  "explanation": "Creates a new low-privileged AWS IAM user with rich, believable profile tags to develop a persistent cloud persona that blends into a marketing/business analyst role.",
+  "rationale_steps": [
+    "Establish a distinct cloud identity for persona building.",
+    "Embed realistic metadata (name, role, contact, location) via tags to enhance legitimacy.",
+    "Ensure output is JSON for automation and tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-35c58fd6",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correctly formatted tags with appropriate quoting, and valid parameter structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a new IAM user with realistic profile information that helps establish a persistent account that blends into normal organizational activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:55:31.578946Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The AWS CLI command is perfectly well-formed with correct flag formats, balanced quoting for tag values, and valid parameters for creating an IAM user.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly creates a new IAM user, which is a core action of the T1585 'Establish Accounts' technique, and the included tags effectively build a plausible, low-privilege persona as described.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:55:40.484492Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid AWS CLI syntax with correctly quoted tag values for PowerShell, balanced flags, and proper parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "Accurately creates a new IAM user with plausible profile tags using AWS CLI, aligning with T1585 by establishing a cloud account that blends in; defaults to no permissions unless later granted.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:55:53.110380Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\nrf_token = json.loads(secrets.get_secret_value(SecretId='recordedfuture/token')['SecretString'])['token']\ndomain = 'example.com'\nurl = 'https://api.recordedfuture.com/v2/domain/profile'\nparams = {'domain': domain, 'fields': 'risk,intelCard,relatedEntities'}\ntry:\n    r = requests.get(url, params=params, headers={'X-RFToken': rf_token, 'Accept': 'application/json', 'User-Agent': 'cloud-intel-client/1.0'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'recordedfuture/{domain}_profile.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'recordedfuture', 'domain': domain, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'recordedfuture', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('Recorded Future domain profile query failed: %s', e)",
+  "explanation": "Uses Recorded Future's closed-source API to retrieve a domain profile (risk score and related entities) and stores structured output in S3. This leverages a commercial subscription dataset for reconnaissance.",
+  "rationale_steps": [
+    "Use a reputable commercial threat intelligence vendor with authenticated API access.",
+    "Request only relevant fields to minimize data volume.",
+    "Persist results to cloud storage for auditability and further analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-d996a92d",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable definitions, error handling, balanced parentheses/braces, and correct function calls to AWS services and the Recorded Future API.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries Recorded Future's commercial threat intelligence API (a closed source) to gather domain intelligence, stores the results securely, and implements proper error handling and logging.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:57:36.345968Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced delimiters, and valid function calls, making it runnable as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a commercial threat intelligence API (Recorded Future) for non-public domain information and storing the results, which is operationally plausible for intelligence gathering.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T12:57:50.812201Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python with balanced quoting/brackets, proper try/except and headers, and acceptable statement separation; no syntax errors apparent.",
+        "semantic_score": 5,
+        "semantic_justification": "It obtains a Recorded Future API token from Secrets Manager, queries a closed-source API for a domain profile, and stores results in S3, directly aligning with T1597 use of paid/private intelligence sources.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:58:09.514882Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

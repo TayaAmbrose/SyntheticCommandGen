@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.spycloud.com'; $user=$env:SPYCLOUD_USER; $key=$env:SPYCLOUD_PPK; $hostkey=$env:SPYCLOUD_HOSTKEY; $remote='/customer_exports/daily/credential-exposures-20250930.csv.gz'; $dest='C:\\Intel\\SpyCloud\\credential-exposures-20250930.csv.gz'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Retrieves a closed-source breach exposure export from SpyCloud over SCP with key-based authentication, suitable for private credential exposure assessment.",
+  "rationale_steps": [
+    "Use authenticated access to a commercial data broker feed (closed source).",
+    "Download a specific daily export quietly to avoid excessive log noise.",
+    "Verify file integrity and log a compact JSON status for traceability.",
+    "Avoids any user targeting or delivery activity, focusing strictly on data collection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-de5d5898",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, error handling with try/catch/finally blocks, balanced quotes/braces, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving credential exposure data from SpyCloud (a closed-source threat intelligence provider) using proper authentication, logging the activity, and storing the data for analysis.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:45:01.506758Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, control flow (try-catch-finally), external command execution, and cmdlet usage.",
+        "semantic_score": 4,
+        "semantic_justification": "The command strongly aligns with T1597 by using pscp to retrieve credential exposure data from a closed source (SpyCloud), but the destination path 'C:\\Intel' is unlikely writable by a user with 'None' privilege, creating a minor operational realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T13:45:22.796792Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced try/catch/finally, correct quoting, valid PSCP flags, and proper hashtable and pipeline usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It retrieves a closed-source SpyCloud export with key-based auth, hashes and logs it\u2014aligned with T1597\u2014though forcing SCP against an sftp.* host may fail if the server is SFTP-only.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T13:45:36.240754Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

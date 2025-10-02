@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$ErrorActionPreference='Stop'; $pscp='pscp.exe'; $log=\"$env:ProgramData\\NetAdmin\\logs\\T1597.log\"; $host='sftp.recordedfuture.com'; $user=$env:RF_USER; $key=$env:RF_PPK; $hostkey=$env:RF_HOSTKEY; $remote='/exports/domain_risk/daily/domain-risk-2025-09-30.json'; $dest='C:\\Intel\\RecordedFuture\\domain-risk-2025-09-30.json'; New-Item -ItemType Directory -Path (Split-Path $dest) -Force | Out-Null; try { & $pscp -scp -batch -q -C -P 22 -i $key -hostkey $hostkey \"$user@$host:$remote\" \"$dest\"; if($LASTEXITCODE -ne 0){ throw \"pscp exit code $LASTEXITCODE\" }; $hash=(Get-FileHash -Algorithm SHA256 -Path $dest).Hash; $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; sha256=$hash; success=$true; ts=(Get-Date).ToString('o') } } catch { $status=[pscustomobject]@{ technique='T1597'; source=$host; remote_path=$remote; local_path=$dest; success=$false; error=$_.Exception.Message; ts=(Get-Date).ToString('o') } } finally { $json=$status|ConvertTo-Json -Compress; New-Item -ItemType Directory -Path (Split-Path $log) -Force | Out-Null; Add-Content -Path $log -Value $json; Write-Output $json }",
+  "explanation": "Securely collects a paid closed-source domain risk feed from Recorded Future via SCP using PuTTY's pscp with key-based auth and host key pinning, then logs and outputs a JSON status.",
+  "rationale_steps": [
+    "Authenticate to a subscription-only vendor endpoint using SSH key and pinned host key to avoid MITM.",
+    "Pull a specific daily JSON intelligence artifact with minimal noise (-batch, -q).",
+    "Hash the artifact for integrity and emit a structured JSON record for auditing.",
+    "Maintain compliance with closed-source information gathering by accessing a commercial feed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-9706a813-d48799b1",
+  "source_prompt_hash": "9706a813",
+  "timestamp_utc": "2025-09-30T06:49:27.618571Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper variable assignments, error handling with try/catch/finally blocks, and correct cmdlet syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by securely retrieving a paid threat intelligence feed from Recorded Future using proper authentication, logging the activity, and implementing error handling for operational reliability.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:33:28.776229Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, exhibiting correct PowerShell syntax for variable assignment, external command execution, error handling, object creation, and file system operations, with balanced quotes and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of T1597 by securely acquiring a paid closed-source intelligence feed using appropriate tools (pscp), key-based authentication, and host key pinning, demonstrating a highly plausible operational implementation for intelligence collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:33:42.633754Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced braces/quotes, valid separators, and correct pscp flag syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1597 by retrieving a paid closed-source feed via SCP with key-based auth and logging JSON, but assigning to the read-only automatic variable $Host ($host) will fail at runtime and prevent the intended operation.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T11:34:28.508503Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

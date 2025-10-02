@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $key=$env:RISKIQ_API_KEY; $sec=$env:RISKIQ_API_SECRET; if([string]::IsNullOrWhiteSpace($key) -or [string]::IsNullOrWhiteSpace($sec)){ throw 'Missing RISKIQ credentials'; }; $basic=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$key`:$sec\")); $uri=\"https://api.riskiq.net/pt/v2/dns/passive?query=example.com\"; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Authorization=(\"Basic \" + $basic); Accept='application/json'} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[RiskIQ PassiveTotal] \" + $_.Exception.Message) }",
+  "explanation": "Retrieves passive DNS data for example.com from RiskIQ PassiveTotal, a subscription-only closed-source dataset useful for infrastructure pivoting. Uses Basic Auth and outputs JSON.",
+  "rationale_steps": [
+    "Pull API key/secret from environment and create a Basic Auth header.",
+    "Issue a targeted passive DNS query to limit noise.",
+    "Use HTTPS with proper Accept header and short timeout.",
+    "Return JSON and log errors to a file if the request fails."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-f12d4ee1",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced braces, parentheses, quotes, correct error handling via try-catch, and valid parameter usage for Invoke-RestMethod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying RiskIQ PassiveTotal, a paid threat intelligence service requiring API credentials, to gather passive DNS data that could be used for adversary reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:30:52.775304Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, parentheses, and braces, and all cmdlets, methods, and parameters are correctly used for PowerShell execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the intent of T1597 by querying RiskIQ PassiveTotal, a prime example of a closed-source intelligence platform, for passive DNS data, which directly supports adversary reconnaissance goals.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:31:03.959492Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces and quotes; valid try/catch, Invoke-RestMethod parameters, and hashtable headers.",
+        "semantic_score": 5,
+        "semantic_justification": "Authenticates to the RiskIQ PassiveTotal paid API and retrieves passive DNS for a domain, matching T1597 closed-source querying.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:31:23.030574Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

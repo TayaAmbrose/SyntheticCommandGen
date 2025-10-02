@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$baseline=(Invoke-WebRequest -UseBasicParsing 'https://assets.example.local/baselines/common-domains.txt').Content -split \"`n\"; $recent=Get-WinEvent -LogName 'Microsoft-Windows-DNS-Client/Operational' -MaxEvents 500 | ForEach-Object { $_.Properties[2].Value } | Where-Object { $_ }; $rare=$recent | Where-Object { $baseline -notcontains $_ } | Group-Object | Where-Object { $_.Count -le 2 } | Select-Object -ExpandProperty Name; Invoke-WebRequest -UseBasicParsing -Method POST -ContentType 'application/json' -Body (@{ts=(Get-Date).ToUniversalTime().ToString('o'); rare=$rare}|ConvertTo-Json -Depth 3) 'https://siem.example.local/api/ingest/rare-domains'",
+  "explanation": "Defensive rarity analysis for T1568: highlights rarely seen domains from DNS client logs that may be tied to DGA/dynamic resolution and sends to SIEM.",
+  "rationale_steps": [
+    "Fetch baseline of common domains.",
+    "Collect recent queried domains from DNS client log.",
+    "Identify rare domains not in baseline with low frequency.",
+    "POST findings to SIEM for investigation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-0b157420",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax throughout, and appropriate pipeline operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements a defensive detection for T1568 by retrieving DNS client logs, comparing against a baseline of common domains, identifying rarely seen domains that could indicate DGA activity, and sending the results to a SIEM for analysis.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:49:14.200067Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, and uses valid cmdlets, parameters, and operators throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a defensible rarity analysis by extracting domain names from DNS client logs, filtering against a baseline, identifying those seen infrequently, and sending them to a SIEM, directly addressing detection of T1568 behaviors.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:49:34.241911Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid PowerShell operators and parameters; mixed named/positional arguments for Invoke-WebRequest are acceptable.",
+        "semantic_score": 4,
+        "semantic_justification": "It gathers DNS client queries, filters against a baseline, surfaces rare domains, and posts to a SIEM as claimed, though use of a specific event field index and simple newline splitting (CRLF) plus potential log read permissions may cause minor inaccuracies.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:49:48.499131Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

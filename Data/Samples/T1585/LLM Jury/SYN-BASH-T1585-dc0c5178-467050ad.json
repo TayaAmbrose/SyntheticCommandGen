@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Kubernetes",
+  "shell": "Bash",
+  "command": "kubectl run persona-social-login -n personas --rm -i --restart=Never --image=curlimages/curl:8.8.0 --command -- sh -lc 'curl -sS -X POST https://api.example-social.test/v1/auth/login -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d \"{\\\"username\\\":\\\"artisanal_outreach\\\",\\\"password\\\":\\\"S3cure!Passw0rd\\\"}\"'",
+  "explanation": "Obtains an access token for the persona via login, enabling automated maintenance actions.",
+  "rationale_steps": [
+    "Authenticate the persona to retrieve an API token in JSON.",
+    "Token can drive subsequent profile and activity management."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-dc0c5178-467050ad",
+  "source_prompt_hash": "dc0c5178",
+  "timestamp_utc": "2025-09-30T07:32:30.045514Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid kubectl syntax, correct flag formats, and proper JSON escaping in the curl payload.",
+        "semantic_score": 5,
+        "semantic_justification": "The command aligns perfectly with T1585 (Establish Accounts) as it attempts to authenticate to a social media API using stored credentials, which could be used by an adversary to maintain access to an established account.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:58:53.200243Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid kubectl and curl syntax, balances all quotes, and correctly escapes internal JSON characters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command performs a login to obtain an access token, which, in an adversarial context, perfectly aligns with 'abuse accounts to gain persistent access [via token] and enable follow-on actions' as described by T1585 Establish Accounts.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:59:04.674132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid kubectl flags, balanced quoting, and correctly escaped JSON in the curl payload.",
+        "semantic_score": 4,
+        "semantic_justification": "It logs into an existing social account via a Kubernetes-run curl pod to obtain an access token, aligning with the 'abuse accounts' aspect of T1585 though it does not create a new account.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:59:22.867227Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

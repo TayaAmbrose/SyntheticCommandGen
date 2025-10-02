@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; $skus=Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri 'https://graph.microsoft.com/v1.0/subscribedSkus' -Method GET; $skuId=($skus.value | Where-Object {$_.skuPartNumber -match 'ENTERPRISEPACK|STANDARDPACK'} | Select-Object -First 1 -ExpandProperty skuId); Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/assignLicense') -Method POST -Body (@{addLicenses=@(@{skuId=$skuId}); removeLicenses=@()} | ConvertTo-Json) -ContentType 'application/json' | ConvertTo-Json -Depth 5",
+  "explanation": "Assigns a Microsoft 365 license so the persona has an active mailbox and collaboration capabilities, making the account usable and persistent.",
+  "rationale_steps": [
+    "List available SKUs, select a common M365 license for mailbox capability.",
+    "Assign the license to the persona user via Graph API.",
+    "Output the Graph response as JSON for record-keeping."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-41563976",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, API calls, parameter passing, JSON conversion, and command chaining using semicolons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by obtaining an access token, identifying a user, finding available license SKUs, and assigning a Microsoft 365 license to make the account fully functional for persistent access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:24:00.882625Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, correct command separators, and valid flag formats, making it entirely parseable and executable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of assigning a Microsoft 365 license, which directly enables follow-on actions and enhances the persistence and usability of an account, aligning well with the broader scope of T1585 Establish Accounts.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:24:13.089511Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner is well-formed PowerShell with balanced quoting/parentheses, valid cmdlets/parameters, proper hashtables, and correct JSON body construction and separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly assigns an M365 license via Graph to enable mailbox/collaboration as claimed, but requires prior authentication, sufficient directory privileges, and available license units, and its mapping to T1585 is somewhat interpretive.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:24:41.315631Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

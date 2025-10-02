@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\nshodan_key = json.loads(secrets.get_secret_value(SecretId='shodan/api')['SecretString'])['api_key']\nip = '203.0.113.10'  # example IP\nurl = f'https://api.shodan.io/shodan/host/{ip}'\ntry:\n    r = requests.get(url, params={'key': shodan_key, 'minify': 'true'}, headers={'User-Agent': 'cloud-intel-client/1.0', 'Accept': 'application/json'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'shodan/{ip}_host.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'shodan', 'ip': ip, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'shodan', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('Shodan host query failed: %s', e)",
+  "explanation": "Retrieves host intelligence from Shodan's paid API for a specific IP and stores results to S3. This closed-source service supports reconnaissance of exposed services/assets.",
+  "rationale_steps": [
+    "Authenticate to a commercial scanning database using an API key from Secrets Manager.",
+    "Query a single IP to avoid excessive data pulls and logging noise.",
+    "Save JSON output with metadata to cloud storage for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-7c7e7c5b",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, error handling, balanced parentheses/braces, and correct function calls to AWS services and the Shodan API.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it retrieves intelligence from Shodan's paid API service about a target IP address, stores the results securely, and implements proper error handling - all consistent with the technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:00:45.764932Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with correct syntax for imports, API calls, string formatting, error handling, and JSON manipulation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by querying Shodan's paid API (a closed source) for host intelligence and storing the results, directly aligning with MITRE ATT&CK T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:00:55.997712Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid, well-formed Python code with balanced quotes/brackets, correct imports, and proper try/except structure.",
+        "semantic_score": 5,
+        "semantic_justification": "Queries Shodan\u2019s paid API using a secret key and stores results to S3, which aligns with using closed-source intelligence for reconnaissance under T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:01:12.067630Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

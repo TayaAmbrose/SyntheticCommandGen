@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url='https://api.builtwith.com/v21/api.json'; params={'KEY': os.environ['BUILTWITH_KEY'], 'LOOKUP': domain};\\ntry:\\n    r=requests.get(url, params=params, timeout=15); r.raise_for_status(); print(json.dumps({'source':'builtwith','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'builtwith','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Queries BuiltWith\u2019s closed-source API to enumerate observed technologies for a target domain using an API key, returning JSON for downstream enrichment.",
+  "rationale_steps": [
+    "Use the subscription BuiltWith API to look up tech stacks for a domain.",
+    "Restrict the request to a single domain and serialize results to JSON."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-6d7f7dfd",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with proper imports, exception handling, balanced quotes/parentheses/braces, and correct syntax for both the outer Kubernetes execution script and the inner Python script that queries the BuiltWith API.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries the non-public BuiltWith API (a paid technical database) to gather intelligence about technologies used by a target domain, which could be used for reconnaissance and targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:07:40.601032Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, with balanced quotes, parentheses, and braces, proper module imports, valid function calls, and correct error handling logic, including the nested Python code executed within the Kubernetes pod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 as it explicitly queries BuiltWith's API (a closed-source provider requiring an API key) to gather intelligence (enumerating technologies for a target domain), directly matching the technique's definition and the provided explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:07:46.769233Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced quoting and a valid Kubernetes stream exec invocation.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately queries a paid BuiltWith API to collect closed-source intel (T1597), though it assumes the API key/module/container and may raise an uncaught KeyError before the try block.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:08:27.732529Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

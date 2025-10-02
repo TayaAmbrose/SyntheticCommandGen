@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -H \"X-API-Key: $DNSDB_KEY\" -H \"Accept: application/json\" \"https://api.dnsdb.info/lookup/rrset/name/example.com?limit=50\" -o dnsdb_rrset_example.com.json -w '{\"service\":\"dnsdb_rrset\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries Farsight DNSDB (subscription) for RRset data on the target domain, returning JSON while applying limits and logging status.",
+  "rationale_steps": [
+    "Use a closed-source passive DNS dataset (Farsight DNSDB).",
+    "Authenticate with an API key supplied via environment variable.",
+    "Apply a result limit to reduce unnecessary data volume.",
+    "Store JSON output to facilitate later parsing.",
+    "Append HTTP status info to a central log for reliability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-b0633acf",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper curl syntax, balanced quotes, valid flags, and correct JSON formatting in the write-out parameter.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying Farsight DNSDB, a paid/subscription-based intelligence source, using an API key to gather non-public DNS intelligence about a target domain.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:00:14.426545Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct arguments, and proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries Farsight DNSDB, a known subscription-based, closed-source intelligence service, perfectly aligning with T1597's 'Search Closed Sources' objective.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:00:19.399681Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed curl command with balanced quotes, valid flags and headers, correctly quoted URL, and proper use of -o with -w output redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the paid DNSDB API for RRset data using an API key, saves JSON results, and logs status, directly aligning with T1597 closed-source querying.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:00:55.775945Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

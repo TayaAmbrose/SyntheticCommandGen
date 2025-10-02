@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would use IPv6 UDP with a specified traffic class (if available) to send base64-encoded chunks to a unicast destination on a high, uncommon port]",
+  "explanation": "IPv6-specific options and addressing provide a distinct medium from typical IPv4/HTTPS traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Leverage IPv6 unicast to avoid primary IPv4 channels",
+    "Optionally set IPv6 traffic class without altering routing",
+    "Base64-encode data for ASCII-safe transport",
+    "Chunk and send via UDP to a high-numbered port",
+    "Avoids any persistent network configuration changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-416c8c11",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld and replaced with a description.",
+        "semantic_score": 3,
+        "semantic_justification": "The described command appears to implement exfiltration over alternative protocol (IPv6 UDP) which aligns with data exfiltration techniques, but T1011 specifically refers to establishing accounts rather than exfiltration.",
+        "combined_score": 1.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T11:06:11.659764Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld and described as 'non-actionable,' preventing any syntactic evaluation.",
+        "semantic_score": 1,
+        "semantic_justification": "The described action of sending base64-encoded chunks over IPv6 UDP is a communication or data exfiltration technique, fundamentally misaligned with T1011 'Establish Accounts' which focuses on creating or abusing accounts.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:06:18.493681Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The provided entry is a high-level description rather than a concrete, parseable command or Python snippet, so it is not runnable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The described IPv6/UDP base64 chunk sending aligns with network exfiltration, not with the provided technique description of establishing accounts, so it does not meet the claimed intent.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:06:20.268286Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

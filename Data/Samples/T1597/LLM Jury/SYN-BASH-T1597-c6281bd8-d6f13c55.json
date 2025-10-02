@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -fsS --retry 2 --connect-timeout 5 --max-time 20 --compressed -u \"$RISKIQ_EMAIL:$RISKIQ_KEY\" -H \"Accept: application/json\" \"https://api.riskiq.net/pt/v2/enrichment/subdomains?query=example.com\" -o riskiq_subdomains_example.com.json -w '{\"service\":\"riskiq_subdomains\",\"http_code\":%{http_code},\"url\":\"%{url_effective}\"}\\n' >> recon_t1597.log",
+  "explanation": "Queries RiskIQ PassiveTotal (commercial) for known subdomains of a target, using Basic auth and returning structured JSON with succinct logging.",
+  "rationale_steps": [
+    "Use a closed-source commercial dataset (RiskIQ PassiveTotal).",
+    "Authenticate via HTTP Basic without exposing credentials in the command history (env vars).",
+    "Target specific enrichment endpoint to minimize noise.",
+    "Save results in JSON for correlation with other findings.",
+    "Log HTTP status to enable error tracking and rate-limit awareness."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-c6281bd8-d6f13c55",
+  "source_prompt_hash": "c6281bd8",
+  "timestamp_utc": "2025-09-30T06:20:09.380937Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper flag formats, valid curl options, and correct output redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1597 (Search Closed Sources) by querying RiskIQ PassiveTotal, a commercial threat intelligence platform, using authentication credentials to access non-public subdomain information about a target domain.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:38:12.897346Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct syntax for all `curl` options and shell redirections.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries a commercial, closed-source threat intelligence platform (RiskIQ PassiveTotal) using an API key, perfectly demonstrating the acquisition of non-public information for targeting as described by T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:38:17.167347Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed curl command with valid flags, balanced quoting, correct authentication, output, and write-out redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "Authenticates to the commercial RiskIQ PassiveTotal API to enumerate subdomains for a target and logs results, matching T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:38:33.087494Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

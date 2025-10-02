@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,json,http.client,urllib.parse; dom=os.environ.get(\"TARGET_DOMAIN\",\"example.com\"); key=os.environ[\"SHODAN_API_KEY\"]; qs=urllib.parse.urlencode({\"key\":key,\"query\":\"hostname:\"+dom}); c=http.client.HTTPSConnection(\"api.shodan.io\",timeout=15); c.request(\"GET\",\"/shodan/host/search?\"+qs,headers={\"Accept\":\"application/json\"}); r=c.getresponse(); b=r.read();\ntry:\n j=json.loads(b.decode());\nexcept Exception:\n j={\"raw\":b.decode(\"utf-8\",\"ignore\")};\nif r.status==200:\n print(json.dumps(j))\nelse:\n sys.stderr.write(f\"HTTP {r.status} {r.reason}: \"+(b[:200].decode(\"utf-8\",\"ignore\"))+\"\\n\"); sys.exit(1)'\n",
+  "explanation": "Uses the Shodan API (keyed access) to search for hosts by hostname matching the target domain and returns results in JSON.",
+  "rationale_steps": [
+    "Load API key from environment and build a precise query.",
+    "Send HTTPS request to Shodan host search endpoint with Accept JSON.",
+    "Parse and print JSON while handling HTTP and decode errors."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-0307cb30-20426c83",
+  "source_prompt_hash": "0307cb30",
+  "timestamp_utc": "2025-09-30T06:31:45.744266Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and braces, proper exception handling, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries Shodan, a paid closed-source intelligence platform, using an API key to gather information about a target domain's internet-exposed systems.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:44:24.716720Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and valid Python syntax throughout, making it executable without errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying the Shodan API, a commercial/keyed intelligence source, to gather data on a target domain, which is a common adversary technique for reconnaissance and targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:44:30.609282Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes, valid indentation across try/except and if blocks, and correct use of semicolons and arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the Shodan API using an API key to search hosts by hostname for a target domain and outputs JSON, aligning with closed-source intelligence collection under T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:44:52.183609Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

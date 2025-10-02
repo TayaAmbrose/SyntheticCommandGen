@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $ErrorActionPreference='Stop'; $domain='example.com'; $out='C:\\ProgramData\\recon\\whois_example.com.json'; New-Item -ItemType Directory -Force -Path C:\\ProgramData\\recon | Out-Null; $log='C:\\ProgramData\\recon\\recon.log'; try { $key=$env:WHOISXML_API_KEY; if([string]::IsNullOrWhiteSpace($key)){ throw 'WHOISXML_API_KEY not set'; } $uri=\"https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=$key&domainName=$domain&outputFormat=JSON\"; $resp=Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop; if(($resp.StatusCode -ge 200) -and ($resp.StatusCode -lt 300) -and ($resp.Headers['Content-Type'] -match 'application/json')){ ($resp.Content | ConvertFrom-Json) | ConvertTo-Json -Depth 6 | Set-Content -Path $out -Encoding UTF8 } else { Add-Content -Path $log -Value \"$(Get-Date -Format o) WhoisXML non-success or non-JSON for $domain. Status=$($resp.StatusCode)\" } } catch { Add-Content -Path $log -Value \"$(Get-Date -Format o) WhoisXML error for $domain: $($_.Exception.Message)\" }",
+  "explanation": "Queries the paid WhoisXML API for domain WHOIS data, a closed-source commercial service, then validates and stores the JSON output securely.",
+  "rationale_steps": [
+    "Load API key from environment variable without printing it.",
+    "Request WHOIS data from a paid closed-source provider over HTTPS.",
+    "Validate status and content type, parse JSON, and save to a controlled path.",
+    "Log errors without exposing sensitive parameters."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-e22d193f-6f3937cf",
+  "source_prompt_hash": "e22d193f",
+  "timestamp_utc": "2025-09-30T06:29:30.632581Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper syntax, balanced quotes/braces, appropriate error handling, and correct use of PowerShell cmdlets and methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the paid WhoisXML API service with proper authentication, error handling, and output management to gather domain intelligence.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:40:38.923545Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, with correct syntax, balanced elements, valid parameters for all cmdlets, proper string interpolation, and robust flow control using try-catch blocks.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1597 by querying a commercial, paid WHOIS API (`whoisxmlapi.com`) for domain intelligence using an API key, fitting the 'querying paid technical databases' and 'closed-source commercial service' aspects of the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:40:49.515144Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell is well-formed with balanced quotes/braces, proper separators, and valid cmdlets/parameters for Windows PowerShell.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries a commercial WHOIS API using an API key and stores the JSON result, directly exemplifying acquisition from a closed paid source consistent with T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:40:58.374772Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "python3 -c \"import os, boto3, json; store_id=os.environ.get('IDENTITY_STORE_ID','d-1234567890'); marketing_group_id=os.environ.get('MARKETING_GROUP_ID','abcd-efgh-ijkl'); ids=boto3.client('identitystore'); u=ids.create_user(IdentityStoreId=store_id, UserName='dan.cho', Name={'GivenName':'Dan','FamilyName':'Cho'}, DisplayName='Dan Cho', Emails=[{'Value':'dan.cho@brand-support.example','Primary':True,'Type':'work'}]); ids.create_group_membership(IdentityStoreId=store_id, GroupId=marketing_group_id, MemberId={'UserId':u['UserId']}); print(json.dumps({'action':'create_sso_persona','identity_store_id':store_id,'user_id':u['UserId'],'username':'dan.cho','group_membership_added':marketing_group_id}))\"",
+  "explanation": "Adds an AWS IAM Identity Center (SSO) user with realistic attributes and places them in a marketing group for believable access patterns.",
+  "rationale_steps": [
+    "Provision identity in SSO to align with organizations that centralize access via Identity Center.",
+    "Assign the user to a common group to inherit standard, low-risk permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1585-5eabdd9a-1d6d5828",
+  "source_prompt_hash": "5eabdd9a",
+  "timestamp_utc": "2025-09-30T07:26:07.139717Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, valid method calls to boto3 APIs, and correct string formatting throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by creating a new user in AWS IAM Identity Center with realistic attributes and adding them to a marketing group, which enables persistent access and blends into normal activity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:25:33.278005Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python syntax, with balanced quotes, parentheses, and braces, and valid function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly creates an AWS IAM Identity Center user and adds them to a group using appropriate boto3 methods, perfectly aligning with the 'Establish Accounts' technique and the claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:25:35.178992Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed Python within balanced double quotes, uses valid semicolons, and has balanced parentheses/braces with correct string quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "It appropriately uses boto3 Identity Store APIs to create a user and add them to a group, aligning with T1585, though it depends on correct AWS configuration/permissions and realistic IDs to succeed.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T09:26:17.212411Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

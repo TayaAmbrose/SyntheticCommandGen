@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging\nlogging.basicConfig(level=logging.INFO)\ns3 = boto3.client('s3')\n# Parameters: previously exported vendor JSONL asset via AWS Data Exchange\nbucket = 'adx-consumer-bucket-123456'\nkey = 'intel/exports/d-xxxxxxxx/r-xxxxxxxx/vendor_asset.jsonl'\ndomain = 'example.com'\nexpr = \"SELECT s.* FROM S3Object s WHERE s.domain = 'example.com'\"\ntry:\n    resp = s3.select_object_content(\n        Bucket=bucket,\n        Key=key,\n        ExpressionType='SQL',\n        Expression=expr,\n        InputSerialization={'JSON': {'Type': 'LINES'}},\n        OutputSerialization={'JSON': {}}\n    )\n    results = []\n    for event in resp['Payload']:\n        if 'Records' in event:\n            results.append(event['Records']['Payload'].decode('utf-8'))\n    out_key = f's3select/{domain}_filtered.json'\n    s3.put_object(Bucket=bucket, Key=out_key, Body='\\n'.join(results).encode('utf-8'), ContentType='application/json')\n    print(json.dumps({'source': 'aws-data-exchange-s3select', 's3Uri': f's3://{bucket}/{out_key}', 'filter': {'domain': domain}}))\nexcept Exception as e:\n    logging.exception('S3 Select filtering of closed-source dataset failed: %s', e)",
+  "explanation": "Performs in-place S3 Select filtering on a previously exported closed-source dataset (from AWS Data Exchange) to extract only records for a target domain, minimizing data movement and noise.",
+  "rationale_steps": [
+    "Operate directly on exported closed-source data within controlled cloud storage.",
+    "Use server-side filtering to reduce unnecessary data transfer and log volume.",
+    "Output filtered records in structured JSON for efficient analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-5a92e50b",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, error handling, balanced parentheses/braces, and correct function calls to the boto3 AWS SDK.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries a non-public dataset from AWS Data Exchange (a paid closed source), filters for specific domain intelligence, and stores the results for potential targeting use.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:31:15.633711Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, with correct syntax for imports, variable assignments, AWS boto3 calls, error handling, and string formatting, making it fully runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly queries a 'previously exported closed-source dataset' (explicitly from AWS Data Exchange) to extract specific intelligence, precisely aligning with the 'Search Closed Sources' technique (T1597) of acquiring and querying non-public information.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:31:24.037134Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is well-formed with balanced quotes, valid boto3 usage, and no syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly uses S3 Select to filter a closed-source AWS Data Exchange JSONL export for a target domain and write results, but it na\u00efvely concatenates chunked Records payloads and hardcodes the domain in the SQL while requiring appropriate AWS permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:31:42.161561Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

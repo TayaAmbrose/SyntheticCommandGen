@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Cloud",
+  "shell": "Python",
+  "command": "import boto3, json, logging, requests\nfrom requests.auth import HTTPBasicAuth\nlogging.basicConfig(level=logging.INFO)\nsecrets = boto3.client('secretsmanager')\ns3 = boto3.client('s3')\ncreds = json.loads(secrets.get_secret_value(SecretId='spycloud/basic')['SecretString'])\nuser, pwd = creds['username'], creds['password']\ndomain = 'example.com'\nurl = 'https://api.spycloud.com/breach/data'\nparams = {'domain': domain, 'limit': '100'}\ntry:\n    r = requests.get(url, params=params, auth=HTTPBasicAuth(user, pwd), headers={'Accept':'application/json','User-Agent':'cloud-intel-client/1.0'}, timeout=10)\n    r.raise_for_status()\n    data = r.json()\n    bucket = 'intel-results-bucket-123456'; key = f'spycloud/{domain}_breaches.json'\n    s3.put_object(Bucket=bucket, Key=key, Body=json.dumps({'source': 'spycloud', 'domain': domain, 'result': data}), ContentType='application/json')\n    print(json.dumps({'source': 'spycloud', 'requestUrl': r.url, 's3Uri': f's3://{bucket}/{key}'}))\nexcept Exception as e:\n    logging.exception('SpyCloud breach data query failed: %s', e)",
+  "explanation": "Retrieves breach exposure data for a target domain from SpyCloud, a paid breach intelligence provider, using basic auth credentials from Secrets Manager. Closed-source reconnaissance data is securely stored to S3.",
+  "rationale_steps": [
+    "Authenticate to a closed-source breach database provider using stored credentials.",
+    "Limit query scope and results to reduce noise and comply with API usage.",
+    "Store results in JSON with provenance metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-a61c7e92-5f73f42d",
+  "source_prompt_hash": "a61c7e92",
+  "timestamp_utc": "2025-09-30T06:45:01.363013Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, balanced parentheses/braces, correct function calls, appropriate error handling, and follows Python syntax conventions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by retrieving breach data from SpyCloud (a paid intelligence source), using proper authentication, storing results securely, and implementing appropriate error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:52:41.695910Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, with correct imports, variable assignments, function calls, f-string usage, and a properly structured try-except block.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the described action of querying a 'paid breach intelligence provider' (SpyCloud) for 'breach exposure data,' directly aligning with the 'Search Closed Sources' technique (T1597) by acquiring non-public information from a paid feed and storing it.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T11:52:49.543018Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python snippet is well-formed with correct imports, balanced delimiters, valid try/except usage, and proper function calls and parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "It authentically queries a paid SpyCloud API using credentials from AWS Secrets Manager to retrieve domain breach data and stores the results in S3, matching T1597 closed-source reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:53:01.635424Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

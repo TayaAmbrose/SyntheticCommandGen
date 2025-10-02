@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$tok=(Get-AzAccessToken -ResourceUrl 'https://graph.microsoft.com').Token; $uid=(Get-AzADUser -UserPrincipalName 'avery.reed@contoso.onmicrosoft.com').Id; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/photo/$value') -Method PUT -InFile 'C:\\Users\\Public\\Pictures\\avery.jpg' -ContentType 'image/jpeg'; Invoke-RestMethod -Headers @{Authorization='Bearer ' + $tok} -Uri ('https://graph.microsoft.com/v1.0/users/' + $uid + '/photo') -Method GET | ConvertTo-Json",
+  "explanation": "Uploads a professional-looking profile photo to the persona\u2019s account to increase realism in directories and email clients.",
+  "rationale_steps": [
+    "Acquire a Graph token via Az PowerShell.",
+    "Upload user photo to Microsoft Graph to visually complete the persona.",
+    "Fetch photo metadata to confirm success and provide JSON output."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-237a137c-c5c4ced1",
+  "source_prompt_hash": "237a137c",
+  "timestamp_utc": "2025-09-30T07:37:51.533004Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, correct variable assignments, appropriate method calls, and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with the T1585 technique by manipulating an established account to increase its legitimacy through profile photo modification, though it assumes Azure credentials are already authenticated which slightly reduces operational plausibility.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:57:27.256794Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell syntax, balances all quotes, parentheses, and braces, and employs correct command separators and flag formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively uploads a profile photo to a specified user account via the Microsoft Graph API, directly aligning with the 'blend into normal activity' aspect of the T1585 technique by making an account appear more legitimate, assuming the necessary Azure AD permissions are available for the executing context.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:57:44.349386Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes/parentheses, correct separators, valid parameters, and proper hashtable/header usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly updates a user\u2019s Microsoft 365 profile photo via Graph to enhance a created persona (supporting Establish Accounts), though it depends on having appropriate Graph permissions/scopes and acting as the target user.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T10:58:09.927356Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

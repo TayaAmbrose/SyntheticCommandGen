@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "( crontab -l 2>/dev/null; echo '30 8 1 * * /usr/bin/env GITHUB_TOKEN=$(cat /etc/persona/github.token) curl -sS -H \"Authorization: token ${GITHUB_TOKEN}\" -H \"Accept: application/vnd.github+json\" -X PATCH https://api.github.com/user -d \"{\\\"name\\\":\\\"Alex Morgan\\\",\\\"bio\\\":\\\"Open-source contributor. Cycling on weekends.\\\"}\" > /var/log/persona_github_profile.json 2>&1' ) | crontab -",
+  "explanation": "Installs a cron job to periodically refresh GitHub profile details, keeping the persona active and credible.",
+  "rationale_steps": [
+    "Load a stored token at runtime to avoid embedding secrets",
+    "Patch profile name and bio via GitHub API",
+    "Capture JSON output for auditing and automation"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-319479ac",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for crontab manipulation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by setting up automated maintenance of a GitHub account persona through a cron job that periodically updates profile information to maintain credibility and persistence.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:30:43.784432Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command separators, valid flag formats, and correct shell syntax for cron job installation and execution.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command correctly installs a cron job to modify a GitHub profile, this action of updating an existing account's details does not align with the 'Establish Accounts' (T1585) technique, which focuses on creating or initially abusing accounts for access or persistence.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:31:03.567397Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and parentheses with a valid crontab pipeline, flags, and redirections make the command well-formed.",
+        "semantic_score": 2,
+        "semantic_justification": "Although it aligns with maintaining a social account (T1585), the Authorization header expands to empty due to using env for the token while the shell expands ${GITHUB_TOKEN} beforehand, and writing to /var/log likely fails without root, so the cron job probably won\u2019t achieve the intended profile update.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:32:26.462156Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

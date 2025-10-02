@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -lc 'set -euo pipefail; ts=$(date -u +%FT%TZ); d=$(date -u +%F); dest=/opt/ti/closed/vulnintel/$d; mkdir -p \"$dest\"; if scp -q -i /etc/ssh/keys/vulnintel_ed25519 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/ssh/known_hosts_vulnintel -o IdentitiesOnly=yes client@sftp.vulnintel.secure:/clients/acme_corp/advisories/daily.json{,.sha256} \"$dest\"/ && (cd \"$dest\" && sha256sum -c daily.json.sha256); then printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"vulnintel-secure\\\",\\\"artifact\\\":\\\"%s/daily.json\\\",\\\"status\\\":\\\"verified\\\"}\\n\" \"$ts\" \"$dest\" | tee -a /var/log/ti_fetch.json; else printf \"{\\\"timestamp\\\":\\\"%s\\\",\\\"technique\\\":\\\"T1597\\\",\\\"source\\\":\\\"vulnintel-secure\\\",\\\"status\\\":\\\"error\\\"}\\n\" \"$ts\" >&2; fi'",
+  "explanation": "Retrieves a paywalled vulnerability advisory feed tailored to the target org via SFTP, verifying checksums and producing structured logs, aligning with closed-source reconnaissance.",
+  "rationale_steps": [
+    "Use key-based authentication to the provider's SFTP endpoint.",
+    "Download daily advisory JSON and its checksum file.",
+    "Validate integrity before consumption.",
+    "Record a JSON status line for audit and ingestion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1597-7b824e9d-018ba059",
+  "source_prompt_hash": "7b824e9d",
+  "timestamp_utc": "2025-09-30T06:47:02.517764Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, appropriate error handling with set -euo pipefail, and clean variable usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by securely retrieving a paid vulnerability intelligence feed via SFTP, implementing proper authentication, verification, and logging mechanisms that would be used in a legitimate threat intelligence collection operation.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:26:17.459734Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flags, and proper use of brace expansion and subshells.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the acquisition of a paywalled, tailored vulnerability advisory feed from a secure, closed source via SFTP, precisely aligning with T1597's description of searching closed sources for intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:26:31.802254Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting and braces, valid scp options, correct use of conditionals and subshells, and properly escaped printf strings within double quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "It securely pulls a closed, authenticated advisory feed, verifies integrity via sha256sum, and emits structured logs, which aligns with T1597's use of non-public sources for reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:28:03.008454Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

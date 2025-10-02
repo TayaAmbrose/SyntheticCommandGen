@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "gcloud iam service-accounts create alex-morgan --display-name=\"Alex Morgan - Research\" --format=json",
+  "explanation": "Creates a Google Cloud service account to support persona-driven automation in cloud environments.",
+  "rationale_steps": [
+    "Choose a service account name that maps to the persona",
+    "Create the account to enable API-driven activities",
+    "Use a benign display name to avoid scrutiny"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-6ce233d8",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper gcloud syntax, valid flags, balanced quotes, and correct formatting for the service account creation operation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a service account with a human-like name that could be used for persistent access to Google Cloud resources, and includes the --format=json flag to obtain credentials in a programmatically usable format.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T09:40:55.690257Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for gcloud, balanced quotes, and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly creates a new Google Cloud service account, which perfectly aligns with the MITRE ATT&CK T1585 technique 'Establish Accounts' and the provided explanation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:40:58.914762Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed gcloud command with valid flags and balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "Creates a GCP service account aligning with T1585, though it requires appropriate IAM permissions despite listing 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:41:06.723673Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1597",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os,sys,json,ssl,urllib.request,urllib.parse,base64; d=os.getenv('TARGET_DOMAIN','example.com'); u=os.getenv('RISKIQ_EMAIL'); k=os.getenv('RISKIQ_KEY'); \nif not (u and k): print(json.dumps({'source':'riskiq_passivetotal','query':d,'error':'missing RISKIQ_EMAIL or RISKIQ_KEY'}), file=sys.stderr); sys.exit(1); \nauth='Basic '+base64.b64encode((u+':'+k).encode()).decode(); hdr={'Authorization':auth,'Accept':'application/json','User-Agent':'t1597-demo/1.0'}; ctx=ssl.create_default_context(); \ntry:\n    url='https://api.riskiq.net/pt/v2/dns/passive?query='+urllib.parse.quote(d); req=urllib.request.Request(url,headers=hdr); r=urllib.request.urlopen(req,timeout=20,context=ctx); print(json.dumps({'source':'riskiq_passivetotal','query':d,'data':json.loads(r.read().decode('utf-8'))}, ensure_ascii=False));\nexcept Exception as e:\n    print(json.dumps({'source':'riskiq_passivetotal','query':d,'error':str(e)}), file=sys.stderr); sys.exit(2)",
+  "explanation": "Uses RiskIQ PassiveTotal (closed-source) with HTTP Basic authentication to retrieve passive DNS for a target domain.",
+  "rationale_steps": [
+    "Provide RiskIQ credentials via environment variables to securely authenticate.",
+    "Request passive DNS data for the domain to enrich infrastructure intelligence.",
+    "Limit to a single API call with timeout and JSON output to minimize log noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-7be75a85-77bba73b",
+  "source_prompt_hash": "7be75a85",
+  "timestamp_utc": "2025-09-30T06:36:34.534600Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with balanced quotes, parentheses, and proper syntax throughout, including error handling and JSON output formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by using RiskIQ PassiveTotal API, a paid threat intelligence service, with proper authentication to gather passive DNS information about a target domain.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:59:42.992331Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, using valid syntax for imports, variable assignments, control flow, function calls, and error handling, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying RiskIQ PassiveTotal, a well-known closed-source intelligence platform, to retrieve passive DNS data for a target domain, which is a direct application of acquiring non-public information for targeting.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:59:49.436880Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with balanced parentheses, valid inline statements after colons, correct imports, and a proper try/except structure.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates and queries RiskIQ PassiveTotal\u2019s closed API to retrieve passive DNS for a target domain, directly implementing T1597\u2019s closed-source collection behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:00:11.585474Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

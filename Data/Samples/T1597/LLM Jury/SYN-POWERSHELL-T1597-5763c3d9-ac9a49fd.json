@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $id=$env:CENSYS_API_ID; $sec=$env:CENSYS_API_SECRET; if([string]::IsNullOrWhiteSpace($id) -or [string]::IsNullOrWhiteSpace($sec)){ throw 'Missing CENSYS credentials'; }; $basic=[Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(\"$id`:$sec\")); $body=@{ q=\"services.service_name:HTTP AND services.tls.certificates.leaf_data.subject.common_name:example.com\"; per_page=3 } | ConvertTo-Json -Depth 3; $resp=Invoke-RestMethod -Method Post -Uri \"https://search.censys.io/api/v2/hosts/search\" -Headers @{Authorization=(\"Basic \" + $basic); Accept='application/json'; 'Content-Type'='application/json'} -Body $body -TimeoutSec 30 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 7 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[Censys] \" + $_.Exception.Message) }",
+  "explanation": "Searches the Censys paid API for hosts whose TLS certificate CN matches example.com, leveraging a closed-source index of internet data. Uses Basic Auth and returns structured JSON.",
+  "rationale_steps": [
+    "Load API ID/secret from environment and build a Basic Auth header.",
+    "Craft a constrained GNQL query to reduce unnecessary results.",
+    "POST to the v2 search endpoint with JSON body and strict content headers.",
+    "Serialize the response to JSON; handle and log errors consistently."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-ac9a49fd",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced quotes, braces, and parentheses, correct error handling in a try-catch block, and valid parameter usage for the Invoke-RestMethod cmdlet.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying the Censys API, a paid closed-source intelligence service, using proper authentication, formatting the query to search for specific hosts, and handling the response appropriately.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T12:11:20.290298Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax for variable assignment, conditional logic, API calls, JSON conversion, and error handling, including proper quoting and balanced structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by querying a closed-source intelligence platform (Censys API) with plausible parameters to gather targeting intelligence, directly aligning with MITRE ATT&CK T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:11:33.227283Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell script is well-formed with balanced quotes/braces, valid try/catch, correct header/hashtable syntax, and proper use of Invoke-RestMethod and JSON conversion.",
+        "semantic_score": 5,
+        "semantic_justification": "It authenticates to the Censys v2 API using Basic Auth and queries a closed-source index for hosts by TLS CN, returning structured JSON, which aligns with T1597 behavior.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T12:11:59.250539Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

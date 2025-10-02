@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); url=f'https://api.securityscorecard.io/companies/{domain}'; headers={'Authorization': f'Token {os.environ[\\'SSC_API_KEY\\']}', 'Accept': 'application/json'};\\ntry:\\n    r=requests.get(url, headers=headers, timeout=15); r.raise_for_status(); print(json.dumps({'source':'securityscorecard','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'securityscorecard','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Retrieves company security rating data from SecurityScorecard\u2019s closed-source API for the target domain, using token-based auth and structured JSON output.",
+  "rationale_steps": [
+    "Call the SecurityScorecard company endpoint with a valid token.",
+    "Return only the company\u2019s profile/score data to limit log noise."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-d53331bc",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the embedded Python code to be executed in the Kubernetes pod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries SecurityScorecard's private API using an authentication token to gather non-public security rating data about a target domain, which could be used for reconnaissance and targeting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:09:38.512539Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The provided Python script is perfectly well-formed, with correct syntax for imports, Kubernetes client calls, environment variable access, string manipulation, and nested script execution via `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of querying SecurityScorecard's closed-source API for company data using token authentication, which directly aligns with MITRE ATT&CK T1597 'Search Closed Sources' by accessing a paid/private intelligence feed for targeting information.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:09:45.744667Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python with balanced quoting/escaping, valid Kubernetes stream exec usage, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "Executes in a Kubernetes pod to query SecurityScorecard\u2019s closed-source API with token auth and returns structured results, directly aligning with T1597 closed-source collection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:10:10.583289Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

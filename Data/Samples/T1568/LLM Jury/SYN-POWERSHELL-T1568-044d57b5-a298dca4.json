@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "$evs = Get-WinEvent -LogName 'Microsoft-Windows-DNS-Client/Operational' -MaxEvents 1000 | Where-Object { $_.Id -in 3008,3009 } | ForEach-Object { $_.Properties[2].Value } | Where-Object { $_ } | Select-Object -Unique; $susp = $evs | Where-Object { ($_ -split '\\.')[0] -match '[a-z]{6,}\\d{3,}' -or $_.Length -gt 30 }; $payload = @{ timestamp=(Get-Date).ToUniversalTime().ToString('o'); suspected=$susp } | ConvertTo-Json -Depth 3; Invoke-WebRequest -UseBasicParsing -ContentType 'application/json' -Method POST -Body $payload 'https://siem.example.local/api/ingest/dns-dga'",
+  "explanation": "Defensive telemetry for T1568: analyzes DNS Client Operational log for domains with DGA-like patterns and reports to SIEM using Invoke-WebRequest.",
+  "rationale_steps": [
+    "Read recent DNS query events from Windows DNS Client Operational log.",
+    "Extract queried domains and deduplicate.",
+    "Apply simple heuristic for DGA-like patterns (long labels, alphanumeric mix).",
+    "Send suspected domains to SIEM."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-044d57b5-a298dca4",
+  "source_prompt_hash": "044d57b5",
+  "timestamp_utc": "2025-09-30T04:07:31.423921Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignment, piping, filtering, and web requests.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements detection for T1568 (Dynamic Resolution) by analyzing DNS client logs for DGA-like patterns (long domains and alphanumeric patterns typical of algorithmically generated domains) and reporting findings to a SIEM endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:15:45.900824Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell syntax for cmdlets, pipes, variable assignments, hashtables, and string operations, with balanced delimiters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a defensive telemetry gathering technique for T1568 by monitoring DNS client logs for DGA-like patterns (specific regex and length heuristics) and reporting findings to a SIEM, all using appropriate and commonly accepted methods without requiring elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:15:57.295486Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced braces and quotes, valid cmdlets and parameters, proper statement separators, and a correctly bound positional URI for Invoke-WebRequest.",
+        "semantic_score": 4,
+        "semantic_justification": "It queries DNS Client Operational events, extracts candidate domain names, applies a reasonable DGA heuristic, and posts results to a SIEM, aligning with defensive detection for T1568, though reliance on specific event property indexes and simple patterns may reduce robustness.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T05:16:19.366875Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

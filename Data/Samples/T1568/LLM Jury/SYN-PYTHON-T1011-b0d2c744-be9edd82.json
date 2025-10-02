@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv4 UDP socket to an APIPA/isolated adapter address and send base64-encoded chunks to a peer on an uncommon UDP port with low TTL]",
+  "explanation": "Leverages a non-routed/alternate interface (APIPA) and UDP to move data out-of-band relative to the primary egress path, mapping to T1011.",
+  "rationale_steps": [
+    "Select an alternate local interface distinct from the default route",
+    "Encode data with base64",
+    "Use IPv4 UDP with a constrained TTL",
+    "Chunk and send to a high, uncommon destination port",
+    "Ensure no global network settings are altered"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-be9edd82",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld and replaced with a description.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld, though the description suggests a potential implementation of T1011 using UDP over APIPA addressing.",
+        "combined_score": 0.0,
+        "confidence": 0,
+        "timestamp": "2025-10-02T07:07:50.427257Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld, making syntactic evaluation impossible.",
+        "semantic_score": 2,
+        "semantic_justification": "While the description mentions 'low TTL' which can be a signal, the core intent of using an APIPA interface and UDP for out-of-band data transfer does not directly align with T1011's focus on dynamic endpoint resolution via methods like DGAs or fast-flux.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:08:01.276613Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command or code is provided\u2014only a narrative description\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The described behavior is UDP-based out-of-band exfiltration over an alternate interface and low IP TTL, which does not implement dynamic resolution (e.g., DGA, fast-flux, dynamic DNS) and thus is misaligned with the provided T1011 description.",
+        "combined_score": 1.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:08:29.985304Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 0.666,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

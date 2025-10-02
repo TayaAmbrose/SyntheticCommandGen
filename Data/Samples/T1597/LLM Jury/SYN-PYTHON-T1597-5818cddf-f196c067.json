@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1597",
+  "platform": "Kubernetes",
+  "shell": "Python",
+  "command": "import os, json, logging, sys\nfrom kubernetes import client, config\nfrom kubernetes.stream import stream\n\nlogging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')\nns = os.getenv('KUBE_NAMESPACE', 'default')\npod = os.getenv('KUBE_POD', 'util-python-0')\ncontainer = os.getenv('KUBE_CONTAINER')\ntry:\n    try:\n        config.load_incluster_config()\n    except Exception:\n        config.load_kube_config()\n    v1 = client.CoreV1Api()\n    inner = \"import os, sys, json, logging, requests; logging.basicConfig(level=logging.INFO); domain=os.environ.get('TARGET_DOMAIN','example.com'); headers={'APIKEY': os.environ['SECURITYTRAILS_KEY']}; url=f'https://api.securitytrails.com/v1/domain/{domain}/subdomains';\\ntry:\\n    r=requests.get(url, headers=headers, timeout=15); r.raise_for_status(); print(json.dumps({'source':'securitytrails','domain':domain,'data':r.json()}))\\nexcept Exception as e:\\n    print(json.dumps({'source':'securitytrails','domain':domain,'error':str(e)})); sys.exit(1)\"\n    resp = stream(v1.connect_get_namespaced_pod_exec, pod, ns, command=['python3','-c', inner], container=container, stderr=True, stdin=False, stdout=True, tty=False)\n    print(resp)\nexcept Exception as e:\n    logging.error('collection_failed', exc_info=e); sys.exit(1)\n",
+  "explanation": "Executes a Python snippet inside a permitted pod to query SecurityTrails (a paid, closed-source DNS intelligence platform) for subdomains of a target domain, returning structured JSON. This leverages a closed-source subscription API and avoids active scanning.",
+  "rationale_steps": [
+    "Use kubernetes-client to exec Python within an existing user-accessible pod.",
+    "Authenticate to SecurityTrails via API key header and query the closed-source dataset for subdomains."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1597-5818cddf-f196c067",
+  "source_prompt_hash": "5818cddf",
+  "timestamp_utc": "2025-09-30T06:41:43.112780Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with proper imports, exception handling, balanced quotes/parentheses/braces, and correct string formatting for the inner Python script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) as it queries SecurityTrails, a paid closed-source intelligence platform, to gather subdomain information about a target domain using a valid API key.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T13:06:42.025860Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, with correct syntax for imports, variable assignments, Kubernetes API calls, f-strings, JSON operations, and error handling, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by executing a Python script within a Kubernetes pod to query SecurityTrails, a recognized paid closed-source intelligence platform, for subdomain data using an API key, which directly aligns with MITRE ATT&CK T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:06:58.162601Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is well-formed with balanced quotes and parentheses, valid Kubernetes client usage, and a correctly quoted inner command string.",
+        "semantic_score": 5,
+        "semantic_justification": "It queries the paid SecurityTrails API for subdomains via a pod exec, directly aligning with T1597's use of closed-source data for reconnaissance.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T13:07:07.930776Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

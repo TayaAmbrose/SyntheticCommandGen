@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "( crontab -l 2>/dev/null; echo '12 18 1 * * /usr/bin/env MASTO_TOKEN=$(cat /etc/persona/mastodon.token) curl -sS -X POST https://mastodon.social/api/v1/statuses -H \"Authorization: Bearer ${MASTO_TOKEN}\" -F \"status=Weekend ride completed! Logging my kms and reading OSS issues.\" > /var/log/persona_mastodon_post.json 2>&1' ) | crontab -",
+  "explanation": "Automates occasional benign posts on Mastodon to keep the persona active without targeting victims.",
+  "rationale_steps": [
+    "Schedule low-frequency activity through cron",
+    "Post innocuous status content via documented API",
+    "Store JSON output to support monitoring and tuning"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-a88f7d50",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct use of parentheses for command grouping.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively establishes a persistent Mastodon account presence through crontab automation, aligning with T1585 (Establish Accounts), though it assumes the token already exists rather than creating the account itself.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:41:24.010557Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly formed, with balanced parentheses and quotes, valid Linux commands, and correct redirection and piping.",
+        "semantic_score": 4,
+        "semantic_justification": "While the command doesn't establish an account, it automates activities (posting to Mastodon) that keep an existing persona active, directly supporting the 'blend into normal activity' objective of the T1585 technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:41:24.239873Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and parentheses, valid flags, proper separators, and a standard crontab merge-to-stdin pattern make it parseable.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with abusing an established social account (T1585) and schedules a plausible Mastodon API post, but ${MASTO_TOKEN} is expanded before env sets it and writing to /var/log typically requires root, so it may not achieve the intended posting.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:42:06.508616Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

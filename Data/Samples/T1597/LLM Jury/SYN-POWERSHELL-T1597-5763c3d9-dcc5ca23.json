@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1597",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "try { $vt=$env:VT_API_KEY; if([string]::IsNullOrWhiteSpace($vt)){ throw 'Missing VT_API_KEY'; }; $uri='https://www.virustotal.com/api/v3/domains/example.com'; $resp=Invoke-RestMethod -Method Get -Uri $uri -Headers @{Accept='application/json'; 'x-apikey'=$vt} -TimeoutSec 25 -ErrorAction Stop; $resp | ConvertTo-Json -Depth 6 } catch { Add-Content -Path \"$env:TEMP\\ti_t1597.log\" -Value (\"[VirusTotal] \" + $_.Exception.Message) }",
+  "explanation": "Queries VirusTotal's API for domain intelligence on example.com. While VT has free tiers, rich access is closed-source/subscription-based. Uses x-apikey header and returns JSON.",
+  "rationale_steps": [
+    "Source the API key from environment for secure handling.",
+    "Perform a scoped domain lookup to avoid excessive data pulls.",
+    "Use HTTPS and explicit Accept header for structured output.",
+    "Convert response to JSON and log any exceptions."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1597-5763c3d9-dcc5ca23",
+  "source_prompt_hash": "5763c3d9",
+  "timestamp_utc": "2025-09-30T06:24:43.674049Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced braces, parentheses, quotes, correct error handling via try-catch, and valid parameter usage for Invoke-RestMethod.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 (Search Closed Sources) by querying VirusTotal's API with an API key for domain intelligence, which is a paid/restricted threat intelligence source, and properly handles the response with appropriate error logging.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T11:42:00.613323Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variables, API calls, error handling, and JSON conversion without any discernible errors or formatting issues.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly and realistically aligns with the T1597 technique by querying a 'closed-source' API (VirusTotal's subscription-based access) for domain intelligence, a plausible adversary action for intelligence gathering.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T11:42:06.551540Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced delimiters, correct hashtable syntax, and valid parameters/separators, so it will parse cleanly.",
+        "semantic_score": 5,
+        "semantic_justification": "Queries VirusTotal's API with an API key for domain intelligence and emits JSON, matching the intent of searching a closed-source service under T1597.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T11:42:27.732039Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "aws iam attach-user-policy --user-name liam.w.nolan --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess; aws iam list-attached-user-policies --user-name liam.w.nolan --output json",
+  "explanation": "Assigns a targeted read-only S3 permission typical for reporting roles and confirms attachment, presenting a low-risk, context-appropriate access pattern.",
+  "rationale_steps": [
+    "Bind role-consistent permissions (S3 read-only) to persona.",
+    "Verify policy attachment and serialize results for records.",
+    "Keep privileges narrow to avoid triggering alerts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1585-e5dca591-f1bc9206",
+  "source_prompt_hash": "e5dca591",
+  "timestamp_utc": "2025-09-30T07:41:19.853635Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper AWS CLI syntax, correct flag formats, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by attaching a policy to an existing user account (granting S3 read-only access) and then verifying the attachment, which aligns with the 'adding accounts to privileged groups' aspect of the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:56:21.650590Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct AWS CLI syntax, valid flags, and a proper command separator for sequential execution.",
+        "semantic_score": 3,
+        "semantic_justification": "The command modifies an existing account's permissions, which aligns with 'changes to identity/privilege configurations' mentioned in T1585 detection, but it does not 'establish' or create an account, which is the primary focus of the technique name and its typical behaviors.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:56:37.220213Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two valid AWS CLI commands with correct flags and a valid policy ARN are properly separated by a PowerShell semicolon.",
+        "semantic_score": 3,
+        "semantic_justification": "The command attaches a managed policy to an existing IAM user and verifies it (privilege change/abuse) but does not create/establish an account per T1585 and also presumes IAM permissions despite 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T08:56:50.823965Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

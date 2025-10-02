@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would set SO_DONTROUTE on an IPv4 TCP socket, bind to a non-default local address, connect to a high, uncommon port, and send base64-encoded data]",
+  "explanation": "Disables routing and forces an alternate path/interface, differentiating the exfil path from the primary channel in line with T1011.",
+  "rationale_steps": [
+    "Bind TCP socket to a non-default local address",
+    "Set SO_DONTROUTE to keep traffic off the default route",
+    "Base64-encode the payload",
+    "Connect to an uncommon remote port and transmit",
+    "Close without modifying system-wide settings"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-349cea43",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a Python socket implementation that appears structurally sound but may have implementation details that could cause issues.",
+        "semantic_score": 4,
+        "semantic_justification": "The described command aligns with T1011 by establishing an alternate communication path for exfiltration using socket options and non-standard ports, though without seeing the actual implementation I cannot verify complete alignment with the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T07:41:15.433742Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command text was explicitly withheld and described as non-actionable, preventing any assessment of its syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "The described command actions (setting SO_DONTROUTE, binding to a specific local address, connecting to a specific remote port) pertain to controlling the *source* and *route* of a connection, not the *dynamic resolution* of a network endpoint at runtime, which is the core of T1011.",
+        "combined_score": 1.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T07:41:31.100938Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete Python command was provided\u2014only a descriptive summary\u2014so it is not runnable or parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "The described actions (SO_DONTROUTE, alternate bind, high port, base64) do not implement dynamic endpoint resolution (e.g., DGA, rotating domains/IPs, short TTLs), so they are not aligned with the provided T1011 definition.",
+        "combined_score": 1.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T07:41:46.792298Z"
+      }
+    ],
+    "llm_average_syntactic": 1.333,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 1.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

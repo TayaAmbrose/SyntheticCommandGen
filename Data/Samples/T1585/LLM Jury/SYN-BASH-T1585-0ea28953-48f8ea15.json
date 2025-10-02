@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1585",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "curl -sS -H \"PRIVATE-TOKEN: $(cat /etc/persona/gitlab_admin.token)\" -H \"Content-Type: application/json\" -X POST \"https://gitlab.example.com/api/v4/users\" -d '{\"email\":\"alex.morgan.persona@example.com\",\"username\":\"alex-morgan\",\"name\":\"Alex Morgan\",\"password\":\"S3cureTemp!23\",\"skip_confirmation\":true}' | tee /var/log/persona_gitlab_create.json",
+  "explanation": "Creates a new user on a GitLab instance (with admin token), establishing a controlled persona for development-themed activity.",
+  "rationale_steps": [
+    "Supply admin token from disk, not inline",
+    "Call documented GitLab Users API to create the account",
+    "Write structured JSON response for auditability"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1585-0ea28953-48f8ea15",
+  "source_prompt_hash": "0ea28953",
+  "timestamp_utc": "2025-09-30T07:23:20.258442Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid curl flags, correct JSON formatting in the data payload, and appropriate use of command substitution and output redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements the T1585 technique by creating a new GitLab user account with a defined username, password and email using an admin token, which perfectly aligns with establishing accounts for persistent access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T08:36:13.061893Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command substitution, correct flags, and a properly formatted JSON payload for curl.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of creating a new user on a GitLab instance via its API using an admin token, directly aligning with the 'Establish Accounts' technique (T1585) by creating a new persona.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T08:36:17.434904Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command has balanced quotes, valid curl flags/headers, properly quoted JSON data, and a correct pipe to tee.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly targets GitLab's user-creation API with an admin token (aligning to T1585), but reading the token from /etc and writing to /var/log may fail without elevated permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T08:36:35.908895Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
