@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T16:06:34.090176Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid variable assignments, proper piping, and correct ncat parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1011 technique by reading a binary file, encoding it to base64, and exfiltrating it over IPv6 UDP using specific source/destination ports that avoid typical monitored services.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:15:32.692257Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.25,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:08:47.930325Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, balanced quotes, correct iptables command structure, and appropriate use of command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1205 Traffic Signaling technique by using a specific TCP MSS value (1337) as a covert signal that, when detected, temporarily opens another port (8080) for 30 seconds only to the signaling IP address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:00.602379Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

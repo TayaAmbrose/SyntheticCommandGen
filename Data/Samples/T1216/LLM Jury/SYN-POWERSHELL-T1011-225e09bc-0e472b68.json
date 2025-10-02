@@ -26,6 +26,26 @@
         "combined_score": 4.0,
         "confidence": 0.72,
         "timestamp": "2025-10-01T22:21:36.376949Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses/braces, correct variable assignments, proper error handling with -ErrorAction, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by configuring a specific network route to an exfiltration server via cellular interface and using iperf3 on an uncommon port (65055) to establish the exfiltration channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:09:45.928687Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid PowerShell cmdlet and external executable syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's execution method does not align with T1011 'System Script Proxy Execution,' as it directly executes PowerShell cmdlets and external binaries rather than leveraging trusted system scripts as proxies; additionally, the `route add` command typically requires elevated privileges, contradicting the 'None' privilege claim.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:09:51.046032Z"
       }
     ],
     "llm_average_syntactic": 5.0,

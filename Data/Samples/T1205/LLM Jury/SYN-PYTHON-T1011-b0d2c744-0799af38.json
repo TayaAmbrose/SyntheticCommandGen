@@ -37,11 +37,21 @@
         "combined_score": 3.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:13:21.861354Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is withheld and only described conceptually, making it impossible to evaluate its syntax directly.",
+        "semantic_score": 4,
+        "semantic_justification": "The described approach of using IPv6 link-local addressing with interface scoping for covert signaling aligns well with T1011 (Traffic Signaling), though without seeing the actual implementation details, minor gaps in operational plausibility cannot be ruled out.",
+        "combined_score": 2.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:26:38.491695Z"
       }
     ],
     "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 2.75,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 2.667,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

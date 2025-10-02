@@ -26,6 +26,26 @@
         "combined_score": 3.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:29:49.657401Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for Python's socket and os modules.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data (bookmarks) which aligns with the general concept of exfiltration, it uses AF_VSOCK (virtual socket) rather than the specific exfiltration over command and control channel described in T1011.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:11:22.318029Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, parseable, and uses correct syntax for importing modules, creating sockets, managing paths, and performing file operations.",
+        "semantic_score": 1,
+        "semantic_justification": "The command directly executes inline Python code for data exfiltration via AF_VSOCK, which does not align with T1011 'System Script Proxy Execution' that specifically describes abusing *trusted system scripts* to *proxy* the execution of *other* malicious files or commands.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:11:31.092587Z"
       }
     ],
     "llm_average_syntactic": 5.0,

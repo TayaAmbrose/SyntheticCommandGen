@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:12:14.439835Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell with balanced braces, parentheses, proper variable declarations, method calls, and command structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending UDP packets to specific ports in sequence, which aligns with port-knocking for covert signaling to potentially trigger actions on a remote system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:19:03.414653Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -35,11 +35,21 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T16:00:36.369820Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (pipes), valid flags for all tools used, and correct subcommand structure with the networksetup command embedded in a command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements T1011 by exfiltrating system configuration data over a network connection with a specific source IP (Bluetooth PAN interface) to a remote server, though it lacks encryption or more sophisticated signaling patterns beyond basic network traffic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:15:03.810152Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

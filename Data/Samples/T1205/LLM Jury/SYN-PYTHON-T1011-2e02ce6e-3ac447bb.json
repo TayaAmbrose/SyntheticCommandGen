@@ -26,11 +26,31 @@
         "combined_score": 4.0,
         "confidence": 0.76,
         "timestamp": "2025-10-01T19:11:31.678064Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting parameters, and performing file operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1011 (Traffic Signaling) by using Bluetooth L2CAP as an out-of-band channel to exfiltrate the user-dirs.dirs configuration file, demonstrating the technique of using an alternative protocol for data transmission.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:36:23.394386Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes and parentheses, valid module imports, correct socket creation and method calls, and proper statement separation for execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively demonstrates exfiltration over a distinct Bluetooth L2CAP channel, aligning with T1011's focus on covert channels, out-of-band communication, and its combination with exfiltration techniques for data transfer or signaling.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T03:36:34.625738Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

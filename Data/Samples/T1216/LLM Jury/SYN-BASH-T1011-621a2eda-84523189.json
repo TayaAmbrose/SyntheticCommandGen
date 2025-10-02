@@ -25,6 +25,26 @@
         "combined_score": 3.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:39:32.676919Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators (&&), and proper use of command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does perform data exfiltration over SCP, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1048 (Exfiltration Over Alternative Protocol), and doesn't involve system script proxy execution as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:59:31.959314Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid bash syntax including command substitution, proper flag formats, and correct command separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs direct file exfiltration using `scp` and does not leverage any trusted or signed system scripts as a proxy for execution, directly contradicting the core concept of MITRE ATT&CK T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:59:36.872039Z"
       }
     ],
     "llm_average_syntactic": 5.0,

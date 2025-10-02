@@ -34,12 +34,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T20:53:50.766315Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid variable assignment, proper method calls, and correct nping parameter formatting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 (Exfiltration Over Other Network Medium) by reading a file, encoding it to Base64, and exfiltrating it over IPv6 UDP to a specific destination using nping, which is an uncommon network medium distinct from standard HTTP/HTTPS channels.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:47:32.564929Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 3.5,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

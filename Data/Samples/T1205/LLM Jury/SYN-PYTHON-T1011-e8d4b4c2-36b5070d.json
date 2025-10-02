@@ -26,11 +26,31 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T18:59:00.026576Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket connection, formatting data, and sending file contents.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by exfiltrating data over a non-standard port (49201) disguised as syslog messages, using a legitimate-looking protocol format to hide the exfiltration of potentially sensitive data from a hidden file.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:32:14.051466Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, correct syntax for imports, function calls, string formatting, and file operations, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely aligns with T1011 by disguising data exfiltration as syslog-like traffic over a non-standard port, embodying 'protocol mimicry' and 'embedding signals' within legitimate-looking traffic to hide intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:32:20.112448Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

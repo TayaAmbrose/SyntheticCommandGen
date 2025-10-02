@@ -26,11 +26,31 @@
         "combined_score": 3.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T22:07:52.010706Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all utilities (airport -z, networksetup -setairportnetwork, gzip -c, base64, nc -6u with port and -w timeout), and follows correct syntax for a pipeline using the pipe operator.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by exfiltrating data over an alternate communication channel (IPv6 UDP over Wi-Fi), but doesn't specifically use a trusted system script as a proxy for execution as described in the technique definition, though it does achieve the data exfiltration goal.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:07:04.343039Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, arguments, and shell operators.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command successfully achieves its operational goal of exfiltrating data, it does not demonstrate \"System Script Proxy Execution\" (T1011) as it directly executes system binaries rather than abusing trusted scripts to proxy command execution.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:07:17.689337Z"
       }
     ],
-    "llm_average_syntactic": 4.0,
+    "llm_average_syntactic": 4.667,
     "llm_average_semantic": 3.0,
-    "llm_average_score": 3.5,
+    "llm_average_score": 3.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

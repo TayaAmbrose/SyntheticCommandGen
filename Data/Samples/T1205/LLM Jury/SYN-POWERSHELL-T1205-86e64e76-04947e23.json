@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:00:47.239333Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid parameter names, and correct syntax for array creation, foreach loops, and conditional statements.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a port knocking sequence across multiple protocols (TCP/UDP) with timed delays that probe common service ports (80, 123, 22) before attempting to connect to a hidden service port (8443), exactly matching the claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:22.345206Z"
       }
     ],
     "llm_average_syntactic": 5.0,

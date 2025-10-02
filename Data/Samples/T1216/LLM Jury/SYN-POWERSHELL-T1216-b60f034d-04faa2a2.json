@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: inline JScript/VBScript protocol invocation from PowerShell",
+  "explanation": "Captures the pattern of invoking mshta with inline script protocol content (e.g., jscript/vbscript) directly from PowerShell, avoiding disk-based HTA artifacts.",
+  "rationale_steps": [
+    "PowerShell launches mshta with a script protocol payload rather than a file path",
+    "Execution occurs in-memory within the signed host process",
+    "Diskless execution can reduce on-disk IoCs and evade simple file-based controls",
+    "Monitor for mshta with command lines containing script protocol tokens spawned by PowerShell",
+    "Block or constrain mshta usage and enforce AMSI instrumentation where possible"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-04faa2a2",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld for safety reasons.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld for safety reasons.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:23:03.463505Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The actual command string is explicitly withheld ('WITHHELD_FOR_SAFETY'), preventing a direct syntactic evaluation of its structure and parseability.",
+        "semantic_score": 5,
+        "semantic_justification": "The described pattern of invoking mshta.exe with inline script via jscript: or vbscript: protocols is a well-known and highly effective method for System Script Proxy Execution (T1216), leveraging a trusted binary to execute arbitrary code.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:23:08.513653Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete PowerShell/mshta command is provided\u2014only a descriptive placeholder\u2014so it is not parseable or runnable as-is.",
+        "semantic_score": 2,
+        "semantic_justification": "Invoking mshta with inline JScript/VBScript is plausible for execution but maps to ATT&CK T1218.005 (Mshta) rather than T1216\u2019s system script proxies, so it is misaligned with the claimed technique.",
+        "combined_score": 1.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T04:23:20.476932Z"
+      }
+    ],
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 1.5,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

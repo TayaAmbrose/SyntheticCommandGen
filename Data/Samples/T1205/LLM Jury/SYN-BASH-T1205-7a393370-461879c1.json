@@ -26,11 +26,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:26:16.565428Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python syntax, and correct use of shell constructs including background execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using Scapy to monitor for GRE protocol packets as a trigger to temporarily enable an HTTP server, creating a covert signaling channel that aligns with T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:40:20.009785Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid function calls, and correct shell syntax within the `os.system` string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the described signaling technique, using Scapy to detect a GRE packet as a trigger to temporarily enable a network device's HTTP server, aligning perfectly with T1205 Traffic Signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:40:28.475328Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

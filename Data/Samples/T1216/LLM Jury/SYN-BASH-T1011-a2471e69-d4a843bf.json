@@ -26,6 +26,26 @@
         "combined_score": 3.0,
         "confidence": 0.7,
         "timestamp": "2025-10-01T21:25:43.735465Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it doesn't use system scripts to proxy execution as described in the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:55:35.420429Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, arguments, and shell operators without any syntax errors.",
+        "semantic_score": 0,
+        "semantic_justification": "The command does not align with T1011 'System Script Proxy Execution' as it uses standard utilities (nohup, tcpdump, nc) directly, rather than abusing trusted system scripts to proxy execution of other code.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:55:40.938836Z"
       }
     ],
     "llm_average_syntactic": 5.0,

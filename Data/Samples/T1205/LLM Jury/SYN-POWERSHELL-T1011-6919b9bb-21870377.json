@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:05:39.446856Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes and brackets, correct variable assignment, proper piping, and valid ncat parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the T1011 technique by reading a file, encoding it with Base64, and exfiltrating it over IPv6 UDP to a specific endpoint using an uncommon high port (57344), effectively hiding the traffic within legitimate-looking network communications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:12:45.156388Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

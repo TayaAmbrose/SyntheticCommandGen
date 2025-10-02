@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:21:45.307840Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct cmdlet usage, appropriate piping, and valid parameter flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a textbook port knocking sequence over IPv6 using sequential connection attempts to predefined ports (15001-15003) before checking the target port 60000, perfectly aligning with the Traffic Signaling technique (T1205).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:27:32.777843Z"
       }
     ],
     "llm_average_syntactic": 5.0,

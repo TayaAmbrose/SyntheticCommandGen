@@ -27,11 +27,31 @@
         "combined_score": 1.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T22:49:37.249811Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld for safety reasons.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld for safety reasons.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:16:00.795222Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "The explanation clearly describes a PowerShell invocation of mshta.exe as a proxy to launch secondary processes, which perfectly aligns with the T1216 technique of abusing a signed system binary (mshta.exe) for script proxy execution and subsequent payload delivery.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:16:05.634996Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 1.333,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -26,11 +26,31 @@
         "combined_score": 4.0,
         "confidence": 0.7,
         "timestamp": "2025-10-01T19:25:11.700337Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, correct command separators, valid parameter flags, and appropriate variable assignments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by establishing a Bluetooth PAN connection with a specific device, configuring a static IP, and exfiltrating base64-encoded file data via HTTP POST with a custom header that could serve as a signal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:40:05.826188Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignments, external command execution, cmdlet usage, and argument passing, with balanced quotes and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command chain effectively establishes a dedicated Bluetooth PAN, configures a static IP for a point-to-point link, and then exfiltrates data via an HTTP POST request using a custom header over this specific Bluetooth channel, perfectly aligning with T1011's description of using protocol fields and covert channels for signaling and data transfer.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:40:16.252037Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

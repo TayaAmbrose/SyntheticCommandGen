@@ -27,11 +27,31 @@
         "combined_score": 4.0,
         "confidence": 0.7,
         "timestamp": "2025-10-01T19:06:54.643797Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper loop syntax, variable usage, command separators, and balanced quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a classic port-knocking sequence using netcat to send empty UDP packets to three sequential ports (7000, 8001, 9002) with timing delays, which aligns perfectly with the Traffic Signaling technique for covert communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:34:48.335097Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Bash for loop, netcat command with its flags, input redirection, and command separators are all perfectly well-formed and syntactically correct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes a UDP port-knock sequence using Netcat, which perfectly aligns with the T1205 Traffic Signaling technique as described, creating a covert signal to a remote system.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:34:52.800140Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

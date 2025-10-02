@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:58:43.367453Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags (-u for UDP, -d for delay), proper IP address format, and correct parameter ordering for the knock utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements port knocking (a traffic signaling technique) by sending UDP packets to specific ports in sequence (321, 654, 987) with a 100ms delay, which aligns perfectly with the T1205 technique of using network traffic patterns as signals.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:56.824483Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.5,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

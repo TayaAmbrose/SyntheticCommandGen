@@ -34,6 +34,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:07:54.548618Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for iptables, including valid flags, balanced quotes, and correct parameter formatting for all modules used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1205 Traffic Signaling technique by creating a rule that identifies and logs TCP packets with specific characteristics (SYN flag, TTL=42, length=60) that could be used as a covert signaling mechanism.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:25:07.799925Z"
       }
     ],
     "llm_average_syntactic": 5.0,

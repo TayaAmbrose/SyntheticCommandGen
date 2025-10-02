@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:03:31.606917Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats for both netsh and PowerShell, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by setting up a packet capture for UDP port 49000, monitoring for specific traffic patterns, and then triggering a firewall rule change when the signal is detected, creating a port-knocking implementation.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:12:38.818148Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.5,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

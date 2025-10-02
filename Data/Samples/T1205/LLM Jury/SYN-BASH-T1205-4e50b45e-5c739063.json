@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:01:54.866219Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat (-u for UDP, -w1 for timeout), and correct piping of the 'OPEN' string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a specific trigger string ('OPEN') via UDP to a specific endpoint that could activate a hidden service or trigger a response from a compromised system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:15:14.476418Z"
       }
     ],
     "llm_average_syntactic": 5.0,

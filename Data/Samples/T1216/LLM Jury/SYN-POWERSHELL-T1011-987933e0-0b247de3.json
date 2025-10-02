@@ -37,12 +37,22 @@
         "combined_score": 4.0,
         "confidence": 0.95,
         "timestamp": "2025-10-01T20:56:24.003054Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, with correct PowerShell syntax embedded within the WMIC process call.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with the exfiltration technique by using WMIC to proxy the execution of PowerShell that exfiltrates data over a Bluetooth network interface, though it uses direct file exfiltration rather than a system script proxy as described in T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:47:53.178422Z"
       }
     ],
-    "llm_average_syntactic": 3.5,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 3.25,
-    "llm_verdict": "uncertain",
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

@@ -26,11 +26,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:12:31.050896Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, split, nc), and correct pipeline construction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the claimed technique by disconnecting from current WiFi, connecting to a specific mesh network, compressing logs, encoding and splitting them into chunks, and exfiltrating them via netcat to an IPv6 address over a high port - all consistent with the T1011 technique of using system tools for exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:51:53.462111Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct syntax for all utilities, handles quoting appropriately, and sequences commands logically with '&&' and pipes.",
+        "semantic_score": 1,
+        "semantic_justification": "The command does not semantically align with T1011 (System Script Proxy Execution) as it directly executes standard binaries to configure the network and exfiltrate data, rather than proxying malicious execution through trusted system scripts; additionally, it incorrectly claims 'Privilege: None' while using 'sudo'.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:52:12.454679Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

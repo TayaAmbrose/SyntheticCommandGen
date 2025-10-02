@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:45:24.822486Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper loop syntax, balanced quotes, valid flags for netcat (-u for UDP, -w1 for timeout), correct command separators, and proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a timed sequence of UDP packets to specific ports (7001, 8002, 9003) with controlled timing (0.75s sleep between signals), creating a covert port-knock pattern that could trigger a response from a listening system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:47.704904Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

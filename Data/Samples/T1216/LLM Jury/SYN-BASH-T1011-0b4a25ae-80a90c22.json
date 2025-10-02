@@ -26,12 +26,32 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T20:58:58.642729Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, openssl, nc), and correct piping/redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the technique by disconnecting from current Wi-Fi, connecting to a specific network, compressing config files, encoding them with base64, and exfiltrating them line-by-line over IPv6 to a specific port with timing controls to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:48:20.459332Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct IPv6 link-local addressing syntax.",
+        "semantic_score": 0,
+        "semantic_justification": "The command does not align with T1011 (System Script Proxy Execution) as it directly executes legitimate macOS binaries and standard shell utilities, rather than abusing a trusted or signed system script to proxy the execution of other commands or files through a script host.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:48:28.402696Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

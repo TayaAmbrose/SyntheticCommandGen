@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T15:09:50.128303Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, appropriate type conversions, and correct object instantiation and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements the Traffic Signaling technique by crafting a Wake-on-LAN magic packet with the specific byte pattern (0xFF header followed by repeated MAC address) and transmitting it via UDP broadcast to port 9, which is the standard implementation of this signaling protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:12:56.965244Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

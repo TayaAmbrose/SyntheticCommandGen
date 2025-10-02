@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:13:23.164005Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper pipe syntax, balanced quotes, valid flags for both tar and netcat, and correct use of command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternate network medium (Bluetooth PAN) as described in T1011, but lacks obfuscation or encoding of the traffic which would make it more aligned with the full technique description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:15:54.749659Z"
       }
     ],
     "llm_average_syntactic": 5.0,

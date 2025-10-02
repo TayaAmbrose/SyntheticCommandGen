@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:19:37.886665Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for file reading, Base64 conversion, regex matching, and proper piping to ncat with valid parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 (Traffic Signaling) by reading a file, encoding it, breaking it into chunks, adding timing delays between transmissions, and using IPv6 with a high port number to create a covert channel for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:29.720191Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

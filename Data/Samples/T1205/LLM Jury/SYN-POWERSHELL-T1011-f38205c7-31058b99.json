@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:37:29.539055Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes and parentheses, correct cmdlet usage, and appropriate parameter flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements the T1011 technique by exfiltrating data through traffic signaling, specifically by encoding each character from a text file into the buffer size of ICMPv6 packets, creating a covert channel that would be difficult to detect without specialized monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:22:42.214950Z"
       }
     ],
     "llm_average_syntactic": 5.0,

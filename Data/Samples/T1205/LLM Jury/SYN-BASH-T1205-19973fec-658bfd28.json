@@ -35,11 +35,21 @@
         "combined_score": 3.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T15:39:28.493955Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for iptables rules, string matching, command chaining with semicolons, and background process execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by setting up a covert DNS-based signaling mechanism that triggers access to a hidden service (port 9091) only when a specific pattern ('MAGICDNS') is detected in DNS traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:09.076414Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

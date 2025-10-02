@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:38:23.878020Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper JavaScript syntax within the rundll32 invocation, and correct use of ActiveX objects and methods.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 by using rundll32.exe with mshtml as a trusted system component to proxy the execution of malicious code, downloading an HTA file and executing it with mshta.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:59:00.597217Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct `rundll32` argument formatting, balanced quotes, proper JavaScript syntax, and valid ActiveX object instantiations and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the described T1216 technique by using `rundll32` as an MSHTML script proxy to download, save, and execute an HTA with native tooling, fully aligning with the explanation and operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:59:09.862969Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

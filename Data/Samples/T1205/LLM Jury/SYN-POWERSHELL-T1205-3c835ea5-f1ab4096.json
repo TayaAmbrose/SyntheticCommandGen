@@ -35,11 +35,21 @@
         "combined_score": 3.5,
         "confidence": 1,
         "timestamp": "2025-10-01T14:48:04.497969Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid command separators, correct netsh and nslookup parameters, and proper output redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by first creating a firewall rule to allow outbound DNS traffic to a specific IP and then sending a specially crafted DNS TXT query that could serve as a covert signal to a C2 server.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:54.794632Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

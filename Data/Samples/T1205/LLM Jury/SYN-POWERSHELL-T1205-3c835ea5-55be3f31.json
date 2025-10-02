@@ -35,6 +35,16 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T16:47:45.574772Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, method calls, balanced quotes/braces, appropriate operators, and correct pipeline usage throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a Wake-on-LAN packet with proper formatting (magic packet with FF bytes followed by repeated MAC address) and UDP broadcast to port 9, though it's debatable whether this fully aligns with the Traffic Signaling technique as it's more of a standard protocol than covert signaling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:17:31.610134Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -36,12 +36,22 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:26:37.995239Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements traffic signaling by exfiltrating data over a Bluetooth PAN interface using an uncommon port (53211) while monitoring that specific traffic flow, though the tcpdump writing to /dev/null doesn't actually capture the traffic for later analysis.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:28:32.357168Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

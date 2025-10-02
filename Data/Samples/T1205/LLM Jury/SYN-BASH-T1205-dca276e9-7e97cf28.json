@@ -24,11 +24,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:12:25.983532Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid iptables syntax, proper flag formats, and balanced quoting throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a sophisticated port-knocking mechanism using ICMP packets of specific size (96 bytes) as the final step in a multi-stage traffic signaling sequence, perfectly aligning with the T1205 technique of using protocol fields and timing patterns for covert signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:36:38.025030Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, arguments, and module usage, adhering to iptables syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a sequential traffic signaling 'knock' using ICMP type, packet length, and timing-based checks with the 'recent' module, perfectly aligning with the T1205 technique description and claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:36:55.936508Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

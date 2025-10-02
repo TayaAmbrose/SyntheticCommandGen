@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:32:45.604405Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid Python syntax within the single quotes, and correct usage of the networksetup utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a UDP packet with a specific 'magic cookie' payload (KNOCK followed by binary data) to port 40000, then enabling proxy auto-discovery which could be used for subsequent traffic redirection or C2 communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:29:08.219867Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

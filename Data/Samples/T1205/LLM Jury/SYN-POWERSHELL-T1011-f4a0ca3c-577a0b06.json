@@ -36,12 +36,22 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T16:36:32.109935Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, pipeline operations, and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by establishing a Bluetooth PAN connection, configuring a static IP, encoding sensitive data (Security.evtx), and exfiltrating it via UDP to a specific endpoint over a covert channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:17:02.353369Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

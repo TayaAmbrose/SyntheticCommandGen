@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:21:33.196956Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quotes, valid tcpdump flags, and a correctly formatted BPF filter expression.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the Traffic Signaling technique by capturing network traffic that matches a specific port-knock sequence (ports 7000, 8000, 9000) directed at a specific host, which could be used to validate or analyze a signaling mechanism.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:36.940291Z"
       }
     ],
     "llm_average_syntactic": 5.0,

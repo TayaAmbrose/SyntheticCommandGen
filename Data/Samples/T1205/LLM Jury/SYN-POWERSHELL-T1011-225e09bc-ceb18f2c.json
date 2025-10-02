@@ -36,12 +36,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:13:12.886351Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, semicolons for command separation, proper error handling with ErrorAction parameters, and valid parameter formats for all cmdlets used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a covert Wi-Fi access point, configuring it with an IP address, and using iperf3 to establish a hidden communication channel over that network to exfiltrate data to a peer system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:13:03.542574Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 3.25,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

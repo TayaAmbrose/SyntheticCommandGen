@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:43:42.080736Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command appears to be a well-formed Python script using Scapy to craft and send a Wake-on-LAN magic packet with proper syntax for packet construction and transmission.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1205 (Traffic Signaling) as it creates a legitimate-looking network packet (WoL) that could be used as a covert signal between systems while maintaining plausible deniability.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:14:19.611544Z"
       }
     ],
-    "llm_average_syntactic": 3.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 3.75,
+    "llm_average_syntactic": 3.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.167,
     "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null

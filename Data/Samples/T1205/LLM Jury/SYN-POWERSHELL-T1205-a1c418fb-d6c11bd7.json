@@ -26,6 +26,26 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T19:06:30.153082Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for pktmon commands, correct flag formats, and appropriate command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements packet monitoring for UDP port 9 (WoL) which aligns with the Traffic Signaling technique, though monitoring alone doesn't fully implement the technique but rather supports reconnaissance of it.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:34:16.076131Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The commands are perfectly well-formed, use valid flags and parameters for `pktmon`, and are correctly separated by semicolons for sequential execution.",
+        "semantic_score": 4,
+        "semantic_justification": "The command accurately sniffs for UDP port 9 traffic, which is a plausible reconnaissance step for an adversary intending to implement Traffic Signaling (T1205) by identifying or abusing specific protocols like WOL, despite not being the signaling action itself.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:34:45.162666Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:31:48.080925Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement exfiltration over an alternative protocol/network interface (Thunderbolt Bridge), it doesn't align with T1011 (Exfiltration Over Other Network Medium) as described, which specifically refers to abusing trusted system scripts for proxy execution, not network interface selection.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:11:47.866645Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command substitutions for Bash and macOS utilities.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command effectively performs data exfiltration via a specified network interface, it does not involve abusing trusted system scripts to proxy execution, which is the core characteristic of the MITRE ATT&CK T1011 technique.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T04:12:08.675166Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

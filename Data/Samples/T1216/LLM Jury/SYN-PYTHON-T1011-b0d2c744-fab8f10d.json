@@ -27,11 +27,31 @@
         "combined_score": 1.0,
         "confidence": 0.4,
         "timestamp": "2025-10-01T21:30:49.211598Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:56:56.335915Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command was explicitly withheld and described as non-actionable, preventing any direct syntactic evaluation.",
+        "semantic_score": 1,
+        "semantic_justification": "The described action of IPv6 data exfiltration does not align with T1011's core mechanism of system script proxy execution, which involves abusing trusted scripts to proxy execution.",
+        "combined_score": 1.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T03:57:07.261472Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 1.0,
-    "llm_average_score": 1.0,
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 0.667,
+    "llm_average_score": 0.667,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

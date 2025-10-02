@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:09:54.147823Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python syntax, and correct use of shell constructs including background processes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a specific packet pattern (SYN+FIN to port 42424) as a covert signal to temporarily modify network access controls, creating a time-limited backdoor that's difficult to detect.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:15:38.948981Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

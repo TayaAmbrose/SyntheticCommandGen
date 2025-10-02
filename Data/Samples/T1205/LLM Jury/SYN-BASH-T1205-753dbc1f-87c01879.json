@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:15:02.725717Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for nc and grep, correct use of command chaining with pipes and conditional execution, and proper sudo usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by listening for a specific trigger phrase on UDP port 4000 and then modifying firewall rules to open SSH access only after receiving the signal.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:26:47.107420Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

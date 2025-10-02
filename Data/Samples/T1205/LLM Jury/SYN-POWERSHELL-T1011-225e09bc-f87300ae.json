@@ -36,12 +36,22 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:37:55.926791Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid parameter names, proper piping, error handling with -ErrorAction, and correct command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1011 by establishing an alternative communication channel via cellular network to bypass enterprise monitoring, though it's using iperf3 which is primarily a bandwidth testing tool rather than a typical C2 channel.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:17:05.670620Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

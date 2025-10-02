@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T17:26:29.209711Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignments, method calls, and piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by establishing a Bluetooth PAN connection, configuring a static IP, encoding data as base64, and transmitting it in small chunks over a TCP connection on a high port (53421) to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:21:19.946936Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

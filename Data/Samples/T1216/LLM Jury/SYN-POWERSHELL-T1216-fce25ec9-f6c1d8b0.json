@@ -25,6 +25,26 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T21:33:02.603821Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, valid flags (//nologo), correct path structure, and appropriate use of parameters for PubPrn.vbs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly demonstrates T1216 by using cscript.exe to execute the legitimate signed PubPrn.vbs script as a proxy to load and execute potentially malicious remote code from an external server via the script: moniker.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:57:33.798790Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid executable, flags, paths, and a correctly structured 'script:' moniker with a valid URL.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by abusing PubPrn.vbs via cscript to load a remote scriptlet using the documented 'script:' moniker, directly aligning with MITRE ATT&CK T1216 for system script proxy execution.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:57:35.688158Z"
       }
     ],
     "llm_average_syntactic": 5.0,

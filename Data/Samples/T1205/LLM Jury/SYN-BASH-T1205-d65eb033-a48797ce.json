@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:42:56.492702Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper Python syntax within the command, correct use of command separators, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sniffing for a specific pattern (WOL magic packet) on UDP port 9 and triggering a system configuration change (enabling SOCKS proxy) when the signal is detected.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:17:17.814056Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

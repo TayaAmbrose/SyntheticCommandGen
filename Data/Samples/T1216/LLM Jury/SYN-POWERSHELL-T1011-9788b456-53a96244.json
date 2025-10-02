@@ -25,6 +25,26 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T22:12:50.780154Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for the netsh advfirewall firewall add rule command, including correctly formatted parameters, balanced quotes, and valid flag formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Exfiltration Over Other Network Medium) by creating a firewall rule that enables outbound communication to a specific IPv6 address and port that could be used for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:08:03.814662Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct `netsh` syntax, balanced quoting, and valid flag formats, making it perfectly well-formed and parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "The command modifies a firewall rule, which is unrelated to the T1011 \"System Script Proxy Execution\" technique, and incorrectly claims \"None\" for required privileges as it typically requires Administrator rights.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:08:10.515002Z"
       }
     ],
     "llm_average_syntactic": 5.0,

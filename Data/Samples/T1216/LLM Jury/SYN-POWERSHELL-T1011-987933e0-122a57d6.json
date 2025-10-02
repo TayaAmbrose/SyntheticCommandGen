@@ -27,12 +27,32 @@
         "combined_score": 3.0,
         "confidence": 0.7,
         "timestamp": "2025-10-01T21:49:25.581923Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, with correct PowerShell syntax including variable declarations, method calls, and pipeline operations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively uses WMIC to proxy the execution of PowerShell code that exfiltrates data over a cellular connection, though it doesn't directly align with T1011 as it's not using a trusted system script but rather WMIC as a proxy.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:02:07.028683Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed; while the backticks before dollar signs are redundant in this PowerShell context, they are harmless and do not cause a syntax error.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent, using WMIC as a proxy for PowerShell execution (T1011) to bind to a cellular interface and exfiltrate data, which is operationally plausible.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:02:18.460428Z"
       }
     ],
-    "llm_average_syntactic": 4.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 3.0,
-    "llm_verdict": "uncertain",
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

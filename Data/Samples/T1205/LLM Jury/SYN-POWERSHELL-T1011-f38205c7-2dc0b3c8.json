@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:46:58.679316Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid cmdlet names and parameters, and correct pipeline operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique (T1011) by encoding exfiltrated text data into ICMPv6 packet buffer sizes, using a start-of-line marker followed by character-by-character encoding that would be difficult to detect as malicious traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:51.259435Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.5,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

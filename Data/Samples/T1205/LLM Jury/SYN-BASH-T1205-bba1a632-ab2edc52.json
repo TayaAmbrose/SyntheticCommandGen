@@ -26,6 +26,26 @@
         "combined_score": 4.5,
         "confidence": 0.79,
         "timestamp": "2025-10-01T19:43:47.663562Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes and parentheses, valid Python syntax within the -c argument, and correct flag formats for both ethtool and the Python scapy code.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by configuring Wake-on-LAN for ARP packets and then sending a crafted ARP packet that could serve as a covert signal to trigger a compromised system, aligning with the technique's description of using protocol fields for signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:45:38.113599Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `sudo`, `ethtool` flags, `&&` separator, `python3 -c` execution, and correct Scapy syntax within balanced quotes and parentheses.",
+        "semantic_score": 3,
+        "semantic_justification": "While the Scapy command correctly transmits a crafted ARP packet for potential signaling, the `ethtool` command configures the *local* NIC for WoL *reception*, which is semantically irrelevant to *sending* an ARP-based wake signal or configuring a *remote* target as implied by the explanation.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:45:52.958692Z"
       }
     ],
     "llm_average_syntactic": 5.0,

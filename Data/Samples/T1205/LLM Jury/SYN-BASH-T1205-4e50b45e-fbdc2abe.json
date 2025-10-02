@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:25:26.948710Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper Python syntax within the quoted code, and correct use of sudo for elevated privileges.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements traffic signaling detection by using Scapy to passively monitor UDP port 4000 for potential command and control beacons, extracting and displaying the payload content of captured packets.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:49.061220Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -36,12 +36,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:31:28.800626Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport -z, networksetup -setairportnetwork, gzip -c, base64, nc -6u with port and -w timeout), and follows correct syntax for piping (|) between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements T1011 by first connecting to a specific Wi-Fi network (potentially controlled by an adversary), then compressing and encoding sensitive data before exfiltrating it over IPv6 UDP to a specific link-local address on an uncommon port (53371), which represents a sophisticated traffic signaling technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:16:52.711748Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 3.25,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

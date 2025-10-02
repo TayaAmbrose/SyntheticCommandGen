@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:35:09.732906Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, correct use of command substitution, and appropriate file redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements traffic signaling by exfiltrating data over IPv6 using a secondary network interface (en5) to a specific link-local IPv6 address on an uncommon port (53127), which aligns with the T1011 technique of using alternate communication channels for data transfer.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:02.355252Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

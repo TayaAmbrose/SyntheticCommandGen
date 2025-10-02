@@ -35,12 +35,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:10:19.246309Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating an iptables rule that watches for a specific HTTP header pattern, logs it, and then allows access to a listening netcat service on port 4444 for 60 seconds.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:45.826852Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

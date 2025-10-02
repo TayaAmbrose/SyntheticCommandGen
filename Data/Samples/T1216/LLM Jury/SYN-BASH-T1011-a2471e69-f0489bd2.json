@@ -26,6 +26,26 @@
         "combined_score": 3.5,
         "confidence": 0.78,
         "timestamp": "2025-10-01T22:14:02.879817Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators for both the background tcpdump process and the data exfiltration pipeline.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements exfiltration over an alternative network channel (cellular interface) as described in T1011, but the tcpdump monitoring to /dev/null doesn't provide actual monitoring value and is slightly misaligned with typical operational needs.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:08:13.973592Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and operators, and is parseable as a standard Bash command sequence.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data compression, exfiltration, and monitoring, which is operationally plausible, but it bears no relation to the MITRE ATT&CK T1011 'System Script Proxy Execution' technique as described.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:08:26.676801Z"
       }
     ],
     "llm_average_syntactic": 5.0,

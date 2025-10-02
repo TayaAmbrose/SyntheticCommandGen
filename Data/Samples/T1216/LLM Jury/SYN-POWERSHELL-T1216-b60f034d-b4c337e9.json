@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "WITHHELD_FOR_SAFETY - mshta variant: remote scriptlet (.sct) loading from PowerShell",
+  "explanation": "Shows PowerShell starting mshta to load a remote scriptlet resource, abusing the script host to proxy execution under a trusted binary.",
+  "rationale_steps": [
+    "Use PowerShell to spawn mshta with a URL or path to a scriptlet resource",
+    "The signed host interprets and runs scriptlet code on load",
+    "This can bypass basic allowlists focused on parent process or binary signatures",
+    "Detect by correlating process creation, network connection, and rare file extensions tied to mshta",
+    "Apply control policies to block scriptlet interpretation by mshta where not needed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-b60f034d-b4c337e9",
+  "source_prompt_hash": "b60f034d",
+  "timestamp_utc": "2025-09-30T07:02:44.293218Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only provide a generic assessment that PowerShell commands invoking mshta with remote scriptlets typically have moderate syntax complexity with potential for quoting or escaping issues.",
+        "semantic_score": 4,
+        "semantic_justification": "The described technique of using PowerShell to launch mshta to load remote scriptlets aligns well with T1216 (System Script Proxy Execution) as it uses a trusted binary (mshta) to proxy execution of potentially malicious content.",
+        "combined_score": 3.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T04:34:16.141805Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command text was explicitly withheld, thus no runnable command string was provided for syntactic evaluation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command's description perfectly aligns with T1216, as `mshta` is a known script proxy for executing remote scriptlets under a trusted binary, matching the technique's intent and common implementations.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:34:19.464482Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command text is withheld, so its exact syntax, quoting, and flags cannot be validated and it is not runnable as provided.",
+        "semantic_score": 2,
+        "semantic_justification": "PowerShell launching mshta to fetch a remote .sct aligns more with signed binary proxy execution (mshta/regsvr32) than T1216 system script proxies, and .sct is not a native mshta payload type.",
+        "combined_score": 1.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T04:34:38.867100Z"
+      }
+    ],
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 2.667,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

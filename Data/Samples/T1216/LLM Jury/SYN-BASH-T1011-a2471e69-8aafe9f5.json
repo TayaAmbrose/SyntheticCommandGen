@@ -26,11 +26,31 @@
         "combined_score": 3.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T22:49:23.675802Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct use of redirection and backgrounding.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over a separate wireless interface, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1218 (System Script Proxy Execution) as it doesn't abuse trusted system scripts to proxy execution.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:15:48.628852Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with valid flags, proper command separators, and correct redirection, making it parseable and runnable in Bash.",
+        "semantic_score": 0,
+        "semantic_justification": "The command directly executes `tcpdump` and `nc`, which are binary executables, not system scripts used to proxy execution via script hosts, making it fundamentally unrelated to T1011.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:15:59.022833Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.0,
-    "llm_average_score": 3.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

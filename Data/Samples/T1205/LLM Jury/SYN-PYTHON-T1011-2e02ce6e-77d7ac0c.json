@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:03:09.181687Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, proper indentation, valid imports, exception handling, and correct socket operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by using Bluetooth L2CAP (an out-of-band channel) to exfiltrate SSH configuration data to a specific Bluetooth MAC address using a non-standard PSM (0x1009), which aligns perfectly with T1011's description of using alternative protocols for covert data transmission.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:30.993269Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

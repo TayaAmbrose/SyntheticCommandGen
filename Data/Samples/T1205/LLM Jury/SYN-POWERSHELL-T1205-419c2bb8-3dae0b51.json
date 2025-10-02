@@ -26,6 +26,26 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T19:10:07.688723Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, braces, and parentheses, proper PowerShell syntax throughout, and valid parameter usage for all cmdlets.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by monitoring firewall logs for specific UDP traffic on port 3702 (WS-Discovery) and using that as a covert signal to dynamically create temporary firewall rules allowing WinRM access from the signaling source.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:35:39.983172Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, valid cmdlets, parameters, and correct use of scripting constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic cleverly implements Traffic Signaling (T1205) and the stated intent, the critical firewall configuration and logging steps explicitly require Administrator privileges, contradicting the 'Privilege: None' claim and preventing its successful execution.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:36:01.714551Z"
       }
     ],
     "llm_average_syntactic": 5.0,

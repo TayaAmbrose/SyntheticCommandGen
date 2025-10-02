@@ -26,11 +26,31 @@
         "combined_score": 4.0,
         "confidence": 0.6,
         "timestamp": "2025-10-01T22:01:21.570316Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, nc), and correct pipeline construction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the claimed exfiltration technique by disconnecting from current Wi-Fi, connecting to a specific network, compressing and encoding the target file, and transmitting it over IPv6 to a specific port on a remote host.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:05:07.785828Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid macOS utilities with correct flags, proper command separators, balanced quotes, and a well-structured IPv6 link-local address.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command effectively performs the stated exfiltration via an alternate Wi-Fi medium, it directly executes system binaries rather than leveraging trusted scripts to proxy execution, which is the core of the T1011 MITRE ATT&CK technique.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:05:20.088729Z"
       }
     ],
-    "llm_average_syntactic": 4.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.0,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -35,11 +35,21 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:29:19.399268Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for iptables rules, string matching, command chaining with semicolons, and background process execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by setting up a covert signaling mechanism using mDNS protocol fields as a trigger that opens a temporary communication channel on TCP port 53530.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:21:48.028656Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

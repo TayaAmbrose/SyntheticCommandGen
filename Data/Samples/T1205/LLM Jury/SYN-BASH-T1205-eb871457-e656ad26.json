@@ -36,11 +36,21 @@
         "combined_score": 3.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T16:59:06.843241Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both ufw and iptables, correct command separators, and proper syntax for string matching and recent module usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by configuring a firewall to listen for a specific UDP packet pattern (the magic packet) that serves as a covert signal to temporarily allow SSH access, exactly matching the claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:10.480493Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

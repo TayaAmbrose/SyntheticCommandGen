@@ -37,12 +37,22 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:56:02.988380Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, correct PowerShell syntax with appropriate variable declarations, and proper escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by using an ISATAP IPv6 interface as a covert channel to exfiltrate data to a specific IPv6 address on a non-standard port (58222), which aligns perfectly with the technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:31:24.615257Z"
       }
     ],
-    "llm_average_syntactic": 3.5,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 3.25,
-    "llm_verdict": "uncertain",
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

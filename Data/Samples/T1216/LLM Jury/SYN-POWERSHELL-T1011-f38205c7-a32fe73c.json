@@ -25,11 +25,31 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T22:17:58.946445Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid cmdlet names and parameters, and correct operators throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command implements a covert channel using ICMPv6 echo requests to exfiltrate data by encoding file bytes into ping counts, but it doesn't directly relate to T1011 (System Script Proxy Execution) as it's using native PowerShell commands rather than abusing trusted system scripts.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:08:58.547900Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignments, loop structures, cmdlet usage, and parameter formatting, making it fully parseable and runnable.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command correctly implements an ICMPv6 covert channel, it does not represent MITRE ATT&CK T1011 (System Script Proxy Execution) as it involves direct PowerShell execution, not the abuse of trusted system scripts as proxies.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:09:10.968947Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 5.0,
-    "llm_average_score": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

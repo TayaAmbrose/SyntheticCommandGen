@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:59:15.826380Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for all tools used (xxd, nc), and correct variable expansion syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a Wake-on-LAN magic packet (matching the Traffic Signaling technique) by creating the required pattern of FF bytes followed by repeated MAC address and sending it via UDP broadcast to port 9, which is the standard WoL port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:12:28.353891Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

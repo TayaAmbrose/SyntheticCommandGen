@@ -26,11 +26,31 @@
         "combined_score": 3.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T21:24:49.110680Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for imports, socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a socket connection which aligns with data exfiltration, it doesn't specifically use system script proxy execution (T1011) as claimed since it's directly using Python rather than abusing a trusted system script as a proxy.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:55:23.079278Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and parentheses, valid Python syntax, and proper flag usage for shell execution.",
+        "semantic_score": 1,
+        "semantic_justification": "The command directly executes a malicious Python script for data exfiltration, which does not align with T1011's core concept of 'System Script Proxy Execution' that involves abusing *trusted/signed system scripts* (e.g., VBScripts, PowerShell scripts) to proxy arbitrary code execution, rather than directly running a custom malicious script.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:55:30.702218Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.0,
-    "llm_average_score": 3.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

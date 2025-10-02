@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T18:48:49.842773Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python syntax within the embedded script, and correct use of bash -c for command execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a covert Wake-on-LAN packet as a signal (using scapy to craft a custom UDP packet with a specific payload pattern) and then establishing a network path via vtysh, aligning with the technique's description of embedding signals within legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:30:33.994627Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correctly balanced quotes and properly escaped characters within nested strings, allowing for parseable execution by bash, python3, and vtysh.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively implements the claimed intent: sending a standard Wake-on-LAN magic packet as a signal using Scapy, followed by a plausible static route addition via vtysh, directly aligning with T1205 Traffic Signaling from a compromised network device.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:30:53.735348Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

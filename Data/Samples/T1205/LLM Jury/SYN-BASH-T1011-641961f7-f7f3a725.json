@@ -35,12 +35,22 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:43:46.998892Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over a specific network interface (USB Ethernet) as claimed, but the technique ID T1011 more specifically refers to exfiltration over alternative protocol rather than just using an alternative physical medium.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:30:02.882881Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

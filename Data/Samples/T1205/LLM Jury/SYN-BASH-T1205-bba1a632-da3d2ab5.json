@@ -36,11 +36,21 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T15:46:44.717531Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code using Scapy with balanced quotes, parentheses, and proper syntax for creating and sending a network packet.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a UDP packet with a specific IP ID (4242) and payload ('KNOCK') that could serve as a covert signal to trigger functionality on a listening system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:26.491411Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

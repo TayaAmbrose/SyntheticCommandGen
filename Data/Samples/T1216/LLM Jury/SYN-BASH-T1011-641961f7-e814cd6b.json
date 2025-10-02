@@ -25,12 +25,32 @@
         "combined_score": 4.5,
         "confidence": 0,
         "timestamp": "2025-10-01T21:58:30.786646Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators, and appropriate use of command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does perform data exfiltration over a network, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1011 (System Script Proxy Execution) as claimed in the explanation.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:04:22.979391Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid flags, and proper command substitution for a Bash shell on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command technically performs an exfiltration, it does not involve 'System Script Proxy Execution' and therefore does not align with MITRE ATT&CK T1011 as claimed in the explanation.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:04:37.498694Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

@@ -25,12 +25,32 @@
         "combined_score": 4.0,
         "confidence": 0.6,
         "timestamp": "2025-10-01T21:07:22.823546Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and brackets, proper command separators, valid syntax for Python's list comprehension, and correct use of the scapy library.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does use network communication over an alternative channel (AWDL interface) which aligns with exfiltration over alternative protocol, it's not using system scripts for proxy execution as described in T1011, but rather implementing custom network exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:50:18.987901Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid Python syntax, and correct Bash command substitution for the dynamic IPv6 source address.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively crafts and sends UDP packets over the AWDL interface as claimed, it does not align with MITRE ATT&CK T1011, which specifically describes abusing trusted or signed *system scripts* (e.g., VBScripts) as proxies for execution, not direct arbitrary Python script execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:50:28.621421Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

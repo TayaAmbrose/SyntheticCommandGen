@@ -27,12 +27,32 @@
         "combined_score": 2.0,
         "confidence": 0.78,
         "timestamp": "2025-10-01T21:15:44.308104Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, with correct PowerShell syntax including variable declarations, method calls, and pipeline operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it's not using WMIC to proxy script execution but rather as a launcher, and Hamachi is being used as a network path rather than as the proxy mechanism described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:52:44.203053Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The backticks used before every '$' in variable names within the PowerShell command string are syntactically incorrect; PowerShell would interpret '`$var' as a literal '$' followed by 'var', not as the variable '$var'.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses WMIC to proxy PowerShell execution for data exfiltration, targeting a Hamachi adapter and connecting to an unusual port, aligning well with the described attack intent and the spirit of T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:53:03.655064Z"
       }
     ],
-    "llm_average_syntactic": 2.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 2.0,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

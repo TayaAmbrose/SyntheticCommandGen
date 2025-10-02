@@ -27,11 +27,31 @@
         "combined_score": 1.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T22:51:11.477912Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntax as the actual command was withheld and replaced with a description.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness without seeing the actual command implementation.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:16:25.079604Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's described functionality (moving data out-of-band via UDP on an APIPA interface) is fundamentally misaligned with MITRE ATT&CK Technique T1011, which defines System Script Proxy Execution.",
+        "combined_score": 0.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T04:16:32.612144Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 1.0,
-    "llm_average_score": 1.0,
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.667,
+    "llm_average_score": 0.5,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

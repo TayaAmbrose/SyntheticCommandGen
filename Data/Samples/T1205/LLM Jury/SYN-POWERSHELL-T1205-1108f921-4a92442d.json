@@ -25,6 +25,26 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T19:15:03.796840Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, correct variable assignments, proper object instantiation, and valid method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of traffic signaling by embedding a specific base64-encoded payload within an ICMP echo request, aligning directly with T1205's description of using protocol fields or covert channels for signaling.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:37:32.810026Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell with balanced quotes, parentheses, and braces, proper variable declarations, correct method calls, and appropriate semicolons separating statements.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by embedding a base64-encoded command ('OPENRDP1') within an ICMP packet payload that could signal a listening implant to enable RDP, exactly matching the technique description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:37:35.102493Z"
       }
     ],
     "llm_average_syntactic": 5.0,

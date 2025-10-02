@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:42:07.915556Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, braces, and parentheses, using proper PowerShell syntax throughout the script block with valid cmdlets, parameters, and pipeline operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by monitoring firewall logs for dropped DNS packets and using them as signals to temporarily open WinRM/HTTPS (port 5986) access for specific source IPs, creating a covert command and control channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:23:24.850922Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

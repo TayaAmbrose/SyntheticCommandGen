@@ -26,11 +26,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:02:23.693435Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid iptables syntax, correct flag formats, and appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements a port-knocking sequence (10443\u219210554\u219210665) that perfectly aligns with the Traffic Signaling technique by using network traffic patterns as a covert authentication mechanism to trigger an action (opening SSH access).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:33:03.514682Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid iptables syntax, correct flag usage, and proper command separation within the `bash -c` string.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a port-knocking mechanism using `iptables` and the `recent` module, which is a classic and operationally plausible example of T1205 Traffic Signaling by using a specific network traffic sequence as a timed trigger to open SSH access.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:33:12.388933Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

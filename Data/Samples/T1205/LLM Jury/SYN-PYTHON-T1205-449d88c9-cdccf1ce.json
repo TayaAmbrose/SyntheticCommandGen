@@ -25,11 +25,31 @@
         "combined_score": 2.0,
         "confidence": 0.4,
         "timestamp": "2025-10-01T19:35:20.129023Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate the concept description which appears to describe a technically feasible approach using packet sniffing with specific TCP flag combinations, though implementation details are missing.",
+        "semantic_score": 4,
+        "semantic_justification": "The described technique aligns well with T1205 Traffic Signaling by using uncommon TCP flag combinations as covert signals to trigger actions, though without the actual command I cannot verify implementation correctness.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:43:00.506257Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "While a Python script can implement packet parsing and process creation, the stated 'Privilege: None' clashes with the typical requirement for 'sniffing TCP packets' (raw socket access), making the described command functionally unexecutable as-is due to permission errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The core concept of using an uncommon TCP flag combination as a covert signal to trigger a local listener directly and accurately implements MITRE ATT&CK T1205 Traffic Signaling, using protocol fields to coordinate actions.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:43:17.310296Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 2.0,
+    "llm_average_syntactic": 2.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 3.0,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

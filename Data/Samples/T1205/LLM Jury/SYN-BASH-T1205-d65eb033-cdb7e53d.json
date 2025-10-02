@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:36:13.705404Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both nc and networksetup commands, correct command separators (;, &&), and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a UDP port-knocking sequence with a payload ('KO') to three specific ports (45001-45003) as a signal, followed by configuring a local proxy that could be used for subsequent C2 communication.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:23.629793Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

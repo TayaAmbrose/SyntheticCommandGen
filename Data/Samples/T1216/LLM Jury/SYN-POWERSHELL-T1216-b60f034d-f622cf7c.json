@@ -27,11 +27,31 @@
         "combined_score": 1.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:05:06.736018Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only assess that mshta with data-URI content invoked from PowerShell would likely have moderate syntax complexity with potential issues around escaping quotes and special characters.",
+        "semantic_score": 5,
+        "semantic_justification": "The described technique perfectly aligns with T1216 (System Script Proxy Execution) as it uses mshta.exe (a trusted Microsoft binary) to proxy the execution of potentially malicious content via data URIs, enabling fileless execution that could bypass application controls.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:49:44.795000Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command itself was explicitly withheld and replaced with a descriptive placeholder, making it a fragment not runnable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "The explanation describes a highly plausible and common technique involving `mshta.exe` to execute HTA content via a data URI, which aligns with the concept of using a signed host to proxy script execution, closely fitting the intent of T1216 despite `mshta.exe` being a binary rather than a script itself, as it acts as a host for HTA (script) content.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:49:54.128357Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 2.667,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

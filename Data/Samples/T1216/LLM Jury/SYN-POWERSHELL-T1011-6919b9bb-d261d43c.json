@@ -24,6 +24,26 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:17:08.779220Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper PowerShell syntax for converting a file to Base64, regex matching, piping, and correct ncat parameter usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by reading a binary file, encoding it as Base64, breaking it into chunks, and exfiltrating it over IPv6 using ncat to an unusual high port with throttling to avoid detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:53:06.935490Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell syntax for variable assignment, .NET method calls, object piping, and the `ncat.exe` invocation with its arguments are all perfectly well-formed and runnable.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively performs a plausible data exfiltration, it directly executes the exfiltration payload via PowerShell and `ncat.exe`, rather than abusing a trusted or signed system script as a proxy, which is the defining characteristic of MITRE ATT&CK T1011.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:53:18.757901Z"
       }
     ],
     "llm_average_syntactic": 5.0,

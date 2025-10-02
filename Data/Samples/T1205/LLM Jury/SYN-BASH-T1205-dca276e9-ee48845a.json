@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:55:59.506035Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper iptables syntax, correctly using the string match module with hex-string option, proper quoting, and valid flags throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements detection of ICMP-based traffic signaling by monitoring for a specific hex pattern (DEADBEEF) in ICMP echo requests, but it only logs the traffic rather than blocking it, which is appropriate for detection but not prevention.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:01.791647Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -36,6 +36,16 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T14:49:05.809383Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, error handling, balanced parentheses, correct cmdlet usage, and appropriate parameter passing.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does use Wi-Fi Direct for communication which could be considered an alternate channel, it doesn't implement the core aspects of T1011 (Traffic Signaling) which involves embedding signals/commands within legitimate traffic or using protocol fields for covert communication.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:11:58.096954Z"
       }
     ],
     "llm_average_syntactic": 5.0,

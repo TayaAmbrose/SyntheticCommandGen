@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:02:38.314509Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, method calls, and object creation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by establishing a Bluetooth PAN connection, configuring a static IP, encoding file data, and transmitting it over a TCP connection with specific protocol markers (DATA: prefix and :END suffix) that serve as signals within the traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:24:50.799701Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

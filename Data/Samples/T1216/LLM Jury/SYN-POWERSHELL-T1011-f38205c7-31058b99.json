@@ -25,12 +25,32 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:35:05.794897Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable declarations, balanced quotes, valid PowerShell cmdlets, correct parameter usage, and proper pipeline construction.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt data exfiltration via ICMP as claimed, it incorrectly references T1011 (Exfiltration Over Other Network Medium) when it should be T1048 (Exfiltration Over Alternative Protocol), and uses IPv6 ICMP rather than the standard network protocols typically associated with these techniques.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:12:38.653929Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed, using correct syntax for variable assignments, cmdlet calls, method calls, pipelining, and script blocks with valid arguments and switches.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively performs ICMP-based data exfiltration, it does not leverage 'System Script Proxy Execution' (T1011) as it directly executes PowerShell cmdlets rather than abusing trusted system scripts to proxy execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:12:54.095357Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

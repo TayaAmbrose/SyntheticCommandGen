@@ -27,11 +27,31 @@
         "combined_score": 2.0,
         "confidence": 0.2,
         "timestamp": "2025-10-01T21:53:45.370333Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only infer it's likely parseable but may contain formatting issues since it's described as using 'abnormal arguments' which suggests potential syntax edge cases.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command perfectly aligns with T1216 (System Script Proxy Execution) by leveraging a legitimate signed script (prnmngr.vbs) via cscript.exe to proxy the execution of other processes, which is exactly how this technique works.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T04:03:35.892002Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The actual command string is withheld, preventing any assessment of its syntactic structure or parseability as a runnable command.",
+        "semantic_score": 5,
+        "semantic_justification": "The explanation of using cscript.exe with the signed prnmngr.vbs and abnormal arguments to proxy execution for bypassing controls is a direct, highly plausible, and realistic implementation of MITRE ATT&CK T1216.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:03:43.364113Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 2.0,
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 3.0,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

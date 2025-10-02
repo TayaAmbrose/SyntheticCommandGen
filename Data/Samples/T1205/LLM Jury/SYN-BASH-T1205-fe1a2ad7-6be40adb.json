@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T18:58:20.944310Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&, ;), valid flags for tcpdump and ipfw, and correct syntax for the bash -c construct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using tcpdump to monitor for a specific UDP packet pattern on port 53 (DNS) containing the magic bytes 'OPENPORT', which then triggers the creation of a port forwarding rule that redirects incoming HTTPS traffic to a local port for 120 seconds.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:31:57.989979Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed for Bash on macOS, with balanced quotes, correct command separators, valid flag formats for tcpdump and ipfw, and proper BPF filter syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements Traffic Signaling (T1205) by using a magic payload ('OPENPORT') within UDP/53 traffic as a trigger for a timed, system-modifying action (ipfw rule to redirect inbound TCP/443), perfectly aligning with the technique's description of embedding signals to coordinate actions or trigger payloads.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:32:10.760716Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.95,
         "timestamp": "2025-10-01T14:23:28.780277Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell code with balanced quotes, braces, and parentheses, proper variable declarations, and valid cmdlet usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by monitoring firewall logs for a specific sequence of TCP SYN packets to ports 81, 4455, and 33890, and when detected, temporarily opens WinRM access for the signaling IP address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:41.119881Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 3.75,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -27,11 +27,31 @@
         "combined_score": 1.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:54:13.557698Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is explicitly marked as 'withheld \u2014 non-actionable' with only a description of what it would do rather than actual executable code.",
+        "semantic_score": 3,
+        "semantic_justification": "The described functionality aligns with exfiltration over alternative protocol (T1011) using ICMP echo packets as data carriers, but without seeing the actual code implementation, full assessment is impossible.",
+        "combined_score": 2.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T04:17:41.170847Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The actual command syntax was explicitly withheld, making it impossible to evaluate its well-formedness or parseability.",
+        "semantic_score": 0,
+        "semantic_justification": "The command describes using ICMP for data carriage, which is a network communication technique, and does not involve the abuse of trusted system scripts or script hosts for proxy execution, which is the core mechanism of T1011.",
+        "combined_score": 0.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T04:17:49.726235Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 1.167,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

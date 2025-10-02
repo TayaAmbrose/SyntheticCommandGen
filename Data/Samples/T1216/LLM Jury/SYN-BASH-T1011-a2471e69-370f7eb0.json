@@ -26,11 +26,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:19:38.230013Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators for both the background tcpdump process and the netcat data exfiltration.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements data exfiltration over an alternate network channel (Wi-Fi Direct) using UDP as claimed, though it's not precisely aligned with T1011 (which focuses on exfiltration via command and control channels) but rather more aligned with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:09:14.535680Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses standard Bash syntax, valid utility calls, proper redirection, and correct backgrounding and piping constructs.",
+        "semantic_score": 1,
+        "semantic_justification": "The command directly uses standard Linux binaries (`dd`, `nc`) for exfiltration, which does not involve 'System Script Proxy Execution' as defined by MITRE ATT&CK T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:09:30.429770Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

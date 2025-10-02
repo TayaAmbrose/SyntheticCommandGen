@@ -26,12 +26,32 @@
         "combined_score": 4.5,
         "confidence": 0.78,
         "timestamp": "2025-10-01T21:59:34.399139Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct use of redirection operators and background process control.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over a physical channel (USB), it doesn't align with T1011 (Exfiltration Over Other Network Medium) as claimed because it's using tcpdump to monitor traffic rather than as a proxy for script execution, and there's no system script being abused as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:04:42.620879Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, proper redirection, and correct use of backgrounding operators, making it fully parseable and runnable in Bash.",
+        "semantic_score": 1,
+        "semantic_justification": "The command attempts data exfiltration but completely misrepresents T1011 (System Script Proxy Execution), as it directly executes standard binaries and does not involve abusing trusted scripts or proxying execution; additionally, the `tcpdump` component is functionally useless for the stated goal due to output redirection to /dev/null.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:04:58.333329Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

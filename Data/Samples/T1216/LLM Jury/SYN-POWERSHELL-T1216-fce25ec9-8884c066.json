@@ -25,6 +25,26 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T22:00:06.460789Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, valid flags (//nologo), correct path structure, and appropriate use of parameters for the PubPrn.vbs script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 (System Script Proxy Execution) by using wscript.exe to execute the legitimate signed PubPrn.vbs script as a proxy to load and execute a remote scriptlet from an attacker-controlled server.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:05:01.191801Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid executable, flags, paths, and arguments, making it parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately utilizes wscript.exe and PubPrn.vbs to proxy the execution of a remote scriptlet, directly aligning with the documented T1216 technique of abusing trusted system scripts for code execution.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:05:04.841554Z"
       }
     ],
     "llm_average_syntactic": 5.0,

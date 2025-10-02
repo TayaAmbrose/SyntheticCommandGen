@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T21:56:26.072207Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignment, valid method calls, and correct pipeline usage.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements data exfiltration by encoding file bytes into ICMP packet sizes and transmitting them over IPv6, though it uses T1048 (Exfiltration Over Alternative Protocol) rather than the claimed T1011 (System Script Proxy Execution).",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:03:50.032899Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for variable assignment, method calls, piping, looping, and cmdlet parameter usage.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively performs ICMPv6 exfiltration, it does not involve abusing trusted system scripts to proxy execution, making it inconsistent with the MITRE ATT&CK T1011 technique definition.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:04:02.278462Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:34:59.442732Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid Python syntax within the quoted code block, and correct usage of the bash -c and vtysh -c flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a specific sequence of TCP SYN packets as a port-knocking mechanism followed by adding a network route that would direct traffic to the signaled destination, creating a covert command channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:42:37.533568Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct nested quoting for `bash -c` and `python3 -c`, valid command separators, and proper flag formats for all tools.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a TCP SYN-based port-knocking sequence followed by a relevant static route insertion using appropriate tools, perfectly aligning with the described Traffic Signaling (T1205) technique and its operational plausibility for C2.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:42:56.831249Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

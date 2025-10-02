@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:28:09.969374Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid Python syntax within a heredoc, and correct use of sudo for elevated privileges needed by scapy.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by crafting a TCP packet with a specific sequence number (0x41414141) that could serve as a covert signal to trigger behavior on a remote system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:40:49.817796Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct shell syntax for `sudo` and a heredoc, and the embedded Python script is syntactically valid Scapy code.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements traffic signaling by embedding a unique 'magic' value (0x41414141) in the TCP sequence number field of a crafted RST packet, perfectly aligning with T1205's description of using protocol fields for covert communication and triggering.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T03:40:57.862332Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

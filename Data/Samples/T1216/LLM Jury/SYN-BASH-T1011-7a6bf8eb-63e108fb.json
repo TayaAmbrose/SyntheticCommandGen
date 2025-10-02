@@ -25,12 +25,32 @@
         "combined_score": 4.0,
         "confidence": 0.7,
         "timestamp": "2025-10-01T21:11:07.082186Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat, and correct command substitution syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command uses netcat for IPv6 UDP multicast transmission which is unrelated to the T1011 technique of abusing trusted system scripts for proxy execution.",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:51:38.926169Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid Bash syntax for command substitution and redirection, and correctly applies `nc` flags with balanced quotes.",
+        "semantic_score": 1,
+        "semantic_justification": "The command is entirely misaligned with T1011 (System Script Proxy Execution) as it directly executes a network utility (`nc`) rather than abusing a trusted system script to proxy execution, and the `ipconfig getv6ifaddr` subcommand is not valid on macOS.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:51:49.812469Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

@@ -27,6 +27,26 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:16:12.604369Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for both tcpdump and iptables, including correct flag formats, balanced quotes, and proper command chaining with &&.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using tcpdump to monitor for specific TCP SYN packets as a trigger signal and then executing an iptables rule to open a port in response, creating a covert activation mechanism.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:37:58.916965Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for tcpdump filters, flag usage, command separators, and iptables arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of using a sequence of three TCP SYNs to a specific port as a network-based signal to trigger an iptables firewall modification, directly implementing MITRE ATT&CK T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:38:06.557706Z"
       }
     ],
     "llm_average_syntactic": 5.0,

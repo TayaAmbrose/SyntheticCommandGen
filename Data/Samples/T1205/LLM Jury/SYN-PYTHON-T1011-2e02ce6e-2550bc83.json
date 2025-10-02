@@ -36,11 +36,21 @@
         "combined_score": 4.5,
         "confidence": 0.95,
         "timestamp": "2025-10-01T15:57:57.138117Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for socket operations, file handling, list comprehension, and control flow.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements the T1011 technique by using Bluetooth RFCOMM as a covert channel to exfiltrate the user's git configuration file in small chunks with timing delays to avoid detection, demonstrating traffic signaling over a non-standard protocol.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:53.784613Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

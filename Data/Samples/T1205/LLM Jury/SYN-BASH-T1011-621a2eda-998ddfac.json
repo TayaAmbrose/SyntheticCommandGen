@@ -35,12 +35,22 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T14:24:28.374972Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), valid flags for both iwconfig and curl, correct redirection of output (>/dev/null 2>&1), and appropriate parameter syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 (Traffic Signaling) by first checking for the wlan1 interface and then using it to exfiltrate data over HTTP to a specific IP and port, representing a clear implementation of exfiltration over an alternate network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:10:45.361548Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

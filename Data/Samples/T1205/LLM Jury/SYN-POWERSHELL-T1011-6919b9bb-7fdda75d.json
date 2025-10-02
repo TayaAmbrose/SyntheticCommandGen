@@ -34,11 +34,21 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:47:49.470509Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct method calls, appropriate string concatenation, and valid parameters for the nping.exe utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 (Traffic Signaling) by encoding file data and embedding it within ICMPv6 packets with a 'C1:' prefix as a signal, using a non-standard protocol for exfiltration that would likely evade standard monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:14:30.992945Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

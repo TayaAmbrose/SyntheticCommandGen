@@ -26,11 +26,31 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:22:15.554549Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, openssl, nc), and correct syntax for piping operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the Traffic Signaling technique by disconnecting from current WiFi, connecting to a specific operations network, encoding data with base64, and transmitting it over IPv6 link-local addressing on an uncommon port - all consistent with covert C2 signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:39:29.400553Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid macOS utilities, flags, and proper command separators with balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command largely achieves the claimed intent of switching networks, encoding data, and exfiltrating it over an unusual IPv6 link-local channel, which aligns with T1011, though the declared 'Privilege: None' conflicts with the necessary `sudo` and there's no explicit check for successful network connection before transmission.",
+        "combined_score": 4.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T03:39:45.059668Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

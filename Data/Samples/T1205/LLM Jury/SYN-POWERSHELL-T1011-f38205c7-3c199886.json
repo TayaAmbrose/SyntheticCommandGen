@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.73,
         "timestamp": "2025-10-01T19:00:43.150527Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, and valid syntax for file operations and the Test-Connection cmdlet.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by encoding file data into ICMPv6 TTL values, using ping-like operations to exfiltrate binary data through a covert channel that would appear as normal network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:32:32.456480Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, adheres to PowerShell syntax, uses valid cmdlets, parameters, operators, and data types without any apparent errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of encoding file data into ICMPv6 TTL fields for traffic signaling, directly aligning with the T1011 technique's description and operational characteristics.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:32:39.718785Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

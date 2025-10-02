@@ -25,6 +25,26 @@
         "combined_score": 3.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T21:35:58.460714Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netcat (nc), correctly using quotes around the command substitution, valid flags (-6, -u, -s), and proper input redirection from the system log file.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a non-standard network interface (AWDL) using IPv6 UDP, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as described, which specifically refers to abusing trusted system scripts for execution proxying, not network exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:58:27.031247Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, proper command substitution, and correct redirection for a Bash shell on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs direct data exfiltration via netcat and does not involve abusing trusted system scripts or proxying execution, which is the core concept of T1011: System Script Proxy Execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:58:33.434677Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:59:48.496571Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the 'knock' utility, including proper spacing, valid IP address format, sequential port numbers, and a valid delay flag (-d) with numeric parameter.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending a specific sequence of TCP packets to predetermined ports (7000, 8000, 9000) with a 200ms delay between them, which serves as a covert signal to trigger the knockd service to open a hidden service.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:12:31.801874Z"
       }
     ],
     "llm_average_syntactic": 5.0,

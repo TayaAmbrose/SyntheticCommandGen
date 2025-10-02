@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T17:51:29.215513Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and proper Python syntax for using Scapy to craft and send an ICMP packet.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by sending an ICMP packet with an embedded command ('OPEN:8443') that could trigger a listening backdoor to open a specific port, aligning with T1205's description of embedding signals within legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:24:01.776903Z"
       }
     ],
     "llm_average_syntactic": 5.0,

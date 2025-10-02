@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T17:57:47.226174Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper loop syntax, variable usage, command separators, balanced quotes, and valid flags for the nc (netcat) utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements port-knocking by sending TCP connection attempts to specific ports in sequence (10443, 10554, 10665) followed by an SSH probe, which aligns perfectly with the Traffic Signaling technique where specific connection patterns trigger access control changes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:24:28.931551Z"
       }
     ],
     "llm_average_syntactic": 5.0,

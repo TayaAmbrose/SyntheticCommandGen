@@ -34,12 +34,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T21:55:11.781985Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignments, correct method calls, and valid PowerShell syntax for file operations and piping to ncat.exe with appropriate command-line arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternative channel (IPv6 UDP) with fixed ports as claimed, but the technique ID T1011 (Exfiltration Over Other Network Medium) is more aligned with using alternate protocols rather than abusing system scripts as described in the technique description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:03:46.949674Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

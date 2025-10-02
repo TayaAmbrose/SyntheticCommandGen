@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:33:58.661105Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable declarations, method calls, and object instantiations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a Wake-on-LAN magic packet (6 bytes of 0xFF followed by 16 repetitions of the target MAC address) sent via UDP broadcast to port 9, which aligns with the Traffic Signaling technique as it uses a specific network packet structure to trigger a response.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:42:23.661085Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, correct variable assignments, proper object instantiations, and valid method calls, ensuring it will parse and execute without errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately constructs and sends a standard Wake-on-LAN magic packet via UDP broadcast, which precisely aligns with the T1205 Traffic Signaling technique as a method for an adversary to coordinate actions or trigger payloads using legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:42:34.095557Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -27,11 +27,31 @@
         "combined_score": 1.5,
         "confidence": 0.35,
         "timestamp": "2025-10-01T21:19:49.191656Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only infer it would be a PowerShell command invoking mshta.exe with a UNC path, which is syntactically possible but I cannot verify specific syntax elements like quotes, parameters or formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The described technique of using mshta.exe to load an HTA file from a UNC path aligns perfectly with T1216 (System Script Proxy Execution) as it leverages a trusted Microsoft binary to proxy execution of potentially malicious content.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:54:17.162576Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The provided command 'WITHHELD_FOR_SAFETY' is not a runnable command string and therefore cannot be evaluated for syntactic correctness or parseability.",
+        "semantic_score": 5,
+        "semantic_justification": "The command's explanation perfectly describes a highly plausible and common implementation of MITRE ATT&CK T1216 (System Script Proxy Execution) using mshta.exe to load remote HTA content via a UNC path from an SMB share.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:54:22.524651Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
+    "llm_average_syntactic": 1.333,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 2.5,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T21:01:36.276849Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses, correct method calls, and appropriate pipeline operators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternate protocol (ICMPv6) as described in T1011, but uses Test-Connection rather than a system script proxy as the technique specifically describes.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:48:54.622446Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with no syntax errors, balanced components, valid flags, and proper command separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs exfiltration via ICMP, which is plausible, but it does not utilize 'System Script Proxy Execution' (T1011) as it's a direct PowerShell command, not proxied through a trusted system script.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:49:05.532512Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

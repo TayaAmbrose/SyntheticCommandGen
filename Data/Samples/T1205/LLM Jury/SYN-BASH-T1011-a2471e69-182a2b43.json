@@ -36,11 +36,21 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T17:30:28.011837Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both tcpdump and netcat, correct command separators, and appropriate redirection syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by using IPv6 link-local addressing over a USB interface to exfiltrate data via a non-standard port (54531) while simultaneously monitoring the traffic with tcpdump, creating a covert channel for data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:22:02.646563Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

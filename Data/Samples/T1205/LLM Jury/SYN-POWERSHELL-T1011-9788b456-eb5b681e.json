@@ -35,12 +35,22 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:23:07.636865Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy add command, including all required parameters with proper format and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a port proxy that could be used for traffic signaling by creating a communication channel between IPv4 and IPv6 networks on uncommon ports (49171/49172), which aligns with the T1011 technique for covert command and control or data exfiltration.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:27:35.854214Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 3.25,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

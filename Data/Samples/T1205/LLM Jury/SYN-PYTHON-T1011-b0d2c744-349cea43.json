@@ -27,12 +27,32 @@
         "combined_score": 1.5,
         "confidence": 0.3,
         "timestamp": "2025-10-01T19:15:31.071538Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only evaluate based on the description which suggests a syntactically valid Python socket implementation, though I cannot verify specific syntax elements.",
+        "semantic_score": 4,
+        "semantic_justification": "The described command aligns well with T1011 Traffic Signaling by using SO_DONTROUTE to force alternate network paths and base64-encoding data for exfiltration over an uncommon port, though I cannot fully verify implementation details.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:37:38.380081Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "Assuming the command, if provided, correctly implements the described socket operations in Python, it would be perfectly well-formed.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command establishes a covert network channel using socket options and an uncommon port, and directly performs traffic signaling by sending base64-encoded data, aligning with T1011's emphasis on embedded signals and covert channels.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:37:55.778534Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

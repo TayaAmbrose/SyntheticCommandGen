@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T16:28:23.587293Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, and proper syntax for socket operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements traffic signaling by establishing a Bluetooth L2CAP connection to send system information to a specific MAC address using a non-standard PSM (0x1003), which aligns with T1011 by using an alternative communication channel that bypasses traditional network monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:16:42.217470Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

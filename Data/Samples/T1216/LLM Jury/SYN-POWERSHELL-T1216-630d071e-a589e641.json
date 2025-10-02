@@ -27,11 +27,31 @@
         "combined_score": 2.5,
         "confidence": 0.3,
         "timestamp": "2025-10-01T21:20:59.830845Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command syntax, I can only infer it's likely parseable but may contain formatting issues since it's described as a PowerShell command invoking wscript.exe to run a VBS script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 (System Script Proxy Execution) by using wscript.exe to execute a legitimate Microsoft-signed script (SyncAppvPublishingServer.vbs) that spawns an unexpected interpreter, which is a classic implementation of this technique.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T03:54:37.069532Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The actual command string was withheld, making it impossible to evaluate its syntactic correctness or parseability.",
+        "semantic_score": 5,
+        "semantic_justification": "The described action\u2014PowerShell invoking wscript.exe to run `SyncAppvPublishingServer.vbs` from System32, leading to an unexpected child interpreter\u2014perfectly aligns with the T1216 technique of abusing a legitimate, signed system script for proxy execution of malicious commands.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:54:42.585301Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 2.5,
+    "llm_average_syntactic": 1.333,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 3.0,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

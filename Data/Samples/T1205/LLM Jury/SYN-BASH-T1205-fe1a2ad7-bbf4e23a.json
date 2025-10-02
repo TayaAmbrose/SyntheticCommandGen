@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T16:19:31.600515Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper Python heredoc syntax, valid socket operations, and correct bash execution structure.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement a form of network signaling (Wake-on-LAN), it's a legitimate use case rather than a malicious implementation of T1205 Traffic Signaling for C2 or exfiltration purposes as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:16:12.785325Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

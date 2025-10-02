@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:01:02.194955Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, valid pipeline structure, correct ForEach-Object usage, proper call operator (&), and appropriate parameter formatting for both the WakeMeOnLan tool and Start-Sleep cmdlet.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with the Traffic Signaling technique by sending repeated Wake-on-LAN packets with specific timing patterns (400ms intervals), though it's more of a legitimate network management use case rather than a malicious implementation of T1205.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:24:44.227701Z"
       }
     ],
     "llm_average_syntactic": 5.0,

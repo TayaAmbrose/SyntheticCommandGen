@@ -27,12 +27,32 @@
         "combined_score": 2.5,
         "confidence": 0.6,
         "timestamp": "2025-10-01T21:45:59.915593Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, using correct PowerShell syntax with proper escape sequences throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with the technique by using WMIC (a trusted system utility) to proxy the execution of PowerShell code that exfiltrates data, though it doesn't specifically use a signed script as mentioned in T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:01:21.733341Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, correctly escaping dollar signs for variables within the `wmic` double-quoted string by prefixing with backticks, and using valid PowerShell syntax for object manipulation and network operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly achieves its claimed intent by using `wmic` to proxy PowerShell execution (aligning with T1011), accurately identifies and binds to a 'Remote NDIS' adapter, and effectively exfiltrates a specified file via a TCP connection to an external host, demonstrating operational plausibility and correct technical implementation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:01:35.358611Z"
       }
     ],
-    "llm_average_syntactic": 3.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 2.5,
-    "llm_verdict": "uncertain",
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

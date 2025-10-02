@@ -36,12 +36,22 @@
         "combined_score": 3.5,
         "confidence": 1,
         "timestamp": "2025-10-01T17:00:01.845905Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses/braces, appropriate semicolons as command separators, proper error handling with -ErrorAction, and correct variable usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by establishing a specific network route for exfiltration traffic over the cellular interface and using iperf3 on an uncommon port (65055) to create a covert channel for data transmission.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:13.592390Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 3.5,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T14:27:16.926558Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper array declaration, foreach loop structure, balanced parentheses/braces, correct variable references, proper command invocation with the ampersand operator, and appropriate use of Start-Sleep with valid parameter.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with T1205 Traffic Signaling as it sends Wake-on-LAN magic packets (a form of network signaling) to multiple target MAC addresses in sequence, though it uses a legitimate tool rather than a covert channel typically associated with adversarial traffic signaling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:10:57.702474Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

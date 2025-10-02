@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:32:30.309320Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), correct redirection (>/dev/null 2>&1), and valid parameters for both iwconfig and socat.",
+        "semantic_score": 5,
+        "semantic_justification": "The command aligns perfectly with T1011 by first checking if wlan1 exists and then using socat to exfiltrate data over UDP through a specific wireless interface, effectively implementing traffic signaling through a secondary communication channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:13.803031Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

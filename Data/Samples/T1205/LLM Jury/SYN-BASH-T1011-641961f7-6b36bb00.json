@@ -25,12 +25,32 @@
         "combined_score": 3.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T19:17:13.911850Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid variable assignment, correct awk syntax, and properly structured Python code with appropriate quoting and escaping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 by retrieving the Thunderbolt Bridge IP address, establishing a socket connection to a specific external IP/port, and exfiltrating the user's bash history file over this non-primary network interface.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:38:09.487721Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Bash syntax for variable assignment and command substitution, and valid Python syntax for socket operations and file handling.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command effectively performs data exfiltration over a specific network interface, its direct TCP transfer mechanism does not align with the T1011 'Traffic Signaling' technique, which emphasizes embedding signals, covert channels, or protocol mimicry rather than plain data transfer.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:38:25.819910Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 3.5,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

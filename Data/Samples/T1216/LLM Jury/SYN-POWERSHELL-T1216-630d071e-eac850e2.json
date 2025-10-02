@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "[withheld] PowerShell runs cscript.exe to call prnport.vbs with suspicious parameters that culminate in unexpected process execution (details redacted).",
+  "explanation": "Signed printing scripts like prnport.vbs can be misused as a proxy for executing other code. Detection focuses on anomalous argument patterns and child process creation.",
+  "rationale_steps": [
+    "Flag powershell.exe -> cscript.exe with prnport.vbs in command line.",
+    "Look for non-standard port/printer arguments or embedded tokens.",
+    "Child process from cscript.exe deviates from expected behavior (e.g., spawns an interpreter).",
+    "No new ports/printers actually created per system logs.",
+    "Execution originates from user space and not an installer/IT tool."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-630d071e-eac850e2",
+  "source_prompt_hash": "630d071e",
+  "timestamp_utc": "2025-09-30T06:59:07.952821Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 3,
+        "syntactic_justification": "Without seeing the actual command, I can only infer it's likely parseable but may contain formatting issues since it involves PowerShell calling cscript.exe with prnport.vbs and potentially complex parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The described command aligns well with T1216 (System Script Proxy Execution) by using a legitimate Windows script (prnport.vbs) as a proxy for execution, though without seeing the exact implementation I cannot verify complete operational plausibility.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T04:42:18.251693Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The actual command was explicitly withheld as '[withheld]', making it impossible to evaluate its syntactic correctness or parseability.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command execution flow\u2014using PowerShell to invoke cscript.exe to run a signed system script (prnport.vbs) with suspicious parameters for proxy execution\u2014perfectly aligns with the T1216 technique.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T04:42:25.713206Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No concrete command is provided\u2014only a narrative description\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 3,
+        "semantic_justification": "Invoking a signed VBS via cscript aligns with T1216 conceptually, but the lack of specific arguments and the less-common use of prnport.vbs for proxy execution reduce plausibility.",
+        "combined_score": 2.0,
+        "confidence": 0.2,
+        "timestamp": "2025-10-02T04:42:33.132214Z"
+      }
+    ],
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 2.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

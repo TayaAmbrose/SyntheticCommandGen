@@ -36,11 +36,21 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T16:18:37.336411Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, tar, base64, nc), and correct pipeline construction.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the claimed technique by disconnecting from current Wi-Fi, connecting to a specific network, compressing and encoding a file, and exfiltrating it over IPv6 to a specific port using netcat, which aligns perfectly with T1011 Traffic Signaling by using an alternate communication channel.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:16:07.849876Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

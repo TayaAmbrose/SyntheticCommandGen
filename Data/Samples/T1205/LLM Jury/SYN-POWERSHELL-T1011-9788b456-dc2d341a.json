@@ -35,12 +35,22 @@
         "combined_score": 4.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:05:13.993065Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy add command, including all required parameters with proper value assignments.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements port forwarding that could be used for traffic signaling/exfiltration as claimed, though it requires administrative privileges contrary to the 'None' privilege level stated in the explanation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:24:56.556487Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

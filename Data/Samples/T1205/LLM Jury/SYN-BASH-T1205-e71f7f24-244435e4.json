@@ -35,11 +35,21 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T17:02:02.941304Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid flags for tcpdump and awk, and correct piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by listening for specific UDP broadcast packets (magic packets) as a covert signal that triggers the installation of a network route, creating a hidden command and control mechanism on network devices.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:18:27.514680Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

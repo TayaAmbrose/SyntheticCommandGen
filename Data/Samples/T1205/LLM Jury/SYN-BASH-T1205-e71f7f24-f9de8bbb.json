@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:33:00.434746Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for tcpdump and vtysh, correct command separators (&&), and proper nesting of commands within bash -c.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using tcpdump to listen for a specific TCP SYN packet to port 65001 as a trigger to automatically configure a BGP peering session, creating a covert communication channel through routing infrastructure.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:41:50.936043Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and arguments for both `tcpdump` and `vtysh`, and has correctly balanced quoting and command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of using a TCP SYN packet as a signal to programmatically establish a covert BGP routing channel, directly aligning with the Traffic Signaling technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:41:59.167223Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

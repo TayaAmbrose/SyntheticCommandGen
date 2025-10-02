@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T16:27:35.372681Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags for hping3 and ssh, and correct syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a port knocking sequence with specific TCP flags (SYN, ACK, FIN) to signal a remote system before establishing an SSH connection, which is a realistic implementation of T1205.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:16:39.217650Z"
       }
     ],
     "llm_average_syntactic": 5.0,

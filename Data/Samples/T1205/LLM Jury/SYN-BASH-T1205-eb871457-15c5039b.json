@@ -36,12 +36,22 @@
         "combined_score": 3.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T14:34:53.421326Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper bash syntax, balanced quotes, valid flags for ufw and iptables, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using specific TCP flags (FIN,URG) and TTL value (66) as a covert signal to temporarily open port 8080, exactly matching the MITRE ATT&CK T1205 description.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:20.248968Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

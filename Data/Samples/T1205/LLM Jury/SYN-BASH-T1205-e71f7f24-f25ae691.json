@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T18:56:43.537576Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for netcat (-u, -w1) and vtysh (-c), correct command separators (&&), and follows proper bash syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by using a UDP port-knocking sequence (sending empty packets to three specific ports) as a signal to a remote system before executing a privileged routing command that would leverage the newly opened access path.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:31:28.132303Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for 'nc' and 'vtysh', and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly executes a UDP port-knocking sequence for signaling and, by using 'sudo', appropriately elevates privileges to add a static route via 'vtysh', fully achieving the claimed intent and aligning with T1205.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:31:54.070428Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

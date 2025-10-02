@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T14:05:05.359192Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, correct variable assignments, proper string formatting, and valid command chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements the Traffic Signaling technique by exfiltrating data over IPv6 to a specific interface using ncat, though it's debatable whether using a link-local IPv6 address fully aligns with the covert signaling aspect of T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:09:46.764453Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

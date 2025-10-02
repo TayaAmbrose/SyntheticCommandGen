@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T14:06:39.980111Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced parentheses, braces, and quotes, proper command separators, valid variable assignments, and correct method calls with appropriate parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command implements Traffic Signaling (T1205) by creating a time-based port knocking sequence derived from the day of year that changes daily, probes three calculated ports in sequence with precise timing, and then attempts a connection to the actual service port (9001) after the knock sequence is complete.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:09:54.347331Z"
       }
     ],
     "llm_average_syntactic": 5.0,

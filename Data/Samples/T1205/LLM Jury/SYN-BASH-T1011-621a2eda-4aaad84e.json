@@ -25,12 +25,32 @@
         "combined_score": 3.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T19:05:04.660140Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), balanced quotes, valid redirection (>/dev/null 2>&1), correct command substitution syntax ($()), and appropriate flag usage for both iwconfig and netcat.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 by checking for a secondary network interface (wlan1) before exfiltrating data (.tmp.bin) via UDP to a specific IP and uncommon port (49175), using the interface's own IP as the source address.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:34:00.642091Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags and separators, and correctly employs command substitution with balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command largely aligns with the technique by exfiltrating data via a specified, potentially secondary, interface using UDP, though the 'monitoring' claim for `iwconfig` is a minor overstatement given its output redirection, serving more as a prerequisite check.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:34:10.306991Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.0,
-    "llm_average_score": 3.0,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

@@ -26,6 +26,26 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:07:48.134291Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced braces/parentheses, correct semicolon usage for statement separation, and appropriate method calls with valid parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique (T1205) by creating a UDP client that sends a specific sequence of signals to predetermined ports with timing delays, which aligns with port knocking for covert access signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:35:11.512924Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct variable assignments, object instantiation, loop structure, method calls, and proper use of semicolons and parentheses.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements UDP-based port knocking with specific payloads and timing, which precisely aligns with the T1205 Traffic Signaling technique's description of using timing, sequence, protocol fields, and covert channels to trigger actions.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T03:35:16.810295Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -37,11 +37,21 @@
         "combined_score": 2.5,
         "confidence": 1.0,
         "timestamp": "2025-10-01T15:20:52.103777Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is described as a Python implementation that would open an IPv6 socket and transmit base64-encoded data, which is syntactically plausible though the actual code was withheld.",
+        "semantic_score": 5,
+        "semantic_justification": "The described command perfectly aligns with T1011 (Traffic Signaling) by using an alternative network medium (IPv6 link-local) with base64 encoding to exfiltrate data over a non-standard port, which would effectively evade standard monitoring.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T03:13:20.191843Z"
       }
     ],
-    "llm_average_syntactic": 0.5,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 2.25,
+    "llm_average_syntactic": 1.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 3.0,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

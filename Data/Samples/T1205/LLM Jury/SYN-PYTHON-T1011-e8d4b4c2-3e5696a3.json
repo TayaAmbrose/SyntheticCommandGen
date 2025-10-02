@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T14:39:59.034456Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Traffic Signaling) by establishing a TCP connection on an uncommon port (52689), reading hidden data from a dot-file, and transmitting it with a custom length-prefixed protocol format that could evade standard monitoring.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:11:31.586444Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

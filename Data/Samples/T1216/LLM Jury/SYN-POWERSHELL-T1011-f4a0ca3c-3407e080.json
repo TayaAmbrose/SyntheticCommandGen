@@ -26,6 +26,26 @@
         "combined_score": 4.0,
         "confidence": 0.6,
         "timestamp": "2025-10-01T22:02:43.948603Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, pipeline operations, and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with T1011 by establishing an alternate communication channel via Bluetooth PAN, configuring the network interface, and exfiltrating data over this non-traditional network medium.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:05:23.104836Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, and valid method calls and operators throughout.",
+        "semantic_score": 1,
+        "semantic_justification": "The command fundamentally misaligns with T1011 by not employing 'system script proxy execution' but rather direct execution, and its 'netsh' component requires elevated privileges, contradicting the stated 'None' privilege level.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:05:39.839048Z"
       }
     ],
     "llm_average_syntactic": 5.0,

@@ -25,12 +25,32 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:50:51.204281Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface portproxy command, using valid parameters and proper value assignments.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly establishes a port proxy that could be used for exfiltration, it doesn't align with T1011 (Exfiltration Over Other Network Medium) but rather with T1572 (Protocol Tunneling) as it creates a network tunnel between IPv4 and IPv6.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:16:18.387939Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid parameters and values for `netsh interface portproxy add v4tov6`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command correctly sets a port proxy, but this action does not align with MITRE ATT&CK T1011 (System Script Proxy Execution), which involves abusing trusted system scripts for execution, not configuring network proxies.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:16:23.134518Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

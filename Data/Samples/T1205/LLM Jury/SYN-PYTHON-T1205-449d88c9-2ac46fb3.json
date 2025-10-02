@@ -25,11 +25,31 @@
         "combined_score": 2.0,
         "confidence": 0.6,
         "timestamp": "2025-10-01T19:40:33.275811Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command appears to be a well-structured Python script using scapy for packet sniffing and system commands for iptables manipulation, though without seeing the actual code I cannot verify complete syntactic correctness.",
+        "semantic_score": 5,
+        "semantic_justification": "The described approach perfectly aligns with T1205 Traffic Signaling by using legitimate WoL packets as covert signaling to trigger a temporary firewall rule change, creating a stealthy backdoor access mechanism.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T03:44:33.701499Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command string was explicitly withheld, therefore its syntactic correctness cannot be evaluated against the provided criteria; it functions as a descriptive fragment rather than a runnable command.",
+        "semantic_score": 3,
+        "semantic_justification": "The high-level concept perfectly aligns with T1205 Traffic Signaling by using a legitimate WoL packet as a hidden activation signal to trigger an action (opening SSH via `iptables`); however, the stated 'Privilege: None' for the executing script contradicts the root privileges required for `iptables` rule insertion, making the full intent operationally unfeasible as described.",
+        "combined_score": 2.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:44:53.245970Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 2.0,
+    "llm_average_syntactic": 2.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 2.833,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

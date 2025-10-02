@@ -25,11 +25,31 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:12:50.454232Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools used (ipfw, tcpdump, sleep), correct command separators, and appropriate use of bash -c for command grouping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a port-knocking mechanism where three SYN packets to port 65001 trigger the temporary opening of port 8443, creating a covert signaling channel that requires specific network traffic patterns to enable access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:25:28.610271Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and separators with valid ipfw and tcpdump option usage and a correctly quoted BPF filter.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements a port-knock-triggered enable/disable of an ipfw rule consistent with T1205, but assumes ipfw is present/active on macOS and that an existing deny policy makes the allow rule meaningful.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T03:26:23.098181Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 5.0,
-    "llm_average_score": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

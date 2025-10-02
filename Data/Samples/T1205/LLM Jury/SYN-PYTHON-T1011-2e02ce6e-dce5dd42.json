@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1.0,
         "timestamp": "2025-10-01T16:57:47.431081Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced parentheses, proper quotes, valid socket operations, and correct exception handling structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration via AF_VSOCK socket (bypassing network monitoring) which aligns with T1011 Traffic Signaling, though it's a simple implementation that only exfiltrates hostname data without more sophisticated signaling mechanisms.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:18:07.374383Z"
       }
     ],
     "llm_average_syntactic": 5.0,

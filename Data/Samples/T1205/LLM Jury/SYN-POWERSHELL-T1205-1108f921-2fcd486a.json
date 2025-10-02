@@ -25,6 +25,26 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:59:41.273526Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, braces, and parentheses, proper variable declarations, correct method calls, and appropriate semicolons for statement separation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique (T1205) by sending an HTTP HEAD request with a custom encoded header that serves as a covert signal to a listening system, potentially triggering actions like opening WinRM (port 5985).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:32:23.598028Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced syntax, proper cmdlet/method calls, correct variable assignments, and appropriate use of semicolons and operators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1205 Traffic Signaling by embedding a base64-encoded, custom HTTP header within a legitimate HEAD request to deliver a specific trigger signal, fulfilling the stated intent of coordinating actions.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:32:29.203772Z"
       }
     ],
     "llm_average_syntactic": 5.0,

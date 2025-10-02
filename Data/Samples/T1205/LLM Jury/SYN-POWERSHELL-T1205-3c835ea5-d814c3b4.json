@@ -35,11 +35,21 @@
         "combined_score": 4.5,
         "confidence": 1,
         "timestamp": "2025-10-01T15:19:47.523043Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignment, command execution, and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a firewall rule to allow outbound ICMP traffic and sending an ICMP packet with an embedded 'MAGIC123' signal that could trigger behavior on the receiving system.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:13:16.979184Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

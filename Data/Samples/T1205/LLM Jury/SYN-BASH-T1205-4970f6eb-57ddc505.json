@@ -25,6 +25,26 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T19:21:16.050788Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, balanced quotes, valid iptables flags, and correct command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the Traffic Signaling technique by using DNS packets with a specific string pattern as a signal to temporarily open MySQL port access, aligning perfectly with T1205's description of embedding signals in legitimate-looking network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:39:18.685269Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and proper Docker and iptables syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the described traffic signaling technique, using specific DNS UDP/53 traffic to trigger a temporary firewall rule change for TCP/3306, aligning well with T1205 and the stated intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:39:26.090239Z"
       }
     ],
     "llm_average_syntactic": 5.0,

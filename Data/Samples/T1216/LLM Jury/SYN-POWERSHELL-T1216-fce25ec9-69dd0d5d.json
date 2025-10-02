@@ -25,11 +25,31 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T21:09:31.189648Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats, and correct escape sequences for the rundll32 proxy execution chain.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 by using rundll32.exe to proxy execution through trusted VBScript components to ultimately execute a hidden PowerShell download cradle that retrieves and executes remote code.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:51:10.143753Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct rundll32 syntax for VBScript execution, balanced quotes, valid PowerShell flags, and a well-formed VBScript payload with correct statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly leverages rundll32 with a VBScript entry point (implicitly using mshtml) to proxy a hidden PowerShell download-and-execute stager, directly aligning with T1216 and the claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T03:51:24.899836Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

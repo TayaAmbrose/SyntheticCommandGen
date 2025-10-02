@@ -34,11 +34,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:28:56.432217Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for iptables, including correct flag formats, balanced quotes, and valid module options.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements T1205 (Traffic Signaling) by monitoring for a specific HTTP header pattern that could be used as a covert signaling mechanism between compromised systems and controllers.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:13:41.567999Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

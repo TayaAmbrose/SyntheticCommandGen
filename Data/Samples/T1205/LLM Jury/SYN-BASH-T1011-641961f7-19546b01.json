@@ -35,12 +35,22 @@
         "combined_score": 4.0,
         "confidence": 0.9,
         "timestamp": "2025-10-01T15:01:36.718072Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools (tar, gzip, nc, networksetup, awk), and correct command chaining using pipes.",
+        "semantic_score": 4,
+        "semantic_justification": "The command implements traffic signaling by exfiltrating compressed data over a specific network interface (FireWire) to a remote server on an unusual port (55284), though it's more aligned with exfiltration than the signaling aspect of T1011.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:12:35.722678Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

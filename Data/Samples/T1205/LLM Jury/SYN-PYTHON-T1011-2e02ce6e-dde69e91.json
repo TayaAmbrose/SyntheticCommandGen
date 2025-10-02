@@ -36,11 +36,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:33:20.378356Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting timeout, connecting to a Bluetooth device, reading a file, and sending data.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Traffic Signaling) as it exfiltrates sensitive bash history data over Bluetooth RFCOMM protocol (an alternative network medium) to avoid standard network monitoring, using a specific channel (27) for signaling.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:13:55.828964Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1216",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "rundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";GetObject(\"script:C:\\\\Users\\\\Public\\\\localtask.sct\")",
+  "explanation": "Proxies execution via MSHTML and the script: moniker to run a local scriptlet under user context, avoiding direct execution mechanisms.",
+  "rationale_steps": [
+    "From PowerShell, call rundll32 to reach MSHTML's RunHTMLApplication.",
+    "In JScript, use GetObject with a local scriptlet path to execute embedded code.",
+    "Execution path uses trusted components; monitoring should focus on script: moniker usage and local .sct targets via rundll32."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1216-fce25ec9-ed07df0f",
+  "source_prompt_hash": "fce25ec9",
+  "timestamp_utc": "2025-09-30T07:05:43.585605Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid syntax for rundll32.exe, and correct use of the javascript protocol handler with properly escaped characters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1216 (System Script Proxy Execution) by using rundll32.exe to proxy execution through mshtml and the script moniker to load and execute a local scriptlet file, bypassing application control mechanisms.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T04:34:41.952606Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The command is syntactically broken as the string provided to `javascript:` is not valid JScript and the semicolon incorrectly separates the `GetObject` call, preventing `rundll32.exe` from parsing it as a single, executable JScript command.",
+        "semantic_score": 3,
+        "semantic_justification": "While the choice of `rundll32.exe` with MSHTML, the `javascript:` protocol, and the `script:` moniker are conceptually correct for the stated intent and MITRE ATT&CK T1216, the command's syntactic flaws prevent it from actually achieving the claimed execution.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:35:18.585594Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "In PowerShell the unescaped semicolon splits the line into two commands, causing rundll32 to miss the JScript payload and making GetObject(...) an invalid separate command despite otherwise balanced quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "The command conceptually uses rundll32 with mshtml and the script: moniker to execute a local .sct (a known proxy-execution pattern more aligned with Signed Binary Proxy Execution/Rundll32 than T1216), but as given for the PowerShell shell it would not achieve the intended execution.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T04:35:47.923893Z"
+      }
+    ],
+    "llm_average_syntactic": 3.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

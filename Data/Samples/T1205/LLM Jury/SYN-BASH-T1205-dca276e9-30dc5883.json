@@ -24,11 +24,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T19:45:44.865849Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for iptables, including correct flag formats, balanced quotes, and valid module options.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements traffic signaling detection by monitoring for a specific string pattern in TLS SNI fields, logging matches with appropriate tagging, and using the string matching module to identify potential C2 beaconing signals.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:46:25.063143Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct syntax for iptables, valid flags, proper quoting, and balanced arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "The command semantically aligns with detecting a signal in TLS traffic (especially for plaintext SNI in TLS 1.2), using the `string` module to search for a keyword and `recent` to mark the source IP as a 'signal' for the T1205 technique, though the provided 'Privilege: None' is incorrect as `sudo` is required.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:46:35.971678Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

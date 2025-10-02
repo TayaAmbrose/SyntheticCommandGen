@@ -26,11 +26,31 @@
         "combined_score": 3.5,
         "confidence": 0.6,
         "timestamp": "2025-10-01T22:47:11.301092Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignments, pipeline operations, and method calls.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with exfiltration over alternative protocol (T1011) by establishing a Bluetooth connection, configuring a network interface, encoding file content to base64, and transmitting it over TCP through the Bluetooth channel, though it doesn't use system scripts as proxies mentioned in the technique description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:14:55.738821Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed PowerShell, using correct syntax for external executable calls, cmdlet usage, .NET method invocation, variable assignment, and string/path handling.",
+        "semantic_score": 1,
+        "semantic_justification": "The command does not demonstrate MITRE ATT&CK T1011 (System Script Proxy Execution) as it directly executes a custom binary and PowerShell commands rather than abusing trusted system scripts as an execution proxy.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:15:09.826907Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 3.5,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
     "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null

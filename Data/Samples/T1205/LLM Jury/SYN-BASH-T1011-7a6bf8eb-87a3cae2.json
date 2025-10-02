@@ -25,6 +25,26 @@
         "combined_score": 4.5,
         "confidence": 0.7,
         "timestamp": "2025-10-01T19:39:40.278060Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and proper Python syntax within a bash command execution context.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements T1011 by using ICMPv6 echo requests over a peer-to-peer interface to exfiltrate file data in chunks, creating a covert channel separate from primary network traffic.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:43:54.993668Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid shell command substitution, and correct Python syntax for Scapy and file operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command perfectly aligns with T1011's intent to exfiltrate data via ICMPv6 on a side-channel, it is operationally implausible because Scapy's raw packet injection typically requires elevated privileges (root on macOS), contradicting the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:44:17.934956Z"
       }
     ],
     "llm_average_syntactic": 5.0,

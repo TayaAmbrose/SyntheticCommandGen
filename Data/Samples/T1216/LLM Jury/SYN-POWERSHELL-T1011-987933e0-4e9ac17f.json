@@ -27,12 +27,32 @@
         "combined_score": 2.5,
         "confidence": 0.78,
         "timestamp": "2025-10-01T22:38:27.785566Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, using correct PowerShell syntax with proper variable declarations, method calls, and pipeline operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does use WMIC to invoke PowerShell for exfiltration over a network adapter, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it's not using a system script proxy for execution as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:13:15.774654Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 2,
+        "syntactic_justification": "The PowerShell command is syntactically incorrect because all PowerShell variables (e.g., `$ifc`, `$_.IPEnabled`) are prefixed with `$` (backtick-dollar sign) instead of just `$`, which will cause a parsing error in PowerShell.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design aligns with T1011 by using WMIC to proxy PowerShell execution and the payload logically performs the described exfiltration, the claim of 'Privilege: None' for `wmic process call create` makes the command operationally implausible under typical Windows configurations, as it usually requires administrator privileges.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:13:58.552879Z"
       }
     ],
-    "llm_average_syntactic": 2.0,
+    "llm_average_syntactic": 3.0,
     "llm_average_semantic": 3.0,
-    "llm_average_score": 2.5,
-    "llm_verdict": "likely_mismatch",
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

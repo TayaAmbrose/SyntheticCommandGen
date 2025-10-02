@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T09:30:03.681955Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quoting, valid separators, correct parameter usage (including acceptable -Expand abbreviation), and proper redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "It locates a removable drive, creates and hides a staging directory, exports HKCU\\Software to that medium, and logs actions\u2014directly supporting exfiltration over a physical medium.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:06:34.617969Z"
       }
     ],
     "llm_average_syntactic": 5.0,

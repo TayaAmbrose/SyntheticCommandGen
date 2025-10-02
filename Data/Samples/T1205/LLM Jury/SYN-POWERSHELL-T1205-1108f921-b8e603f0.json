@@ -35,11 +35,21 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T18:37:48.412257Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, braces, and parentheses, correct PowerShell syntax for creating objects, defining variables, and establishing a service.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Traffic Signaling technique by creating a persistent service that listens for specific UDP packets containing a magic string that triggers the enabling of RemoteRegistry service, demonstrating covert signaling to activate functionality.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:29:27.941562Z"
       }
     ],
-    "llm_average_syntactic": 4.5,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.25,
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.5,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

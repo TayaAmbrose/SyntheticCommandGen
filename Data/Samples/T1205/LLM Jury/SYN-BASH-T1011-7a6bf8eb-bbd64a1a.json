@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-01T15:18:27.575781Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid netcat flags, correct use of command substitution, and appropriate redirection syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over AWDL using IPv6 UDP on an uncommon port as claimed, though it's debatable whether this fully aligns with T1011 (Traffic Signaling) as it's more straightforward exfiltration without embedded signals or commands.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:13:12.983245Z"
       }
     ],
     "llm_average_syntactic": 5.0,

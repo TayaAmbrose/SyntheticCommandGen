@@ -26,12 +26,32 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T22:28:02.060653Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct use of redirection and backgrounding.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over a cellular interface which aligns with T1011's concept of alternate communication channels, it uses tcpdump and netcat rather than abusing trusted system scripts as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:10:54.119400Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, and proper command separation and redirection in Bash.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs direct execution of `tcpdump` and `netcat` for exfiltration, which is fundamentally misaligned with T1011, a technique specifically about 'System Script Proxy Execution' via trusted scripts and script hosts.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:11:04.773393Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

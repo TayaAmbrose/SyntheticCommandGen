@@ -27,11 +27,31 @@
         "combined_score": 1.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T21:18:28.249801Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld for safety reasons.",
+        "semantic_score": 3,
+        "semantic_justification": "The description aligns with T1216 technique by using mshta.exe as a proxy to execute HTA content from a user-writable location, but without seeing the actual command, full assessment is limited.",
+        "combined_score": 1.5,
+        "confidence": 0.4,
+        "timestamp": "2025-10-02T03:53:34.175794Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The provided string 'WITHHELD_FOR_SAFETY - mshta variant: local HTA from user-writable directory invoked from PowerShell' is a descriptive phrase, not a syntactically well-formed or runnable command.",
+        "semantic_score": 5,
+        "semantic_justification": "The described action of PowerShell launching mshta to execute a locally staged HTA from a user-writable directory perfectly aligns with the T1216 technique, utilizing a signed system script proxy (mshta.exe) to bypass controls and execute malicious content.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T03:53:52.172450Z"
       }
     ],
-    "llm_average_syntactic": 1.0,
-    "llm_average_semantic": 2.0,
-    "llm_average_score": 1.5,
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 1.833,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

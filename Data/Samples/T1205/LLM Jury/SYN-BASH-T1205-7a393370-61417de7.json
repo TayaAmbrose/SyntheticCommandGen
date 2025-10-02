@@ -36,11 +36,21 @@
         "combined_score": 4.0,
         "confidence": 0.8,
         "timestamp": "2025-10-01T18:42:29.558017Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid iptables syntax, background process handling, and correct bash constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements Traffic Signaling by creating a covert knock sequence where a specific UDP packet with 'MAGIC-OPEN-161' temporarily enables SNMP access for 120 seconds, demonstrating a sophisticated signaling mechanism to control network service availability.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T03:29:58.361380Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.0,
-    "llm_average_score": 4.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null
