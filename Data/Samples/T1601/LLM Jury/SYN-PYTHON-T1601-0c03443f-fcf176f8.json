@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, tempfile, filecmp, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\nbootdev = \"/dev/mmcblk0p1\"\nimg = \"/boot/flash/system.img\"\n\nwith tempfile.NamedTemporaryFile(delete=False) as snap, tempfile.NamedTemporaryFile(delete=False) as ref:\n    subprocess.check_call([\"dd\", \"if=\" + bootdev, \"of=\" + snap.name, \"bs=1M\", \"count=16\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n    subprocess.check_call([\"dd\", \"if=\" + img, \"of=\" + ref.name, \"bs=1M\", \"count=16\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n    same = filecmp.cmp(snap.name, ref.name, shallow=False)\n    print(\"Boot partition snapshot matches first 16MB of image:\", same)\n    h = hashlib.md5()\n    with open(snap.name, \"rb\") as f:\n        for b in iter(lambda: f.read(1<<20), b\"\"):\n            h.update(b)\n    print(\"Snapshot md5:\", h.hexdigest())\nPY",
+  "explanation": "Captures a privileged snapshot of the boot partition and compares it to the corresponding segment of the deployed image, verifying that on-disk boot contents reflect the modified image.",
+  "rationale_steps": [
+    "Require root to read raw block device and run dd.",
+    "Create comparable 16MB slices from the boot partition and image file.",
+    "Use filecmp to verify equality and compute MD5 for the snapshot as a quick integrity reference."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-fcf176f8",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper imports, error handling, balanced quotes/parentheses, and correct syntax for file operations, subprocess calls, and output formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The script correctly implements a system image verification mechanism by comparing the boot partition with a reference image, but it only detects modifications rather than implementing the actual T1601 technique of modifying system images.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:04:09.978508Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced constructs, valid module usage, and the shell wrapper for execution is also correct.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs an integrity check to detect image modifications, but it does not itself perform the T1601 technique of modifying a system image; rather, it's a detection or verification mechanism.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:04:37.417736Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The heredoc is correctly quoted and the Python code is valid with proper dd arguments and subprocess usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It runs as root to snapshot the boot partition and compares it to the start of a system image, supporting T1601 detection for image tampering, though it only checks the first 16MB and assumes partition-to-image alignment.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:05:09.908902Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

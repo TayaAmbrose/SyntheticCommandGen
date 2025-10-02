@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 count=1 of=/var/tmp/mbr_full.bin && md5sum /var/tmp/mbr_full.bin baseline/mbr_full.bin && diff -u <(hexdump -C /var/tmp/mbr_full.bin) <(hexdump -C baseline/mbr_full.bin)",
+  "explanation": "Captures the full 512-byte MBR (boot code + partition table) and compares it byte-for-byte and via checksum to a baseline to verify system image integrity.",
+  "rationale_steps": [
+    "Copy the first 512 bytes of the disk (entire MBR) with dd.",
+    "Compute MD5 checksums for quick comparison against a known-good MBR.",
+    "Perform a hexdump-based unified diff to visualize any differences at the byte level."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-c25ecd64",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper use of command separators (&&), balanced parentheses in the process substitution, valid flags for all tools (dd, md5sum, diff, hexdump), and correct redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the defensive aspect of T1601 by capturing the MBR and performing both checksum and byte-by-byte comparison against a baseline to detect firmware/bootloader tampering, which is a key mitigation for this technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:58:31.547872Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash command sequence with correct dd, md5sum, hexdump, and diff usage and balanced process substitutions.",
+        "semantic_score": 4,
+        "semantic_justification": "It captures the first 512 bytes (MBR) and provides a byte-level diff against a baseline, but md5sum does not automatically compare checksums and reading /dev/sda generally requires elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:59:01.231738Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Bash constructs like process substitution and command separators, with all utility arguments correctly formatted.",
+        "semantic_score": 4,
+        "semantic_justification": "The command provides an excellent method for MBR integrity verification; however, the `dd` command to read `/dev/sda` explicitly requires root privileges, which contradicts the stated `Privilege: None`, making the initial capture operationally unfeasible.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:59:05.998973Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

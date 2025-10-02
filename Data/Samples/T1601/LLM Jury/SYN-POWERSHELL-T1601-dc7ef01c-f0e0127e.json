@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$sys='C:\\mount\\Windows\\System32\\winload.exe'; $psh=(Get-FileHash $sys -Algorithm SHA256).Hash; $ct=(certutil -hashfile $sys SHA256 | Select-String -Pattern '^[0-9A-F]{64}$').Line; if($psh -ne $ct){Write-Output 'Hash tool mismatch on winload.exe'} else {Write-Output (\"winload.exe hash \" + $psh)}",
+  "explanation": "Cross-validates the hash of a critical boot binary inside the mounted system image using both PowerShell and certutil to detect tampering, a verification activity under T1601.",
+  "rationale_steps": [
+    "Compute SHA256 of winload.exe within the offline image via Get-FileHash.",
+    "Compute SHA256 via certutil and normalize to the hex string line.",
+    "Compare both results to detect manipulation or tampering.",
+    "Output a warning on mismatch to flag integrity issues."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-f0e0127e",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct variable assignments, proper PowerShell cmdlet usage, and appropriate pipeline operations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a verification mechanism to detect firmware/system image tampering by comparing hashes from two different tools, but it's a detection mechanism rather than the actual modification technique described in T1601.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:46:29.050043Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, valid cmdlets, correct variable assignments, proper command separators, and a well-formed conditional statement.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by cross-validating file hashes of a critical boot binary using two distinct methods, directly aligning with T1601's detection signals for image integrity failures.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:46:38.914698Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and parentheses, valid cmdlets/parameters, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It hashes the target file with two tools to cross-check, but does not compare against a trusted baseline and likely fails to parse certutil\u2019s spaced hash output, so it only partially supports T1601 detection.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T18:47:21.556062Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

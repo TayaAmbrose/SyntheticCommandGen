@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib,difflib; cand=['/boot/grub/grub.cfg','/boot/grub2/grub.cfg']; p=next((x for x in cand if os.path.exists(x)), None); assert p, 'grub.cfg not found'; cur=open(p,'r').read().splitlines(keepends=True); basep='/var/lib/img-baseline/grub.cfg'; base=open(basep,'r').read().splitlines(keepends=True); ch=hashlib.sha256(''.join(cur).encode()).hexdigest(); bh=hashlib.sha256(''.join(base).encode()).hexdigest(); print('GRUBCFG', p, 'HASH_MATCH' if ch==bh else 'HASH_DIFF', ch, bh); print(''.join(difflib.unified_diff(base,cur,fromfile=basep,tofile=p)))\"",
+  "explanation": "Compares the current GRUB configuration against a baseline via hashes and a unified diff to detect unauthorized boot config changes.",
+  "rationale_steps": [
+    "GRUB config controls boot parameters and can embed persistence in T1601.",
+    "Uses hashlib and difflib to detect and display integrity deviations.",
+    "Requires elevated access to interact with boot configurations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-f8ae20c2",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax throughout the one-liner script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses T1601 by implementing a detection mechanism that checks for unauthorized modifications to the GRUB bootloader configuration through hash comparison and diff generation, which would reveal tampering with the system boot process.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:22:38.536811Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, with balanced quotes and parentheses, valid Python syntax for imports, assignments, file operations, hashing, and diffing, all contained within a single executable string for `python3 -c`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent of comparing the current GRUB configuration against a baseline using hashes and diffs, directly aligning with detecting modifications to boot configuration, a core aspect of MITRE ATT&CK T1601 (Modify System Image) detection, and is operationally plausible for a detection mechanism.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:22:52.291770Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c invocation with balanced quotes, valid Python syntax, and no shell parsing issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Compares current GRUB configuration to a baseline via hashes and unified diff to detect bootloader config tampering, aligning with T1601 detection.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:23:00.757340Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

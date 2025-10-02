@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "md5sum -c /etc/firmware/active.img.md5",
+  "explanation": "Verifies the MD5 checksum of the current system image against a stored reference to detect unauthorized modifications to the system image.",
+  "rationale_steps": [
+    "Read the reference MD5 from the checksum file",
+    "Compute the MD5 of the active system image",
+    "Compare computed value to reference and report mismatch"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-c9e92f29",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the md5sum utility, using the -c flag correctly to check against a stored checksum file.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly counters T1601 (Modify System Image) by verifying the integrity of the system firmware image against a known good reference checksum, which is a recommended mitigation for detecting unauthorized firmware modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:01:42.104016Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses a standard utility with valid flags, and a properly formatted file path, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The `md5sum -c` command is perfectly suited for verifying file integrity against a stored checksum list, directly aligning with the claimed intent of detecting unauthorized system image modifications as described for T1601 detection.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:01:56.342907Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Proper md5sum syntax using -c with a checksum file path and no quoting or flag issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It verifies files listed in /etc/firmware/active.img.md5 against stored hashes to detect image modification, but it depends on the checksum file referencing the active image and being readable, and MD5 is a weak integrity check.",
+        "combined_score": 4.5,
+        "confidence": 0.87,
+        "timestamp": "2025-10-02T17:01:57.832721Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

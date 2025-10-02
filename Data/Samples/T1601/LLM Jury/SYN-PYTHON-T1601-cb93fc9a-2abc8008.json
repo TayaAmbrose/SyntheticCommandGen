@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, glob, hashlib, difflib\n\npaths = [\"/boot/efi/EFI/BOOT/BOOTX64.EFI\", \"/boot/efi/EFI/*/shimx64.efi\", \"/boot/efi/EFI/*/grubx64.efi\"]\ncands = []\nfor pat in paths:\n    for p in glob.glob(pat):\n        if os.path.exists(p):\n            cands.append(p)\nif not cands:\n    raise SystemExit(\"No EFI binaries found under /boot/efi/EFI/\")\n\ntarget = sorted(cands)[0]\n\nh = hashlib.sha256()\nwith open(target, \"rb\") as f:\n    for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n        h.update(ch)\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/efi.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_efi_sha256\", tofile=f\"current_{os.path.basename(target)}_sha256\")))",
+  "explanation": "Verifies UEFI bootloader binaries against a baseline hash to detect tampering in firmware-level boot images.",
+  "rationale_steps": [
+    "Locate key EFI binaries on the EFI System Partition.",
+    "Compute SHA-256 and compare to a stored baseline.",
+    "Report differences to flag potential persistence via modified boot images."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-2abc8008",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper syntax, balanced parentheses, correct function calls, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The script directly addresses the technique by implementing firmware integrity verification through SHA-256 hash comparison of EFI bootloader files against known-good baselines, which is a key mitigation against T1601 firmware tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:08:08.763660Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The provided text is a perfectly well-formed Python script with correct syntax, balanced delimiters, and valid function calls.",
+        "semantic_score": 3,
+        "semantic_justification": "The script's logic perfectly aligns with detecting T1601 tampering through hash-based integrity checks of UEFI bootloaders, but the stated 'Privilege: None' is incorrect as reading files from `/boot/efi` and `/root/baselines` typically requires root privileges, making it operationally implausible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:08:17.877159Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python 3 code with correct imports, control flow, file I/O, and f-string usage; no parse or syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "Computes a SHA-256 of an EFI bootloader and diffs against a baseline to detect tampering (aligned with T1601 detection), but only checks one candidate and relies on a baseline in /root requiring elevated access despite claiming no privilege.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:08:36.455622Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

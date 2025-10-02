@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: in-place rootfs modification (JFFS2)'; mount -t jffs2 /dev/mtdblock6 /mnt/rootfs && cp -f /tmp/init-patched /mnt/rootfs/sbin/init && chmod 755 /mnt/rootfs/sbin/init && umount /mnt/rootfs && sync",
+  "explanation": "Mounts a JFFS2-based root filesystem partition and replaces the init binary to implant a persistent modification inside the system image.",
+  "rationale_steps": [
+    "Mount the flash-based rootfs used by the NOS at boot.",
+    "Replace a critical system binary (init) within the image to ensure execution on startup.",
+    "Unmount and sync so the modified image is what boots next."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-50d4d26c",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags, balanced quotes, and correct syntax for mount/umount operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by mounting a JFFS2 filesystem, replacing the critical init binary with a modified version, setting appropriate permissions, and properly unmounting to ensure persistence across reboots.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:28:14.259919Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, proper command separators (`;` and `&&`), and valid flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the T1601 technique by mounting a typical embedded filesystem (JFFS2 on MTD) and replacing a critical system binary (`/sbin/init`), thereby implanting a persistent modification within the system image of a network device.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:28:23.519903Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are correctly separated with ';' and '&&', quotes are balanced, and options/paths conform to standard Linux utilities.",
+        "semantic_score": 4,
+        "semantic_justification": "Mounting a JFFS2 MTD block, replacing /sbin/init, and unmounting/syncing matches modifying the system image for persistence, but it requires root privileges and assumes the device node, mount point, and file paths exist.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:28:38.901120Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

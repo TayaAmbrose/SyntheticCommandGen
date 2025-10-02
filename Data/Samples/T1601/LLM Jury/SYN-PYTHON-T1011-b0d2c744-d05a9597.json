@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would open an IPv6 TCP socket (AF_INET6) scoped to a link-local interface and transmit base64-encoded file data to a high, uncommon port]",
+  "explanation": "Conceptually demonstrates T1011 by using an alternate network medium (IPv6 link-local) instead of the likely primary IPv4/HTTPS channel to exfiltrate data in base64 form over TCP to a non-standard port.",
+  "rationale_steps": [
+    "Select IPv6 link-local as the medium distinct from primary IPv4",
+    "Base64-encode the target data to avoid binary anomalies",
+    "Open AF_INET6/SOCK_STREAM and connect using a scope ID for the specific interface",
+    "Send data to a high-numbered, uncommon TCP port",
+    "Close the socket"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-d05a9597",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantic correctness as the actual command was withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:58:17.004779Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command was explicitly withheld, making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 0,
+        "semantic_justification": "The described action of exfiltrating base64-encoded file data is a data exfiltration technique, which is fundamentally unrelated to the T1011 'Modify System Image' technique.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:58:27.082851Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is not provided\u2014only a conceptual description\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 0,
+        "semantic_justification": "The described IPv6 data exfiltration does not align with the provided technique description about modifying system/firmware images.",
+        "combined_score": 0.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:58:40.734260Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.0,
+    "llm_average_score": 0.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

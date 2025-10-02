@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$pre=(Get-FileHash 'C:\\images\\boot.wim' -Algorithm SHA256).Hash; dism /Unmount-Image /MountDir:C:\\bemount /Commit | Out-Null; $post=(Get-FileHash 'C:\\images\\boot.wim' -Algorithm SHA256).Hash; if($pre -ne $post){Write-Output 'boot.wim modified'}; certutil -hashfile C:\\images\\boot.wim SHA256",
+  "explanation": "Commits modifications to the boot.wim system image and validates integrity change by comparing pre/post hashes, aligning with T1601 system image patching verification.",
+  "rationale_steps": [
+    "Hash boot.wim prior to committing changes.",
+    "Commit modifications to the mounted boot image.",
+    "Hash boot.wim after commit and compare for confirmation.",
+    "Record the new hash with certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-d75af157",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax for variable assignment, conditional logic, and piping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by calculating a hash before committing changes to a Windows boot image (boot.wim), comparing pre/post modification hashes to detect changes, and using certutil as a secondary verification method.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:30:47.779026Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell cmdlets, Windows commands, proper syntax for variable assignment, conditional logic, and command chaining.",
+        "semantic_score": 3,
+        "semantic_justification": "The command correctly uses DISM to commit image changes and PowerShell to verify file integrity, aligning with T1601, but the stated 'Privilege: None' makes the DISM commit operation operationally implausible for modifying a system image like 'boot.wim'.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:31:07.455681Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner has balanced quoting/parentheses, valid cmdlets and switches, and proper separators, making it fully parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It commits a DISM-mounted WIM and compares pre/post hashes of boot.wim to verify modification, aligning with system image tampering, though it assumes the mount corresponds to that file and generally requires administrative privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:31:37.404930Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

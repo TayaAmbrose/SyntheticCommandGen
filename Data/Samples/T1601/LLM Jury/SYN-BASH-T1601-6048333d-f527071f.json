@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(sha256sum /bootflash/kernels/vmlinuz | awk '{print $1}') <(sha256sum /var/tmp/modified_kernels/vmlinuz | awk '{print $1}')",
+  "explanation": "Compares hashes of the baseline vs modified kernel binaries to verify the system image includes a changed kernel.",
+  "rationale_steps": [
+    "Hash the kernel binary from the trusted source and the modified copy.",
+    "Use diff to detect a mismatch, indicating a kernel replacement in the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-f527071f",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper process substitution, piping, balanced parentheses, and valid use of utilities (diff, sha256sum, awk).",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly aligns with T1601 by comparing cryptographic hashes between the original kernel image and a potentially modified version, which is an effective method to detect system image modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:00:57.804727Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid Bash syntax, including process substitution, pipes, and standard utilities, with all components correctly balanced and formatted.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements a method for detecting system image modifications by comparing cryptographic hashes of two kernel binaries, directly aligning with the detection signals of MITRE ATT&CK T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:01:07.006809Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash syntax using process substitution with balanced quoting and appropriate flags for diff and sha256sum.",
+        "semantic_score": 4,
+        "semantic_justification": "It compares SHA-256 hashes of two kernel files to detect changes consistent with T1601 detection, though the specific paths/tools and required privileges on network devices may not always be available.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:01:40.180466Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

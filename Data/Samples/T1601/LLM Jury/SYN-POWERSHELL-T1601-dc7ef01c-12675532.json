@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\boot.wim /Index:1 /MountDir:C:\\bemount /ReadWrite | Out-Null; $before=(Get-FileHash 'C:\\bemount\\Windows\\System32\\startnet.cmd' -Algorithm SHA256).Hash; Set-Content 'C:\\bemount\\Windows\\System32\\startnet.cmd' 'wpeinit & cmd.exe /c echo modified'; $after=(Get-FileHash 'C:\\bemount\\Windows\\System32\\startnet.cmd' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'startnet.cmd modified in WinPE'}; certutil -hashfile C:\\bemount\\Windows\\System32\\startnet.cmd SHA256",
+  "explanation": "Modifies the WinPE boot image (boot.wim) startnet.cmd and verifies the change via hashing, reflecting alteration of a system boot image per T1601.",
+  "rationale_steps": [
+    "Mount boot.wim for modification.",
+    "Hash the original startnet.cmd.",
+    "Alter startnet.cmd to introduce custom behavior.",
+    "Re-hash and verify the modification using Get-FileHash and certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-12675532",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, parentheses, and braces, correct command separators, valid DISM parameters, and proper variable assignments and comparisons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1601 by mounting a Windows PE boot image, modifying a critical startup script (startnet.cmd), verifying the modification through hash comparison, and demonstrating a real-world firmware/system image modification technique that could be used by adversaries.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:52:47.522638Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Powershell syntax, balanced quotes, valid command separators, and proper flag formats for both DISM and Powershell cmdlets.",
+        "semantic_score": 3,
+        "semantic_justification": "The command uses the correct tools and methods (DISM to mount a WIM, Set-Content to modify a critical boot file) to achieve the stated intent of modifying a boot image, but it fails to acknowledge the necessity of elevated (administrator) privileges for DISM /Mount-Image /ReadWrite, making it operationally implausible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:53:04.287831Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting and valid separators, but DISM\u2019s /ReadWrite switch is invalid (DISM uses /ReadOnly; read-write is default), which could trigger an error.",
+        "semantic_score": 3,
+        "semantic_justification": "It attempts to mount a WIM and alter startnet.cmd with hash verification aligning to T1601, but the invalid DISM flag likely prevents mounting, it omits an unmount/commit to persist changes to the WIM, and it requires admin privileges despite claiming none.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:53:18.175204Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

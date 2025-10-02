@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,hashlib,glob; assert os.geteuid()==0; entries=[l.strip().split() for l in open(\"/bootflash/golden/allowed_hashes.txt\") if l.strip() and not l.startswith(\"#\")]; allow={name:hash for (hash,name) in entries}; files=sum([glob.glob(\"/bootflash/*.bin\"),glob.glob(\"/mnt/flash/*.swi\"),glob.glob(\"/var/tmp/junos-*.tgz\")],[]); bad=[os.path.basename(p) for p in files if (os.path.basename(p) in allow and allow[os.path.basename(p)]!=hashlib.sha256(open(p,\"rb\").read()).hexdigest())]; print(\"All images match allowed hashes\" if not bad else \"MISMATCH: \"+\", \".join(bad)); sys.exit(0 if not bad else 10)'",
+  "explanation": "Scans common image locations and validates each discovered image against an allowlist of known-good SHA-256 hashes.",
+  "rationale_steps": [
+    "Load authorized image hashes from a controlled file.",
+    "Enumerate image artifacts across device storage paths.",
+    "Hash and validate each image; report any deviations."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-46d93472",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax throughout the one-liner script.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses T1601 by implementing a defensive measure that scans for modified system images across common network device firmware locations and validates them against known-good hashes, which is an appropriate countermeasure for firmware tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:14:18.323925Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, correct syntax for imports, list/dictionary comprehensions, file operations, hashing, and control flow.",
+        "semantic_score": 3,
+        "semantic_justification": "The command's logic for detecting image integrity failures aligns well with T1601 detection signals, but it explicitly asserts root privileges (`assert os.geteuid()==0`), which contradicts the stated 'Privilege: None', making it unexecutable as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:14:35.981494Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced shell quoting and valid Python one-liner syntax with correct imports, comprehensions, and function calls.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly hashes common network-device image locations against an allowlist, but it enforces root despite 'Privilege: None' and ignores unknown images (and loosely handles comments), which can cause failures or under-report tampering.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:16:24.676022Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

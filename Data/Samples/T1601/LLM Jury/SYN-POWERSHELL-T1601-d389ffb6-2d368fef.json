@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$current = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $baseline = \"C:\\ProgramData\\NetOS\\baseline\\system.img\"; if ((Get-FileHash $current -Algorithm SHA256).Hash -ne (Get-FileHash $baseline -Algorithm SHA256).Hash) { Write-Error \"Current image differs from baseline\" } else { Write-Output \"Current image matches baseline\" }",
+  "explanation": "Compares the current system image's hash against a read-only baseline image copy to verify integrity and detect image tampering.",
+  "rationale_steps": [
+    "Read the current and baseline system images from admin-protected locations.",
+    "Compute SHA256 for both with Get-FileHash.",
+    "Compare the resulting hashes.",
+    "Report if the current image has diverged from the baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-2d368fef",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct cmdlet usage, proper comparison operators, and valid conditional structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a detection mechanism for T1601 by comparing file hashes to identify system image tampering, though it's a detection control rather than the actual technique implementation and assumes PowerShell availability on network devices which may not always be realistic.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:53:02.140146Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell one-liner with balanced quotes/parentheses, valid cmdlets, and correct operators.",
+        "semantic_score": 2,
+        "semantic_justification": "It correctly compares file hashes to detect image tampering, but uses Windows-specific PowerShell and paths that are not applicable to network devices and may require read privileges not guaranteed by 'None'.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:53:27.050861Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with balanced quotes, parentheses, braces, and proper command separators, adhering to Powershell syntax rules.",
+        "semantic_score": 4,
+        "semantic_justification": "The command perfectly implements a hash-based integrity check, which is a key detection mechanism for T1601, but the specified 'Network Devices' platform conflicts with the Windows-specific Powershell paths, reducing general operational plausibility.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:53:28.117949Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

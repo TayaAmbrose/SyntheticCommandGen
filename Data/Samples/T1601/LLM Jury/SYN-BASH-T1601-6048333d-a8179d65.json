@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(sha256sum /bootflash/prod_system.img | awk '{print $1}') <(sha256sum /var/tmp/modified_system.img | awk '{print $1}')",
+  "explanation": "Compares SHA-256 hashes of the production system image and a modified image to confirm integrity deviation consistent with system image tampering.",
+  "rationale_steps": [
+    "Compute cryptographic checksums for both the known-good and modified images.",
+    "Use diff to verify a mismatch, indicating the modified image differs from the trusted baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-a8179d65",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper process substitution, piping, balanced parentheses, and valid use of the diff, sha256sum, and awk utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with detecting T1601 (Modify System Image) by comparing cryptographic hashes between the production and potentially modified system images, which is a standard integrity verification technique for firmware tampering detection.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:43:50.009550Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing standard Bash process substitution, pipes, and common utilities without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by calculating and comparing SHA-256 hashes of two system images, which directly aligns with detecting 'image integrity failures' or 'unexpected checksums' as a signal for MITRE ATT&CK T1601 (Modify System Image).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:43:57.151892Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed Bash using valid process substitution, correct flags, and balanced quoting.",
+        "semantic_score": 4,
+        "semantic_justification": "It compares SHA-256 hashes of the production and modified images to detect integrity deviations consistent with image tampering, though feasibility depends on tool availability and read permissions on the device paths.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:44:25.404858Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

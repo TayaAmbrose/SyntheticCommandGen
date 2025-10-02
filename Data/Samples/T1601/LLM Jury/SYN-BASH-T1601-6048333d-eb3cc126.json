@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(tar -tf /bootflash/prod_system.tar | LC_ALL=C sort) <(tar -tf /var/tmp/modified_system.tar | LC_ALL=C sort)",
+  "explanation": "Diffs file lists of a tar-archived system image to identify additions/removals introduced by the tampered image.",
+  "rationale_steps": [
+    "List contents of the original and modified image tarballs.",
+    "Sort and diff the listings to enumerate structural changes in the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-eb3cc126",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper process substitution, balanced parentheses, valid flags for diff and tar commands, and correct piping to sort with appropriate environment variable setting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique of detecting system image modifications by comparing file listings between an original and potentially modified system image, which would reveal additions, removals, or changes that could indicate firmware tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:08:41.400118Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses standard Bash features like process substitution, and employs valid flags and balanced parentheses.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent by using `tar -tf` to list archive contents, `sort` for consistent comparison, and `diff -u` to highlight file-level differences between two system images, directly aligning with detection aspects of T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:08:49.480912Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash using valid diff options, process substitution, and correct tar and sort usage with no quoting or balancing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately diffs sorted file lists from two tarred system images to detect additions/removals relevant to T1601, though it assumes Bash/process substitution availability on the device and may require privileges to read /bootflash.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:09:06.056357Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

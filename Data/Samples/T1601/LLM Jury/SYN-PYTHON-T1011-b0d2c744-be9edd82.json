@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would bind an IPv4 UDP socket to an APIPA/isolated adapter address and send base64-encoded chunks to a peer on an uncommon UDP port with low TTL]",
+  "explanation": "Leverages a non-routed/alternate interface (APIPA) and UDP to move data out-of-band relative to the primary egress path, mapping to T1011.",
+  "rationale_steps": [
+    "Select an alternate local interface distinct from the default route",
+    "Encode data with base64",
+    "Use IPv4 UDP with a constrained TTL",
+    "Chunk and send to a high, uncommon destination port",
+    "Ensure no global network settings are altered"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-be9edd82",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld and replaced with a description.",
+        "semantic_score": 2,
+        "semantic_justification": "The described command appears to be using UDP for data exfiltration rather than firmware/OS image modification as described in T1011, showing a misalignment between the command's purpose and the cited technique.",
+        "combined_score": 1.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T19:32:26.338952Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The actual command syntax is withheld and explicitly stated as non-actionable, preventing any assessment of its form or parseability.",
+        "semantic_score": 1,
+        "semantic_justification": "The described command action\u2014using UDP to move base64-encoded data out-of-band\u2014does not align with T1011 'Modify System Image,' which involves altering OS or firmware images.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:32:33.017525Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual command/code is provided\u2014only a descriptive placeholder\u2014so it is not runnable or parseable as-is.",
+        "semantic_score": 1,
+        "semantic_justification": "The description covers UDP-based out-of-band data transfer, which does not align with the provided technique description of modifying system/firmware images.",
+        "combined_score": 1.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T19:33:01.094232Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 0.833,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

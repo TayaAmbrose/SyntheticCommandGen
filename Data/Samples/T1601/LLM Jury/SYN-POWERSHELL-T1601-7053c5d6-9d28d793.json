@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; $h=(Get-FileHash 'C:\\Mount\\Install\\Windows\\System32\\winlogon.exe' -Algorithm SHA256).Hash; if ($h -ne (Get-Content 'C:\\Baselines\\winlogon.exe.sha256')) { Write-Output 'winlogon.exe tampered in image' }; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Discard",
+  "explanation": "Computes an offline hash of a critical binary within the mounted image and compares it to a baseline to detect unauthorized patching inside the system image.",
+  "rationale_steps": [
+    "Mount the system image for offline file access.",
+    "Hash a critical system binary inside the image.",
+    "Compare with a trusted baseline checksum to detect tampering.",
+    "Unmount the image without saving changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-9d28d793",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for both DISM and PowerShell components, including balanced quotes, parentheses, and proper command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1601 technique by mounting a Windows image, checking a critical system file (winlogon.exe) against a known-good baseline to detect tampering, and then unmounting the image, which is a valid defensive approach to detect system image modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T16:55:54.113417Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct dism and PowerShell cmdlets with valid flags, balanced elements, and appropriate command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses dism to mount an image and Get-FileHash to check a binary's integrity against a baseline, directly detecting T1601 modifications; however, the dism operations fundamentally require elevated privileges, making the 'Privilege: None' claim a significant realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T16:56:12.611610Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner is well-formed with balanced quotes and parentheses, valid DISM flags, and proper semicolon separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly mounts a WIM, hashes an offline binary, compares to a baseline for tamper detection, and unmounts, but typically requires administrative privileges and a pre-existing empty mount directory.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T16:56:17.014376Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

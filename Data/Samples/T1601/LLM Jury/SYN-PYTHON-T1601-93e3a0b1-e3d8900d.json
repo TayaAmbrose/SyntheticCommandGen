@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,hashlib,json; assert os.geteuid()==0; meta=json.load(open(\"/bootflash/golden/image_meta.json\")); img=meta[\"path\"]; h=hashlib.sha256(); f=open(img,\"rb\"); [h.update(chunk) for chunk in iter(lambda: f.read(1048576), b\"\")]; f.close(); ok=(h.hexdigest()==meta[\"sha256\"] and os.stat(img).st_size==meta[\"size\"]); print(\"OK\" if ok else \"MISMATCH\"); sys.exit(0 if ok else 7)'",
+  "explanation": "Streams the image to compute SHA-256 and checks file size against a signed metadata file for robust integrity verification.",
+  "rationale_steps": [
+    "Use root to access the image and metadata.",
+    "Compute a streaming SHA-256 to handle large files safely.",
+    "Verify both hash and size against the baseline metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-e3d8900d",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and braces, proper imports, valid syntax for list comprehension, and correct error handling with appropriate exit codes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a firmware image integrity verification mechanism that checks both SHA-256 hash and file size against trusted metadata, which directly addresses the defensive aspect of T1601 by detecting unauthorized firmware modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:24:43.383186Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with balanced quotes, parentheses, and valid Python syntax, executable via `python3 -c`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs an integrity check, which is a defensive measure to detect T1601 (Modify System Image), not an action to modify an image itself, and it contains a privilege assertion (root) that contradicts the stated 'Privilege: None'.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:24:52.773965Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quotes, valid constructs, and proper statement separators.",
+        "semantic_score": 2,
+        "semantic_justification": "It verifies a firmware image's integrity from metadata rather than modifying or tampering with the system image (T1601) and it enforces root despite 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:25:07.910673Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

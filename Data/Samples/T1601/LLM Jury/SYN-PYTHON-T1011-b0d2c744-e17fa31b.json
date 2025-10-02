@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would craft ICMP Echo Request packets (AF_INET/SOCK_RAW, IPPROTO_ICMP) carrying base64-encoded payload segments with proper checksums]",
+  "explanation": "Uses ICMP echo as a non-standard application data carrier, a distinct network medium compared to normal TCP/HTTP flows, consistent with T1011.",
+  "rationale_steps": [
+    "Select ICMP as the exfil medium distinct from standard TCP/UDP",
+    "Encode data with base64",
+    "Construct ICMP echo requests with correct identifiers/sequence",
+    "Transmit in small chunks to an uncommon path",
+    "Avoids changing host network configuration"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-e17fa31b",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 1,
+        "syntactic_justification": "The command is not provided in executable form but rather described in brackets as a withheld non-actionable item, making it impossible to evaluate its syntax properly.",
+        "semantic_score": 2,
+        "semantic_justification": "While the description mentions using ICMP for exfiltration (which could align with data exfiltration techniques), it's misaligned with T1011 (Modify System Image) which involves firmware/OS modification rather than network-based exfiltration.",
+        "combined_score": 1.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:39:27.381406Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The actual command string was explicitly withheld, making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 1,
+        "semantic_justification": "The described command's action of crafting ICMP Echo Request packets for data transfer is entirely unrelated to MITRE ATT&CK T1011 (Modify System Image); furthermore, creating raw sockets on Windows typically requires administrator privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:39:40.059946Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "This is a descriptive placeholder rather than an actual, parseable Python command, so it is not runnable as-is.",
+        "semantic_score": 0,
+        "semantic_justification": "Using ICMP echo as a data carrier maps to exfiltration over alternative protocols, not to modifying system images as described for this technique, and raw ICMP on Windows typically requires elevated privileges, contradicting 'Privilege: None'.",
+        "combined_score": 0.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T19:39:56.958783Z"
+      }
+    ],
+    "llm_average_syntactic": 0.667,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 0.834,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

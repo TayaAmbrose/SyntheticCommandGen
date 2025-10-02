@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install.wim /Index:1 /MountDir:C:\\mount /ReadWrite | Out-Null; certutil -hashfile C:\\mount\\Windows\\System32\\config\\SOFTWARE SHA256",
+  "explanation": "Mounts the Windows system image read-write and records the SHA256 of the offline SOFTWARE hive to baseline and enable detection of later tampering (T1601).",
+  "rationale_steps": [
+    "Mount the WIM in read-write mode to enable image modification.",
+    "Hash the offline SOFTWARE registry hive as a pre-modification integrity reference using certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-5d216d2d",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for both DISM and certutil commands, correct piping to Out-Null, and appropriate parameter formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly mounts a Windows image in read-write mode and calculates a hash of the SOFTWARE registry hive which aligns with detecting T1601 modifications, but requires administrative privileges despite claiming 'None' in the privilege field.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:25:35.203867Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell pipeline and statement separator using valid DISM and certutil flags with correctly formatted paths and no quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts the image read-write and computes the SHA256 of the offline SOFTWARE hive as claimed, but it doesn\u2019t persist the hash output and realistically requires administrative rights despite the 'Privilege: None' declaration.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:25:59.690628Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses well-formed DISM and CertUtil syntax, valid flags, correct command separators, and Powershell piping, making it perfectly parseable.",
+        "semantic_score": 1,
+        "semantic_justification": "The command does not perform the 'modify system image' action central to T1601; instead, it mounts the image read-write (a preparatory step) and then hashes a file for baselining/detection, and critically, the `dism /Mount-Image` operation requires Administrator privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:26:08.340502Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$baseline=(Get-Content 'C:\\images\\install.wim.sha256' -ErrorAction SilentlyContinue); $current=(Get-FileHash 'C:\\images\\install.wim' -Algorithm SHA256).Hash; if($baseline -and $baseline -ne $current){Write-Output 'ALERT: install.wim hash changed'} else {Set-Content 'C:\\images\\install.wim.sha256' $current}; certutil -hashfile C:\\images\\install.wim SHA256",
+  "explanation": "Establishes and compares a baseline SHA256 for the Windows install.wim system image to detect unauthorized modification, aligning with T1601 verification of system image integrity.",
+  "rationale_steps": [
+    "Compute current SHA256 of install.wim using Get-FileHash.",
+    "Compare against prior baseline; alert on mismatch.",
+    "Write baseline if none exists.",
+    "Cross-validate using certutil -hashfile to ensure consistent hashing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-6c56fdd9",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper semicolon separators, correct variable assignments, conditional logic, and valid PowerShell cmdlets with appropriate parameters.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements a system image integrity verification mechanism by establishing a baseline hash, comparing it to the current hash, alerting on changes, and using both PowerShell and certutil for redundant verification - directly addressing the T1601 technique's detection recommendations.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:39:18.526932Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax for variable assignment, conditional logic, cmdlets, and includes a valid Windows native command with appropriate parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements file hash comparison to detect modifications to the system image, directly aligning with T1601 detection signals; however, the 'Set-Content' operation to establish or update the baseline file would typically require elevated privileges for the specified 'C:\\images' path, creating a minor realism gap for a 'None' privilege level.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:39:45.033692Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, proper semicolon separators, and valid cmdlets/flags that should parse and run.",
+        "semantic_score": 5,
+        "semantic_justification": "Computes and compares a SHA256 for install.wim against a stored baseline to alert on changes (or establish the baseline) and additionally prints the hash, effectively detecting potential system image modification in line with T1601 integrity verification.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:39:48.393035Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

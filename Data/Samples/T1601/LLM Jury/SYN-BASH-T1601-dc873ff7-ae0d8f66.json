@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "sha256sum /root/firmware_orig.img /root/firmware_mod.img && mkdir -p /mnt/orig /mnt/mod && mount -o loop /root/firmware_orig.img /mnt/orig && mount -o loop /root/firmware_mod.img /mnt/mod && diff -qr /mnt/orig /mnt/mod || true; umount /mnt/mod; umount /mnt/orig",
+  "explanation": "Compares original and modified firmware images by both checksums and file-level differences to validate injected changes.",
+  "rationale_steps": [
+    "Hash both images to establish distinct identities.",
+    "Mount images and perform a recursive diff to enumerate modifications.",
+    "Clean up mounts to avoid leaving traces."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-ae0d8f66",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&, ||), balanced quotes, valid flags, and proper command structure for all operations (sha256sum, mkdir, mount, diff, umount).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique of analyzing firmware modifications by comparing checksums and performing file-level difference analysis between original and modified firmware images, which is a valid approach for detecting T1601 (Modify System Image).",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:51:37.410200Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, valid flags, and proper command separators, ensuring it is parseable and runnable.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic and chosen tools are appropriate for comparing firmware images (checksums and file-level differences), the stated 'Privilege: None' makes the `mount` and `umount` operations impossible on a standard system, thus preventing a significant portion of the claimed file-level comparison from executing.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:51:59.394383Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash one-liner with valid flags, correct operator chaining, and no quoting or parsing issues.",
+        "semantic_score": 3,
+        "semantic_justification": "The logic correctly hashes, loop-mounts, and diffs images to validate changes, but it realistically requires root access and utilities not typically available on network devices despite the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:52:25.375731Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

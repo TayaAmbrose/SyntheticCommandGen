@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/boot/vmlinuz-$(uname -r) of=/var/tmp/vmlinuz.cur bs=1M && sha256sum /var/tmp/vmlinuz.cur baseline/vmlinuz && diff -u <(sha256sum /var/tmp/vmlinuz.cur | awk '{print $1}') <(sha256sum baseline/vmlinuz | awk '{print $1}')",
+  "explanation": "Copies the active kernel image and compares it to a baseline to detect unauthorized kernel replacement or patching.",
+  "rationale_steps": [
+    "Use dd to copy the current kernel image from /boot to a temporary file.",
+    "Compute SHA-256 checksums for the current and baseline kernel images.",
+    "Diff the hashes to confirm whether the kernel has been modified."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-458355b5",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a kernel image integrity check by copying the current kernel, calculating checksums, and comparing against a baseline to detect unauthorized modifications, which directly addresses the T1601 technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:33:11.904815Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid commands, arguments, command substitution, process substitution, and proper command separators without any syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively copies the live kernel image and compares its SHA256 hash to a baseline, directly aligning with the stated intent of detecting unauthorized kernel changes and the T1601 technique's detection signals for image integrity, even with 'None' privilege, as kernel images are typically world-readable.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:33:25.085708Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash command using valid dd, sha256sum, diff -u, and process substitution with balanced quoting and proper chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "It copies the current kernel image and compares SHA-256 hashes against a baseline to detect unauthorized modification, matching the stated detection intent for T1601.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:34:01.894485Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

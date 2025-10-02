@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,filecmp; assert os.geteuid()==0; cur=\"/mnt/flash/EOS-4.29.1F.swi\"; ref=\"/mnt/usb/golden/EOS-4.29.1F.swi\"; ok=filecmp.cmp(cur,ref,shallow=False); print(\"match\" if ok else \"mismatch\"); sys.exit(0 if ok else 4)'",
+  "explanation": "Performs a deep binary comparison of the active EOS image against a golden reference copy.",
+  "rationale_steps": [
+    "Use root to read images on local and removable storage.",
+    "Binary-compare current image and golden image.",
+    "Report mismatch to indicate potential tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-6b9a48d6",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed Python code with balanced quotes, parentheses, proper imports, and valid syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) as a defensive measure by performing a deep binary comparison between the active network device firmware and a known-good reference copy to detect unauthorized modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:54:44.664660Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced punctuation, valid module imports, proper variable assignments, and standard function calls, all enclosed correctly for execution via `python3 -c`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs a comparison to detect modifications to a system image, which is a defensive integrity check, not an action that 'modifies the system image' as described by T1601, making it misaligned with the technique itself.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:54:57.849311Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c snippet has balanced quotes and parentheses, valid imports, proper semicolon-separated statements, and correct function/argument usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It performs a byte-for-byte comparison of the EOS image against a golden reference as claimed (useful for T1601 detection), but the assert os.geteuid()==0 requirement conflicts with the 'Privilege: None' context and could cause failure.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T18:55:17.509827Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

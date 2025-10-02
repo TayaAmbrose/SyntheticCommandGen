@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; dism /Image:C:\\Mount\\Install /Get-Drivers /Format:Table > C:\\Temp\\drivers_current.txt; fc C:\\Baselines\\drivers_baseline.txt C:\\Temp\\drivers_current.txt; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Discard",
+  "explanation": "Extracts the list of drivers from the offline image and compares it against a baseline to identify unauthorized driver insertions or removals.",
+  "rationale_steps": [
+    "Mount the image to query its driver catalog.",
+    "Export the current driver list from the offline image.",
+    "Use fc to diff against a known-good driver inventory.",
+    "Unmount without committing to avoid altering the image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-7565d4f0",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper DISM syntax, correct flag formats, appropriate command separators (semicolons), and balanced quoting throughout all operations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a method to detect unauthorized modifications to a Windows system image by mounting a WIM file, extracting driver information, comparing against a baseline, and then discarding changes, though it requires administrative privileges despite being marked as 'None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:41:37.569133Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct DISM and FC syntax, valid flags for each utility, proper output redirection, and standard command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logical flow and choice of tools are perfectly aligned with the stated intent, the explicitly defined 'Privilege: None' makes the critical DISM mount and unmount operations impossible to execute, rendering the command operationally implausible for its claimed purpose.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:41:57.062903Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are properly separated by semicolons, redirection is valid in PowerShell, and DISM flags/arguments are well-formed with no quoting issues.",
+        "semantic_score": 3,
+        "semantic_justification": "It plausibly mounts and queries an offline image to detect driver changes (relevant to T1601 detection), but in PowerShell 'fc' resolves to Format-Custom unless 'fc.exe' is called and DISM mounting typically requires elevation, so the comparison step and overall execution may fail as written.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T17:42:08.049208Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$base=(Get-FileHash C:\\images\\install_clean.wim -Algorithm SHA256).Hash; $mod=(Get-FileHash C:\\images\\install_mod.wim -Algorithm SHA256).Hash; Compare-Object @($base) @($mod)",
+  "explanation": "Directly compares SHA256 hashes of a clean and a modified WIM to verify the system image file has been altered.",
+  "rationale_steps": [
+    "Compute SHA256 for both WIM files as an integrity baseline versus target.",
+    "Use Compare-Object to highlight differing hashes indicating modification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-42b0e11f",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced parentheses, correct variable assignments, proper method calls, and appropriate piping to Compare-Object.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique by calculating and comparing SHA256 hashes of two WIM files to detect modifications to a system image, which is exactly what T1601 (Modify System Image) describes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:12:00.080594Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Powershell syntax for variable assignment, cmdlet calls, parameter usage, property access, and command separation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the stated intent by calculating and comparing SHA256 hashes of two WIM files, directly aligning with the 'image integrity failures' and 'checksums' detection signals for T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:12:07.151812Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell one-liner using proper cmdlets, parameters, separators, and balanced tokens.",
+        "semantic_score": 5,
+        "semantic_justification": "Computes SHA256 hashes of two WIM system images and compares them to detect alteration, aligning with checksum-based integrity validation for T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:12:25.525378Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import hashlib; p='/var/lib/libvirt/images/base.qcow2'; h=hashlib.sha256(open(p,'rb').read()).hexdigest(); b=open('/var/lib/img-baseline/base.qcow2.sha256').read().strip().split()[0]; print('QCOW2', p, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Computes the hash of a VM base image (QCOW2) and compares it to a baseline to confirm persistent system image tampering.",
+  "rationale_steps": [
+    "Targets a deployable system image used by VMs consistent with T1601.",
+    "Uses hashlib to verify whether the image matches the expected malicious baseline.",
+    "Operates with privileges typical for managing hypervisor images."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-9d36f93b",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, variable assignments, file operations, and string comparisons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses T1601 by implementing a detection mechanism that computes and verifies the cryptographic hash of a VM image against a known baseline to detect unauthorized modifications to system images.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:50:10.632596Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, proper statement separators, and valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent of computing a hash of a VM image and comparing it to a baseline, directly implementing a detection mechanism for T1601's 'image integrity failures'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:50:20.258172Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid imports, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It performs a plausible integrity check by hashing a VM image and comparing to a baseline (aligned with T1601 detection intent), but likely needs elevated permissions to read the QCOW2, reads the entire file into memory, and targets a VM image rather than embedded/network firmware typically covered by T1601.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:50:42.744784Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

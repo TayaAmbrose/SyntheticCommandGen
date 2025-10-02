@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,glob,hashlib; cand=['/boot/efi/EFI/BOOT/BOOTX64.EFI']+glob.glob('/boot/efi/EFI/*/grubx64.efi')+['/boot/grub/x86_64-efi/core.efi','/boot/grub/i386-pc/core.img']; p=next((x for x in cand if os.path.exists(x)), None); assert p, 'grub core not found'; h=hashlib.sha256(open(p,'rb').read()).hexdigest(); b=open('/var/lib/img-baseline/grub-core.sha256').read().strip().split()[0]; print('GRUBCORE', p, 'MATCH' if h==b else 'MISMATCH', h, b)\"",
+  "explanation": "Validates the GRUB core/EFI loader hash against a baseline to confirm tampered bootloader components.",
+  "rationale_steps": [
+    "Targets GRUB core/EFI binaries, central to system image boot chain in T1601.",
+    "Employs hashlib for integrity verification against attacker-stored values.",
+    "Operates on privileged boot files typically managed by root."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-6d4209e1",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, list comprehension, assertions, file operations, and string comparisons.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses T1601 by implementing a detection mechanism that validates bootloader integrity through SHA256 hash comparison between current GRUB/EFI components and a known-good baseline, which is an appropriate countermeasure against firmware/bootloader tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:11:38.304594Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, parentheses, and valid Python syntax for all statements and operations, making it fully parseable and runnable.",
+        "semantic_score": 4,
+        "semantic_justification": "The command's logic accurately implements a robust detection method for T1601 by hashing critical bootloader components and comparing them to a baseline, although the claimed 'Privilege: None' is a significant realism gap as it typically requires root privileges to read files in '/boot'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:11:58.890006Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 -c one-liner with balanced quotes, valid Python syntax, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately computes and compares a SHA-256 hash of a GRUB core/EFI loader from common paths to a baseline to detect tampering, though it only checks the first found candidate and assumes a readable baseline path.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:12:03.985899Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

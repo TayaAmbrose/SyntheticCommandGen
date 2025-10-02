@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "bash -c 'h1=$(md5sum /bootflash/active.img | awk \"{print $1}\"); h2=$(awk \"{print $1}\" /mnt/golden/active.img.md5); [ \"$h1\" = \"$h2\" ] || echo \"ALERT: active.img MD5 mismatch\"'",
+  "explanation": "Computes the MD5 of the active image and compares it to a golden value to detect divergence indicating system image modification.",
+  "rationale_steps": [
+    "Compute MD5 of the current active image",
+    "Read the golden MD5 reference",
+    "Compare values and raise an alert on mismatch"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-ae19f4c1",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is mostly well-formed but has a minor issue with nested quotes where double quotes inside awk are escaped with curly braces instead of proper escaping.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the technique of detecting system image modification by comparing the MD5 hash of the active boot image against a known good reference value stored in a protected location.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:39:59.631067Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct command substitution, piping, quoting, and conditional execution within the bash -c environment.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the stated intent of detecting system image modification by comparing current and golden MD5 hashes, directly aligning with T1601 detection signals and operational best practices for integrity checks.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:40:18.071058Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly quoted bash -c string with balanced quotes, valid pipelines, variable assignments, and a correct test expression.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly compares the MD5 of the active image to a golden hash to detect image modification (aligned with T1601 detection), though use of MD5 and assumed read permissions on network devices are minor realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:40:31.663023Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

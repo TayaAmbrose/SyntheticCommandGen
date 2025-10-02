@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$images = \"C:\\ProgramData\\NetOS\\images\\bankA.img\",\"C:\\ProgramData\\NetOS\\images\\bankB.img\"; $baselineDir = \"C:\\ProgramData\\NetOS\\baseline\"; foreach ($img in $images) { $base = Join-Path $baselineDir ([IO.Path]::GetFileName($img)); if ((Get-FileHash $img -Algorithm SHA256).Hash -ne (Get-FileHash $base -Algorithm SHA256).Hash) { Write-Error \"Bank integrity mismatch: $img\" } }",
+  "explanation": "Checks multiple boot banks' images against their baselines to detect tampering with redundant system image slots used by network devices.",
+  "rationale_steps": [
+    "Enumerate banked image files (admin-only paths).",
+    "Compute SHA256 of each bank image with Get-FileHash.",
+    "Compute SHA256 of the corresponding baseline images.",
+    "Report any bank that does not match its baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-0a86292f",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes/parentheses/braces, correct foreach loop structure, proper method calls, and appropriate error handling.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a firmware integrity check by comparing hash values of system images against baseline references, which aligns with detecting T1601 (Modify System Image), though it's a detection mechanism rather than the attack technique itself.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:14:15.440921Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed, using correct variable assignments, loop structures, cmdlet calls, and .NET method access without any syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a robust integrity check against baselines, directly addressing the detection of modified system images (T1601), though its execution on a Windows machine for 'Network Devices' implies an indirect management role rather than direct execution on the device.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:14:41.071174Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell syntax with balanced delimiters, correct cmdlets/parameters, and proper use of foreach, Join-Path, and Get-FileHash.",
+        "semantic_score": 5,
+        "semantic_justification": "It compares SHA-256 hashes of each specified image against a matching-named baseline and flags mismatches, effectively detecting potential T1601-style system image tampering for network device images.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:14:45.589884Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

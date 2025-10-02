@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$expected='A1B2C3D4E5F60718293A4B5C6D7E8F90112233445566778899AABBCCDDEEFF00'; if ((Get-FileHash 'C:\\Images\\install.wim' -Algorithm SHA256).Hash -ne $expected) { Write-Output 'INTEGRITY MISMATCH: install.wim' } else { Write-Output 'install.wim OK' }",
+  "explanation": "Computes the SHA256 of an installation image and compares it with a known-good value to verify integrity after potential image modification.",
+  "rationale_steps": [
+    "Establish expected checksum from a trusted source.",
+    "Compute current SHA256 of the WIM file as Administrator.",
+    "Compare to detect unauthorized modifications to the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-a1c32705",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced parentheses, quotes, and braces, using correct cmdlet syntax, comparison operators, and conditional structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a file integrity check for a system image file which aligns with detecting T1601 (Modify System Image), but it only performs a point-in-time check rather than continuous monitoring and doesn't implement remediation actions.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:15:26.199080Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command uses correct syntax for variable assignment, cmdlet execution, property access, comparison operators, and conditional logic with balanced parentheses and quotes.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with detecting T1601 by performing an integrity check on a system image, directly addressing the 'image integrity failures' and 'unexpected checksums' detection signals.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:15:36.031897Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell one-liner with balanced quotes/braces, valid cmdlet usage, and correct property access.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately computes and compares a SHA256 hash to verify image integrity (detection/mitigation relevant to T1601) but does not perform system image modification itself.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:15:58.422752Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

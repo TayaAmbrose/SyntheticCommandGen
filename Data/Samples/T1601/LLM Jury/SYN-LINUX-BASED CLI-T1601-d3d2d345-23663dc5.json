@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: flashing malicious kernel to MTD'; flashcp -v /tmp/mal_kernel.bin /dev/mtd2 && sync",
+  "explanation": "Overwrites the kernel partition on NOR/NAND flash using flashcp with a malicious kernel image, directly modifying the system image.",
+  "rationale_steps": [
+    "Use embedded mtd-utils (flashcp) appropriate for network devices.",
+    "Write a crafted kernel to the kernel MTD partition to alter the boot image.",
+    "Flush changes with sync to ensure persistence across reboots."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-23663dc5",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper echo statement, command separator (&&), valid flashcp syntax with the -v flag, and sync command to ensure writes are committed to storage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by using flashcp to directly write a malicious kernel image to the MTD flash device partition, which is exactly how firmware modification would be performed on many network devices.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:15:08.949132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes with proper command separators and valid flags/operators make the command well-formed and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "Using flashcp to write a kernel image to an MTD partition plausibly modifies the system image in line with T1601, but it typically requires root privileges and flashcp is suitable mainly for NOR (not NAND) which introduces realism gaps.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:15:19.707207Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid `echo`, `flashcp`, and `sync` commands with correct arguments and proper command separators.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses `flashcp` to attempt to overwrite an MTD partition, directly aligning with T1601's intent to modify a system image; however, the stated 'Privilege: None' makes its successful execution operationally implausible, as `flashcp` requires root privileges.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:15:22.966336Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, hashlib, difflib\n\ncands = [\"/boot/grub/i386-pc/core.img\", \"/boot/grub/x86_64-efi/core.efi\"]\ntarget = next((p for p in cands if os.path.exists(p)), None)\nif not target:\n    raise SystemExit(\"No GRUB core image found\")\n\nh = hashlib.sha256()\nwith open(target, \"rb\") as f:\n    for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n        h.update(ch)\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/grub_core.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_grub_core_sha256\", tofile=f\"current_{os.path.basename(target)}_sha256\")))",
+  "explanation": "Checks the GRUB core image's integrity by comparing its SHA-256 to a baseline, revealing bootloader image modifications.",
+  "rationale_steps": [
+    "Select the platform-appropriate GRUB core image.",
+    "Compute its SHA-256 and compare with a baseline hash.",
+    "Use unified diff for a clear mismatch indication."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-ba5464ac",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, conditional logic, file handling, error handling, and string manipulation with no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The script directly addresses T1601 (Modify System Image) by implementing a detection mechanism that checks GRUB bootloader integrity through SHA-256 hash comparison against a known baseline, which would effectively identify bootloader tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:23:45.425909Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with no syntax errors, balanced constructs, and valid function calls and imports.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements integrity checking for GRUB core images, directly addressing T1601 detection, but the baseline file path `/root/baselines/grub_core.sha256` contradicts the stated 'Privilege: None' making it operationally implausible without elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:24:01.376568Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python 3 code with correct imports, balanced parentheses, and proper control flow and function calls.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements an integrity check by hashing a GRUB core image and comparing to a baseline (aligned with detecting T1601), but the baseline path in /root likely requires elevated privileges and the candidate paths are narrow, reducing operational plausibility under the stated 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:24:10.442936Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

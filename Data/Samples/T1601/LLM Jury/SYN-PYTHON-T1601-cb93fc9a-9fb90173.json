@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import difflib\n\nbase = \"/root/baselines/grub.cfg\"\ncur = \"/boot/grub/grub.cfg\"\n\nbase_lines = open(base).read().splitlines(keepends=True)\ncur_lines = open(cur).read().splitlines(keepends=True)\nprint(\"\".join(difflib.unified_diff(base_lines, cur_lines, fromfile=\"baseline_grub.cfg\", tofile=\"current_grub.cfg\")))",
+  "explanation": "Diffs GRUB configuration (part of the boot image environment) against a baseline to reveal persistence-oriented modifications.",
+  "rationale_steps": [
+    "Load baseline and current GRUB config files.",
+    "Perform a unified diff to expose unauthorized boot parameter changes.",
+    "Report differences for incident response analysis."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-9fb90173",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable assignments, file operations, and function calls with appropriate parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a detection mechanism for T1601 by comparing current GRUB configuration against a baseline to identify unauthorized modifications to the boot environment, though it doesn't directly implement the attack technique itself.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:54:17.145620Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced components, and valid function calls and assignments.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's intent to detect GRUB configuration modifications is highly relevant to T1601 (Modify System Image) detection, the claim of 'Privilege: None' is semantically incorrect as reading '/root/baselines/grub.cfg' typically requires root privileges, making the command operationally infeasible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:54:33.506339Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python script with balanced parentheses and correct use of difflib; no syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately diffs GRUB configuration to detect bootloader-related modifications aligned with T1601 detection, but using a baseline in /root likely requires elevated privileges contrary to 'Privilege: None'.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:54:38.904015Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

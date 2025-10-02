@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "md5sum -c /etc/firmware/manifest.md5",
+  "explanation": "Validates all system images listed in the checksum manifest to detect integrity issues after any image changes.",
+  "rationale_steps": [
+    "Iterate through each file listed in the manifest",
+    "Compute MD5 and compare against stored values",
+    "Report any images that fail verification"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-77ed5ae1",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, using the md5sum utility with the -c flag to check against a manifest file with a proper path specification.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses the technique by validating firmware image integrity through checksum verification, which is a primary mitigation against T1601 (Modify System Image) attacks.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:14:02.412312Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, utilizing a standard utility with a valid flag and a properly structured file path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively uses `md5sum -c` to perform checksum validation against a manifest, directly aligning with the detection of integrity issues that would arise from a T1601 (Modify System Image) activity.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:14:06.244926Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command uses valid md5sum -c syntax with a proper file path and no quoting or flag issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly verifies files against a checksum manifest to detect image tampering relevant to T1601, though it assumes the manifest path, tool availability, and read permissions on a network device.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:14:11.651435Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

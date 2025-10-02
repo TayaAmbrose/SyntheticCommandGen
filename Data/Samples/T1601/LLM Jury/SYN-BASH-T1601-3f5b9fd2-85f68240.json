@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "diff -u <(md5sum /bootflash/active.img | awk '{print $1}') <(md5sum /bootflash/active.img.bak | awk '{print $1}') || echo \"ALERT: active.img differs from backup\"",
+  "explanation": "Compares the MD5 hashes of the current system image and a backup copy to verify whether the active image has been altered.",
+  "rationale_steps": [
+    "Compute MD5 of the active image",
+    "Compute MD5 of the backup image",
+    "Diff the hashes and alert on any discrepancy"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-85f68240",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper process substitution, piping, conditional execution, and balanced quotes/parentheses.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses T1601 by comparing MD5 hashes of the active system image against a backup to detect unauthorized firmware modifications, which is a valid detection method for this technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:57:50.066478Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Bash constructs like process substitution and logical operators, with no apparent syntax errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic of comparing MD5 hashes is perfectly aligned with detecting image alterations, the stated 'Privilege: None' contradicts the necessary read permissions for sensitive system image files, making its operational execution for the claimed intent largely unfeasible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:58:11.005166Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash using process substitution, balanced quotes, valid flags, and proper pipelines.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately compares MD5 hashes of the active image and its backup to detect image tampering in line with T1601 detection, though it depends on MD5, may alert on read/command errors, and likely requires elevated access on network devices.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:58:14.956282Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

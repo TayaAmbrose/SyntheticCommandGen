@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, filecmp, json\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur_img = \"/boot/flash/system.img\"\ngold_img = \"/opt/golden/system.img\"\nmnt_cur = \"/mnt/imgc\"\nmnt_gold = \"/mnt/imgg\"\n\nos.makedirs(mnt_cur, exist_ok=True)\nos.makedirs(mnt_gold, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", cur_img, mnt_cur])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold_img, mnt_gold])\n\ndirs = [\"/etc\", \"/bin\", \"/sbin\"]\nresult = {}\nfor d in dirs:\n    left = os.path.join(mnt_cur, d.strip(\"/\"))\n    right = os.path.join(mnt_gold, d.strip(\"/\"))\n    if os.path.isdir(left) and os.path.isdir(right):\n        common = set(os.listdir(left)).intersection(os.listdir(right))\n        cmpres = filecmp.cmpfiles(left, right, list(common), shallow=False)\n        result[d] = {\"same\": cmpres[0], \"diff\": cmpres[1], \"errors\": cmpres[2]}\n\nprint(json.dumps(result))\nsubprocess.call([\"umount\", mnt_gold])\nsubprocess.call([\"umount\", mnt_cur])\nPY",
+  "explanation": "Performs targeted integrity checks on critical directories within mounted images using filecmp.cmpfiles to enumerate exact file-level differences.",
+  "rationale_steps": [
+    "Require root to mount images read-only.",
+    "Identify common files across key system directories in both images.",
+    "Use filecmp.cmpfiles to list same, differing, and error files for focused verification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-50ade950",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes/parentheses, valid function calls, and correct syntax for all operations including file mounting, directory traversal, and JSON output.",
+        "semantic_score": 4,
+        "semantic_justification": "The script effectively implements a system image integrity check by comparing critical directories between a current and golden image, but lacks cryptographic verification which would be more robust against sophisticated firmware modifications.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:53:55.739365Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced constructs, and valid command invocations via the heredoc.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs an integrity check to detect modifications, which is a defensive countermeasure against T1601 'Modify System Image', rather than an adversarial action that *performs* the technique itself.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:54:07.114819Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document is properly quoted and the Python code and mount/umount invocations are well-formed with valid flags and balanced structures.",
+        "semantic_score": 2,
+        "semantic_justification": "It performs read-only integrity comparisons for detection rather than modifying a system image as in T1601, and it requires root despite the claim of no privilege.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:54:42.046213Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

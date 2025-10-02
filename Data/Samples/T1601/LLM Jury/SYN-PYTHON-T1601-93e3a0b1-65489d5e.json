@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,difflib,binascii; assert os.geteuid()==0; a=\"/bootflash/asa984-45-smp-k8.bin\"; b=\"/bootflash/golden/asa984-45-smp-k8.bin\"; A=open(a,\"rb\").read(4096); B=open(b,\"rb\").read(4096); da=list(difflib.unified_diff(binascii.hexlify(B).decode().splitlines(), binascii.hexlify(A).decode().splitlines(), fromfile=b,tofile=a,lineterm=\"\")); print(\"\\n\".join(da[:50])); sys.exit(0 if A==B else 6)'",
+  "explanation": "Compares the first 4KB of the ASA image to a golden copy and prints a hex diff if differences are found.",
+  "rationale_steps": [
+    "Read a deterministic segment of each image as root.",
+    "Hex-encode and generate a unified diff for quick triage.",
+    "Exit with error if any difference exists."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-65489d5e",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, assertions, file operations, and conditional exit.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly aligns with T1601 by implementing a detection mechanism that compares the first 4KB of a Cisco ASA firmware image against a golden copy to identify unauthorized modifications, exiting with code 6 if differences are found.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:29:34.419311Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Python syntax, balanced delimiters, and valid arguments for `python3 -c`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs an integrity check to detect modifications to a system image, which is a defensive action against T1601, not an instance of the T1601 technique (modifying a system image).",
+        "combined_score": 3.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:29:58.277996Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quotes/parentheses, valid imports, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly performs a read-only integrity comparison and prints a hex diff (useful for detecting T1601 activity) but does not modify any system image, requires root despite claiming no privilege, and assumes python3 availability on the network device.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T20:30:56.858834Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

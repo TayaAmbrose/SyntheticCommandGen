@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$boot = \"C:\\ProgramData\\NetOS\\images\\boot\\bootx64.efi\"; $expected = (Get-Content \"C:\\ProgramData\\NetOS\\baseline\\bootx64.efi.sha256\").Trim().ToUpper(); $actual = (Get-FileHash -Algorithm SHA256 -Path $boot).Hash.ToUpper(); if ($actual -ne $expected) { Write-Error \"Bootloader integrity failure\" } else { Write-Output \"Bootloader hash OK\" }",
+  "explanation": "Verifies the bootloader component of the system image against a baseline checksum to detect low-level tampering that could affect boot integrity.",
+  "rationale_steps": [
+    "Access the bootloader file in a privileged directory.",
+    "Compute its SHA256 using Get-FileHash.",
+    "Load the expected baseline hash.",
+    "Compare and alert on any mismatch."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-470a2df8",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced quotes/parentheses/braces, correct method calls, and appropriate conditional logic structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a bootloader integrity check which aligns with the T1601 mitigation strategy, though it's unusual to see this PowerShell implementation on network devices rather than a native firmware verification mechanism.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:15:05.610120Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct Powershell syntax, balanced elements, and valid cmdlets and arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's logic correctly applies hashing for integrity verification relevant to T1601, the use of Powershell and Windows paths makes it operationally implausible on typical 'Network Devices' as specified.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:15:31.325935Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and braces, valid cmdlets, and proper statement separators.",
+        "semantic_score": 3,
+        "semantic_justification": "It conceptually detects bootloader tampering via hash comparison, but may fail due to not using -Raw with Get-Content and potential .sha256 format issues, and it mismatches the declared 'Network Devices' platform by using Windows paths/PowerShell.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:15:40.491052Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

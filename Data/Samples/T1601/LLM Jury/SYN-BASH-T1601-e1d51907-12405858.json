@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 skip=1 count=1 of=/var/tmp/gpt_primary.bin && diff -u <(sha256sum /var/tmp/gpt_primary.bin | awk '{print $1}') <(sha256sum baseline/gpt_primary.bin | awk '{print $1}')",
+  "explanation": "Extracts the primary GPT header (LBA 1) and compares its hash to a baseline, validating whether the partition map metadata has been altered.",
+  "rationale_steps": [
+    "Use dd to read the primary GPT header from LBA 1.",
+    "Compute SHA-256 checksums for the current and baseline headers.",
+    "Diff the hashes to determine if the GPT metadata was modified."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-12405858",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper use of dd parameters, pipe redirection, command substitution, and awk for processing the output.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively extracts and compares the GPT header against a baseline which aligns with detecting firmware/system image modifications, but it only checks one component of the system rather than the complete firmware image.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:19:32.751087Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "All commands, pipes, process substitutions, and arguments are correctly formed and balanced, resulting in a perfectly parseable Bash command.",
+        "semantic_score": 3,
+        "semantic_justification": "The command accurately targets GPT header integrity as a T1601 detection signal, but it requires root privileges to read `/dev/sda`, directly contradicting the stated 'Privilege: None' and making it operationally infeasible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:19:52.270867Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash using valid dd options, process substitution, and command chaining with no quoting or flag issues.",
+        "semantic_score": 3,
+        "semantic_justification": "Appropriate for detecting GPT header changes via hashing, but it does not perform T1601 (modifying a system image) and typically needs elevated privileges to read /dev/sda despite 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:20:07.805104Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

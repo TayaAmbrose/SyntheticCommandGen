@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\ndev = \"/dev/sda\"\nbaseline = \"/root/baselines/mbr.sha256\"\nsize = 1024 * 1024  # first 1 MiB (MBR + GPT headers)\n\nh = hashlib.sha256()\nwith open(dev, \"rb\") as f:\n    h.update(f.read(size))\ncurr = h.hexdigest()\nbase_data = open(baseline).read().strip()\nbase = base_data.split()[0]\nprint(\"\\n\".join(difflib.unified_diff([base + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_mbr_sha256\", tofile=\"current_mbr_sha256\")) or (\"OK: \" + curr))",
+  "explanation": "Computes and compares the SHA-256 of the first 1 MiB of the disk (boot sector/headers) to detect unauthorized modifications to the boot image area.",
+  "rationale_steps": [
+    "Read the first 1 MiB from the system disk to capture boot-critical image regions.",
+    "Compute SHA-256 and compare against a baseline hash.",
+    "Use difflib to present a clear diff if the hash mismatches."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-815717af",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, file operations, error handling, and string formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "The script correctly implements a bootloader/MBR integrity check to detect firmware tampering (T1601), but requires root privileges to read from /dev/sda which contradicts the 'Privilege: None' claim.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:13:16.732407Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, runnable, and contains no syntax errors.",
+        "semantic_score": 4,
+        "semantic_justification": "The command's logic perfectly aligns with detecting T1601 by comparing boot sector hashes, but the stated 'Privilege: None' is incorrect as reading '/dev/sda' requires root access, which is a minor realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:13:24.998052Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python script with correct imports, balanced constructs, and runnable syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly hashes and compares the first 1 MiB of the disk for boot-area integrity, but the specified 'Privilege: None' is unrealistic since reading /dev/sda and /root requires elevated access, so it would fail as stated.",
+        "combined_score": 4.0,
+        "confidence": 0.82,
+        "timestamp": "2025-10-02T19:13:48.487621Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

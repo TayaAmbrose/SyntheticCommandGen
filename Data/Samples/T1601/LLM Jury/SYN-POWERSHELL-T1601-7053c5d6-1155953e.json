@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; dism /Image:C:\\Mount\\Install /Enable-Feature /FeatureName:TelnetClient /All; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Commit; Get-FileHash C:\\Images\\install.wim -Algorithm SHA256; fc /b C:\\Images\\install_clean.wim C:\\Images\\install.wim",
+  "explanation": "Modifies the offline system image by enabling an OS feature and then verifies the resulting image integrity against a baseline, consistent with image patching behavior.",
+  "rationale_steps": [
+    "Mount the target WIM for servicing with administrative privileges.",
+    "Enable a feature offline to alter the system image state.",
+    "Commit changes to bake the modification into the image.",
+    "Confirm the image differs from the baseline via hash and fc."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-1155953e",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for DISM operations, correct command separators, valid flags, and proper PowerShell cmdlet usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1601 technique by mounting a Windows image file, modifying it by enabling a feature, committing changes, and then verifying the modified image against a clean baseline - all consistent with system image modification for potential backdoor insertion.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:22:35.585915Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct DISM syntax, valid Powershell cmdlets, proper flag formats, and appropriate command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command sequence correctly uses DISM to modify an offline WIM image, aligning with T1601's goal, but the stated 'Privilege: None' is incorrect as DISM operations require Administrator privileges, making the command operationally infeasible under the given context.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:23:02.636403Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed PowerShell statements with valid DISM and Get-FileHash syntax, proper separators, and no quoting issues for the given paths.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts and modifies an offline Windows image consistent with T1601 and then attempts integrity verification, but in PowerShell 'fc' resolves to Format-Custom (use fc.exe or cmd /c fc) and the action requires elevated privileges despite 'None'.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:23:19.170644Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

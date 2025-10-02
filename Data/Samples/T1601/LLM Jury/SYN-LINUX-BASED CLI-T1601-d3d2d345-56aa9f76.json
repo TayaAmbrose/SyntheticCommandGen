@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify: hashing entire rootfs partition'; dd if=/dev/mtdblock5 bs=1M 2>/dev/null | sha256sum | tee /tmp/T1601_rootfs.sha256",
+  "explanation": "Generates a SHA256 hash of the root filesystem partition to validate or document the current system image before or after malicious alteration.",
+  "rationale_steps": [
+    "Read the rootfs partition directly from flash to avoid filesystem artifacts.",
+    "Compute a cryptographic hash to check integrity or track changes.",
+    "Store the hash to support stealthy version control of malicious patches."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-56aa9f76",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators (pipe and redirection), and appropriate use of the dd, sha256sum, and tee utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a method to detect firmware/system image modification by reading the root filesystem partition (/dev/mtdblock5) and generating a SHA256 hash that can be compared against a known good value to identify unauthorized changes.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:21:16.116379Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid flags, and proper command separators for a Linux-based CLI.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command uses appropriate tools and arguments to hash a partition, the stated 'Privilege: None' is semantically incorrect as reading raw '/dev/mtdblockX' partitions typically requires root, making it operationally implausible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:21:33.281599Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed pipeline with balanced quotes, valid redirection, and correct use of dd, sha256sum, and tee separated by semicolons.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately hashes the raw rootfs partition to support image integrity verification aligned with T1601 detection, but typically requires elevated privileges and the correct device node, which may limit practical execution as stated.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T20:21:45.007289Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

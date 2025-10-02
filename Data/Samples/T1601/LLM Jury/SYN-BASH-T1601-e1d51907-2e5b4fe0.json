@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=446 count=1 of=/var/tmp/mbr_code.bin && sha256sum /var/tmp/mbr_code.bin baseline/mbr_code.bin && diff -u <(sha256sum /var/tmp/mbr_code.bin | awk '{print $1}') <(sha256sum baseline/mbr_code.bin | awk '{print $1}')",
+  "explanation": "Reads only the MBR boot code (first 446 bytes) and compares its checksum to a baseline to detect or confirm unauthorized changes to the bootloader code.",
+  "rationale_steps": [
+    "Use dd to copy the first 446 bytes of the disk (MBR boot code) to a file.",
+    "Generate and display SHA-256 checksums for the current and baseline MBR boot code.",
+    "Diff the checksums to quickly confirm integrity or detect tampering."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-2e5b4fe0",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper use of dd parameters, correct piping, balanced parentheses in process substitution, and appropriate command chaining with &&.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the defensive counterpart of T1601 by extracting the MBR boot code and comparing its hash against a baseline to detect unauthorized modifications to the bootloader, which is a key component in firmware/system image integrity verification.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T20:05:10.136830Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid bash constructs like process substitution, and all commands have valid flags and arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "While the tools and logic are appropriate for detecting MBR changes, the initial `dd if=/dev/sda` command requires root privileges to read the raw disk, making it operationally infeasible under the stated 'Privilege: None'.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T20:05:20.220685Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is valid Bash with correct dd options, proper use of process substitution, balanced quoting, and appropriate command chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "It detects bootloader code tampering by hashing the first 446 bytes of the MBR and comparing to a baseline, but it typically requires root access despite 'Privilege: None' and may not cover UEFI-centric boot paths.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:05:57.189359Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

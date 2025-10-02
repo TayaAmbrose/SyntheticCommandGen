@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify: computing SHA256 of kernel partition'; dd if=/dev/mtdblock2 bs=1M count=8 2>/dev/null | sha256sum | tee /tmp/T1601_kernel.sha256",
+  "explanation": "Assesses the integrity of the kernel image stored on an MTD partition by computing a SHA256 hash, establishing a baseline before modifying the system image.",
+  "rationale_steps": [
+    "Target the kernel image on a typical MTD block device used by embedded Linux network gear.",
+    "Compute and record a SHA256 hash for later comparison or to mask changes.",
+    "Support decision-making for subsequent image patching (T1601 verification)."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-626c046d",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators, and appropriate redirection of stderr.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly implements a baseline integrity check by reading the kernel partition from an MTD device, computing its SHA256 hash, and saving the result to a file - which aligns perfectly with detecting T1601 firmware/image modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:28:37.141088Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quoting, valid flags, and proper command separators for a Linux-based CLI.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly uses appropriate tools (dd, sha256sum) to assess kernel image integrity related to T1601, the claim of 'Privilege: None' is semantically incorrect and operationally implausible for reading from a raw MTD partition like /dev/mtdblock2 on most Linux-based network devices.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:28:50.081274Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are well-formed with balanced quotes, proper separators, valid options, and correct redirection/piping.",
+        "semantic_score": 4,
+        "semantic_justification": "It computes and records a SHA256 hash of data from the specified MTD partition as a baseline, but typically requires elevated privileges and only hashes the first 8 MiB which may not cover the entire kernel image.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:29:00.847173Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

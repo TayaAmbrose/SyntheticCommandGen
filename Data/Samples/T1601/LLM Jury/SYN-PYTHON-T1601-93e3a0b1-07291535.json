@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 -c 'import os,sys,filecmp; assert os.geteuid()==0; cur=\"/var/tmp/junos-install-usb-arm-21.4R3-S3.tgz\"; ref=\"/var/tmp/golden/junos-install-usb-arm-21.4R3-S3.tgz\"; ok=filecmp.cmp(cur,ref,shallow=False); print(\"identical\" if ok else \"different\"); sys.exit(0 if ok else 12)'",
+  "explanation": "Performs a deep binary comparison of a Junos installer archive against a golden reference to detect tampering.",
+  "rationale_steps": [
+    "Access installer archives with root permissions.",
+    "Use filecmp for a byte-for-byte comparison.",
+    "Exit non-zero when differences are found."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-93e3a0b1-07291535",
+  "source_prompt_hash": "93e3a0b1",
+  "timestamp_utc": "2025-09-30T04:36:55.673131Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, assertions, variable assignments, and conditional statements.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a detection mechanism against firmware tampering by comparing a Junos installer against a golden reference, though it's a defensive measure rather than an offensive technique described in T1601.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:11:11.421730Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command uses perfectly well-formed syntax with balanced quotes and parentheses, valid function calls, and proper statement separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly achieves its stated intent of detecting image tampering via deep binary comparison against a golden reference, aligning perfectly with T1601's detection signals for image integrity and mitigation via integrity validation on a plausible platform (Junos on network devices).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:11:20.169106Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses python3 -c with balanced quotes and valid Python statements separated by semicolons, and all functions and arguments are correctly formed.",
+        "semantic_score": 3,
+        "semantic_justification": "It accurately performs a bytewise comparison to detect potential image tampering, but this is defensive rather than modifying system images (T1601) and it unnecessarily enforces root despite 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:11:34.922671Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

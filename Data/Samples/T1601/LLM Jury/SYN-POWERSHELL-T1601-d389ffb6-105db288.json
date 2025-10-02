@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $expected = (Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\NetOS\\Firmware\" -Name \"ExpectedSHA256\").ExpectedSHA256.ToUpper(); $actual = (Get-FileHash -Algorithm SHA256 -Path $img).Hash.ToUpper(); if ($actual -ne $expected) { Write-Error \"Registry baseline mismatch\" } else { Write-Output \"Registry baseline match\" }",
+  "explanation": "Validates the system image against an expected SHA256 stored in a protected registry location (Administrator-only) to detect unauthorized changes.",
+  "rationale_steps": [
+    "Read expected SHA256 from a protected registry key.",
+    "Compute the image's SHA256 with Get-FileHash.",
+    "Compare expected vs actual.",
+    "Alert if the registry baseline does not match the on-disk image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-105db288",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with properly balanced quotes, parentheses, and braces, correct variable assignments, proper cmdlet usage, and valid conditional logic structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a firmware integrity check by comparing SHA256 hashes which aligns with detecting T1601 (Modify System Image), but relies on registry values that could themselves be tampered with by an attacker with sufficient privileges.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:36:02.993306Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell cmdlets and syntax, with correct variable assignments, command separators, and control flow structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of validating a system image against a baseline SHA256, directly mapping to T1601's detection of 'image integrity failures' and 'unexpected firmware versions/checksums'.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T17:36:17.802024Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes and braces using valid cmdlets and parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "It computes a SHA256 of a Windows file and compares it to a registry baseline as described, but assumes a Windows registry/PowerShell environment for 'Network Devices' and claims no privilege despite referencing an admin-protected key, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T17:36:46.409881Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

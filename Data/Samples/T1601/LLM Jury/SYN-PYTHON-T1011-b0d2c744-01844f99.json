@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would send base64-encoded data in fixed-size chunks via IPv6 UDP (AF_INET6/SOCK_DGRAM) to a unique-local address with a low hop-limit]",
+  "explanation": "Exfiltration over IPv6 UDP to a unique-local destination with reduced hop count constitutes using a different medium/path than the typical enterprise IPv4 traffic, aligning with T1011.",
+  "rationale_steps": [
+    "Choose IPv6 unique-local addressing to avoid the primary IPv4 egress",
+    "Encode data with base64",
+    "Use UDP and set a low hop limit to confine traffic",
+    "Chunk and send to a high, uncommon UDP port",
+    "No network configuration changes are performed"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-01844f99",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntactic correctness as the actual command was withheld and replaced with a description.",
+        "semantic_score": 1,
+        "semantic_justification": "The described command appears to be an exfiltration technique (T1048 - Exfiltration Over Alternative Protocol) rather than T1011 (Modify System Image) as it describes data transmission not firmware modification.",
+        "combined_score": 0.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:48:05.823010Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, making it impossible to evaluate its syntactic correctness.",
+        "semantic_score": 0,
+        "semantic_justification": "The described action of exfiltrating data over IPv6 UDP is a data exfiltration technique, which is entirely unrelated to 'Modify System Image' (T1011).",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:48:14.167476Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No actual runnable command or Python code is provided\u2014only a descriptive placeholder\u2014so it is not parseable or executable as-is.",
+        "semantic_score": 4,
+        "semantic_justification": "Conceptually, exfiltrating base64-encoded data via IPv6 UDP to a unique-local address with a low hop limit from Python on Windows is feasible and aligns with exfiltration over an alternate medium (T1011), though practical reachability and firewall constraints may impede success.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T17:48:33.362388Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 1.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, filecmp, hashlib, datetime, json\ncur = \"/boot/flash/system.img\"\ngold = \"/opt/golden/system.img\"\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ndef sha256(p):\n    h = hashlib.sha256()\n    with open(p, 'rb') as f:\n        for b in iter(lambda: f.read(1<<20), b''):\n            h.update(b)\n    return h.hexdigest()\n\nsame = filecmp.cmp(cur, gold, shallow=False)\nrec = {\n    \"timestamp\": datetime.datetime.utcnow().isoformat() + \"Z\",\n    \"current\": cur,\n    \"golden\": gold,\n    \"match\": same,\n    \"current_sha256\": sha256(cur),\n    \"golden_sha256\": sha256(gold)\n}\nwith open(\"/var/log/firmware_integrity.log\", \"a\") as log:\n    log.write(json.dumps(rec) + \"\\n\")\nprint(\"OK\" if same else \"MISMATCH\")\nPY",
+  "explanation": "Compares the current system image to a golden reference using filecmp and records SHA-256 hashes to a privileged log, enabling detection of unauthorized image changes.",
+  "rationale_steps": [
+    "Require root to access protected image paths and write to system logs.",
+    "Use filecmp.cmp to check binary equality of the system image and golden image.",
+    "Compute SHA-256 for both images and append a JSON record to /var/log/firmware_integrity.log."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-fe282e46",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, parentheses, and braces, and uses valid Python syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The script directly addresses the technique by comparing the current system image against a golden reference, calculating SHA-256 hashes for integrity verification, logging results with timestamps, and requiring root privileges - all essential components for detecting firmware/image modifications.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:13:20.031495Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly formed with correct syntax, balanced delimiters, and valid function calls within a properly structured heredoc.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements a robust system image integrity check, comparing a current image to a golden reference, recording hashes to a log, and correctly enforcing root privileges for its operation, aligning perfectly with detection for T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T17:13:31.449389Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document is correctly quoted, python3 - reads from stdin, and the embedded Python code is syntactically valid with balanced structures.",
+        "semantic_score": 4,
+        "semantic_justification": "It implements integrity verification and logging to detect unauthorized image modifications consistent with T1601 detection, but it contradicts the stated privilege of None by requiring root and relies on specific paths without error handling.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:13:46.055226Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

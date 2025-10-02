@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Image /ImageFile:C:\\images\\install_clean.wim /Index:1 /MountDir:C:\\Mount\\Base; dism /Mount-Image /ImageFile:C:\\images\\install_mod.wim /Index:1 /MountDir:C:\\Mount\\Win; New-Item -ItemType Directory -Force -Path C:\\Mount\\Win\\Windows\\System32\\Tasks | Out-Null; Copy-Item C:\\staging\\MyTask.xml C:\\Mount\\Win\\Windows\\System32\\Tasks\\MyTask.xml -Force; Compare-Object (Get-ChildItem -Name C:\\Mount\\Base\\Windows\\System32\\Tasks -ErrorAction SilentlyContinue) (Get-ChildItem -Name C:\\Mount\\Win\\Windows\\System32\\Tasks -ErrorAction SilentlyContinue)",
+  "explanation": "Adds a scheduled task XML to the offline image and uses Compare-Object to detect the new task file compared to the baseline.",
+  "rationale_steps": [
+    "Mount base and modified images via DISM.",
+    "Copy a task XML into the modified image.",
+    "List and compare task directory contents using Compare-Object."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-f5c24626-00ef48b9",
+  "source_prompt_hash": "f5c24626",
+  "timestamp_utc": "2025-09-30T04:51:19.633456Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid DISM parameters, correct semicolon separators, and proper PowerShell cmdlet usage throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by mounting Windows image files, injecting a scheduled task into the modified image, and using comparison to verify the modification, demonstrating a realistic firmware/OS image tampering technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:12:59.726848Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with semicolon-separated commands, balanced parentheses, and correct DISM/cmdlet parameter usage.",
+        "semantic_score": 3,
+        "semantic_justification": "It mounts WIMs and adds a file to the mounted image then compares directories, but lacks commit/unmount to persist changes and requires admin privileges, so the modification to the system image is incomplete despite aligning with T1601.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T18:13:23.853145Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 3,
+        "syntactic_justification": "The command is mostly well-formed and parseable, but the `Get-ChildItem` cmdlet is incorrectly used with the `-Name` parameter instead of `-Path` to specify the directories for content listing, making the `Compare-Object` likely to operate on empty or incorrect sets.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command correctly uses DISM to modify a system image, aligning with T1601, the crucial DISM mount operations require elevated privileges, fundamentally contradicting the stated 'Privilege: None' and making the entire command chain operationally implausible, additionally, the `Get-ChildItem` commands are semantically incorrect for listing directory contents, rendering the comparison non-functional.",
+        "combined_score": 2.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:13:29.647697Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

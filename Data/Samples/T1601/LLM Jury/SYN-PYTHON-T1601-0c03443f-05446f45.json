@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, filecmp, tempfile, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\ncur = \"/boot/flash/system.img\"\ngold = \"/opt/golden/system.img\"\n\ndef header(path, n=4096):\n    with open(path, \"rb\") as f:\n        return f.read(n)\n\nwith tempfile.NamedTemporaryFile(delete=False) as c, tempfile.NamedTemporaryFile(delete=False) as g:\n    c.write(header(cur)); c.flush()\n    g.write(header(gold)); g.flush()\n    same = filecmp.cmp(c.name, g.name, shallow=False)\n    print(\"Headers identical:\", same)\n\nh = hashlib.sha256(); h.update(header(cur))\nprint(\"Current header sha256:\", h.hexdigest())\nPY",
+  "explanation": "Extracts and compares the first 4 KB of the current and golden images using filecmp to detect tampering in image headers; prints header hash for quick reference.",
+  "rationale_steps": [
+    "Require root to access image files in boot storage.",
+    "Write image headers to temp files and compare them with filecmp.",
+    "Compute SHA-256 of the current image header for auditing."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-05446f45",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, parentheses, and braces, and uses valid Python syntax throughout.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a firmware integrity check by comparing headers of system images and calculating checksums, which aligns with detecting T1601 (Modify System Image), though it only checks headers rather than the entire image.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:31:45.601451Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced constructs, and valid command execution via heredoc.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its stated intent of detecting system image header tampering by comparing with a golden image and hashing the current header, serving as a highly plausible and realistic defensive measure against T1601.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:31:53.620574Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document and Python invocation are correctly formed with balanced quoting and valid python3 '-' usage, and the Python code is syntactically valid.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly compares the first 4 KB of two images and outputs a header hash as described, but it does not implement the T1601 modification technique (it\u2019s a detection check) and it requires root despite the declared 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T19:32:23.671235Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

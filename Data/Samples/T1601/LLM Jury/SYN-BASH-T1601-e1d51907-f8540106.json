@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda1 bs=1M count=$(( ( $(stat -c%s baseline/esp.img) + 1048575 ) / 1048576 )) of=/var/tmp/esp.cur && sha256sum /var/tmp/esp.cur baseline/esp.img && diff -u <(sha256sum /var/tmp/esp.cur | awk '{print $1}') <(sha256sum baseline/esp.img | awk '{print $1}')",
+  "explanation": "Images the EFI System Partition (ESP) up to the size of a baseline image and compares checksums to verify if boot components in the ESP were altered.",
+  "rationale_steps": [
+    "Calculate the number of 1MB blocks to read based on the baseline ESP image size.",
+    "Use dd to read that range from the ESP device node.",
+    "Compare SHA-256 checksums between current and baseline images; diff the hashes for confirmation."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-f8540106",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, parentheses, command separators, valid flags, and correct use of command substitution and arithmetic expansion.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a firmware integrity check by comparing the current ESP with a baseline image, which aligns with detecting T1601 (Modify System Image), though it only detects rather than prevents modifications.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:40:34.069391Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct syntax, balanced operators, valid command arguments, and proper use of shell features like arithmetic and process substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic and tool selection (dd, sha256sum, diff) are excellent for implementing an integrity check for the EFI System Partition to detect T1601, its operational feasibility is severely hampered by the incorrect claim of 'Privilege: None' for reading '/dev/sda1', which typically requires root access.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:41:06.213433Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced arithmetic expansion and process substitution, valid flags, and proper && chaining.",
+        "semantic_score": 3,
+        "semantic_justification": "Uses appropriate tools for T1601-related integrity checking, but rounding the dd count to 1 MiB can force checksum mismatches when the baseline isn\u2019t MiB-aligned, /dev/sda1 may not be the ESP, and reading the block device generally requires root despite 'Privilege: None'.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:41:34.328507Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

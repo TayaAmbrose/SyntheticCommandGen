@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\ngold = \"/root/baselines/golden_disk.img\"\ndev = \"/dev/sda\"\nBS = 4 * 1024 * 1024\n\ndef chunk_hashes(p, limit=None):\n    hashes = []\n    with open(p, \"rb\") as f:\n        idx = 0\n        while True:\n            data = f.read(BS)\n            if not data:\n                break\n            h = hashlib.sha256(data).hexdigest()\n            hashes.append(f\"{idx}:{h}\\n\")\n            idx += 1\n            if limit and idx >= limit:\n                break\n    return hashes\n\nbase = chunk_hashes(gold)\ncurr = chunk_hashes(dev, limit=len(base))\nprint(\"\".join(difflib.unified_diff(base, curr, fromfile=\"golden_disk_chunks\", tofile=\"current_disk_chunks\")))",
+  "explanation": "Performs block-wise hashing of the live disk versus a golden system image to localize unauthorized modifications at the image level.",
+  "rationale_steps": [
+    "Read the golden disk image and compute per-chunk SHA-256 hashes.",
+    "Compute chunk hashes from the live disk up to the same length.",
+    "Use difflib to identify which chunks differ for targeted triage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-6210b871",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper function definition, variable declarations, balanced parentheses/braces, and correct syntax for file operations, hashing, and difflib usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The script directly addresses T1601 by implementing a detection mechanism that compares block-level hashes between a golden system image and the current disk to identify unauthorized firmware/OS modifications, which is a primary detection strategy for this technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:17:57.318991Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, valid imports, correct function definitions, and proper use of language constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's logic is perfectly suited for detecting T1601 modifications, the claim of 'Privilege: None' for reading directly from `/dev/sda` on a Linux system makes it operationally unfeasible as described, as root privileges are typically required for such an operation.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:18:20.217026Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Python code with proper imports, function definitions, I/O operations, and no syntax or quoting errors.",
+        "semantic_score": 4,
+        "semantic_justification": "Accurately performs block-wise hashing and diffing to detect system image modifications consistent with T1601 detection, but it requires elevated privileges to read /dev/sda and does not cover firmware stored outside the disk.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:18:53.372984Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

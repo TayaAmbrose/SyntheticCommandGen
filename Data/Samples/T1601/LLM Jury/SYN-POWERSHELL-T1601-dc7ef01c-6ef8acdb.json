@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "if(Test-Path 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd'){$before=(Get-FileHash 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' -Algorithm SHA256).Hash}else{$before=''}; New-Item -ItemType Directory -Path 'C:\\mount\\Windows\\Setup\\Scripts' -Force | Out-Null; Set-Content 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' 'REM post-install hook'; $after=(Get-FileHash 'C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd' -Algorithm SHA256).Hash; if($before -ne $after){Write-Output 'SetupComplete.cmd created/modified'}; certutil -hashfile C:\\mount\\Windows\\Setup\\Scripts\\SetupComplete.cmd SHA256",
+  "explanation": "Drops or modifies SetupComplete.cmd within the offline image to ensure post-install execution and verifies the change via hashing, exemplifying image modification per T1601.",
+  "rationale_steps": [
+    "Hash existing SetupComplete.cmd if present.",
+    "Ensure Scripts directory exists in the image.",
+    "Create or replace SetupComplete.cmd.",
+    "Hash and compare to confirm modification and record via certutil."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-dc7ef01c-6ef8acdb",
+  "source_prompt_hash": "dc7ef01c",
+  "timestamp_utc": "2025-09-30T04:49:19.161651Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid PowerShell syntax, and appropriate variable usage.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 by modifying a system image through creating/altering the SetupComplete.cmd file in an offline Windows image, verifying the change with hash comparison, and demonstrating a practical implementation of firmware/OS image modification for persistence.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:18:23.750664Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell cmdlets and syntax, balances all quotes, parentheses, and braces, and employs proper command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "The command accurately outlines a method to modify an offline Windows image via `SetupComplete.cmd`, aligning with T1601; however, the stated 'None' privilege makes the critical file writing operation operationally infeasible for a typical system path like C:\\mount\\Windows.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:18:36.927604Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, valid cmdlets and parameters, proper statement separators, and a correct external certutil call.",
+        "semantic_score": 4,
+        "semantic_justification": "It modifies an offline Windows image by creating/altering SetupComplete.cmd and verifying via hashes, aligning with T1601, though the content is benign and effectiveness depends on the image being deployed and context/permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:18:54.093753Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

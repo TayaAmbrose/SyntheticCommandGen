@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-NetIPAddress -InterfaceAlias 'Bluetooth Network Connection' -IPAddress 192.168.55.10 -PrefixLength 24 -ErrorAction SilentlyContinue; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-s -p 59321 -B 192.168.55.10\"",
+  "explanation": "Configures a private IPv4 on the Bluetooth PAN and starts an iperf3 server bound to that interface, enabling nearby peer pull over Bluetooth as an alternate path (T1011).",
+  "rationale_steps": [
+    "Assign a non-conflicting private IP to the Bluetooth PAN.",
+    "Bind an iperf3 server to the Bluetooth address on an uncommon port.",
+    "Allow a nearby receiver to connect over the Bluetooth medium only.",
+    "Run hidden to reduce casual discovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-39f12534",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid cmdlet names, appropriate parameters, and correct use of semicolon as a command separator.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command correctly configures a network interface and starts a hidden iperf3 server, it does not align with T1011 (Exfiltration Over Other Network Medium) as it doesn't modify system images, firmware, or bootloaders as described in the technique.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:07:09.918532Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell cmdlet syntax, valid parameters, and properly quoted strings and argument lists.",
+        "semantic_score": 0,
+        "semantic_justification": "The command configures a network interface and starts a network service, which is unrelated to 'Modify System Image' (T1011), and the first part requires elevated privileges that contradict the stated 'Privilege: None' requirement.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:07:19.381927Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Properly formed PowerShell with balanced quotes, valid cmdlets/parameters, and correct command separator; Start-Process usage and argument quoting are valid.",
+        "semantic_score": 1,
+        "semantic_justification": "The command configures a Bluetooth PAN IP and launches an iperf3 server, which does not modify any system/firmware image or bootloader as described for this technique and would typically require admin rights for the IP change.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T19:08:04.293243Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

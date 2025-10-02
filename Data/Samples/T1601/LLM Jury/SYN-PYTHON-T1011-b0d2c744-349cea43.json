@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Python",
+  "command": "[withheld \u2014 non-actionable: would set SO_DONTROUTE on an IPv4 TCP socket, bind to a non-default local address, connect to a high, uncommon port, and send base64-encoded data]",
+  "explanation": "Disables routing and forces an alternate path/interface, differentiating the exfil path from the primary channel in line with T1011.",
+  "rationale_steps": [
+    "Bind TCP socket to a non-default local address",
+    "Set SO_DONTROUTE to keep traffic off the default route",
+    "Base64-encode the payload",
+    "Connect to an uncommon remote port and transmit",
+    "Close without modifying system-wide settings"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-b0d2c744-349cea43",
+  "source_prompt_hash": "b0d2c744",
+  "timestamp_utc": "2025-09-30T08:42:48.649618Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 0,
+        "syntactic_justification": "Cannot evaluate syntax as the command was intentionally withheld from the prompt.",
+        "semantic_score": 0,
+        "semantic_justification": "Cannot evaluate semantics as the command was intentionally withheld from the prompt.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:08:02.822683Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The command itself was explicitly withheld, preventing any evaluation of its syntactic correctness.",
+        "semantic_score": 1,
+        "semantic_justification": "The described command details network communication and data exfiltration, which does not semantically align with the T1011 'Modify System Image' technique, which focuses on altering operating system or firmware images.",
+        "combined_score": 0.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:08:11.383645Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 1,
+        "syntactic_justification": "No executable command or code is provided\u2014only a prose description\u2014so it is not runnable as-is.",
+        "semantic_score": 0,
+        "semantic_justification": "The described behavior alters socket routing for exfiltration and does not pertain to modifying system/firmware images or bootloaders as defined by the provided T1011 description.",
+        "combined_score": 0.5,
+        "confidence": 0.5,
+        "timestamp": "2025-10-02T20:09:01.868412Z"
+      }
+    ],
+    "llm_average_syntactic": 0.333,
+    "llm_average_semantic": 0.333,
+    "llm_average_score": 0.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

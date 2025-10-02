@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Linux-based CLI",
+  "command": "echo 'T1601 patch: ubiformat rootfs partition'; ubiformat /dev/mtd5 -y -f /tmp/mal_rootfs.ubi && sync",
+  "explanation": "Reformats and writes a malicious UBI-formatted rootfs image to the designated MTD partition, modifying the system image used at boot.",
+  "rationale_steps": [
+    "Use ubiformat to safely erase/format the UBI-capable MTD partition.",
+    "Flash a crafted UBI image containing the attacker\u2019s modified root filesystem.",
+    "Sync to ensure the new image is fully persisted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-LINUX-BASED CLI-T1601-d3d2d345-af5a59c7",
+  "source_prompt_hash": "d3d2d345",
+  "timestamp_utc": "2025-09-30T02:47:56.896050Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper echo statement, command separator (;), valid ubiformat syntax with correct flags (-y for confirmation, -f for file specification), and proper path references.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1601 (Modify System Image) by using ubiformat to overwrite the rootfs partition with a malicious image file, which would persist across reboots and potentially introduce backdoors or weaken security controls.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T17:13:49.042925Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and proper separators; ubiformat is invoked with valid flags and arguments, and sync is correctly chained with &&.",
+        "semantic_score": 4,
+        "semantic_justification": "Flashing a UBI image to an MTD partition via ubiformat aligns with modifying the system image (T1601), but it typically requires root privileges and a non-active target partition.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T17:14:10.637448Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command chaining, valid flags, and balanced quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly describes the technical steps for modifying a system image (T1601) using the appropriate tool (`ubiformat`), it requires root privileges to write to `/dev/mtd5`, making it operationally unfeasible under the stated 'Privilege: None' condition.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T17:14:12.720732Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

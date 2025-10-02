@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh wlan set hostednetwork mode=allow ssid=svc_diag key=K0mp!exP@ss! | Out-Null; netsh wlan start hostednetwork | Out-Null; $hn=Get-NetAdapter -InterfaceDescription 'Microsoft Hosted Network Virtual Adapter' -ErrorAction Stop; $ip=(Get-NetIPAddress -InterfaceIndex $hn.ifIndex -AddressFamily IPv4).IPAddress; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-s -p 60789 -B $ip\"",
+  "explanation": "Creates a software AP (hosted network) and binds iperf3 server to that Wi-Fi virtual adapter so a covert peer can connect directly over Wi\u2011Fi, bypassing the primary LAN (T1011).",
+  "rationale_steps": [
+    "Enable and start a hosted Wi\u2011Fi network to establish an alternate medium.",
+    "Resolve the hosted network adapter's IP address.",
+    "Bind iperf3 server to the hosted network interface on a high port.",
+    "Keep activity less visible by hiding the server window."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-da5c29c4",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax including balanced quotes, correct pipe operators, error handling with -ErrorAction parameter, and proper command separators.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly creates a hosted network and starts an iperf3 server, it doesn't actually modify system firmware/OS images as described in T1011 (Exfiltration Over Other Network Medium), but instead creates a covert communication channel.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:11:48.826265Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct Powershell syntax, balanced elements, valid command usage, and proper argument passing to external executables.",
+        "semantic_score": 1,
+        "semantic_justification": "The command creates a hosted network and starts an iperf3 server, which is an operational configuration change completely unrelated to 'Modify System Image (T1011)', and it incorrectly claims 'None' privileges as it requires administrator rights for `netsh wlan` commands.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:12:06.164269Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with correct separators, balanced quoting/parentheses, valid parameters, and parseable pipelines.",
+        "semantic_score": 1,
+        "semantic_justification": "It sets up a hosted Wi\u2011Fi network and runs an iperf3 server, which does not modify any system image or boot components as described, and typically requires admin privileges.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T18:12:27.917730Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

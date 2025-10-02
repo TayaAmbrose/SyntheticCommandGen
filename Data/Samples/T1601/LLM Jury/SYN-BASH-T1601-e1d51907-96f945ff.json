@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "dd if=/dev/sda bs=512 skip=2048 count=409600 of=/var/tmp/boot_part.cur && python3 -c \"import hashlib; ref='baseline/boot_part.bin'; cur='/var/tmp/boot_part.cur'; h=lambda p: (lambda f: (lambda d: (d.update(f.read()), d)[1] if False else None)(hashlib.sha256()))(open(p,'rb')); import sys; def hs(p): h=hashlib.sha256(); f=open(p,'rb'); [h.update(b) for b in iter(lambda:f.read(1<<20), b'')]; return h.hexdigest(); rh=hs(ref); ch=hs(cur); print(rh, ref); print(ch, cur); print('MATCH' if rh==ch else 'MISMATCH')\"",
+  "explanation": "Extracts a boot partition slice by sector offset and size, then uses Python hashlib to compare SHA-256 digests with a baseline partition image to validate integrity.",
+  "rationale_steps": [
+    "Use dd to read the specified boot partition region from the disk.",
+    "Compute SHA-256 digests for both current and baseline boot partition images.",
+    "Print comparison results to confirm whether the partition content matches the baseline."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1601-e1d51907-96f945ff",
+  "source_prompt_hash": "e1d51907",
+  "timestamp_utc": "2025-09-30T04:41:42.466219Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper command separators, valid flag formats, and appropriate escape sequences.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements firmware/system image integrity validation by extracting a boot partition and comparing its SHA-256 hash against a baseline image, which is a proper defensive measure against the T1601 technique of modifying system images.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:06:01.014472Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct Bash syntax, balanced quotes, valid flags for `dd`, and the Python script itself is syntactically valid despite one lambda function being semantically inert.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's intent to validate integrity aligns with T1601 detection, its critical first step of extracting data from `/dev/sda` with `dd` operationally requires root privileges, directly contradicting the stated `Privilege: None` and preventing it from achieving its claimed intent.",
+        "combined_score": 3.5,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T19:06:29.986041Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quoting, valid dd flags, and a parseable Python one-liner.",
+        "semantic_score": 3,
+        "semantic_justification": "It extracts a boot-region slice and compares SHA-256 hashes as an integrity check (detection-oriented), but it does not modify a system image (T1601 action) and omits the elevated permissions typically required to read /dev/sda.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T19:06:31.696577Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

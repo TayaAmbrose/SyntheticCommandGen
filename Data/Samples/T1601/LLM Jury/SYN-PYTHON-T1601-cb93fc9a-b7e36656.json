@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import os, hashlib, difflib\n\ndef sha256_file(p):\n    h = hashlib.sha256()\n    with open(p, \"rb\") as f:\n        for ch in iter(lambda: f.read(1024 * 1024), b\"\"):\n            h.update(ch)\n    return h.hexdigest()\n\nentries = []\nfor root, _, files in os.walk(\"/boot\"):\n    for name in sorted(files):\n        p = os.path.join(root, name)\n        rel = os.path.relpath(p, \"/boot\")\n        entries.append(f\"{sha256_file(p)}  {rel}\\n\")\n\nbaseline_list = \"/root/baselines/boot.sha256list\"\nbase_lines = open(baseline_list).read().splitlines(keepends=True)\nprint(\"\".join(difflib.unified_diff(base_lines, entries, fromfile=\"baseline_boot_sha256list\", tofile=\"current_boot_sha256list\")))",
+  "explanation": "Creates a SHA-256 manifest of all files under /boot and diffs it against a baseline to uncover any modified boot image components.",
+  "rationale_steps": [
+    "Traverse /boot and compute per-file SHA-256 hashes.",
+    "Load a baseline manifest of hashes and relative paths.",
+    "Use difflib to highlight added, removed, or changed artifacts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-b7e36656",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper function definition, balanced parentheses/braces, correct indentation, and appropriate method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The script correctly implements a detection mechanism for T1601 by calculating SHA-256 hashes of boot files and comparing them against a baseline to identify unauthorized modifications to system images.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:33:39.449352Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced constructs, and valid module/function calls.",
+        "semantic_score": 4,
+        "semantic_justification": "The script accurately implements integrity validation against a baseline to detect modifications to `/boot` files, directly aligning with T1601 detection, but it incorrectly assumes 'None' privilege when root is typically required to access `/boot` and `/root` files.",
+        "combined_score": 4.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T19:33:52.131552Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is well-formed with valid imports, balanced structures, and executable statements.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly hashes /boot files and diffs against a baseline to detect boot image changes relevant to T1601, but directory traversal order may cause noisy diffs and the baseline path in /root implies root access despite the 'Privilege: None' claim.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T19:34:08.939621Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

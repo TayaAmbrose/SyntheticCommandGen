@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import os,hashlib,filecmp; cur='/boot/efi/EFI/BOOT/BOOTX64.EFI'; base='/var/lib/img-baseline/BOOTX64.EFI'; same=filecmp.cmp(cur,base,shallow=False); ch=hashlib.sha256(open(cur,'rb').read()).hexdigest(); bh=hashlib.sha256(open(base,'rb').read()).hexdigest(); print('EFI_LOADER', cur, 'IDENTICAL' if same else 'DIFF', 'HASH', ch, bh)\"",
+  "explanation": "Compares the EFI bootloader binary to a captured baseline using filecmp and hashlib to detect tampering.",
+  "rationale_steps": [
+    "Targets EFI bootloader, a critical system image artifact under T1601.",
+    "Combines direct file comparison and hashlib-based verification.",
+    "Operates in a privileged EFI system partition location."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-18930331-73d96377",
+  "source_prompt_hash": "18930331",
+  "timestamp_utc": "2025-09-30T04:46:14.515402Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for imports, variable assignments, and function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly addresses the technique by comparing the EFI bootloader file against a baseline using both binary comparison and hash verification, which is an appropriate detection method for firmware/bootloader tampering.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T18:14:41.675536Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and parentheses, correct Python syntax, and valid function calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves its claimed intent of detecting tampering of a critical EFI bootloader by comparing it to a baseline using both byte-by-byte comparison and cryptographic hashing, directly aligning with T1601 detection methods like image integrity failures.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:14:50.586196Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed python3 one-liner with balanced quotes and valid statements; no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "Accurately compares the EFI bootloader to a baseline and outputs SHA-256 hashes to detect tampering, aligning with T1601 detection practices.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:15:01.355929Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

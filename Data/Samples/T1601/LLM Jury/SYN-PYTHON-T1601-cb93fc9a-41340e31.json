@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1601",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "import hashlib, difflib\n\nboot_dev = None\nfor line in open(\"/proc/mounts\"):\n    parts = line.split()\n    if len(parts) >= 2 and parts[1] == \"/boot\":\n        boot_dev = parts[0]\n        break\nif not boot_dev:\n    raise SystemExit(\"/boot is not a separate mount or not found\")\n\nh = hashlib.sha256()\nwith open(boot_dev, \"rb\") as f:\n    h.update(f.read(4 * 1024 * 1024))  # first 4 MiB of the boot partition\ncurr = h.hexdigest()\nexp = open(\"/root/baselines/boot_part_header.sha256\").read().strip().split()[0]\nprint(\"\\n\".join(difflib.unified_diff([exp + \"\\n\"], [curr + \"\\n\"], fromfile=\"baseline_boot_part_header_sha256\", tofile=f\"current_{boot_dev}_header_sha256\")))",
+  "explanation": "Computes and compares the hash of the boot partition header region to a baseline, detecting tampering in on-disk boot image metadata.",
+  "rationale_steps": [
+    "Resolve the block device backing /boot from /proc/mounts.",
+    "Read the leading 4 MiB and compute SHA-256.",
+    "Compare to a baseline and display differences via difflib."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1601-cb93fc9a-41340e31",
+  "source_prompt_hash": "cb93fc9a",
+  "timestamp_utc": "2025-09-30T04:58:58.620992Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed with proper imports, variable declarations, control flow, file operations, error handling, and string manipulation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements a detection mechanism for T1601 by comparing boot partition hashes against a baseline, though it only checks the first 4MB rather than the entire image which could miss some modifications.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T18:58:30.362255Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with no syntax errors, balanced parentheses, and valid Python constructs.",
+        "semantic_score": 3,
+        "semantic_justification": "The script's logic aligns with detecting system image tampering, but the stated 'Privilege: None' is incorrect as reading raw block devices and files in `/root` requires root privileges, making it operationally implausible as described.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T18:58:42.954776Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid, well-formed Python code with correct imports, control flow, and function calls.",
+        "semantic_score": 4,
+        "semantic_justification": "It correctly identifies the /boot device, hashes the first 4 MiB, and diffs against a baseline to detect tampering, but it realistically requires root privileges to read the block device and /root baseline despite claiming none.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T18:59:25.426680Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
