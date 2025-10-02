@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v logs:/target ubuntu bash -lc 'find /target -type f -print0 | xargs -0 -r shred -n 1 -z -u; dd if=/dev/zero of=/target/.wipe bs=10M || true; sync; rm -f /target/.wipe'",
+  "explanation": "Securely overwrites and deletes files in the 'logs' volume, then fills free space with zeros to sanitize remnants before syncing and removing the filler file.",
+  "rationale_steps": [
+    "Mount the logs volume into a helper container",
+    "Shred all files with at least one pass and zeroing",
+    "Overwrite free space with zeros to remove residual data",
+    "Sync and remove filler to complete the wipe"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-88250ac8",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for all tools used (find, xargs, shred, dd, sync, rm), and follows correct Docker syntax for volume mounting and command execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely overwrite files in the logs volume, followed by zero-filling free space with dd, and removing all traces with proper synchronization to ensure data is unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:59:01.650020Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command separators, and no impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the claimed intent of securely overwriting files and sanitizing free space, using appropriate tools (`shred`, `dd`) and demonstrating strong operational plausibility for data destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:59:09.140929Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker run with balanced quoting, valid flags, and correctly chained commands and separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Uses shred to securely overwrite and delete files in the mounted volume and dd to zero-fill free space followed by sync and cleanup, aligning with data destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:59:38.836578Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

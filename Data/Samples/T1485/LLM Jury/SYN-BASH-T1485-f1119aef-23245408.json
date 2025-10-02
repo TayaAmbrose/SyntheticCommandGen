@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f /srv/db_dumps/*.{sql,sql.gz}",
+  "explanation": "Securely overwrites and removes plaintext and compressed database dump files.",
+  "rationale_steps": [
+    "Use Bash brace expansion to precisely target .sql and .sql.gz files in a specific dump directory.",
+    "Run wipe in forced mode to avoid interactive prompts.",
+    "By overwriting data blocks and removing directory entries, wipe makes DB dumps unrecoverable."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-23245408",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, proper use of the wipe command with the -f flag, and correct brace expansion pattern for targeting both .sql and .sql.gz files.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique as it uses the 'wipe' utility to securely overwrite and permanently destroy database dump files, making them unrecoverable through standard forensic methods.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:33:40.424702Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command correctly uses the `wipe` utility with a valid flag and a well-formed path utilizing Bash brace expansion and a wildcard.",
+        "semantic_score": 5,
+        "semantic_justification": "The `wipe` command is an appropriate secure deletion tool, and its application to database dump files directly aligns with the T1485 Data Destruction technique's intent to render data unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:33:50.626999Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed Bash with valid brace expansion and globbing, and a plausible short option format for wipe.",
+        "semantic_score": 4,
+        "semantic_justification": "It aligns with data destruction by securely overwriting and deleting matching dump files, but depends on wipe being installed, appropriate permissions on /srv/db_dumps, and successful glob matches.",
+        "combined_score": 4.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T01:34:23.217091Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

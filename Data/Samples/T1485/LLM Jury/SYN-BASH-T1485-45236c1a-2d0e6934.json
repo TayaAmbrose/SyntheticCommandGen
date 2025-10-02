@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfP \"/Volumes/Backup/ProjectX\"",
+  "explanation": "Recursively and securely wipes a specific project backup directory on an external volume.",
+  "rationale_steps": [
+    "Pick a single backup folder rather than the entire volume to minimize collateral damage.",
+    "Use -r to traverse all subfolders and -P to overwrite data thoroughly.",
+    "Run as root to handle permissioned files within the backup."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-2d0e6934",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, featuring a valid command, standard flags, and a correctly quoted path for the macOS platform.",
+        "semantic_score": 5,
+        "semantic_justification": "The command uses 'srm', a tool specifically designed for secure deletion with overwriting, directly achieving the recursive and unrecoverable data destruction described in T1485 for the specified backup directory.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:58:03.379661Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, valid flags (-rfP), and correctly quoted path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command uses 'srm' (secure remove) with recursive (-r), force (-f), and DoD-compliant overwrite (-P) flags to permanently destroy data in the specified backup directory, directly aligning with the T1485 Data Destruction technique.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:58:03.683021Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The command is well-formed with balanced quotes and valid option clustering, though -P may not be a supported srm flag on modern macOS versions.",
+        "semantic_score": 4,
+        "semantic_justification": "It aims to securely and recursively wipe the specified directory in line with T1485, but effectiveness depends on srm being available and supporting the given options on the target macOS and filesystem.",
+        "combined_score": 4.0,
+        "confidence": 0.5,
+        "timestamp": "2025-10-02T02:58:39.356029Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

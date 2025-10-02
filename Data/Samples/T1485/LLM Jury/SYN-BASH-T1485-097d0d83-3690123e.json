@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/lib/jenkins/jobs -xdev -type f -path '*/builds/*/archive/*' -exec shred -n 2 -z -u -f {} +",
+  "explanation": "Targets Jenkins archived build artifacts for secure destruction within the jobs directory.",
+  "rationale_steps": [
+    "Scope to Jenkins archive paths to limit the blast radius.",
+    "Overwrite artifact files to prevent content recovery.",
+    "Remove files after shredding to clear directory entries and reduce residual metadata."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-3690123e",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper find syntax, valid flags for both find and shred, correct path specification, and proper use of the -exec option with the + terminator.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely destroy Jenkins build artifacts with multiple overwrites (-n 2), zero-filling (-z), forced removal (-f), and unlinking (-u) to ensure data is unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:45:10.444936Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags for `find` and `shred`, balanced quotes, and correct `-exec ... +` syntax for batch processing.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly uses `shred` to securely destroy files, aligning perfectly with T1485 and the explanation, but the stated 'Privilege: None' would realistically prevent its successful execution on the specified Jenkins directory in most default configurations.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:45:18.770767Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid find/shred options, and correct -exec ... {} + usage.",
+        "semantic_score": 4,
+        "semantic_justification": "Securely overwrites and deletes Jenkins archived artifacts as per T1485, though effectiveness depends on file permissions and filesystem characteristics.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T01:45:43.210645Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

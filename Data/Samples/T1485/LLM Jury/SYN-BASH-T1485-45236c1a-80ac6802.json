@@ -25,11 +25,31 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-01T23:28:41.388658Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, balanced parentheses, valid find syntax with proper file type testing, and correct use of the -exec option with the + terminator.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'srm' (secure remove) with flags for fast (-f) and DoD 7-pass overwrite (-P) to permanently destroy specific document types (docx, xlsx, pdf) in a targeted project directory, making the files unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:30:54.548505Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, correct escaping, valid flags, and proper command chaining using standard Unix utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of selectively and permanently destroying specific document formats using 'srm -fP', a secure deletion tool explicitly mentioned as a T1485 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:31:00.281430Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

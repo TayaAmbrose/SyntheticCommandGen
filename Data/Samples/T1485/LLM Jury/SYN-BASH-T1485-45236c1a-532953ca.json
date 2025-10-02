@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/jdoe/Library/Mail\" -type f \\( -name \"*.emlx\" -o -name \"*.mbox\" \\) -exec srm -fP {} +",
+  "explanation": "Wipes mail message and mailbox files for a single user using multi-pass secure deletion.",
+  "rationale_steps": [
+    "Constrain scope to one user\u2019s Mail data to limit collateral impact.",
+    "Select only mail-related file types with find to avoid deleting settings.",
+    "Overwrite with -P and force with -f to ensure permanent deletion."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-532953ca",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, balanced parentheses, valid find command syntax with proper file type specification, and correct usage of the -exec option with the srm command and its flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using the secure deletion tool 'srm' with multi-pass overwrite flags (-fP) to permanently destroy email data files, making them unrecoverable and disrupting the user's email access.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:22:50.803405Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, correctly escaped parentheses for grouping, valid `find` and `srm` flags, and proper command structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command uses `find` to locate mail files and `srm` with `-fP` flags to perform multi-pass secure deletion, directly aligning with the claimed intent and T1485, although `srm` is deprecated and unavailable on modern macOS versions, presenting a realism gap.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:23:01.929404Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quotes and escaped parentheses with correct find predicates and -exec ... {} + syntax using plausible srm flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Securely deletes targeted mail files consistent with data destruction, but typical Apple Mail .mbox are directories not matched by -type f and srm may be missing on modern macOS.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T02:23:27.971005Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

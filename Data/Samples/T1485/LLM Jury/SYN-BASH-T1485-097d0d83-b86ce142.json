@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "xargs -0 -a /root/shred_targets.list shred -n 3 -z -u -f --",
+  "explanation": "Reads a curated NUL-delimited list of target files and securely shreds each one.",
+  "rationale_steps": [
+    "Use a predefined target list to precisely control which files are destroyed.",
+    "Overwrite each file with multiple passes and a zeroing pass to prevent recovery.",
+    "Remove the files post-overwrite to eliminate directory references."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-b86ce142",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid xargs and shred flags, proper argument structure, and no syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely overwrite files (3 passes plus zero-fill) listed in a target file, making data unrecoverable with the -u flag to remove files after overwriting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:25:07.191816Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid utilities, flags, and arguments in a syntactically correct sequence for Bash.",
+        "semantic_score": 4,
+        "semantic_justification": "While the command uses the correct tools and arguments for data destruction (T1485), the specified 'Privilege: None' makes it operationally implausible to read from `/root/shred_targets.list` or shred files typically found in `/root` or other protected system directories, introducing a significant realism gap.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:25:20.105823Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses valid GNU xargs options (-0, -a) and a correctly formed shred invocation with appropriate flags (-n, -z, -u, -f) and option terminator (--).",
+        "semantic_score": 4,
+        "semantic_justification": "It reads a NUL-delimited list and securely deletes the listed files via shred (aligning with T1485), though it may run once with no operands if the list is empty and can fail on inaccessible files or certain filesystems/SSDs.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:25:38.921279Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfP \"/Users/finance/Documents/Contracts\"",
+  "explanation": "Securely overwrites and recursively deletes a targeted contracts directory, rendering its contents unrecoverable.",
+  "rationale_steps": [
+    "Select a specific business data directory to minimize collateral impact.",
+    "Use srm with -P for multi-pass overwrite and -r to recursively destroy all contents.",
+    "Run as root to ensure all files and subdirectories can be securely removed."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-e656f0e9",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, proper flag format (-rfP), and correctly quoted path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique as 'srm' is a secure deletion utility that overwrites files before deletion, making them unrecoverable, and the -rfP flags ensure recursive, forced deletion with multiple-pass overwriting.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:29:15.995027Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using a known utility `srm` with valid flags (`-r`, `-f`, `-P`) and a correctly quoted path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the stated intent of securely and recursively deleting a directory, using `srm` with flags to ensure data overwriting and unrecoverability, aligning perfectly with T1485 Data Destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:29:21.792756Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quotes and valid srm flags (-r -f -P).",
+        "semantic_score": 4,
+        "semantic_justification": "It aligns with data destruction by recursively overwriting and deleting the directory, though on modern macOS/APFS with SSDs srm may be unavailable or not guarantee unrecoverability.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T02:29:32.592516Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

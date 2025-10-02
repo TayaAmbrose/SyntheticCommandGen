@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'mp=/mnt/finance; dd if=/dev/zero of=\"$mp/.wipe\" bs=8M oflag=direct status=progress || true; sync; rm -f \"$mp/.wipe\"'",
+  "explanation": "Fills free space on a specific mount with zeros and deletes the filler file to prevent recovery of deleted data remnants.",
+  "rationale_steps": [
+    "Target a specific mount to avoid system-wide impact",
+    "Write a large zero-filled file until the filesystem is full",
+    "Force direct writes to disk",
+    "Sync and delete the filler to clear free space"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-22b41905",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for dd, correct use of variables, proper command chaining with || and ;, and balanced syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the Data Destruction technique by using dd to overwrite free space with zeros (making previously deleted data unrecoverable) and then removing the wipe file, effectively implementing secure deletion on the finance mount point.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:38:27.031976Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command separators, valid flags for all utilities, and correct variable expansion.",
+        "semantic_score": 5,
+        "semantic_justification": "The command accurately implements the claimed intent of filling free space with zeros using 'dd if=/dev/zero' and then removing the filler file, directly aligning with the 'overwriting files or entire devices' aspect of T1485 Data Destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:38:33.472696Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash command with balanced quoting, valid dd options, proper separators, and correct variable expansion.",
+        "semantic_score": 4,
+        "semantic_justification": "It zero-fills free space on the specified mount and deletes the filler file to hinder recovery, aligning with data destruction via free-space wiping, though oflag=direct or insufficient permissions may cause failures on some systems.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:38:50.315380Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

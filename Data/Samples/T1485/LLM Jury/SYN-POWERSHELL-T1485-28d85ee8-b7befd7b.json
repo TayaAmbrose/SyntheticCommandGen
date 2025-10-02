@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Apps' -Name 'WinVM-Exports' -CommandId 'RunPowerShellScript' -ScriptString \"Remove-Item -LiteralPath 'D:\\Exports' -Recurse -Force -ErrorAction SilentlyContinue; cipher.exe /w:D:\"",
+  "explanation": "Deletes the D:\\Exports directory and then overwrites all free space on D: to destroy residual data remnants.",
+  "rationale_steps": [
+    "Remove targeted directory contents.",
+    "Overwrite free space on the same volume so deleted file data cannot be recovered."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-b7befd7b",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Azure PowerShell syntax, balanced quotes, valid parameters for Invoke-AzVMRunCommand, and correct PowerShell command structure within the ScriptString parameter.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully aligns with the T1485 Data Destruction technique by first recursively deleting a directory and then using cipher.exe /w to overwrite free space, effectively destroying data remnants on the target VM's D: drive.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:22:42.280811Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid PowerShell cmdlets and parameters, balanced quoting, and a correct command separator, making it parseable and executable.",
+        "semantic_score": 3,
+        "semantic_justification": "While the commands 'Remove-Item' and 'cipher.exe /w' are appropriate for data destruction, the stated 'Privilege: None' for the script's execution context within the VM makes the full achievement of the claimed intent (especially 'cipher.exe /w:D:' which requires administrator rights) operationally implausible.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:22:59.023021Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Azure PowerShell cmdlet with valid parameters and balanced quoting; the embedded script correctly chains Remove-Item and cipher.exe with proper flags.",
+        "semantic_score": 5,
+        "semantic_justification": "Deletes D:\\Exports recursively then overwrites free space on D:, achieving data destruction consistent with T1485, and Az VM RunCommand executes with sufficient privileges on Windows VMs.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:23:19.307270Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.667,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

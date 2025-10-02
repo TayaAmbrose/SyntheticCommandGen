@@ -35,12 +35,22 @@
         "combined_score": 4.5,
         "confidence": 0.9,
         "timestamp": "2025-10-01T23:36:16.064348Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid PowerShell syntax for variable assignments, command execution, .NET method calls, and pipelining, with no apparent errors.",
+        "semantic_score": 0,
+        "semantic_justification": "The command reads and exfiltrates data via ICMPv6 payload size, which is a data exfiltration technique, and is entirely unrelated to 'Data Destruction' (T1011).",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:33:38.755187Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 2.5,
-    "llm_average_score": 3.75,
-    "llm_verdict": "uncertain",
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

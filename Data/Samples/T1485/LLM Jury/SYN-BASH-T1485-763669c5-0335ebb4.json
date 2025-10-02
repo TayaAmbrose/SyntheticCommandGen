@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v backups:/backups debian bash -lc 'find /backups -type f -name \"*.tar.gz\" -print0 | xargs -0 -r shred -n 2 -z -u; sync'",
+  "explanation": "Securely destroys archive files within the 'backups' volume by overwriting them twice with zeroing and removing them, then syncing.",
+  "rationale_steps": [
+    "Mount the backups volume into a helper container",
+    "Target only backup archives",
+    "Shred with multiple passes and delete",
+    "Sync to flush changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-0335ebb4",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, volume mounting, balanced quotes, valid flags for 'find', 'xargs', and 'shred' commands, and appropriate command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'shred' to securely overwrite backup files with the -n 2 (two passes), -z (final zeroing pass), and -u (remove after overwriting) flags, effectively rendering the backup archives unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:06:51.201281Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for Docker, bash, find, xargs, shred, and proper quoting and command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by utilizing `shred` to securely overwrite and delete specific backup files, then syncing to ensure data destruction, making it operationally plausible and directly addressing the claimed intent.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:06:57.377633Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid docker run syntax, and correct find/xargs/shred flags and separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It overwrites and removes matching backup files in the mounted volume consistent with data destruction, though the 'secure' wipe guarantee may be limited by the underlying filesystem and containerized environment.",
+        "combined_score": 4.5,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T02:07:20.368435Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

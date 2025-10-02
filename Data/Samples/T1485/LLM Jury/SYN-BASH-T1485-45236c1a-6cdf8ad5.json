@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/research/Data/Experiment_2025\" -type f -exec srm -fm {} +",
+  "explanation": "Irreversibly destroys all files within a specific research dataset using forced, multi-pass secure deletion.",
+  "rationale_steps": [
+    "Target a single experiment directory to focus destruction.",
+    "Enumerate files with find to avoid unintended directory removal.",
+    "Apply srm with -m for 7-pass overwrite and -f to force deletion without prompts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-6cdf8ad5",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for both 'find' and 'srm', and correct use of the -exec syntax with the terminating '+'.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'srm' with multi-pass secure deletion flags (-fm) to irreversibly destroy all files in the specified research directory, making data recovery impossible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:36:11.822968Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct `find -exec` syntax, proper quoting for the path, and valid flags for both `find` and `srm`.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves the claimed intent by using `srm`, a tool explicitly designed for multi-pass secure deletion, correctly targeting files within the specified directory, and using appropriate flags for forced, irreversible destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:36:16.150496Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed find command with balanced quotes, valid -type/-exec usage, and proper {} + aggregation.",
+        "semantic_score": 4,
+        "semantic_justification": "Secure deletion of all files via srm -fm aligns with data destruction intent, though srm availability and effectiveness on modern APFS/SSD macOS may limit practical impact.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:36:29.468774Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

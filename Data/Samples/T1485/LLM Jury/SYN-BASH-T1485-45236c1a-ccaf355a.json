@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfm \"/Library/Application Support/AcmeApp/Data\"",
+  "explanation": "Recursively wipes an application\u2019s data directory with multi-pass overwrite to disrupt availability of its data.",
+  "rationale_steps": [
+    "Identify a single application's data path to focus impact.",
+    "Use -r to remove nested files and -m for multi-pass overwrite.",
+    "Execute as root to ensure all files can be securely deleted."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-ccaf355a",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the 'srm' secure removal utility, using proper flags (-rfm) and correctly quoted path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using a secure deletion tool (srm) with multi-pass overwrite (-m flag) to recursively (-r) and forcibly (-f) destroy application data, making it unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:48:50.091132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Uses valid srm short-option cluster (-rfm) with balanced quotes around a space-containing path and no parsing errors.",
+        "semantic_score": 3,
+        "semantic_justification": "While srm recursively overwrites and deletes data consistent with T1485, it likely requires elevated privileges for /Library and may be absent or ineffective on modern macOS/APFS, reducing operational plausibility.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T00:49:08.176139Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, uses valid flags for `srm`, and properly quotes the path containing spaces.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command syntax correctly uses `srm` for multi-pass overwrite, the specified `Privilege: None` is insufficient to delete files in the system's `/Library` directory on macOS, preventing the command from achieving its claimed intent.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:49:16.857231Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.333,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/backups/mysql -xdev -type f \\( -name '*.sql' -o -name '*.sql.gz' -o -name '*.dump' \\) -mtime +3 -exec shred -n 3 -z -u -f {} +",
+  "explanation": "Targets and irreversibly destroys older MySQL backup files within a confined filesystem boundary.",
+  "rationale_steps": [
+    "Constrain to backup file patterns and files older than 3 days to minimize collateral impact.",
+    "Use shred with multiple overwrite passes to prevent data recovery.",
+    "Delete files after shredding to remove directory entries and metadata pointers."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-d2356d51",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, balanced parentheses, valid flags for both 'find' and 'shred' commands, and correct use of the -exec action with proper termination.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'shred' to securely and irreversibly destroy MySQL backup files older than 3 days with multiple overwrites (-n 3), zero-filling (-z), and removing the files (-u) in a targeted manner.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:57:31.538609Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Uses valid find syntax with escaped parentheses, properly quoted globs, correct -exec {} + form, and valid shred flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Securely overwrites and removes targeted backup files older than 3 days within the same filesystem, aligning with T1485, though effectiveness depends on write/delete permissions and shred\u2019s reliability on certain filesystems.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:57:48.075895Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, all flags are valid, parentheses are correctly escaped, and the `find -exec ... +` syntax is correctly used.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1485 Data Destruction, utilizing `find` to target specific backup files and `shred` with appropriate flags for irreversible deletion, directly matching the claimed intent and technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:57:49.643651Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

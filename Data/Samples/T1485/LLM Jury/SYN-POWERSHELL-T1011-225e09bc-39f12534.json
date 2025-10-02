@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "New-NetIPAddress -InterfaceAlias 'Bluetooth Network Connection' -IPAddress 192.168.55.10 -PrefixLength 24 -ErrorAction SilentlyContinue; Start-Process -WindowStyle Hidden iperf3.exe -ArgumentList \"-s -p 59321 -B 192.168.55.10\"",
+  "explanation": "Configures a private IPv4 on the Bluetooth PAN and starts an iperf3 server bound to that interface, enabling nearby peer pull over Bluetooth as an alternate path (T1011).",
+  "rationale_steps": [
+    "Assign a non-conflicting private IP to the Bluetooth PAN.",
+    "Bind an iperf3 server to the Bluetooth address on an uncommon port.",
+    "Allow a nearby receiver to connect over the Bluetooth medium only.",
+    "Run hidden to reduce casual discovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-39f12534",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid cmdlet names, appropriate parameters, and correct use of semicolon as a command separator.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid, it configures a network interface and starts an iperf3 server which is misaligned with T1011 (Exfiltration Over Other Network Medium) and completely unrelated to T1485 (Data Destruction) as described in the technique description.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:58:16.096453Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command uses correct cmdlet names, parameters, argument formats, and command separators, making it perfectly well-formed and parseable.",
+        "semantic_score": 0,
+        "semantic_justification": "The command configures a network interface and starts a network performance testing server, which is completely unrelated to the MITRE ATT&CK T1011 Data Destruction technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:58:19.898438Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes, valid parameters, and correct use of semicolon and Start-Process with -ArgumentList.",
+        "semantic_score": 1,
+        "semantic_justification": "It configures a Bluetooth PAN IP and launches an iperf3 server, which does not perform data destruction as described by the technique and also generally requires elevation to change IP settings.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:58:58.157160Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

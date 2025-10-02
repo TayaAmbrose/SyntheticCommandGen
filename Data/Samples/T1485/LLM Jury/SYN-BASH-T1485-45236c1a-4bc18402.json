@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "find \"/Users/Shared/Finance\" -type f -name \"*.csv\" -exec srm -P -f {} +",
+  "explanation": "Irreversibly deletes finance CSV files in a shared location with multi-pass overwriting.",
+  "rationale_steps": [
+    "Limit scope to a specific shared finance directory.",
+    "Filter only CSV files to avoid deleting unrelated content.",
+    "Use srm -P -f to overwrite and force removal without prompts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-4bc18402",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid find syntax, correct use of the -exec option with the + terminator, and appropriate flags for the srm command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using secure deletion (srm with multi-pass overwriting via -P flag) to permanently destroy financial CSV files, making them unrecoverable even with forensic tools.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:58:44.085564Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid `find` and `srm` flags, and correct use of the `-exec {} +` construct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of irreversibly deleting specific CSV files using `srm` with multi-pass overwriting, aligning precisely with the T1485 Data Destruction technique description.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:58:50.788132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 3,
+        "syntactic_justification": "Well-formed find -exec syntax with balanced quoting, but uses an invalid srm flag (-P) on macOS, violating the valid-flags criterion.",
+        "semantic_score": 2,
+        "semantic_justification": "While aligned with Data Destruction intent, srm on macOS does not support -P so the command likely errors and fails to securely delete the targeted files as claimed.",
+        "combined_score": 2.5,
+        "confidence": 0.6,
+        "timestamp": "2025-10-02T02:59:17.208621Z"
+      }
+    ],
+    "llm_average_syntactic": 4.333,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.167,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

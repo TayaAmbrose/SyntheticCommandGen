@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'swapdev=/dev/mapper/vg0-swap; swapoff \"$swapdev\" 2>/dev/null || true; dd if=/dev/zero of=\"$swapdev\" bs=4M oflag=direct status=progress'",
+  "explanation": "Disables a specific swap device and overwrites it with zeros to destroy sensitive remnants.",
+  "rationale_steps": [
+    "Identify the swap block device",
+    "Disable swapping to that device",
+    "Overwrite the swap area with zeros",
+    "Use direct I/O to ensure physical write-through"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-ba2042dd",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags, error redirection, logical operators, and correct bash syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly implements data destruction by first disabling the swap device and then using dd to overwrite it with zeros, effectively destroying any sensitive data that might have been stored in swap space.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:28:51.323038Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax, balanced quotes, proper command separators, and valid flag formats.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design precisely matches the T1485 technique for data destruction via device overwriting, the specified 'Privilege: None' means it would fail due to insufficient permissions to execute 'swapoff' or 'dd' on a block device, preventing it from achieving the claimed intent operationally.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:29:11.200175Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, proper separators, and valid dd/swapoff options.",
+        "semantic_score": 3,
+        "semantic_justification": "Zeroing a swap device after swapoff aligns with data destruction, but without root privileges swapoff and writing to the block device will likely fail, limiting practicality.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:29:12.964638Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

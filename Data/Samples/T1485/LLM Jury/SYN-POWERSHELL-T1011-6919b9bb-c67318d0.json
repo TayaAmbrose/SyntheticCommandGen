@@ -24,6 +24,26 @@
         "combined_score": 3.0,
         "confidence": 1,
         "timestamp": "2025-10-01T23:30:32.277241Z"
+      },
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper variable assignment, correct method calls, and valid ncat parameters.",
+        "semantic_score": 2,
+        "semantic_justification": "The command is misaligned with T1011 (Exfiltration Over Other Network Medium) rather than T1485 (Data Destruction) as it exfiltrates data over IPv6 but does not destroy or render data unrecoverable.",
+        "combined_score": 3.5,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:31:51.894657Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is perfectly well-formed, using correct syntax for variable assignment, .NET method calls, command separation, piping, and valid flags for ncat.exe.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration by reading a file and sending its Base64-encoded content, which is the opposite of the T1011 Data Destruction technique that focuses on destroying or rendering data unrecoverable.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:32:02.634905Z"
       }
     ],
     "llm_average_syntactic": 5.0,

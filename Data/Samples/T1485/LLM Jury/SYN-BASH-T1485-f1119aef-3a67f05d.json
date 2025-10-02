@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f /root/keys/old-luks.key",
+  "explanation": "Overwrites and removes a retired LUKS key file to prevent future recovery and misuse.",
+  "rationale_steps": [
+    "Target a specific key file in a controlled directory to avoid accidental destruction of active keys.",
+    "Run wipe with force to ensure non-interactive execution as root.",
+    "wipe\u2019s overwrite passes ensure the key material cannot be recovered by forensic tools."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-3a67f05d",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with a valid command name 'wipe', proper flag '-f', and a valid file path '/root/keys/old-luks.key'.",
+        "semantic_score": 5,
+        "semantic_justification": "The command correctly uses the 'wipe' utility which is designed for secure file deletion, aligning perfectly with the T1485 Data Destruction technique by securely overwriting a sensitive encryption key file to prevent recovery.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:02:08.806661Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command uses a valid utility (`wipe`), a common flag (`-f`), and a well-formed file path, with no syntax errors or formatting issues.",
+        "semantic_score": 3,
+        "semantic_justification": "While the `wipe` utility is perfectly aligned with the Data Destruction technique, the stated 'Privilege: None' would prevent a non-root user from accessing and deleting a file in the `/root` directory, making the claimed intent unachievable under the given conditions.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:02:27.567057Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with a plausible flag and a valid absolute path; no quoting or parsing issues.",
+        "semantic_score": 3,
+        "semantic_justification": "Appropriate secure-deletion tool for data destruction, but wiping a file in /root typically requires elevated privileges, so it would likely fail as specified.",
+        "combined_score": 4.0,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T01:02:28.821199Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.667,
+    "llm_average_score": 4.333,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

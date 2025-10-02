@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "srm -fP \"/Users/alice/Library/Messages/chat.db\"",
+  "explanation": "Permanently wipes the Messages chat database for a specific user to destroy communication records.",
+  "rationale_steps": [
+    "Identify a single high-value database file for targeted destruction.",
+    "Use srm with -P to overwrite the file multiple times before unlinking.",
+    "Force deletion with -f to prevent interactive prompts."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-45236c1a-18a5a709",
+  "source_prompt_hash": "45236c1a",
+  "timestamp_utc": "2025-09-30T07:56:40.760169Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax, proper quoting, and correct flag format for the srm utility.",
+        "semantic_score": 5,
+        "semantic_justification": "The command uses srm (secure remove) with flags -f (force) and -P (overwrite with patterns) to permanently destroy the Messages chat database, directly implementing the Data Destruction technique by making the communication records unrecoverable.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:25:54.469664Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with a valid command name, standard flags, and a correctly quoted file path.",
+        "semantic_score": 5,
+        "semantic_justification": "The `srm` command with `-fP` flags is specifically designed for secure multi-pass data destruction, making it an ideal and operationally plausible tool to permanently wipe the specified Messages database file, directly aligning with the T1485 technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:25:58.100872Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed command with valid combined flags and balanced quoting around the file path.",
+        "semantic_score": 4,
+        "semantic_justification": "Appropriately uses a secure-deletion tool to destroy the Messages database (aligning with data destruction), though effectiveness may be limited on modern macOS/APFS or if srm is missing and related WAL/SHM files or snapshots persist.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T02:26:12.083687Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

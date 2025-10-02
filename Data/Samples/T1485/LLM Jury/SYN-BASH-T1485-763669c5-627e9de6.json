@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v /srv/app/uploads:/target:rw ubuntu bash -lc 'find /target -xdev -type f -print0 | xargs -0 -r shred -n 2 -z -u; sync'",
+  "explanation": "Binds a host-backed uploads directory into a helper container and irreversibly deletes files via multi-pass overwrite and zeroing, then syncs to disk.",
+  "rationale_steps": [
+    "Bind-mount the specific host directory used by the container",
+    "Constrain operations to the target mount",
+    "Shred files securely and remove them",
+    "Flush writes with sync"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-627e9de6",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper Docker syntax, volume mounting, balanced quotes, valid flags for both 'find' and 'shred' commands, and appropriate command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly implements the Data Destruction technique by using 'shred' with multi-pass overwriting (-n 2), zeroing (-z), and secure deletion (-u) on all files in the mounted directory, followed by a 'sync' to ensure changes are committed to disk.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T00:50:48.202966Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, and correct command separators for both Docker and the encapsulated Bash command.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of irreversible multi-pass file deletion using `shred` with appropriate flags, targeting a bind-mounted directory, and explicitly syncing to disk, directly aligning with the T1485 Data Destruction technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T00:50:54.040588Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker command with balanced quoting and valid flags for find, xargs, and shred, and a properly sequenced sync.",
+        "semantic_score": 5,
+        "semantic_justification": "Mounts a host directory and uses shred with multiple passes and deletion followed by sync to destroy file contents, directly aligning with Data Destruction (T1485).",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T00:51:29.256463Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

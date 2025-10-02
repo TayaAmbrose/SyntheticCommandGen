@@ -1,0 +1,57 @@
+{
+  "technique_id": "T1485",
+  "platform": "Linux",
+  "shell": "Bash",
+  "command": "wipe -f -r /opt/myapp/cache/expired",
+  "explanation": "Recursively overwrites and deletes an application's expired cache directory.",
+  "rationale_steps": [
+    "Scope the operation to a dedicated 'expired' cache path to minimize risk.",
+    "Use -r to ensure directories and their contents are processed.",
+    "wipe performs secure overwrites on each file before removal, preventing recovery from the cache."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-f1119aef-3fe0a9e7",
+  "source_prompt_hash": "f1119aef",
+  "timestamp_utc": "2025-09-30T08:06:57.630497Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with valid syntax for the 'wipe' utility, using proper flags (-f for force, -r for recursive) and a valid filesystem path.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns well with the Data Destruction technique by using a secure deletion tool to recursively wipe files, though it's targeting a legitimate cache directory rather than malicious destruction.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:01:00.750137Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using a valid utility with correct flags and a well-structured absolute path, making it fully parseable and runnable.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 technique, utilizing `wipe`\u2014a secure deletion tool explicitly mentioned in the technique description\u2014to recursively overwrite and delete specified data, achieving the stated intent of data destruction.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:01:07.044311Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is well-formed with valid short flags, a proper path argument, and no quoting or separator issues.",
+        "semantic_score": 5,
+        "semantic_justification": "Using wipe with -r and -f will recursively overwrite and delete the directory\u2019s contents without prompts, aligning with data destruction goals assuming the utility is present and permissions allow.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:01:26.585957Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

