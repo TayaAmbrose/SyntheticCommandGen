@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-02T14:30:33.183235Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with correct PowerShell syntax, balanced elements, valid parameter usage, and proper error handling.",
+        "semantic_score": 5,
+        "semantic_justification": "The command directly and realistically queries a known commercial 'closed source' API (FullContact) for company intelligence using an API key, precisely matching the T1597 technique's description of querying paid databases for targeting intelligence.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:55:25.352945Z"
       }
     ],
     "llm_average_syntactic": 5.0,

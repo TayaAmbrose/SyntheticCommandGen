@@ -35,6 +35,16 @@
         "combined_score": 3.0,
         "confidence": 0.7,
         "timestamp": "2025-10-02T14:08:58.086159Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with correct command syntax, valid flags, balanced quoting, and proper command substitution and redirection.",
+        "semantic_score": 2,
+        "semantic_justification": "While the command effectively performs a plausible file exfiltration over a specific network interface, its action (exfiltrating a local session file) significantly misaligns with MITRE T1011 'Search Closed Sources,' which describes acquiring or querying external non-public information sources.",
+        "combined_score": 3.5,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:48:57.629852Z"
       }
     ],
     "llm_average_syntactic": 5.0,

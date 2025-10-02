@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-02T14:16:30.287629Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python command is perfectly well-formed, with balanced quotes, parentheses, and braces, and valid syntax for all operations.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a known subscription-based domain intelligence service (SecurityTrails) via an API key to collect information, which is a direct example of 'Search Closed Sources'.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:51:35.915541Z"
       }
     ],
     "llm_average_syntactic": 5.0,

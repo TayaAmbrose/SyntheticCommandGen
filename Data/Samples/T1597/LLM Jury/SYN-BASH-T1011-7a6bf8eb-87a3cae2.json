@@ -35,11 +35,21 @@
         "combined_score": 3.0,
         "confidence": 0.8,
         "timestamp": "2025-10-02T14:22:51.496050Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, valid bash command substitution, and correct Python syntax for Scapy operations, making it fully parseable and runnable.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs data exfiltration of a local file via ICMPv6, which fundamentally contradicts T1011 'Search Closed Sources' (an intelligence collection technique), despite the use of a side-channel interface.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:53:04.519735Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 3.25,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 3.167,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

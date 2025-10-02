@@ -37,11 +37,21 @@
         "combined_score": 1.0,
         "confidence": 0.7,
         "timestamp": "2025-10-02T14:25:21.529827Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 0,
+        "syntactic_justification": "The actual command string was explicitly withheld and replaced with a descriptive placeholder, rendering it unparseable and unrunnable as a command.",
+        "semantic_score": 0,
+        "semantic_justification": "The described action of establishing an exfiltration path to transmit data is fundamentally different from MITRE ATT&CK T1011 'Search Closed Sources,' which focuses on acquiring intelligence from external non-public sources, not exfiltrating data from a compromised system.",
+        "combined_score": 0.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:53:33.181942Z"
       }
     ],
-    "llm_average_syntactic": 2.0,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 1.75,
+    "llm_average_syntactic": 1.333,
+    "llm_average_semantic": 1.0,
+    "llm_average_score": 1.167,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

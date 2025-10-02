@@ -36,11 +36,21 @@
         "combined_score": 4.5,
         "confidence": 0.86,
         "timestamp": "2025-10-02T14:06:34.219202Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, proper command chaining, valid flag formats, and correct variable expansions and redirections.",
+        "semantic_score": 5,
+        "semantic_justification": "The command flawlessly executes the claimed intent of pulling closed-source organizational data via SFTP from a dedicated 'peopledata.pro' service, which perfectly aligns with the intelligence gathering described in T1597.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:48:08.090659Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.5,
-    "llm_average_score": 4.75,
+    "llm_average_semantic": 4.667,
+    "llm_average_score": 4.833,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

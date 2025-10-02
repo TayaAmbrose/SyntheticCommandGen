@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-02T14:11:31.994176Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using standard PowerShell syntax, balanced elements, and valid parameters, ensuring parseability and execution without syntax errors.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying a known subscription-based closed-source intelligence platform (SecurityTrails) using an API key to collect domain intelligence, demonstrating a highly plausible operational implementation.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:49:55.366574Z"
       }
     ],
     "llm_average_syntactic": 5.0,

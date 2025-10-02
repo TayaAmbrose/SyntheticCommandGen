@@ -35,11 +35,21 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-02T14:05:38.459792Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The `netsh interface portproxy` command is correctly structured with valid arguments and values.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs network redirection, which does not align with T1011 (Search Closed Sources), and the stated privilege requirement of \"None\" is incorrect as `netsh portproxy add` requires administrator privileges.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:47:50.652991Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 4.0,
-    "llm_average_score": 4.5,
+    "llm_average_semantic": 3.0,
+    "llm_average_score": 4.0,
     "llm_verdict": "likely_match",
     "sandbox_trace_id": null,
     "mitre_match_score": null

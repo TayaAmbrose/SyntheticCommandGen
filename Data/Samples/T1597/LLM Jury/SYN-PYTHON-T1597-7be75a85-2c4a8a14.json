@@ -35,6 +35,16 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-02T14:26:25.502838Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is a perfectly well-formed Python script, with balanced quotes, parentheses, braces, and proper statement separators, runnable as-is.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 by querying Clearbit, a known paid closed-source data provider, to enrich organizational intelligence on a target domain, which is a classic adversary intelligence gathering step.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:53:57.519594Z"
       }
     ],
     "llm_average_syntactic": 5.0,

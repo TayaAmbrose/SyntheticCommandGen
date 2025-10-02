@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-02T14:28:15.654651Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed with balanced quotes, valid flags, proper separators, and correct syntax for all included shell features and commands.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent of collecting intelligence from a closed source via SFTP with verification and logging, aligning precisely with the T1597 technique and demonstrating high operational plausibility.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:54:41.735960Z"
       }
     ],
     "llm_average_syntactic": 5.0,

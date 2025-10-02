@@ -36,6 +36,16 @@
         "combined_score": 5.0,
         "confidence": 0.9,
         "timestamp": "2025-10-02T14:17:47.013500Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, with balanced quotes, parentheses, braces, and valid PowerShell syntax throughout.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly achieves the claimed intent by interacting with a real-world, closed-source security rating API (SecurityScorecard) using token-based authentication, directly aligning with the T1597 technique.",
+        "combined_score": 5.0,
+        "confidence": 1.0,
+        "timestamp": "2025-10-02T20:52:00.962037Z"
       }
     ],
     "llm_average_syntactic": 5.0,

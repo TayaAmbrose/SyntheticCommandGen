@@ -37,11 +37,21 @@
         "combined_score": 1.5,
         "confidence": 0.74,
         "timestamp": "2025-10-02T14:11:08.578539Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, featuring balanced quotes, proper PowerShell syntax, and correct escaping of dollar signs using backticks within the WMIC-executed string.",
+        "semantic_score": 1,
+        "semantic_justification": "While the command technically achieves data exfiltration via a FireWire adapter, this action fundamentally misaligns with MITRE ATT&CK T1011 'Search Closed Sources,' which describes adversaries *acquiring* intelligence from external non-public sources, not *exfiltrating* internal data.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:49:37.480953Z"
       }
     ],
-    "llm_average_syntactic": 3.5,
-    "llm_average_semantic": 1.5,
-    "llm_average_score": 2.5,
+    "llm_average_syntactic": 4.0,
+    "llm_average_semantic": 1.333,
+    "llm_average_score": 2.667,
     "llm_verdict": "likely_mismatch",
     "sandbox_trace_id": null,
     "mitre_match_score": null

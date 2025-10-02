@@ -35,12 +35,22 @@
         "combined_score": 4.5,
         "confidence": 0.8,
         "timestamp": "2025-10-02T14:18:39.961270Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The command is perfectly well-formed, using valid macOS commands, standard shell constructs like pipes and command substitution, and balanced quotes.",
+        "semantic_score": 1,
+        "semantic_justification": "The command performs exfiltration of local log data, which is non-public, but T1011 focuses on 'searching' or 'querying' external closed sources like paid feeds or dark markets, not exfiltrating data from a compromised host.",
+        "combined_score": 3.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:52:17.517136Z"
       }
     ],
     "llm_average_syntactic": 5.0,
-    "llm_average_semantic": 3.5,
-    "llm_average_score": 4.25,
-    "llm_verdict": "likely_match",
+    "llm_average_semantic": 2.667,
+    "llm_average_score": 3.833,
+    "llm_verdict": "uncertain",
     "sandbox_trace_id": null,
     "mitre_match_score": null
   }

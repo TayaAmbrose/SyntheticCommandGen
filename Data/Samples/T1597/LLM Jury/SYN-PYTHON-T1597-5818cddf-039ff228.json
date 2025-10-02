@@ -34,6 +34,16 @@
         "combined_score": 5.0,
         "confidence": 1,
         "timestamp": "2025-10-02T14:29:50.656682Z"
+      },
+      {
+        "model": "gemini-2.0-flash-thinking-exp",
+        "syntactic_score": 5,
+        "syntactic_justification": "The Python script is perfectly well-formed with correct imports, variable assignments, function calls, exception handling, and valid string literals for both the outer Kubernetes interaction and the inner RiskIQ API call.",
+        "semantic_score": 5,
+        "semantic_justification": "The command perfectly aligns with T1597 as it queries RiskIQ PassiveTotal, a 'closed-source, subscription API,' to collect passive DNS intelligence, directly matching the 'querying paid technical databases' and 'collect intelligence for targeting' aspects of the technique.",
+        "combined_score": 5.0,
+        "confidence": 1,
+        "timestamp": "2025-10-02T20:55:13.884375Z"
       }
     ],
     "llm_average_syntactic": 5.0,
